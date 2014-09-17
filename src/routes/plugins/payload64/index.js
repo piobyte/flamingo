@@ -1,0 +1,52 @@
+var _ = require('lodash-node'),
+    conf = require('../../../../config'),
+    boom = require('boom');
+
+var defaults = {
+    decode: false
+};
+
+exports.register = function (server, options, next) {
+    server.ext('onPreHandler', function (request, reply) {
+        var plugins = request.route.settings.plugins;
+
+        if (_.isPlainObject(plugins) && plugins.payload64) {
+            var shouldDecode = plugins.payload64.decode,
+                encoded = request.params.execution;
+
+            if (shouldDecode) {
+                /*eslint new-cap: 0, no-else-return: 0 */
+                var utf8buf,
+                    decodedObj;
+
+                try {
+                    utf8buf = conf.DECODE_PAYLOAD(decodeURIComponent(encoded));
+                } catch(e) {
+                    return reply(boom.badRequest('Error decoding the payload.'));
+                }
+
+                try {
+                    decodedObj = JSON.parse(utf8buf);
+                } catch (e) {
+                    // param isn't valid json
+                    return reply(boom.badRequest('Encoded execution payload is invalid JSON.'));
+                }
+                if (_.isPlainObject(decodedObj)) {
+                    request.payload = _.assign({}, request.payload || {}, decodedObj);
+                    return reply.continue();
+                } else {
+                    // decoded isn't plain object
+                    return reply(boom.badRequest('Encoded execution payload isn\'t a plain object.'));
+                }
+            }
+        }
+        return reply.continue();
+    });
+
+    return next();
+};
+
+exports.register.attributes = {
+    name: 'payload64',
+    version: '0.1.0'
+};
