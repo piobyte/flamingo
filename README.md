@@ -37,6 +37,14 @@ Modify `config.js` or set environment variables (PORT, SECRET or CIPHER).
 __Note:__ if you're using the docker config, don't change the port to something other than 3000
 (port 3000 is exposed from the docker image).
 
+### CRYPTO
+
+__change these values if you want to use this server in a production environment__
+
+- `IV` - decipher [IV](https://en.wikipedia.org/wiki/Initialization_vector)
+- `KEY` - `base64` - decipher key
+- `CIPHER` - cipher algorithm
+
 ## Encoding payload
 
 If you don't want others to use your flamingo instance, you encode/encrypt the api payload.

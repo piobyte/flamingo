@@ -38,52 +38,57 @@ var rateLimiter = new limiter.RateLimiter(
     },
     convertRequestHandler = function (req, reply) {
         var profile = req.params.profile,
-            inputUrl;
+            decode;
 
         try {
             /*eslint new-cap: 0 */
-            inputUrl = conf.DECODE_PAYLOAD(decodeURIComponent(req.params.url));
+            decode = conf.DECODE_PAYLOAD(decodeURIComponent(req.params.url));
         } catch (e) {
             // url decode errored
             return reply(boom.badRequest('No input or output protocol found'));
         }
 
-        if (PROFILES.hasOwnProperty(profile)){
-            // has profile
-            PROFILES[profile]().then(function (queue) {
-                var input = url.parse(inputUrl);
+        decode.then(function (inputUrl) {
+            if (PROFILES.hasOwnProperty(profile)){
+                // has profile
+                PROFILES[profile]().then(function (queue) {
+                    var input = url.parse(inputUrl);
 
-                if (input.protocol !== null) {
-                    var reader = readers[input.protocol.substring(0, input.protocol.length - 1)],
-                        writer = writers.response,
-                        processor = processors.image;
+                    if (input.protocol !== null) {
+                        var reader = readers[input.protocol.substring(0, input.protocol.length - 1)],
+                            writer = writers.response,
+                            processor = processors.image;
 
-                    if (reader && processor && writer) {
-                        // build processing queue
-                        reader(input, conf.ACCESS.READ)
-                            .then(unfoldReaderResult)
-                            .then(processor(queue))
-                            .then(writer(null, reply))
-                            .catch(function (err) {
-                                logger.warn(err);
-                                reply({
-                                    statusCode: err.statusCode || 500,
-                                    error: err.error || 'Internal Server Error',
-                                    message: err.message
-                                }).code(err.statusCode || 500);
-                            });
-                    } else {
-                        reply(boom.preconditionFailed(
-                            'Has input reader: ' + !!reader + ', ' +
-                            'output writer: ' + !!writer + ', ' +
-                            'processor: ' + !!processor));
+                        if (reader && processor && writer) {
+                            // build processing queue
+                            reader(input, conf.ACCESS.READ)
+                                .then(unfoldReaderResult)
+                                .then(processor(queue))
+                                .then(writer(null, reply))
+                                .catch(function (err) {
+                                    logger.warn(err);
+                                    reply({
+                                        statusCode: err.statusCode || 500,
+                                        error: err.error || 'Internal Server Error',
+                                        message: err.message
+                                    }).code(err.statusCode || 500);
+                                });
+                        } else {
+                            reply(boom.preconditionFailed(
+                                'Has input reader: ' + !!reader + ', ' +
+                                'output writer: ' + !!writer + ', ' +
+                                'processor: ' + !!processor));
+                        }
                     }
-                }
-            });
-        } else {
-            // no known profile
-            reply(boom.badRequest('No input or output protocol found'));
-        }
+                });
+            } else {
+                // no known profile
+                reply(boom.badRequest('No input or output protocol found'));
+            }
+        }).catch(function (err) {
+            console.log('ERR', err);
+            reply(boom.badRequest('Error decrypting payload', err));
+        });
     };
 
 module.exports = {

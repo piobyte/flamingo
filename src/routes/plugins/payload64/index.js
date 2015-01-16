@@ -16,28 +16,33 @@ exports.register = function (server, options, next) {
 
             if (shouldDecode) {
                 /*eslint new-cap: 0, no-else-return: 0 */
-                var utf8buf,
-                    decodedObj;
+                var decodedObj,
+                    decode;
 
                 try {
-                    utf8buf = conf.DECODE_PAYLOAD(decodeURIComponent(encoded));
+                    decode = conf.DECODE_PAYLOAD(decodeURIComponent(encoded));
                 } catch(e) {
                     return reply(boom.badRequest('Error decoding the payload.'));
                 }
 
-                try {
-                    decodedObj = JSON.parse(utf8buf);
-                } catch (e) {
-                    // param isn't valid json
-                    return reply(boom.badRequest('Encoded execution payload is invalid JSON.'));
-                }
-                if (_.isPlainObject(decodedObj)) {
-                    request.payload = _.assign({}, request.payload || {}, decodedObj);
-                    return reply.continue();
-                } else {
-                    // decoded isn't plain object
-                    return reply(boom.badRequest('Encoded execution payload isn\'t a plain object.'));
-                }
+                decode.then(function (utf8buf) {
+                    try {
+                        decodedObj = JSON.parse(utf8buf);
+                    } catch (e) {
+                        // param isn't valid json
+                        return reply(boom.badRequest('Encoded execution payload is invalid JSON.'));
+                    }
+                    if (_.isPlainObject(decodedObj)) {
+                        request.payload = _.assign({}, request.payload || {}, decodedObj);
+                        return reply.continue();
+                    } else {
+                        // decoded isn't plain object
+                        return reply(boom.badRequest('Encoded execution payload isn\'t a plain object.'));
+                    }
+                }).catch(function (err) {
+                    console.log('ERR', err);
+                    reply(boom.badRequest('Error decrypting payload', err));
+                });
             }
         }
         return reply.continue();

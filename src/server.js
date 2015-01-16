@@ -11,10 +11,13 @@ var ratifyOptions = {
 
 module.exports = function (serverConfig) {
     return new RSVP.Promise(function (resolve) {
-        var server = new Hapi.Server();
+        var server = new Hapi.Server({ debug: false });
         server.connection({
             port: serverConfig.PORT
         });
+
+        // pass server logging to custom logger
+        server.on('log', function (ev, tags) { logger.info(_.isArray(tags) ? tags.join(' ') : tags, ev.data); });
 
         // apply routes
         if (serverConfig.ROUTES.INDEX) {

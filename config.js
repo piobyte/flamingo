@@ -1,4 +1,5 @@
-var crypto = require('crypto');
+var crypto = require('crypto'),
+    RSVP = require('rsvp');
 
 const config = {
     /**
@@ -50,11 +51,17 @@ const config = {
             '/vagrant', '/tmp/flamingo'
         ]
     },
-    // !!! CHANGE THIS SECRET IF YOU WANT TO USE IT !!!
-    SECRET: 'oFvNpepj98JW4QJPoMYrFNpZ7aQ7AbzV',
-    // !!! CHANGE THIS SECRET IF YOU WANT TO USE IT !!!
-
-    CIPHER: 'BF-CBC' /* Blowfish */,
+    // !!! CHANGE THIS IF YOU WANT TO USE IT !!!
+    CRYPTO: {
+        KEY: new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64'),
+        IV: new Buffer('_ag3WU77'),
+        CIPHER: 'BF-CBC' /* Blowfish */
+        // pbkdf2 values to generate the above KEY, IV, CIPHER
+        //SECRET: 'XwckHV-3cySkr96QbqhHb2GvianU3ggU',
+        //SALT: 'URAdgv-D',
+        //ITERATIONS: 2048,
+        //KEYLEN: 16,
+    },
     /**
      * Function to encode a given plaintext string
      * @private
@@ -62,9 +69,20 @@ const config = {
      * @return {*}
      */
     ENCODE_PAYLOAD: function (plaintext) {
-        var cipher = crypto.createCipher(config.CIPHER, config.SECRET);
-        cipher.end(plaintext, 'utf8');
-        return cipher.read().toString('base64');
+        return new RSVP.Promise(function(resolve, reject){
+            //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
+            //    if (err) { reject(err); return; }
+                try {
+                    var cipher = crypto.createCipheriv(config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV);
+                    cipher.end(plaintext, 'utf8');
+                } catch(err) {
+                    console.error(err);
+                    reject(err);
+                    return;
+                }
+                resolve(cipher.read().toString('base64'));
+            //});
+        })
     },
     /**
      * Function to decode a given base64 encoded string
@@ -72,9 +90,20 @@ const config = {
      * @return {String} decoded String
      */
     DECODE_PAYLOAD: function (plaintext) {
-        var decipher = crypto.createDecipher(config.CIPHER, config.SECRET);
-        decipher.end(plaintext, 'base64');
-        return decipher.read().toString('utf8');
+        return new RSVP.Promise(function (resolve, reject) {
+            //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
+            //    if (err) { reject(err); return; }
+                try {
+                    var decipher = crypto.createDecipheriv(config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV);
+                    decipher.end(plaintext, 'base64');
+                } catch(err) {
+                    console.error(err);
+                    reject(err);
+                    return;
+                }
+                resolve(decipher.read().toString('utf8'));
+            //})
+        });
     }
 };
 
