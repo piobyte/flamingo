@@ -6,6 +6,7 @@ var convertSchema = require('../schema/convert'),
     path = require('path'),
     limiter = require('limiter'),
     conf = require('../../config'),
+    profileLoader = require('../util/profile-loader'),
     unfoldReaderResult = require('../util/unfold-reader-result');
 
 var logger = require('../logger')();
@@ -20,10 +21,7 @@ var rateLimiter = new limiter.RateLimiter(
     },
     /*eslint no-sync: 0 */
     // sync allowed because it is run while loading the module
-    PROFILES = _.reduce(fs.readdirSync(path.join(__dirname, '../profiles')), function (obj, fileName) {
-        obj[fileName.replace(/\.js$/, '')] = require('../profiles/' + fileName);
-        return obj;
-    }, {}),
+    PROFILES = profileLoader.load(conf.PROFILE_DIR),
     readers = {
         file: require('../reader/file'),
         data: require('../reader/data'),
@@ -51,7 +49,7 @@ var rateLimiter = new limiter.RateLimiter(
         decode.then(function (inputUrl) {
             if (PROFILES.hasOwnProperty(profile)){
                 // has profile
-                PROFILES[profile]().then(function (queue) {
+                profileLoader.build(PROFILES[profile]).then(function (queue) {
                     var input = url.parse(inputUrl);
 
                     if (input.protocol !== null) {

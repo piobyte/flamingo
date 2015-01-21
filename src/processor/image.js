@@ -20,7 +20,7 @@ var processes = {
         return graphics;
     },
     extent: function (graphics, opts) {
-        graphics = graphics.extent(opts.width, opts.height);
+        graphics = graphics.extent(opts.width, opts.height, opts.options);
         return graphics;
     },
     scale: function (graphics, opts) {
@@ -28,7 +28,7 @@ var processes = {
         return graphics;
     },
     resize: function (graphics, opts) {
-        graphics = graphics.resize(opts.width, opts.height);
+        graphics = graphics.resize(opts.width, opts.height, opts.options);
         return graphics;
     },
     rotate: function (graphics, opts) {

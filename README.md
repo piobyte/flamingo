@@ -60,17 +60,30 @@ Examples contain generating small squared avatar images.
 Profiles use promises (via [rsvp.js](https://github.com/tildeio/rsvp.js)) to allow a more complex asynchronous behaviors
 (i.e. get face position, crop to center face).
 
+If you want to use more than the default profiles (`src/profiles`), use the `conf.PROFILE_DIR` or `ENV.PROFILE_DIR`.
+This will load all files in the defined directory and add it to the default ones.
+
+A external profile file (not located in `src/profiles`) __can\`t__ use require to load project dependencies.
+A profiles file should only contain one `module.exports` with a function that returns a promise.
+This promise should resolve the array of operations that can be used in the processor.
+As of now, the profile function is invoked with the `RSVP` object (to create a promise) by default.
+
 ### Examples:
 
-- resize an image to 500x500 px
+- resize an image to 200x200 pixel by [treating width and height as minimum values](http://www.graphicsmagick.org/GraphicsMagick.html#details-geometry)
+- result is an squared image that is fully filled with the source image without containing whitespace
 
 ```
-module.exports = function () {
+module.exports = function (RSVP) {
     return new RSVP.Promise(function (resolve) {
         resolve([{
             id: 'resize',
-            width: 500,
-            height: 500
+            width: 200,
+            height: '200^'
+        },{
+            id: 'extent',
+            width: 200,
+            height: 200
         }]);
     });
 };

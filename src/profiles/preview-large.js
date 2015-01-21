@@ -1,4 +1,4 @@
-const WIDTH = 50,
+const WIDTH = 200,
     HEIGHT = WIDTH;
 
 module.exports = function (RSVP) {
@@ -6,10 +6,7 @@ module.exports = function (RSVP) {
         resolve([{
             id: 'resize',
             width: WIDTH,
-            height: HEIGHT
-        },{
-            id: 'compose',
-            operator: 'Copy'
+            height: HEIGHT + '^'
         },{
             id: 'gravity',
             type: 'Center'

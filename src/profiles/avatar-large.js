@@ -1,9 +1,7 @@
-var RSVP = require('rsvp');
-
 const WIDTH = 170,
     HEIGHT = WIDTH;
 
-module.exports = function () {
+module.exports = function (RSVP) {
     return new RSVP.Promise(function (resolve) {
         resolve([{
             id: 'resize',

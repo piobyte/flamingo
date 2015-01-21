@@ -14,6 +14,11 @@ const config = {
     },
 
     /**
+     * path to directory where more profiles are located
+     */
+    PROFILE_DIR: null,
+
+    /**
      * server port
      */
     PORT: 3000,
