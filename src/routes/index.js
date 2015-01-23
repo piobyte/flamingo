@@ -20,7 +20,7 @@ module.exports = {
         '    =="-',
         '',
         pkg.name + ' v' + pkg.version,
-        pkg.repository.url,
+        '<a href="' + pkg.repository.url + '">' + pkg.repository.url + '</a>',
         '</pre>' +
         '</body></html>'].join('\n')
         );

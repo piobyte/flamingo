@@ -16,7 +16,12 @@ const config = {
     /**
      * path to directory where more profiles are located
      */
-    PROFILE_DIR: null,
+    PROFILES: {
+        // directories that contain multiple profile files. These only return one profile function.
+        DIR: null,
+        // file that returns multiple one object containing multiple profile functions.
+        FILE: null
+    },
 
     /**
      * server port

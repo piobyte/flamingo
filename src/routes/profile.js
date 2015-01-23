@@ -21,7 +21,7 @@ var rateLimiter = new limiter.RateLimiter(
     },
     /*eslint no-sync: 0 */
     // sync allowed because it is run while loading the module
-    PROFILES = profileLoader.load(conf.PROFILE_DIR),
+    PROFILES = profileLoader.loadAll(conf.PROFILES.FILE, conf.PROFILES.DIR),
     readers = {
         file: require('../reader/file'),
         data: require('../reader/data'),
@@ -49,8 +49,10 @@ var rateLimiter = new limiter.RateLimiter(
         decode.then(function (inputUrl) {
             if (PROFILES.hasOwnProperty(profile)){
                 // has profile
-                profileLoader.build(PROFILES[profile]).then(function (queue) {
-                    var input = url.parse(inputUrl);
+                profileLoader.build(PROFILES[profile]).then(function (loadedProfile) {
+                    var queue = loadedProfile.process,
+                        response = loadedProfile.response,
+                        input = url.parse(inputUrl);
 
                     if (input.protocol !== null) {
                         var reader = readers[input.protocol.substring(0, input.protocol.length - 1)],
@@ -62,7 +64,7 @@ var rateLimiter = new limiter.RateLimiter(
                             reader(input, conf.ACCESS.READ)
                                 .then(unfoldReaderResult)
                                 .then(processor(queue))
-                                .then(writer(null, reply))
+                                .then(writer(null, reply, response))
                                 .catch(function (err) {
                                     logger.warn(err);
                                     reply({

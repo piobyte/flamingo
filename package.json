@@ -1,6 +1,6 @@
 {
   "name": "flamingo",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
@@ -11,9 +11,12 @@
   },
   "author": "Christian",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/piobyte/flamingo/issues"
+  },
   "repository": {
     "type": "git",
-    "url": "TODO: repo url"
+    "url": "https://github.com/piobyte/flamingo"
   },
   "dependencies": {
     "boom": "^2.6.1",

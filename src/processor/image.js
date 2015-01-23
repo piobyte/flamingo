@@ -7,6 +7,10 @@ const BITS = {
 };
 
 var processes = {
+    format: function (graphics, opts) {
+        graphics = graphics.setFormat(opts.format);
+        return graphics;
+    },
     compose: function (graphics, opts) {
         graphics = graphics.compose(opts.operator);
         return graphics;
