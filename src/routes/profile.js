@@ -21,7 +21,7 @@ var rateLimiter = new limiter.RateLimiter(
     },
     /*eslint no-sync: 0 */
     // sync allowed because it is run while loading the module
-    PROFILES = profileLoader.loadAll(conf.PROFILES.FILE, conf.PROFILES.DIR),
+    PROFILES = profileLoader.loadAll(conf.PROFILES_DIR),
     readers = {
         file: require('../reader/file'),
         data: require('../reader/data'),

@@ -7,19 +7,8 @@ var logger = require('../logger')();
 
 function requireReduceFunction(profilePath){
     return function (obj, fileName) {
-        obj[fileName.replace(/\.js$/, '')] = require(profilePath + fileName);
-        return obj;
+        return _.assign(obj, require(profilePath + fileName));
     };
-}
-
-/**
- * Function to check if a given string ends with a given string
- * @param {String} string String to check for ending substring
- * @param {String} end Possible ending string
- * @return {boolean} if the string ends with the end string
- */
-function endsWith(string, end) {
-    return string.indexOf(end) === string.length - end.length;
 }
 
 /**
@@ -33,9 +22,9 @@ exports.loadProfileDirectories = function (prevProfiles, profileDirectoryPath) {
     prevProfiles = prevProfiles || {};
 
     // load default profiles
-    var profiles = _.reduce(fs.readdirSync(path.join(__dirname, '../profiles/files')), requireReduceFunction('../profiles/files/'), prevProfiles);
+    var profiles = _.reduce(fs.readdirSync(path.join(__dirname, '../profiles')), requireReduceFunction('../profiles/'), prevProfiles);
 
-    if (typeof profileDirectoryPath === 'string' && endsWith(profileDirectoryPath, '.js')) {
+    if (typeof profileDirectoryPath === 'string') {
         // load additional profiles
         profiles = _.reduce(fs.readdirSync(path.normalize(profileDirectoryPath)), requireReduceFunction(profileDirectoryPath + '/'), profiles);
     }
@@ -45,30 +34,13 @@ exports.loadProfileDirectories = function (prevProfiles, profileDirectoryPath) {
     return profiles;
 };
 
-exports.loadProfileFile = function (prevProfiles, filePath) {
-    prevProfiles = prevProfiles || {};
-
-    // load default profiles
-    var profiles = _.assign(prevProfiles, require('../profiles/inline'));
-
-    if (typeof filePath === 'string' && endsWith(filePath, '.js')) {
-        // load additional profiles
-        profiles = _.assign(prevProfiles, require(path.normalize(filePath)));
-    }
-
-    logger.info('loaded profiles: ' + Object.keys(profiles));
-
-    return profiles;
-};
-
 /**
  * Function to load profiles from a file and from a directory
- * @param {String} file path to profiles file
  * @param {String} dir path to profiles dir
  * @return {Object} complete profile map
  */
-exports.loadAll = function (file, dir) {
-    return exports.loadProfileFile(exports.loadProfileDirectories({}, dir), file);
+exports.loadAll = function (dir) {
+    return exports.loadProfileDirectories({}, dir);
 };
 
 /**

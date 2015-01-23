@@ -49,8 +49,7 @@ __environment variables -> config mappings__
 - `CRYPTO_IV` -> `CRYPTO.IV`
 - `CRYPTO_KEY` -> `CRYPTO.KEY`
 - `CRYPTO_CIPHER` -> `CRYPTO.CIPHER`
-- `PROFILES_DIR` -> `PROFILES.DIR`
-- `PROFILES_FILE` -> `PROFILES.FILE`
+- `PROFILES_DIR` -> `PROFILES_DIR`
 
 ### CRYPTO
 
@@ -70,23 +69,18 @@ To generate an expected request you have to encrypt your initial request using `
 
 ## Profiles
 
-To allow short urls, you can create presets in the `src/profiles/files` directory.
-Profiles use promises (via [rsvp.js](https://github.com/tildeio/rsvp.js)) to allow a more complex asynchronous behaviors
+To allow short urls, you can create presets in the `src/profiles/` directory.
+Profiles use promises (via [rsvp.js](https://github.com/tildeio/rsvp.js)) to allow more complex asynchronous behaviors
 (i.e. get face position, crop to center face).
 
-If you want to use more than the default profiles (`src/profiles`), set a path to another directory using `conf.PROFILES.DIR` or `ENV.PROFILES_DIR`.
+If you want to use more than the default profiles (`src/profiles`), set a path to another directory using `conf.PROFILES_DIR` or `ENV.PROFILES_DIR`.
 This will load all files in the defined directory and add them to the default profiles.
-
-If you don't want to use one file per profile, you can use the `src/profiles/inline` file or specify another path to a file using `conf.PROFILES.FILE` or `ENV.PROFILES_FILE` variables.
-This file should export an object containing profile names (key) and profile generator functions (value).
-
-See `src/profiles/inline.js` for an example on how to programmatic generate profile generators.
 
 ### External profile files/directory rules
 
 - An external profile file (not located in `src/profiles`) __can\`t__ use `require('module')` to load project dependencies.
-- A profiles file should only contain one `module.exports` with a function that returns a promise.
-- This promise should resolve the object containing an array of operations (`process` object property) that can be used in the processor.
+- A profiles file should only contain one `module.exports` that exports an object containing profile name (key) and profile generation function (value).
+- The profile generation function should return a promise that resolves an object containing an array of operations (`process` object property) that can be used in the processor.
 As of now, the profile function is invoked with the `RSVP` object (to create a promise) by default.
 
 Besides the `process` field there is support for more customization:
@@ -96,7 +90,7 @@ Besides the `process` field there is support for more customization:
         - `key: value` - calls [reply](http://hapijs.com/api#replyerr-result)`.header(key, value)` to use custom response header fields
 - `process` {Array} array of processor commands
 
-### Example: 1 profile per file - `src/profiles/files/my-profile.js`
+### Example
 
 - convert to `jpg`
 - resize an image to 200x200 pixel by [treating width and height as minimum values](http://www.graphicsmagick.org/GraphicsMagick.html#details-geometry)
@@ -105,55 +99,17 @@ Besides the `process` field there is support for more customization:
 - available on `/convert/my-profile/{cipher}`
 
 ```
-module.exports = function (RSVP) {
-    return new RSVP.Promise(function (resolve) {
-        resolve({
-            response: { header: {
-                'Content-Type': 'image/jpg'
-            }},
-            process: [{
-                id: 'format',
-                format: 'jpg'
-            },{
-                id: 'resize',
-                width: 200,
-                height: '200^'
-            },{
-                id: 'extent',
-                width: 200,
-                height: 200
-            }]
-        });
-    });
-};
-```
-
-### Example: using multiple profiles in one file - `src/profiles/inline.js`
-
-- same processing mechanism as above
-
-```
 module.exports = {
     'my-profile': function (RSVP) {
         return new RSVP.Promise(function (resolve) {
-            resolve({
-                response: {
-                    header: {
-                        'Content-Type': 'image/jpg'
-                    }
-                },
-                process: [{
-                    id: 'format',
-                    format: 'jpg'
-                }, {
-                    id: 'resize',
-                    width: 200,
-                    height: '200^'
-                }, {
-                    id: 'extent',
-                    width: 200,
-                    height: 200
-                }]
+            resolve({ response: { header: {
+                    'Content-Type': 'image/jpg'
+                }},
+                process: [
+                    { id: 'format', format: 'jpg' },
+                    { id: 'resize', width: 200, height: '200^'},
+                    { id: 'extent', width: 200, height: 200 }
+                ]
             });
         });
     }

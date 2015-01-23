@@ -24,8 +24,7 @@ if (process.env.CRYPTO_IV) { conf.CRYPTO.IV = new Buffer(process.env.CRYPTO_IV);
 if (process.env.CRYPTO_KEY) { conf.CRYPTO.KEY = new Buffer(process.env.CRYPTO_KEY, 'base64'); }
 if (process.env.CRYPTO_CIPHER) { conf.CRYPTO.CIPHER = process.env.CRYPTO_CIPHER; }
 
-if (process.env.PROFILES_DIR) { conf.PROFILES.DIR = process.env.PROFILES_DIR; }
-if (process.env.PROFILES_FILE) { conf.PROFILES.FILE = process.env.PROFILES_FILE; }
+if (process.env.PROFILES_DIR) { conf.PROFILES_DIR = process.env.PROFILES_DIR; }
 
 process.on('uncaughtException', function (err) {
     logger.error(err);
