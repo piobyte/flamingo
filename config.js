@@ -75,8 +75,8 @@ const config = {
     /**
      * Function to encode a given plaintext string
      * @private
-     * @param plaintext
-     * @return {*}
+     * @param {String} plaintext string to encode
+     * @return {String} base64 encoded ciphertext
      */
     ENCODE_PAYLOAD: function (plaintext) {
         return new RSVP.Promise(function(resolve, reject){
@@ -92,7 +92,7 @@ const config = {
                 }
                 resolve(cipher.read().toString('base64'));
             //});
-        })
+        });
     },
     /**
      * Function to decode a given base64 encoded string

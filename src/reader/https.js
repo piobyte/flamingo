@@ -10,7 +10,7 @@ module.exports = function (fileUrl) {
                 return request({
                     url: fileUrl.href,
                     headers: {
-                        'User-Agent': pkg.name + '/' + pkg.version + ' (+SOON)'
+                        'User-Agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'
                     }
                 });
             },

@@ -35,9 +35,11 @@ var NODE = 'node',
     ISTANBUL = 'istanbul',
     MOCHA = NODE_MODULES + 'mocha/bin/_mocha',
 
-    JS_FILES = find('src/').filter(fileType('js')).concat('index.js').join(' '),
+    JS_FILES = find('src/').filter(fileType('js'))
+        .concat('index.js')
+        .concat('config.js')
+        .join(' '),
     TEST_FILES = find('test/').filter(fileType('js')).filter(endsWith('.test.js')).join(' ');
-
 
 target.all = function () {
     target.test();
