@@ -50,6 +50,7 @@ __environment variables -> config mappings__
 - `CRYPTO_KEY` -> `CRYPTO.KEY`
 - `CRYPTO_CIPHER` -> `CRYPTO.CIPHER`
 - `PROFILES_DIR` -> `PROFILES_DIR`
+- `READER_REQUEST_TIMEOUT` -> `READER.REQUEST.TIMEOUT`
 
 ### CRYPTO
 

@@ -14,6 +14,16 @@ const config = {
     },
 
     /**
+     * reader options
+     */
+    READER: {
+        REQUEST: {
+            // http/https request timeout
+            TIMEOUT: 10 * 1000
+        }
+    },
+
+    /**
      * path to directory where more profiles are located
      */
     PROFILES_DIR: null,

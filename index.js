@@ -26,6 +26,8 @@ if (process.env.CRYPTO_CIPHER) { conf.CRYPTO.CIPHER = process.env.CRYPTO_CIPHER;
 
 if (process.env.PROFILES_DIR) { conf.PROFILES_DIR = process.env.PROFILES_DIR; }
 
+if (process.env.READER_REQUEST_TIMEOUT) { conf.READER.REQUEST.TIMEOUT = parseIntNaN(process.env.READER_REQUEST_TIMEOUT, 10 * 1000); }
+
 process.on('uncaughtException', function (err) {
     logger.error(err);
 });
