@@ -11,12 +11,13 @@ var parseFieldNaN = function (object, field, nanDefault) {
     avatarGenerator = function (dimension) {
         return function (RSVP, query) {
             return new RSVP.Promise(function (resolve) {
+                // override dimension with query.width
                 dimension = parseFieldNaN(query, 'width', dimension);
 
                 resolve({
-                    response: { header: { 'Content-Type': 'image/jpg' }},
+                    response: { header: { 'Content-Type': 'image/png' }},
                     process: [
-                        { id: 'format', format: 'jpg' },
+                        { id: 'format', format: 'png' },
                         { id: 'resize', width: dimension, height: dimension },
                         { id: 'compose', operator: 'Copy' },
                         { id: 'gravity', type: 'Center' },
@@ -29,12 +30,13 @@ var parseFieldNaN = function (object, field, nanDefault) {
     previewGenerator = function (dimension) {
         return function (RSVP, query) {
             return new RSVP.Promise(function (resolve) {
+                // override dimension with query.width
                 dimension = parseFieldNaN(query, 'width', dimension);
 
                 resolve({
-                    response: { header: { 'Content-Type': 'image/jpg' }},
+                    response: { header: { 'Content-Type': 'image/png' }},
                     process: [
-                        { id: 'format', format: 'jpg' },
+                        { id: 'format', format: 'png' },
                         { id: 'resize', width: dimension, height: dimension + '^' },
                         { id: 'gravity', type: 'Center' },
                         { id: 'extent', width: dimension, height: dimension }
