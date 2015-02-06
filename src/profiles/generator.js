@@ -13,6 +13,7 @@ var parseFieldNaN = function (object, field, nanDefault) {
             return new RSVP.Promise(function (resolve) {
                 // override dimension with query.width
                 dimension = parseFieldNaN(query, 'width', dimension);
+		dimension = Math.max(10, Math.min(1024, dimension));
 
                 resolve({
                     response: { header: { 'Content-Type': 'image/png' }},
@@ -32,6 +33,7 @@ var parseFieldNaN = function (object, field, nanDefault) {
             return new RSVP.Promise(function (resolve) {
                 // override dimension with query.width
                 dimension = parseFieldNaN(query, 'width', dimension);
+		dimension = Math.max(10, Math.min(1024, dimension));
 
                 resolve({
                     response: { header: { 'Content-Type': 'image/png' }},
@@ -48,36 +50,11 @@ var parseFieldNaN = function (object, field, nanDefault) {
 
 var profiles = {
     avatar: [
-        ['large', 170, avatarGenerator],
-        ['small', 100, avatarGenerator],
-        ['tiny',  40,  avatarGenerator]
+        ['image', 170, avatarGenerator]
     ],
     preview: [
-        ['large', 200, previewGenerator]
-    ],
-    android: {
-        avatar: [
-            ['mdpi',    40,  avatarGenerator],
-            ['hdpi',    60,  avatarGenerator],
-            ['xhdpi',   80,  avatarGenerator],
-            ['xxhdpi',  120, avatarGenerator],
-            ['xxxhdpi', 160, avatarGenerator]
-        ],
-        me: [
-            ['mdpi',    64,  avatarGenerator],
-            ['hdpi',    96,  avatarGenerator],
-            ['xhdpi',   128, avatarGenerator],
-            ['xxhdpi',  192, avatarGenerator],
-            ['xxxhdpi', 256, avatarGenerator]
-        ],
-        preview: [
-            ['mdpi',    192, previewGenerator],
-            ['hdpi',    288, previewGenerator],
-            ['xhdpi',   384, previewGenerator],
-            ['xxhdpi',  576, previewGenerator],
-            ['xxxhdpi', 768, previewGenerator]
-        ]
-    }
+        ['image', 200, previewGenerator]
+    ]
 };
 
 /**
