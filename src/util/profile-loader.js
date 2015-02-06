@@ -46,6 +46,7 @@ exports.loadAll = function (dir) {
 /**
  * Function to build a profile by calling it with some default values
  * @param {Function} profile function that resolves with an array to be used as input for the processor
+ * @param {Object} query current request query object
  * @return {Array} Array of operations for the processor
  */
 exports.build = function(profile, query){
