@@ -82,7 +82,7 @@ This will load all files in the defined directory and add them to the default pr
 - An external profile file (not located in `src/profiles`) __can\`t__ use `require('module')` to load project dependencies.
 - A profiles file should only contain one `module.exports` that exports an object containing profile name (key) and profile generation function (value).
 - The profile generation function should return a promise that resolves an object containing an array of operations (`process` object property) that can be used in the processor.
-As of now, the profile function is invoked with the `RSVP` object (to create a promise) by default.
+As of now, the profile function is invoked with the `RSVP` object (to create a promise) and the request query object by default.
 
 Besides the `process` field there is support for more customization:
 
@@ -101,7 +101,7 @@ Besides the `process` field there is support for more customization:
 
 ```
 module.exports = {
-    'my-profile': function (RSVP) {
+    'my-profile': function (RSVP, query) {
         return new RSVP.Promise(function (resolve) {
             resolve({ response: { header: {
                     'Content-Type': 'image/jpg'

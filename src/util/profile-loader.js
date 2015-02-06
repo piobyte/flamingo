@@ -48,6 +48,6 @@ exports.loadAll = function (dir) {
  * @param {Function} profile function that resolves with an array to be used as input for the processor
  * @return {Array} Array of operations for the processor
  */
-exports.build = function(profile){
-    return profile(RSVP);
+exports.build = function(profile, query){
+    return profile(RSVP, query);
 };

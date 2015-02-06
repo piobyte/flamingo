@@ -1,6 +1,18 @@
-var avatarGenerator = function (dimension) {
-        return function (RSVP) {
+var parseFieldNaN = function (object, field, nanDefault) {
+        var result = nanDefault;
+        if(object.hasOwnProperty(field)) {
+            var objValue = parseInt(object[field], 10);
+            if (!isNaN(objValue)) {
+                 result = objValue;
+            }
+        }
+        return result;
+    },
+    avatarGenerator = function (dimension) {
+        return function (RSVP, query) {
             return new RSVP.Promise(function (resolve) {
+                dimension = parseFieldNaN(query, 'width', dimension);
+
                 resolve({
                     response: { header: { 'Content-Type': 'image/jpg' }},
                     process: [
@@ -15,8 +27,10 @@ var avatarGenerator = function (dimension) {
         };
     },
     previewGenerator = function (dimension) {
-        return function (RSVP) {
+        return function (RSVP, query) {
             return new RSVP.Promise(function (resolve) {
+                dimension = parseFieldNaN(query, 'width', dimension);
+
                 resolve({
                     response: { header: { 'Content-Type': 'image/jpg' }},
                     process: [

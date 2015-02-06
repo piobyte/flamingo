@@ -3,9 +3,9 @@ var server = require('./src/server'),
 
 var logger = require('./src/logger')();
 
-function parseIntNaN(portString, nanDefault) {
-    var parsed = parseInt(portString, 10);
-    if (isNaN(conf.PORT)) { conf.PORT = nanDefault; }
+function parseIntNaN(value, nanDefault) {
+    var parsed = parseInt(value, 10);
+    if (isNaN(parsed)) { parsed = nanDefault; }
     return parsed;
 }
 

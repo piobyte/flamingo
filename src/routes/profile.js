@@ -7,6 +7,7 @@ var convertSchema = require('../schema/convert'),
     limiter = require('limiter'),
     conf = require('../../config'),
     profileLoader = require('../util/profile-loader'),
+    errorReply = require('../util/error-reply'),
     unfoldReaderResult = require('../util/unfold-reader-result');
 
 var logger = require('../logger')();
@@ -49,7 +50,7 @@ var rateLimiter = new limiter.RateLimiter(
         decode.then(function (inputUrl) {
             if (PROFILES.hasOwnProperty(profile)){
                 // has profile
-                profileLoader.build(PROFILES[profile]).then(function (loadedProfile) {
+                profileLoader.build(PROFILES[profile], req.query).then(function (loadedProfile) {
                     var queue = loadedProfile.process,
                         response = loadedProfile.response,
                         input = url.parse(inputUrl);
@@ -67,11 +68,7 @@ var rateLimiter = new limiter.RateLimiter(
                                 .then(writer(null, reply, response))
                                 .catch(function (err) {
                                     logger.warn(err);
-                                    reply({
-                                        statusCode: err.statusCode || 500,
-                                        error: err.error || 'Internal Server Error',
-                                        message: err.message
-                                    }).code(err.statusCode || 500);
+                                    errorReply(reply, err);
                                 });
                         } else {
                             reply(boom.preconditionFailed(
