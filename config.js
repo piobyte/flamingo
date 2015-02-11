@@ -1,7 +1,7 @@
 var crypto = require('crypto'),
     RSVP = require('rsvp');
 
-const config = {
+var config = {
     /**
      * enable/disable specific routes
      */
@@ -33,17 +33,6 @@ const config = {
      */
     PORT: 3000,
 
-    /**
-     * configure request rate limiting
-     */
-    RATE_LIMIT: {
-        ALL: {
-            // 50 requests per minute
-            REQUESTS: 50,
-            TIME: 'minute',
-            WAIT_FOR_TOKEN: false
-        }
-    },
     PREPROCESSOR: {
         VIDEO: {
             /**
@@ -121,5 +110,27 @@ const config = {
         });
     }
 };
+
+function parseIntNaN(value, nanDefault) {
+    var parsed = parseInt(value, 10);
+    if (isNaN(parsed)) { parsed = nanDefault; }
+    return parsed;
+}
+
+// overwrite config with environment variables
+if (process.env.PORT) { config.PORT = parseIntNaN(process.env.PORT, 3000); }
+
+if (process.env.ROUTE_CUSTOM_CONVERT) { config.ROUTES.CUSTOM_CONVERT = process.env.ROUTE_CUSTOM_CONVERT === 'true'; }
+if (process.env.ROUTE_PROFILE_CONVERT) { config.ROUTES.PROFILE_CONVERT = process.env.ROUTE_PROFILE_CONVERT === 'true'; }
+if (process.env.ROUTE_INDEX) { config.ROUTES.INDEX = process.env.ROUTE_INDEX === 'true'; }
+
+if (process.env.CRYPTO_IV) { config.CRYPTO.IV = new Buffer(process.env.CRYPTO_IV); }
+if (process.env.CRYPTO_KEY) { config.CRYPTO.KEY = new Buffer(process.env.CRYPTO_KEY, 'base64'); }
+if (process.env.CRYPTO_CIPHER) { config.CRYPTO.CIPHER = process.env.CRYPTO_CIPHER; }
+
+if (process.env.PROFILES_DIR) { config.PROFILES_DIR = process.env.PROFILES_DIR; }
+
+if (process.env.READER_REQUEST_TIMEOUT) { config.READER.REQUEST.TIMEOUT = parseIntNaN(process.env.READER_REQUEST_TIMEOUT, 10 * 1000); }
+
 
 module.exports = config;

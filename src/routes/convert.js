@@ -1,17 +1,12 @@
 var convertSchema = require('../schema/convert'),
     url = require('url'),
-    limiter = require('limiter'),
     conf = require('../../config'),
     boom = require('boom'),
     unfoldReaderResult = require('../util/unfold-reader-result');
 
 var logger = require('../logger')();
 
-var rateLimiter = new limiter.RateLimiter(
-        conf.RATE_LIMIT.ALL.REQUESTS,
-        conf.RATE_LIMIT.ALL.TIME,
-        !conf.RATE_LIMIT.ALL.WAIT_FOR_TOKEN),
-    writers = {
+var writers = {
         file: require('../writer/file'),
         response: require('../writer/response')
     },
@@ -26,47 +21,6 @@ var rateLimiter = new limiter.RateLimiter(
     },
     processors = {
         image: require('../processor/image')
-    },
-    convertRequestHandler = function (req, reply) {
-        var options = req.payload,
-            input = url.parse(options.input),
-            preprocessor = options.preprocessor ? preprocessors[options.preprocessor.type] : false,
-            output = url.parse(options.output);
-
-        if (input.protocol === null || output.protocol === null) {
-            reply(boom.badRequest('No input or output protocol found'));
-        } else {
-            var reader = readers[input.protocol.substring(0, input.protocol.length - 1)],
-                writer = writers[output.protocol.substring(0, output.protocol.length - 1)],
-                processor = processors[options.processor.type];
-
-            if (reader && processor && writer) {
-                // build processing queue
-                var processQ = reader(input, conf.ACCESS.READ);
-                if (preprocessor) {
-                    // apply preprocessor if existing
-                    processQ = processQ.then(preprocessor(options.preprocessor.options));
-                } else {
-                    processQ = processQ.then(unfoldReaderResult);
-                }
-                processQ
-                    .then(processor(options.processor.queue))
-                    .then(writer(output, reply))
-                    .catch(function (err) {
-                        logger.warn(err);
-                        reply({
-                            statusCode: err.statusCode || 500,
-                            error: err.error || 'Internal Server Error',
-                            message: err.message
-                        }).code(err.statusCode || 500);
-                    });
-            } else {
-                reply(boom.preconditionFailed(
-                    'Has input reader: ' + !!reader + ', ' +
-                    'output writer: ' + !!writer + ', ' +
-                    'processor: ' + !!processor));
-            }
-        }
     };
 
 module.exports = {
@@ -83,17 +37,45 @@ module.exports = {
             }
         },
         handler: function (req, reply) {
-            rateLimiter.removeTokens(1, function(err, remainingRequests) {
-                if (err) {
-                    reply(err);
-                }else {
-                    if (remainingRequests < 0) {
-                        reply(boom.tooManyRequests('You\'ve send too many requests. Please wait and try again later.'));
+            var options = req.payload,
+                input = url.parse(options.input),
+                preprocessor = options.preprocessor ? preprocessors[options.preprocessor.type] : false,
+                output = url.parse(options.output);
+
+            if (input.protocol === null || output.protocol === null) {
+                reply(boom.badRequest('No input or output protocol found'));
+            } else {
+                var reader = readers[input.protocol.substring(0, input.protocol.length - 1)],
+                    writer = writers[output.protocol.substring(0, output.protocol.length - 1)],
+                    processor = processors[options.processor.type];
+
+                if (reader && processor && writer) {
+                    // build processing queue
+                    var processQ = reader(input, conf.ACCESS.READ);
+                    if (preprocessor) {
+                        // apply preprocessor if existing
+                        processQ = processQ.then(preprocessor(options.preprocessor.options));
                     } else {
-                        convertRequestHandler(req, reply);
+                        processQ = processQ.then(unfoldReaderResult);
                     }
+                    processQ
+                        .then(processor(options.processor.queue))
+                        .then(writer(output, reply))
+                        .catch(function (err) {
+                            logger.warn(err);
+                            reply({
+                                statusCode: err.statusCode || 500,
+                                error: err.error || 'Internal Server Error',
+                                message: err.message
+                            }).code(err.statusCode || 500);
+                        });
+                } else {
+                    reply(boom.preconditionFailed(
+                        'Has input reader: ' + !!reader + ', ' +
+                        'output writer: ' + !!writer + ', ' +
+                        'processor: ' + !!processor));
                 }
-            });
+            }
         }
     }
 };

@@ -1,4 +1,10 @@
-var parseFieldNaN = function (object, field, nanDefault) {
+var imageHeader = {
+        'Content-Type': 'image/png'
+    },
+    clamp = function (value, min, max) {
+        return Math.max(min, Math.min(max, value));
+    },
+    parseFieldNaN = function (object, field, nanDefault) {
         var result = nanDefault;
         if(object.hasOwnProperty(field)) {
             var objValue = parseInt(object[field], 10);
@@ -13,14 +19,13 @@ var parseFieldNaN = function (object, field, nanDefault) {
             return new RSVP.Promise(function (resolve) {
                 // override dimension with query.width
                 dimension = parseFieldNaN(query, 'width', dimension);
-		dimension = Math.max(10, Math.min(1024, dimension));
+                dimension = clamp(dimension, 10, 1024);
 
                 resolve({
-                    response: { header: { 'Content-Type': 'image/png' }},
+                    response: { header: imageHeader },
                     process: [
                         { id: 'format', format: 'png' },
-                        { id: 'resize', width: dimension, height: dimension },
-                        { id: 'compose', operator: 'Copy' },
+                        { id: 'resize', width: dimension, height: dimension + '^' },
                         { id: 'gravity', type: 'Center' },
                         { id: 'extent', width: dimension, height: dimension }
                     ]
@@ -33,10 +38,10 @@ var parseFieldNaN = function (object, field, nanDefault) {
             return new RSVP.Promise(function (resolve) {
                 // override dimension with query.width
                 dimension = parseFieldNaN(query, 'width', dimension);
-		dimension = Math.max(10, Math.min(1024, dimension));
+                dimension = clamp(dimension, 10, 1024);
 
                 resolve({
-                    response: { header: { 'Content-Type': 'image/png' }},
+                    response: { header: imageHeader },
                     process: [
                         { id: 'format', format: 'png' },
                         { id: 'resize', width: dimension, height: dimension + '^' },
