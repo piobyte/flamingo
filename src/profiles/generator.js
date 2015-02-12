@@ -1,7 +1,4 @@
-var imageHeader = {
-        'Content-Type': 'image/png'
-    },
-    clamp = function (value, min, max) {
+var clamp = function (value, min, max) {
         return Math.max(min, Math.min(max, value));
     },
     parseFieldNaN = function (object, field, nanDefault) {
@@ -22,7 +19,7 @@ var imageHeader = {
                 dimension = clamp(dimension, 10, 1024);
 
                 resolve({
-                    response: { header: imageHeader },
+                    response: { header: { 'Content-Type': 'image/png' }},
                     process: [
                         { id: 'format', format: 'png' },
                         { id: 'resize', width: dimension, height: dimension + '^' },
@@ -41,9 +38,10 @@ var imageHeader = {
                 dimension = clamp(dimension, 10, 1024);
 
                 resolve({
-                    response: { header: imageHeader },
+                    response: { header: { 'Content-Type': 'image/jpg' }},
                     process: [
-                        { id: 'format', format: 'png' },
+                        { id: 'background', color: 'white' },
+                        { id: 'format', format: 'jpg' },
                         { id: 'resize', width: dimension, height: dimension + '^' },
                         { id: 'gravity', type: 'Center' },
                         { id: 'extent', width: dimension, height: dimension }

@@ -15,6 +15,10 @@ var processes = {
         graphics = graphics.compose(opts.operator);
         return graphics;
     },
+    background: function (graphics, opts) {
+        graphics = graphics.background(opts.color);
+        return graphics;
+    },
     gravity: function (graphics, opts) {
         graphics = graphics.gravity(opts.type);
         return graphics;
