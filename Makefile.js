@@ -46,14 +46,21 @@ target.all = function () {
 };
 
 target.lint = function () {
+    var errors = 0,
+        lastReturn;
+
     echo('Validating Makefile.js');
-    nodeCLI.exec(ESLINT, '-c eslint.json', MAKEFILE);
+    lastReturn = nodeCLI.exec(ESLINT, '-c eslint.json', MAKEFILE);
+    if (lastReturn.code !== 0) { errors++; }
 
     echo('Validating JavaScript files');
-    nodeCLI.exec(ESLINT, '-c eslint.json', JS_FILES);
+    lastReturn = nodeCLI.exec(ESLINT, '-c eslint.json', JS_FILES);
+    if (lastReturn.code !== 0) { errors++; }
 
     echo('Validating JavaScript test files');
-    nodeCLI.exec(ESLINT, '-c eslint.json', TEST_FILES);
+    lastReturn = nodeCLI.exec(ESLINT, '-c eslint.json', TEST_FILES);
+    if (lastReturn.code !== 0) { errors++; }
+    if (errors) { exit(1); }
 };
 
 target.test = function () {
@@ -63,19 +70,12 @@ target.test = function () {
 
     echo('Generating coverage');
     lastReturn = nodeCLI.exec(ISTANBUL, 'cover', MOCHA, '-- -R tap -c', TEST_FILES);
-    if (lastReturn.code !== 0) {
-        errors++;
-    }
+    if (lastReturn.code !== 0) { errors++; }
 
     echo('Checking coverage');
     lastReturn = nodeCLI.exec(ISTANBUL, 'check-coverage', '--statement 99 --branch 98 --function 99 --lines 99');
-    if (lastReturn.code !== 0) {
-        errors++;
-    }
-
-    if (errors) {
-        exit(1);
-    }
+    if (lastReturn.code !== 0) { errors++; }
+    if (errors) { exit(1); }
 };
 
 target.perf = function () {

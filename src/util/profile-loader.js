@@ -1,13 +1,14 @@
 var RSVP = require('rsvp'),
     fs = require('fs'),
     path = require('path'),
-    _ = require('lodash-node');
+    assign = require('lodash/object/assign'),
+    reduce = require('lodash/collection/reduce');
 
 var logger = require('../logger')();
 
 function requireReduceFunction(profilePath){
     return function (obj, fileName) {
-        return _.assign(obj, require(profilePath + fileName));
+        return assign(obj, require(profilePath + fileName));
     };
 }
 
@@ -22,11 +23,11 @@ exports.loadProfileDirectories = function (prevProfiles, profileDirectoryPath) {
     prevProfiles = prevProfiles || {};
 
     // load default profiles
-    var profiles = _.reduce(fs.readdirSync(path.join(__dirname, '../profiles')), requireReduceFunction('../profiles/'), prevProfiles);
+    var profiles = reduce(fs.readdirSync(path.join(__dirname, '../profiles')), requireReduceFunction('../profiles/'), prevProfiles);
 
     if (typeof profileDirectoryPath === 'string') {
         // load additional profiles
-        profiles = _.reduce(fs.readdirSync(path.normalize(profileDirectoryPath)), requireReduceFunction(profileDirectoryPath + '/'), profiles);
+        profiles = reduce(fs.readdirSync(path.normalize(profileDirectoryPath)), requireReduceFunction(profileDirectoryPath + '/'), profiles);
     }
 
     logger.info('loaded profiles: ' + Object.keys(profiles));

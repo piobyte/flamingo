@@ -1,5 +1,5 @@
 var Hapi = require('hapi'),
-    _ = require('lodash-node'),
+    isArray = require('lodash/lang/isArray'),
     RSVP = require('rsvp'),
     pkg = require('../package.json');
 
@@ -17,7 +17,7 @@ module.exports = function (serverConfig) {
         });
 
         // pass server logging to custom logger
-        server.on('log', function (ev, tags) { logger.info(_.isArray(tags) ? tags.join(' ') : tags, ev.data); });
+        server.on('log', function (ev, tags) { logger.info(isArray(tags) ? tags.join(' ') : tags, ev.data); });
 
         // apply routes
         if (serverConfig.ROUTES.INDEX) {
@@ -28,6 +28,9 @@ module.exports = function (serverConfig) {
         }
         if (serverConfig.ROUTES.CUSTOM_CONVERT) {
             server.route(require('./routes/convert'));
+        }
+        if (serverConfig.ROUTES.S3) {
+            server.route(require('./routes/s3'));
         }
 
         server.register([

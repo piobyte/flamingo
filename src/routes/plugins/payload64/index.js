@@ -1,16 +1,15 @@
-var _ = require('lodash-node'),
+var isPlainObject = require('lodash/lang/isPlainObject'),
+    assign = require('lodash/object/assign'),
     conf = require('../../../../config'),
     boom = require('boom');
 
-var defaults = {
-    decode: false
-};
+var logger = require('../../../logger')();
 
 exports.register = function (server, options, next) {
     server.ext('onPreHandler', function (request, reply) {
         var plugins = request.route.settings.plugins;
 
-        if (_.isPlainObject(plugins) && plugins.payload64) {
+        if (isPlainObject(plugins) && plugins.payload64) {
             var shouldDecode = plugins.payload64.decode,
                 encoded = request.params.execution;
 
@@ -32,15 +31,15 @@ exports.register = function (server, options, next) {
                         // param isn't valid json
                         return reply(boom.badRequest('Encoded execution payload is invalid JSON.'));
                     }
-                    if (_.isPlainObject(decodedObj)) {
-                        request.payload = _.assign({}, request.payload || {}, decodedObj);
+                    if (isPlainObject(decodedObj)) {
+                        request.payload = assign({}, request.payload || {}, decodedObj);
                         return reply.continue();
                     } else {
                         // decoded isn't plain object
                         return reply(boom.badRequest('Encoded execution payload isn\'t a plain object.'));
                     }
                 }).catch(function (err) {
-                    console.log('ERR', err);
+                    logger.warn(err);
                     reply(boom.badRequest('Error decrypting payload', err));
                 });
             }

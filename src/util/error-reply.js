@@ -2,7 +2,8 @@ var boom = require('boom');
 
 var codes = {
     ETIMEDOUT: boom.gatewayTimeout,
-    ENETUNREACH: boom.gatewayTimeout
+    ENETUNREACH: boom.gatewayTimeout,
+    NotFound: boom.notFound
 };
 
 module.exports = function (reply, error) {

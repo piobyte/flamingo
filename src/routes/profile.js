@@ -72,6 +72,8 @@ module.exports = {
                                     'output writer: ' + !!writer + ', ' +
                                     'processor: ' + !!processor));
                             }
+                        } else {
+                            reply(boom.badRequest('Input url malformed.'));
                         }
                     });
                 } else {
@@ -79,7 +81,7 @@ module.exports = {
                     reply(boom.badRequest('No input or output protocol found'));
                 }
             }).catch(function (err) {
-                console.log('ERR', err);
+                logger.warn(err);
                 reply(boom.badRequest('Error decrypting payload', err));
             });
         }

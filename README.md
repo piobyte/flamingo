@@ -13,6 +13,7 @@ Internally it uses [gm](https://github.com/aheckmann/gm) and [ffmpeg](https://gi
 - easier environment -> config mapping
 - documentation
 - allow profiles to modify readers/writers
+- pluggable addons to avoid route dependencies if they're not needed (i.e. `aws-sdk`)
 
 ## Architecture
 
@@ -30,6 +31,10 @@ Flamingo uses a REST api. You can disable specific routes using the `config.js` 
 - `GET` `/` - Flamingo index page <sup>ROUTES.INDEX</sup>
 - `GET` `/convert/{profile}/{url}` - convert item from url using a given profile <sup>ROUTES.PROFILE_CONVERT</sup>
 - `GET` `/convert/{execution}` - custom conversation <sup>ROUTES.CUSTOM_CONVERT</sup>
+- `GET` `/s3/{bucket}/{profile}/{key}` - convert item from [S3](https://aws.amazon.com/s3/) <sup>ROUTES.S3</sup>
+    - __Note__: the server expects the key to be encoded using a `-`, example: `s3/foo/barprofile/wasd-directory-file.ext` (key: `directory/file.ext`)
+    - The bucket parameter is an alias for the real bucket id. See `AWS.S3.BUCKETS`. Example:
+    `AWS.S3.BUCKETS.myAlias = 'foo-bar-wasd'` will map `/s3/myAlias/profile/wasd-dir-file.ext` to request the object using the key `dir/file.ext` inside the `foo-bar-wasd` S3 bucket.
 
 ## Config
 
@@ -48,6 +53,12 @@ __environment variables -> config mappings__
 - `CRYPTO_CIPHER` -> `CRYPTO.CIPHER`
 - `PROFILES_DIR` -> `PROFILES_DIR`
 - `READER_REQUEST_TIMEOUT` -> `READER.REQUEST.TIMEOUT`
+
+- `AWS_REGION` -> `AWS.REGION`
+- `AWS_SECRET` -> `AWS.SECRET`
+- `AWS_ACCESS_KEY` -> `AWS.ACCESS_KEY`
+- `AWS_S3_BUCKETS` -> `AWS.S3.BUCKETS`
+    - __Note__: Alias object encoded using `,` and `:`, example: `'bucketAlias1:bucketId1,bucketAlias2:bucketId2'`
 
 ### CRYPTO
 
