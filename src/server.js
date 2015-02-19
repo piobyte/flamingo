@@ -3,7 +3,7 @@ var Hapi = require('hapi'),
     RSVP = require('rsvp'),
     pkg = require('../package.json');
 
-var logger = require('./logger')();
+var logger = require('./logger')('server');
 
 var ratifyOptions = {
     apiVersion: pkg.version
@@ -18,6 +18,9 @@ module.exports = function (serverConfig) {
 
         // pass server logging to custom logger
         server.on('log', function (ev, tags) { logger.info(isArray(tags) ? tags.join(' ') : tags, ev.data); });
+        server.on('request-error', function (request, err) {
+            logger.error(err);
+        });
 
         // apply routes
         if (serverConfig.ROUTES.INDEX) {
@@ -38,9 +41,9 @@ module.exports = function (serverConfig) {
             { register: require('ratify'), options: ratifyOptions }
         ], function (err) {
             if (err) {
-                logger.warn('Failed loading plugins', err);
+                logger.warn('Failed loading hapi plugins', err);
             } else {
-                logger.info('Plugins loaded');
+                logger.info('Hapi plugins loaded');
                 server.start(resolve);
             }
         });

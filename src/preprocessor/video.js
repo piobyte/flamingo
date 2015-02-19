@@ -5,7 +5,7 @@ var RSVP = require('rsvp'),
     ffmpeg = require('fluent-ffmpeg'),
     cfg = require('../../config');
 
-var logger = require('../logger')();
+var logger = require('../logger')('preprocessor:video');
 
 module.exports = function (options) {
     return function (readerResult) {

@@ -3,7 +3,7 @@ var isPlainObject = require('lodash/lang/isPlainObject'),
     conf = require('../../../../config'),
     boom = require('boom');
 
-var logger = require('../../../logger')();
+var logger = require('../../../logger')('payload64');
 
 exports.register = function (server, options, next) {
     server.ext('onPreHandler', function (request, reply) {

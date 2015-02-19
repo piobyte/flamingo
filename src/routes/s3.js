@@ -9,7 +9,7 @@ var url = require('url'),
 
 const KEY_DELIMITER = '-';
 
-var logger = require('../logger')(),
+var logger = require('../logger')('route:s3'),
     writers = { response: require('../writer/response') },
     /*eslint no-sync: 0 */
     // sync allowed because it is run while loading the module

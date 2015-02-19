@@ -4,7 +4,7 @@ var RSVP = require('rsvp'),
     assign = require('lodash/object/assign'),
     reduce = require('lodash/collection/reduce');
 
-var logger = require('../logger')();
+var logger = require('../logger')('profile-loader');
 
 function requireReduceFunction(profilePath){
     return function (obj, fileName) {
@@ -30,7 +30,7 @@ exports.loadProfileDirectories = function (prevProfiles, profileDirectoryPath) {
         profiles = reduce(fs.readdirSync(path.normalize(profileDirectoryPath)), requireReduceFunction(profileDirectoryPath + '/'), profiles);
     }
 
-    logger.info('loaded profiles: ' + Object.keys(profiles));
+    logger.info('loaded profiles:' + Object.keys(profiles));
 
     return profiles;
 };

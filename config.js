@@ -37,6 +37,16 @@ var config = {
     },
 
     /**
+     * https://getsentry.com/welcome/ DSN (sentry logging is disabled if you don't set it)
+     */
+    SENTRY_DSN: undefined,
+
+    /**
+     * Enable to log gc and memory leaks using https://github.com/marcominetti/node-memwatch
+     */
+    MEMWATCH: false,
+
+    /**
      * path to directory where more profiles are located
      */
     PROFILES_DIR: null,
@@ -132,6 +142,9 @@ function parseIntNaN(value, nanDefault) {
 
 // overwrite config with environment variables
 if (process.env.PORT) { config.PORT = parseIntNaN(process.env.PORT, 3000); }
+
+if (process.env.MEMWATCH) { config.MEMWATCH = process.env.MEMWATCH === 'true'; }
+if (process.env.SENTRY_DSN) { config.SENTRY_DSN = process.env.SENTRY_DSN; }
 
 if (process.env.ROUTE_CUSTOM_CONVERT) { config.ROUTES.CUSTOM_CONVERT = process.env.ROUTE_CUSTOM_CONVERT === 'true'; }
 if (process.env.ROUTE_PROFILE_CONVERT) { config.ROUTES.PROFILE_CONVERT = process.env.ROUTE_PROFILE_CONVERT === 'true'; }

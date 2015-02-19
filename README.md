@@ -8,7 +8,6 @@ Internally it uses [gm](https://github.com/aheckmann/gm) and [ffmpeg](https://gi
 
 ## TODO
 
-- `Internal Server Error` first request after starting
 - /convert/{profile} refactor
 - easier environment -> config mapping
 - documentation
@@ -53,6 +52,9 @@ __environment variables -> config mappings__
 - `CRYPTO_CIPHER` -> `CRYPTO.CIPHER`
 - `PROFILES_DIR` -> `PROFILES_DIR`
 - `READER_REQUEST_TIMEOUT` -> `READER.REQUEST.TIMEOUT`
+
+- `SENTRY_DSN` -> `SENTRY_DSN`
+- `MEMWATCH` -> `MEMWATCH`
 
 - `AWS_REGION` -> `AWS.REGION`
 - `AWS_SECRET` -> `AWS.SECRET`

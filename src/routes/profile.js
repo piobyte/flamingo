@@ -7,7 +7,7 @@ var url = require('url'),
     errorReply = require('../util/error-reply'),
     unfoldReaderResult = require('../util/unfold-reader-result');
 
-var logger = require('../logger')();
+var logger = require('../logger')('route:profile');
 
 var writers = {
         file: require('../writer/file'),
@@ -75,6 +75,8 @@ module.exports = {
                         } else {
                             reply(boom.badRequest('Input url malformed.'));
                         }
+                    }).catch(function (err) {
+                        reply(boom.badRequest('Error while processing', err));
                     });
                 } else {
                     // no known profile

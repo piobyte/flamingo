@@ -1,5 +1,5 @@
 module.exports = {
-    $schema: 'http://json-schema.org/draft-04/schema#',
+    //$schema: 'http://json-schema.org/draft-04/schema#',
     title: 'Convert something',
     type: 'object',
     required: ['input', 'processor', 'output'],

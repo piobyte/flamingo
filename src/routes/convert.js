@@ -4,7 +4,7 @@ var convertSchema = require('../schema/convert'),
     boom = require('boom'),
     unfoldReaderResult = require('../util/unfold-reader-result');
 
-var logger = require('../logger')();
+var logger = require('../logger')('route:convert');
 
 var writers = {
         file: require('../writer/file'),
