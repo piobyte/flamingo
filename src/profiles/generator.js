@@ -21,6 +21,7 @@ var clamp = function (value, min, max) {
                 resolve({
                     response: { header: { 'Content-Type': 'image/png' }},
                     process: [
+                        { id: 'autoOrient' },
                         { id: 'format', format: 'png' },
                         { id: 'resize', width: dimension, height: dimension + '^' },
                         { id: 'gravity', type: 'Center' },
@@ -40,6 +41,7 @@ var clamp = function (value, min, max) {
                 resolve({
                     response: { header: { 'Content-Type': 'image/jpg' }},
                     process: [
+                        { id: 'autoOrient' },
                         { id: 'background', color: 'white' },
                         { id: 'format', format: 'jpg' },
                         { id: 'resize', width: dimension, height: dimension + '^' },

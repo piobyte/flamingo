@@ -7,6 +7,10 @@ const BITS = {
 };
 
 var processes = {
+    autoOrient: function (graphics) {
+        graphics = graphics.autoOrient();
+        return graphics;
+    },
     format: function (graphics, opts) {
         graphics = graphics.setFormat(opts.format);
         return graphics;
