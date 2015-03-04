@@ -1,6 +1,10 @@
 var Hapi = require('hapi'),
     isArray = require('lodash/lang/isArray'),
+    profileLoader = require('./util/profile-loader'),
+    forEach = require('lodash/collection/forEach'),
+    assign = require('lodash/object/assign'),
     RSVP = require('rsvp'),
+    addon = require('./addon'),
     pkg = require('../package.json');
 
 var logger = require('./logger')('server');
@@ -9,9 +13,12 @@ var ratifyOptions = {
     apiVersion: pkg.version
 };
 
-module.exports = function (serverConfig) {
+module.exports = function (serverConfig, addonLoader) {
     return new RSVP.Promise(function (resolve) {
-        var server = new Hapi.Server({ debug: false });
+        var server = new Hapi.Server({ debug: false }),
+            serverPlugins = [
+                { register: require('ratify'), options: ratifyOptions }
+            ];
         server.connection({
             port: serverConfig.PORT
         });
@@ -29,17 +36,17 @@ module.exports = function (serverConfig) {
         if (serverConfig.ROUTES.PROFILE_CONVERT) {
             server.route(require('./routes/profile'));
         }
-        if (serverConfig.ROUTES.CUSTOM_CONVERT) {
-            server.route(require('./routes/convert'));
-        }
-        if (serverConfig.ROUTES.S3) {
-            server.route(require('./routes/s3'));
-        }
 
-        server.register([
-            { register: require('./routes/plugins/payload64/index') },
-            { register: require('ratify'), options: ratifyOptions }
-        ], function (err) {
+        var profiles = profileLoader.loadAll(serverConfig.PROFILES_DIR);
+        addonLoader.hook(addon.HOOKS.PROFILES, { conf: serverConfig }, function(addonProfiles) {
+            assign(profiles, addonProfiles); });
+        addonLoader.hook(addon.HOOKS.ROUTES, { conf: serverConfig, profiles: profiles },
+            server.route.bind(server));
+        addonLoader.hook(addon.HOOKS.HAPI_PLUGINS, { conf: serverConfig }, function(addonPlugins){
+            serverPlugins = serverPlugins.concat(addonPlugins);
+        });
+
+        server.register(serverPlugins, function (err) {
             if (err) {
                 logger.warn('Failed loading hapi plugins', err);
             } else {

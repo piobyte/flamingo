@@ -11,7 +11,7 @@
     },
 
     "rules": {
-        "eol-last": 2,
+        "eol-last": 0,
         "no-alert": 2,
         "no-array-constructor": 2,
         "no-bitwise": 2,
