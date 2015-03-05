@@ -2,6 +2,11 @@ var crypto = require('crypto'),
     RSVP = require('rsvp');
 
 var config = {
+    /**
+     * Enable native auto orient (requires graphicsmagick >= 1.3.18)
+     */
+    NATIVE_AUTO_ORIENT: true,
+
     AWS: {
         REGION: 'eu-west-1',
         ACCESS_KEY: '0!]FHTu)sSO&ph8jNJWT',
@@ -143,6 +148,7 @@ function parseIntNaN(value, nanDefault) {
 // overwrite config with environment variables
 if (process.env.PORT) { config.PORT = parseIntNaN(process.env.PORT, 3000); }
 
+if (process.env.NATIVE_AUTO_ORIENT) { config.NATIVE_AUTO_ORIENT = process.env.NATIVE_AUTO_ORIENT === 'true'; }
 if (process.env.MEMWATCH) { config.MEMWATCH = process.env.MEMWATCH === 'true'; }
 if (process.env.SENTRY_DSN) { config.SENTRY_DSN = process.env.SENTRY_DSN; }
 

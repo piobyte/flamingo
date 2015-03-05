@@ -1,4 +1,5 @@
 var RSVP = require('rsvp'),
+    conf = require('../../config'),
     gm = require('gm');
 
 const BITS = {
@@ -64,7 +65,8 @@ var processes = {
 module.exports = function (processQueue) {
     return function (inputStream) {
         return new RSVP.Promise(function (resolve) {
-            var graphics = gm(inputStream);
+            var graphics = gm(inputStream)
+                .options({nativeAutoOrient: conf.NATIVE_AUTO_ORIENT});
 
             processQueue.forEach(function (processItem) {
                 var processFn = processes[processItem.id];

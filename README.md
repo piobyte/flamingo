@@ -6,6 +6,8 @@
 Flamingo is a simple, [hapi](http://hapijs.com/) based, HTTP server that allows you to convert media files to images.
 Internally it uses [gm](https://github.com/aheckmann/gm) and [ffmpeg](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg) to convert image and video files.
 
+__Requires graphicsmagick >= 1.3.18 if `NATIVE_AUTO_ORIENT` is true.__
+
 ## TODO
 
 - /convert/{profile} refactor
@@ -44,6 +46,7 @@ __Note:__ if you're using the docker config, don't change the port to something 
 __environment variables -> config mappings__
 
 - `PORT` -> `PORT`
+- `NATIVE_AUTO_ORIENT` -> `NATIVE_AUTO_ORIENT`
 - `ROUTE_CUSTOM_CONVERT` -> `ROUTES.CUSTOM_CONVERT`
 - `ROUTE_PROFILE_CONVERT` -> `ROUTES.PROFILE_CONVERT`
 - `ROUTE_INDEX` -> `ROUTES.ROUTE_INDEX`
