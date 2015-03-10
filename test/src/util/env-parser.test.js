@@ -1,5 +1,24 @@
 var assert = require('assert');
 
+// @via https://github.com/substack/node-buffer-equal#
+var compareFunction = function (bufA, bufB) {
+    /*eslint curly:0,no-else-return:0 */
+    if (!bufA.compare) {
+        if (!Buffer.isBuffer(bufA)) return undefined;
+        if (!Buffer.isBuffer(bufB)) return undefined;
+        if (typeof bufA.equals === 'function') return bufA.equals(bufB);
+        if (bufA.length !== bufB.length) return false;
+
+        for (var i = 0; i < bufA.length; i++) {
+            if (bufA[i] !== bufB[i]) return false;
+        }
+
+        return true;
+    } else {
+        return bufA.compare(bufB) === 0;
+    }
+};
+
 describe('env-parser', function () {
     var envParser = require('../../../src/util/env-parser');
 
@@ -18,14 +37,14 @@ describe('env-parser', function () {
     });
 
     it('checks that the buffer parser works', function () {
-        assert.equal(new Buffer('wasd').compare(envParser.buffer('wasd')), 0);
+        assert.ok(compareFunction(new Buffer('wasd'), envParser.buffer('wasd')));
     });
 
     it('checks that the buffer base64 parser works', function () {
-        assert.equal(new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64').compare(envParser.buffer64('DjiZ7AWTeNh38zoQiZ76gw==')), 0);
+        assert.ok(compareFunction(new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64'), envParser.buffer64('DjiZ7AWTeNh38zoQiZ76gw==')));
     });
 
-    it('checks that the buffer objectList parser works', function () {
+    it('checks that the objectList parser works', function () {
         assert.deepEqual(envParser.objectList('id')('id:foo,bar:baz,lorem:ipsum'), {
             foo: {
                 bar: 'baz',
