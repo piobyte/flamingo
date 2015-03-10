@@ -1,34 +1,16 @@
 var crypto = require('crypto'),
+    envParser = require('./src/util/env-parser'),
+    envConfig = require('./src/util/env-config'),
     RSVP = require('rsvp');
 
 var config = {
-    /**
-     * Enable native auto orient (requires graphicsmagick >= 1.3.18)
-     */
-    NATIVE_AUTO_ORIENT: true,
-
-    AWS: {
-        REGION: 'eu-west-1',
-        ACCESS_KEY: '0!]FHTu)sSO&ph8jNJWT',
-        SECRET: 'XEIHegQ@XbfWAlHI6MOVWKK7S[V#ajqZdx6N!Us%',
-        S3: {
-            VERSION: '2006-03-01',
-            BUCKETS: {
-                alias: 'bucket-id'
-            }
-        }
-    },
     /**
      * enable/disable specific routes
      */
     ROUTES: {
         INDEX: true,
-        // /convert/{execution}
-        CUSTOM_CONVERT: true,
         // /convert/{profile}/{url}
-        PROFILE_CONVERT: true,
-        // /s3/{bucket}/{profile}/{key}
-        S3: true
+        PROFILE_CONVERT: true
     },
 
     /**
@@ -139,41 +121,24 @@ var config = {
     }
 };
 
-function parseIntNaN(value, nanDefault) {
-    var parsed = parseInt(value, 10);
-    if (isNaN(parsed)) { parsed = nanDefault; }
-    return parsed;
-}
+// load base config from env
+config = envConfig(config, process.env, [
+    ['PORT', 'PORT', envParser.int(3000)],
+    ['MEMWATCH', 'MEMWATCH', envParser.boolean],
+    ['NATIVE_AUTO_ORIENT', 'NATIVE_AUTO_ORIENT', envParser.boolean],
+    ['SENTRY_DSN', 'SENTRY_DSN'],
+    ['ROUTE_CUSTOM_CONVERT', 'ROUTES.CUSTOM_CONVERT', envParser.boolean],
+    ['ROUTE_PROFILE_CONVERT', 'ROUTES.PROFILE_CONVERT', envParser.boolean],
+    ['ROUTE_INDEX', 'ROUTES.ROUTE_INDEX', envParser.boolean],
+    ['ROUTE_S3', 'ROUTES.ROUTE_S3', envParser.boolean],
 
-// overwrite config with environment variables
-if (process.env.PORT) { config.PORT = parseIntNaN(process.env.PORT, 3000); }
+    ['CRYPTO_IV', 'CRYPTO.IV', envParser.buffer],
+    ['CRYPTO_KEY', 'CRYPTO.KEY', envParser.buffer64],
+    ['CRYPTO_CIPHER', 'CRYPTO.CIPHER', envParser.buffer],
 
-if (process.env.NATIVE_AUTO_ORIENT) { config.NATIVE_AUTO_ORIENT = process.env.NATIVE_AUTO_ORIENT === 'true'; }
-if (process.env.MEMWATCH) { config.MEMWATCH = process.env.MEMWATCH === 'true'; }
-if (process.env.SENTRY_DSN) { config.SENTRY_DSN = process.env.SENTRY_DSN; }
+    ['PROFILES_DIR', 'PROFILES_DIR'],
 
-if (process.env.ROUTE_CUSTOM_CONVERT) { config.ROUTES.CUSTOM_CONVERT = process.env.ROUTE_CUSTOM_CONVERT === 'true'; }
-if (process.env.ROUTE_PROFILE_CONVERT) { config.ROUTES.PROFILE_CONVERT = process.env.ROUTE_PROFILE_CONVERT === 'true'; }
-if (process.env.ROUTE_INDEX) { config.ROUTES.INDEX = process.env.ROUTE_INDEX === 'true'; }
-if (process.env.ROUTE_S3) { config.ROUTES.S3 = process.env.ROUTE_S3 === 'true'; }
-
-if (process.env.CRYPTO_IV) { config.CRYPTO.IV = new Buffer(process.env.CRYPTO_IV); }
-if (process.env.CRYPTO_KEY) { config.CRYPTO.KEY = new Buffer(process.env.CRYPTO_KEY, 'base64'); }
-if (process.env.CRYPTO_CIPHER) { config.CRYPTO.CIPHER = process.env.CRYPTO_CIPHER; }
-
-if (process.env.PROFILES_DIR) { config.PROFILES_DIR = process.env.PROFILES_DIR; }
-
-if (process.env.READER_REQUEST_TIMEOUT) { config.READER.REQUEST.TIMEOUT = parseIntNaN(process.env.READER_REQUEST_TIMEOUT, 10 * 1000); }
-
-if (process.env.AWS_REGION) { config.AWS.REGION = process.env.AWS_REGION; }
-if (process.env.AWS_SECRET) { config.AWS.SECRET = process.env.AWS_SECRET; }
-if (process.env.AWS_ACCESS_KEY) { config.AWS.ACCESS_KEY = process.env.AWS_ACCESS_KEY; }
-if (process.env.AWS_S3_BUCKETS) {
-    config.AWS.S3.BUCKETS = process.env.AWS_S3_BUCKETS.split(',').reduce(function(all, val){
-        var v = val.split(':');
-        all[v[0]] = v[1];
-        return all;
-    }, {});
-}
+    ['READER_REQUEST_TIMEOUT', 'READER.REQUEST.TIMEOUT', envParser.int(10 * 1000)]
+]);
 
 module.exports = config;

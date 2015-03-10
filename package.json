@@ -1,6 +1,6 @@
 {
   "name": "flamingo",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,6 @@
     "url": "https://github.com/piobyte/flamingo"
   },
   "dependencies": {
-    "aws-sdk": "^2.1.9",
     "boom": "^2.6.1",
     "bunyan": "^1.0.1",
     "fluent-ffmpeg": "^2.0.0-rc2",

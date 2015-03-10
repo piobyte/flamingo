@@ -11,19 +11,16 @@ __Requires graphicsmagick >= 1.3.18 if `NATIVE_AUTO_ORIENT` is true.__
 ## TODO
 
 - /convert/{profile} refactor
-- easier environment -> config mapping
 - documentation
 - allow profiles to modify readers/writers
-- pluggable addons to avoid route dependencies if they're not needed (i.e. `aws-sdk`)
+- addon hook: logger
 
 ## Architecture
 
 The whole application includes different readers, preprocessors, processors and writers.
-Depending on the given `input` and `output`, a chain of promises is created and executed.
 The data is mostly transferred through Node.js [streams](http://nodejs.org/api/stream.html).
 
 Reader modules don't resolve streams directly, because a given preprocessor could optimize reading of the input.
-For example if a local video file is used as input the __video preprocessor__ passes the path directly to `ffmpeg` without opening and streaming the content first.
 
 ## API
 
@@ -32,10 +29,6 @@ Flamingo uses a REST api. You can disable specific routes using the `config.js` 
 - `GET` `/` - Flamingo index page <sup>ROUTES.INDEX</sup>
 - `GET` `/convert/{profile}/{url}` - convert item from url using a given profile <sup>ROUTES.PROFILE_CONVERT</sup>
 - `GET` `/convert/{execution}` - custom conversation <sup>ROUTES.CUSTOM_CONVERT</sup>
-- `GET` `/s3/{bucket}/{profile}/{key}` - convert item from [S3](https://aws.amazon.com/s3/) <sup>ROUTES.S3</sup>
-    - __Note__: the server expects the key to be encoded using a `-`, example: `s3/foo/barprofile/wasd-directory-file.ext` (key: `directory/file.ext`)
-    - The bucket parameter is an alias for the real bucket id. See `AWS.S3.BUCKETS`. Example:
-    `AWS.S3.BUCKETS.myAlias = 'foo-bar-wasd'` will map `/s3/myAlias/profile/wasd-dir-file.ext` to request the object using the key `dir/file.ext` inside the `foo-bar-wasd` S3 bucket.
 
 ## Config
 
@@ -58,12 +51,6 @@ __environment variables -> config mappings__
 
 - `SENTRY_DSN` -> `SENTRY_DSN`
 - `MEMWATCH` -> `MEMWATCH`
-
-- `AWS_REGION` -> `AWS.REGION`
-- `AWS_SECRET` -> `AWS.SECRET`
-- `AWS_ACCESS_KEY` -> `AWS.ACCESS_KEY`
-- `AWS_S3_BUCKETS` -> `AWS.S3.BUCKETS`
-    - __Note__: Alias object encoded using `,` and `:`, example: `'bucketAlias1:bucketId1,bucketAlias2:bucketId2'`
 
 ### CRYPTO
 
@@ -130,82 +117,51 @@ module.exports = {
 };
 ```
 
-## Flow (convert)
+## Addons
 
-0. requests arrives on the convert route
-1. `input` and `output` fields are parsed and their protocol is used to check if a reader, writer and processor for it exists.
-2. `reader` promise is created and the promise chain starts
-3. if a `preprocessor` exists, add the preprocessor to the promise chain
-4. add a `processor`, `writer` and error handler to the promise chain
+###Installation
 
-### Readers (convert)
+Use npm to install flamingo addons. Example: `npm install flamingo-s3`.
+Modify the addon config by overwriting fields inside your `config.js`. The config loading order is as follows:
 
-Readers create [readable streams](http://nodejs.org/api/stream.html#stream_class_stream_readable) of an input.
+1. load addon config
+2. merge addon config with flamingo config (flamingo `config.js` fields will overwrite addon fields)
+3. overwrite config fields with environment variables
 
-- `file` - readable stream from a local file
-- `data` - readable stream from [data-uri](https://en.wikipedia.org/wiki/Data_URI_scheme#Format)
-- `https` - readable stream from a remote resource
+###Discovery
 
-__Example:__
+Flamingo will detect package dependencies (and development dependencies [`devDependencies`]) that contain the `"flamingo-addon"` keyword.
+Using the specified entry point it'll load the addon.
 
-- data input: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==`
-- local file input: `file:///tmp/my/input.png`
-- remote input: `https://domain.tld/image.png`
+###Development - Hooks
 
-### PreProcessors (convert)
+Flamingo addons only interact with the base flamingo installation using specified hooks, ie.: `"ENV", "CONF", "PROFILES", "ROUTES", "HAPI_PLUGINS"`.
+Each hook inside an addon must return a function that returns an expected value. To make it easier to change hook names,
+use the exported `HOOKS` from the `src/addon.js` module (ie. `addon.HOOK.CONF`).
 
-Preprocessors can process an input before it's passed to the processor.
+__ENV__ hook:
 
-- `video` - takes a screenshot from a video file using `ffmpeg`
+The `"ENV"` hook allows you to extend environment variable parsing.
+It must export a function that returns an array of configurations compatible with the `src/util/env-config.js` module.
+See the `env-config` module documentation for more information.
 
-### Processors (convert)
+__CONF__ hook:
 
-Processors processes an image input stream and uses `gm` to convert (crop, scale, rotate, flip) it.
-The processors uses an array to queue multiple operations.
+The `"CONF"` hook allows you to set default parameter for your addon.
+It will merge the config object with the flamingo config (`config.js`).
+It must export a function that returns an object.
 
-### Writers (convert)
+__PROFILES__ hook:
 
-A writer takes the processor output stream and writes it somewhere.
+The `"PROFILES"` hook allows you to register additional profiles that are available inside the profile conversion route (`src/routes/profile.js`).
+It must export a function that returns an object.
 
-- `file` - write the stream to a local file
-- `response` - write the stream in the http response
+__ROUTES__ hook:
 
-## Examples (convert)
+The `"ROUTES"` hook allows you to register additional [hapi routes](http://hapijs.com/tutorials/routing#routes).
+It must export a function that returns an array of route registration objects
 
-- Rotate an base64 encoded image and store the result in a file
+__HAPI_PLUGINS__ hook:
 
-```
-{
-  "input": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
-  "output": "file:///tmp/flamingo/image.png",
-  "processor": {
-    "type": "image",
-    "queue": [{
-      "id": "rotate",
-      "degrees": 40
-    }]
-  }
-}
-```
-
-- Rotate an base64 encoded image, crop and return the result
-
-```
-{
-  "input": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==",
-  "output": "response://",
-  "processor": {
-    "type": "image",
-    "queue": [{
-      "id": "rotate",
-      "degrees": 40
-    },{
-      "id": "crop",
-      "x": 10,
-      "y": 10,
-      "width": 100,
-      "height": 100
-    }]
-  }
-}
-```
+The `"HAPI_PLUGINS"` hook allows you to register additional [hapi plugins](http://hapijs.com/tutorials/plugins#loading-a-plugin).
+It must export a function that returns an array of plugin registrations.

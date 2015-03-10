@@ -1,10 +1,12 @@
-var pkg = require('../../package.json');
+var pkg = require('../../package.json'),
+    addons = require('../addon-loader');
+
 module.exports = {
     method: 'GET',
     path: '/',
     handler: function (req, reply) {
         reply([
-        '<!doctype html><html lang=""><head><title>' + pkg.name + '</title></head><body>',
+        '<!doctype html><html lang=""><head><title>' + pkg.name + '@' + pkg.version + '</title></head><body>',
         '<pre>',
         ' .-.',
         '(-`))' ,
@@ -19,7 +21,7 @@ module.exports = {
         '      |' ,
         '    =="-',
         '',
-        pkg.name + ' v' + pkg.version,
+        pkg.name + '@' + pkg.version,
         '<a href="' + pkg.repository.url + '">' + pkg.repository.url + '</a>',
         '</pre>' +
         '</body></html>'].join('\n')

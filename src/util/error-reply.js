@@ -3,17 +3,21 @@ var boom = require('boom');
 var codes = {
     ETIMEDOUT: boom.gatewayTimeout,
     ENETUNREACH: boom.gatewayTimeout,
-    NotFound: boom.notFound
+    NotFound: boom.notFound,
+    Forbidden: boom.forbidden
 };
 
 module.exports = function (reply, error) {
-    if (error.code && codes.hasOwnProperty(error.code)) {
-        reply(codes[error.code](error.message));
+    var code = error.code || error.statusCode,
+        message = error.message || error.name;
+
+    if (code && codes.hasOwnProperty(code)) {
+        reply(codes[code](message));
     } else {
         reply({
-            statusCode: error.statusCode || 500,
-            error: error.error || 'Internal Server Error',
-            message: error.message
-        }).code(error.statusCode || 500);
+            statusCode: 500,
+            error: 'Internal Server Error',
+            message: 'Internal Server Error'
+        }).code(500);
     }
 };

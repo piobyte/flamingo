@@ -69,7 +69,7 @@ target.test = function () {
     target.lint();
 
     echo('Generating coverage');
-    lastReturn = nodeCLI.exec(ISTANBUL, 'cover', MOCHA, '-- -R tap -c', TEST_FILES);
+    lastReturn = nodeCLI.exec(ISTANBUL, 'cover', MOCHA, '-- -b -R tap -c', TEST_FILES);
     if (lastReturn.code !== 0) { errors++; }
 
     echo('Checking coverage');
