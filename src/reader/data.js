@@ -2,11 +2,11 @@ var RSVP = require('rsvp'),
     stream = require('stream'),
     readerType = require('./reader-type');
 
-var Readable = stream.Readable;
+var Readable = stream.Readable,
+    B64_DELIMITER = 'base64,';
 
 module.exports = function (url) {
     return new RSVP.Promise(function (resolve, reject) {
-        const B64_DELIMITER = 'base64,';
 
         var type = url.host,
             encoded = url.href.substring(url.href.indexOf(B64_DELIMITER) + B64_DELIMITER.length, url.href.length);

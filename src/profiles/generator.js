@@ -1,52 +1,55 @@
-var clamp = function (value, min, max) {
-        return Math.max(min, Math.min(max, value));
-    },
-    parseFieldNaN = function (object, field, nanDefault) {
-        var result = nanDefault;
-        if(object.hasOwnProperty(field)) {
-            var objValue = parseInt(object[field], 10);
-            if (!isNaN(objValue)) {
-                 result = objValue;
-            }
-        }
-        return result;
-    },
-    avatarGenerator = function (dimension) {
-        return function (RSVP, query) {
+var RSVP = require('rsvp'),
+    sharp = require('sharp'),
+    isArray = require('lodash/lang/isArray'),
+    envParser = require('../util/env-parser'),
+    bestFormat = require('../util/best-format'),
+    clamp = require('clamp'),
+    config = require('../../config'),
+    isPlainObject = require('lodash/lang/isPlainObject');
+
+var avatarGenerator = function (dimension) {
+        return function (request) {
             return new RSVP.Promise(function (resolve) {
                 // override dimension with query.width
-                dimension = parseFieldNaN(query, 'width', dimension);
-                dimension = clamp(dimension, 10, 1024);
+                var dim = clamp(envParser.objectInt('width', dimension)(request.query), 10, 1024),
+                    format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
                 resolve({
-                    response: { header: { 'Content-Type': 'image/png' }},
+                    response: { header: { 'Content-Type': format.mime }},
                     process: [
-                        { id: 'autoOrient' },
-                        { id: 'format', format: 'png' },
-                        { id: 'resize', width: dimension, height: dimension + '^' },
-                        { id: 'gravity', type: 'Center' },
-                        { id: 'extent', width: dimension, height: dimension }
+                        { processor: 'sharp', pipe: function (instance) {
+                            return instance
+                                .rotate()
+                                .toFormat(format.type)
+                                .resize(dim, dim)
+                                .min()
+                                .crop(sharp.gravity.center);
+                        }}
                     ]
                 });
             });
         };
     },
     previewGenerator = function (dimension) {
-        return function (RSVP, query) {
+        return function (request) {
             return new RSVP.Promise(function (resolve) {
                 // override dimension with query.width
-                dimension = parseFieldNaN(query, 'width', dimension);
-                dimension = clamp(dimension, 10, 1024);
+                var dim = clamp(envParser.objectInt('width', dimension)(request.query), 10, 1024),
+                    format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
                 resolve({
-                    response: { header: { 'Content-Type': 'image/jpg' }},
+                    response: { header: { 'Content-Type': format.mime }},
                     process: [
-                        { id: 'autoOrient' },
-                        { id: 'background', color: 'white' },
-                        { id: 'format', format: 'jpg' },
-                        { id: 'resize', width: dimension, height: dimension + '^' },
-                        { id: 'gravity', type: 'Center' },
-                        { id: 'extent', width: dimension, height: dimension }
+                        { processor: 'sharp', pipe: function (instance) {
+                            return instance
+                                .rotate()
+                                .background('white')
+                                .flatten()
+                                .toFormat(format.type)
+                                .resize(dim, dim)
+                                .min()
+                                .crop(sharp.gravity.center);
+                        }}
                     ]
                 });
             });
@@ -63,9 +66,10 @@ var profiles = {
 };
 
 /**
- * Recursive generation of profiles
+ * Recursive generation of profiles.
  * Useful for generating a profile name by hierarchical combining object property names:
  * android: [preview: [['mdpi', 64, fn]]] -> {android-preview-mdpi: fn}
+ * @ignore
  * @param {String} prefix path  prefix
  * @param {Object} object Objects to traverse
  * @param {Object} all resulting object
@@ -73,11 +77,11 @@ var profiles = {
  */
 function buildProfiles(prefix, object, all) {
     Object.keys(object).forEach(function (key) {
-        if (/* isArray(object[key] */object[key].constructor === Array) {
+        if (isArray(object[key])) {
             object[key].forEach(function (item) {
                 all[(prefix.length ? prefix + '-' : '') + key + '-' + item[0]] = item[2](item[1]);
             });
-        } else if (/* isPlainObject(object[key] */Object.prototype.toString.call(object[key]) === '[object Object]') {
+        } else if (isPlainObject(object[key])) {
             all = buildProfiles(prefix + key, object[key], all);
         }
     });

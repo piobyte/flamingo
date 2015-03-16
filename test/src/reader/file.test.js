@@ -12,7 +12,7 @@ var fixture = require('../../test-util/fixture'),
 
 var compareFileFixtures = function (fixturePath) {
     return new RSVP.Promise(function (resolve, reject) {
-        const TEST_WHITELIST = ['/tmp', path.resolve(__dirname, '../../')];
+        var TEST_WHITELIST = ['/tmp', path.resolve(__dirname, '../../')];
         fileReader(url.parse('file://' + fixture.fullFixturePath(fixturePath)), TEST_WHITELIST).then(function (readResult) {
             temp.track();
 
@@ -24,9 +24,9 @@ var compareFileFixtures = function (fixturePath) {
                     if (err) {
                         reject(err);
                     } else {
-                        temp.cleanup(function (err) {
-                            if (err) {
-                                reject(err);
+                        temp.cleanup(function (tmpErr) {
+                            if (tmpErr) {
+                                reject(tmpErr);
                             } else {
                                 resolve(isEqual);
                             }
@@ -73,7 +73,7 @@ describe('file reader', function () {
         });
     });
     it('tests if the reader rejects if file doesn\'t exist', function (done) {
-        var fileUrl  = url.parse('file://' + fixture.fullFixturePath('NON-EXISTANT-FILE'));
+        var fileUrl = url.parse('file://' + fixture.fullFixturePath('NON-EXISTANT-FILE'));
         fileReader(fileUrl, [path.resolve(__dirname, '../../')]).then(function () {
             assert.fail('shouldn\'t reached this code');
         }).catch(function () {

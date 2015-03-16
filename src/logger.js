@@ -1,3 +1,8 @@
+/**
+ * Logger module
+ * @module flamingo/src/logger
+ */
+
 var pkg = require('../package.json'),
     conf = require('../config'),
     bunyan = require('bunyan');
@@ -5,8 +10,17 @@ var pkg = require('../package.json'),
 var loggers = {},
     streams = [],
     ravenClient,
-    genLogger = function (name) {
+    /**
+     * Create a bunyan logger using a given name.
+     * @see https://github.com/trentm/node-bunyan
+     * @param {String} [name=package.name] logger name
+     * @returns {Object} bunyan logger
+     */
+    genLogger = function (name/*: ?string */) {
+        /* istanbul ignore next */
         name = name || pkg.name;
+
+        /* istanbul ignore else */
         if (!loggers[name]) {
             loggers[name] = bunyan.createLogger({
                 name: name,
@@ -16,6 +30,7 @@ var loggers = {},
         return loggers[name];
     };
 
+/* istanbul ignore if */
 if (conf.SENTRY_DSN) {
     var raven = require('raven');
     var levels = {};
@@ -29,7 +44,7 @@ if (conf.SENTRY_DSN) {
     streams = [{
         level: bunyan.INFO,
         stream: process.stdout
-    },{
+    }, {
         level: bunyan.WARN,
         stream: { write: function (msg) {
             var obj = {};

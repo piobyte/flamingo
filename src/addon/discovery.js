@@ -2,22 +2,16 @@ var fs = require('fs'),
     assign = require('lodash/object/assign'),
     path = require('path');
 
-var logger = require('./logger')('addon-discovery');
+var logger = require('./../logger')('addon-discovery');
 
-const ADDON_KEYWORD = 'flamingo-addon';
+var ADDON_KEYWORD = 'flamingo-addon';
 
-function resolvePkg(addon) {
-    var main = addon.pkg.main,
+function resolvePkg(addon/*: {path: string}*/) {
+    var main = addon.pkg.main || 'index.js',
         mainPath,
         loadedAddon;
 
-    if (!main) {
-        logger.info('defaulting to "index.js" as main for addon:', addon.pkg.name);
-        main = 'index.js';
-    }
-
     mainPath = path.join(addon.path, main);
-
 
     /*eslint no-sync: 0*/
     if (fs.existsSync(mainPath)) {
@@ -29,7 +23,7 @@ function resolvePkg(addon) {
     return loadedAddon;
 }
 
-function fromPackage(packagePath) {
+function fromPackage(packagePath/*: string */) {
     var pkg = path.join(packagePath, 'package.json');
     if (fs.existsSync(pkg)) {
         var content = require(pkg);
@@ -53,7 +47,9 @@ function discover(rootDir, pkg) {
         return fromPackage(path.join(rootDir, 'node_modules/', dependency, '/'));
     }).filter(Boolean).map(function (addon) {
         return resolvePkg(addon);
-    });
+    }).filter(Boolean);
 }
 
+exports.fromPackage = fromPackage;
+exports.resolvePkg = resolvePkg;
 exports.discover = discover;

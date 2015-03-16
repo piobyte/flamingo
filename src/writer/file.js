@@ -1,12 +1,11 @@
 var fs = require('fs'),
     fileAccessAllowed = require('../util/file-access-allowed'),
     conf = require('../../config'),
-    url = require('url'),
     mkdirp = require('mkdirp'),
     path = require('path'),
     RSVP = require('rsvp');
 
-module.exports = function (outputUrl, reply) {
+module.exports = function (outputUrl/*: {path: string}*/, reply/*: function*/) {
     return function (stream) {
         var outputPath = path.normalize(outputUrl.path),
             outputDir = path.dirname(outputPath);

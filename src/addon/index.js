@@ -1,4 +1,14 @@
-var HOOKS = {
+/**
+ * Addon module
+ * @module flamingo/src/addon
+ */
+
+/**
+ * Hooks to register addon functionality.
+ * @namespace
+ * @type {}
+ */
+exports.HOOKS = {
     /**
      * Hook that allows you to extend environment variable parsing.
      * It must export a function that returns an array of configurations compatible with the `src/util/env-config.js` module.
@@ -30,7 +40,6 @@ var HOOKS = {
     /**
      * Hook that allows you to register additional profiles that are available inside the profile conversion route (`src/routes/profile.js`).
      * It must export a function that returns an object.
-     * @example
      */
     PROFILES: 'PROFILES',
     /**
@@ -39,11 +48,11 @@ var HOOKS = {
      *
      * @see http://hapijs.com/tutorials/routing#routes
      * @example
-     *   exports[addon.HOOKS.ROUTES] = [{
-     *       method: 'GET',
-     *       path: '/my/route',
-     *       handler: function (req, reply) { // handle request }
-     *   }]
+     * exports[addon.HOOKS.ROUTES] = [{
+     *     method: 'GET',
+     *     path: '/my/route',
+     *     handler: function (req, reply) { // handle request }
+     * }]
      */
     ROUTES: 'ROUTES',
     /**
@@ -54,6 +63,3 @@ var HOOKS = {
      */
     HAPI_PLUGINS: 'HAPI_PLUGINS'
 };
-
-
-exports.HOOKS = HOOKS;

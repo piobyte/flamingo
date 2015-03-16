@@ -1,7 +1,6 @@
 var RSVP = require('rsvp'),
     fs = require('fs'),
     temp = require('temp'),
-    stream = require('stream'),
     ffmpeg = require('fluent-ffmpeg'),
     cfg = require('../../config');
 

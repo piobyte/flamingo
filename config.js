@@ -5,6 +5,16 @@ var crypto = require('crypto'),
 
 var config = {
     /**
+     * Enable some debug features, like host:port/debug for testing existing routes, configurations
+     */
+    DEBUG: false,
+
+    /**
+     * Default mimetype for default profile image conversion
+     */
+    DEFAULT_MIME: 'image/png',
+
+    /**
      * Enable native auto orient (requires graphicsmagick >= 1.3.18)
      */
     NATIVE_AUTO_ORIENT: true,
@@ -32,16 +42,6 @@ var config = {
      * https://getsentry.com/welcome/ DSN (sentry logging is disabled if you don't set it)
      */
     SENTRY_DSN: undefined,
-
-    /**
-     * Enable to log gc and memory leaks using https://github.com/marcominetti/node-memwatch
-     */
-    MEMWATCH: false,
-
-    /**
-     * path to directory where more profiles are located
-     */
-    PROFILES_DIR: null,
 
     /**
      * server port
@@ -87,7 +87,7 @@ var config = {
      * @param {String} plaintext string to encode
      * @return {String} base64 encoded ciphertext
      */
-    ENCODE_PAYLOAD: function (plaintext) {
+    ENCODE_PAYLOAD: /* istanbul ignore next */ function (plaintext) {
         return new RSVP.Promise(function(resolve, reject){
             //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
             //    if (err) { reject(err); return; }
@@ -98,13 +98,12 @@ var config = {
 
                     read = cipher.read();
                     if (read !== null) {
-                        resolve(read.toString('utf8'));
+                        resolve(read.toString('base64'));
                     } else {
                         reject('Cant\'t encode given plaintext');
                     }
 
                 } catch(err) {
-                    console.error(err);
                     reject(err);
                 }
             //});
@@ -115,7 +114,7 @@ var config = {
      * @param {String} plaintext base64 encoded cipher text
      * @return {String} decoded String
      */
-    DECODE_PAYLOAD: function (plaintext) {
+    DECODE_PAYLOAD: /* istanbul ignore next */ function (plaintext) {
         return new RSVP.Promise(function (resolve, reject) {
             //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
             //    if (err) { reject(err); return; }
@@ -132,7 +131,6 @@ var config = {
                         reject('Cant\'t decode given plaintext');
                     }
                 } catch(err) {
-                    console.error(err);
                     reject(err);
                 }
             //})
@@ -142,13 +140,15 @@ var config = {
 
 // load base config from env
 config = envConfig(config, process.env, [
+    ['DEBUG', 'DEBUG', envParser.boolean],
+    ['DEFAULT_MIME', 'DEFAULT_MIME'],
+
     ['PORT', 'PORT', envParser.int(3000)],
-    ['MEMWATCH', 'MEMWATCH', envParser.boolean],
+    ['DEBUG', 'DEBUG', envParser.boolean],
     ['NATIVE_AUTO_ORIENT', 'NATIVE_AUTO_ORIENT', envParser.boolean],
     ['SENTRY_DSN', 'SENTRY_DSN'],
     ['ROUTE_PROFILE_CONVERT', 'ROUTES.PROFILE_CONVERT', envParser.boolean],
-    ['ROUTE_INDEX', 'ROUTES.ROUTE_INDEX', envParser.boolean],
-    ['ROUTE_S3', 'ROUTES.ROUTE_S3', envParser.boolean],
+    ['ROUTE_INDEX', 'ROUTES.INDEX', envParser.boolean],
 
     ['CRYPTO_IV', 'CRYPTO.IV', envParser.buffer],
     ['CRYPTO_KEY', 'CRYPTO.KEY', envParser.buffer64],

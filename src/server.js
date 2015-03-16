@@ -1,9 +1,9 @@
 var Hapi = require('hapi'),
     isArray = require('lodash/lang/isArray'),
-    profileLoader = require('./util/profile-loader'),
-    forEach = require('lodash/collection/forEach'),
-    assign = require('lodash/object/assign'),
+    merge = require('lodash/object/merge'),
     RSVP = require('rsvp'),
+    fs = require('fs'),
+    path = require('path'),
     addon = require('./addon'),
     pkg = require('../package.json');
 
@@ -13,12 +13,12 @@ var ratifyOptions = {
     apiVersion: pkg.version
 };
 
-module.exports = function (serverConfig, addonLoader) {
+module.exports = function (serverConfig, addons) {
     return new RSVP.Promise(function (resolve) {
         var server = new Hapi.Server({ debug: false }),
-            serverPlugins = [
-                { register: require('ratify'), options: ratifyOptions }
-            ];
+            serverPlugins = [{ register: require('ratify'), options: ratifyOptions }],
+            flamingo = { conf: serverConfig, profiles: {}, addons: addons};
+
         server.connection({
             port: serverConfig.PORT
         });
@@ -29,22 +29,28 @@ module.exports = function (serverConfig, addonLoader) {
             logger.error(err);
         });
 
+        var profilesPath = path.join(__dirname, 'profiles');
+        /*eslint no-sync: 0*/
+        fs.readdirSync(profilesPath).forEach(function (file) {
+            merge(flamingo.profiles, require(path.join(profilesPath, file)));
+        });
+
+        addons.hook(addon.HOOKS.PROFILES)(flamingo.profiles);
+        addons.hook(addon.HOOKS.ROUTES, flamingo)(server);
+        addons.hook(addon.HOOKS.HAPI_PLUGINS, flamingo)(serverPlugins);
+
+        logger.info('available profiles', Object.keys(flamingo.profiles));
+
         // apply routes
         if (serverConfig.ROUTES.INDEX) {
-            server.route(require('./routes/index'));
+            server.route(require('./routes/index')(flamingo));
         }
         if (serverConfig.ROUTES.PROFILE_CONVERT) {
-            server.route(require('./routes/profile'));
+            server.route(require('./routes/profile')(flamingo));
         }
-
-        var profiles = profileLoader.loadAll(serverConfig.PROFILES_DIR);
-        addonLoader.hook(addon.HOOKS.PROFILES, { conf: serverConfig }, function(addonProfiles) {
-            assign(profiles, addonProfiles); });
-        addonLoader.hook(addon.HOOKS.ROUTES, { conf: serverConfig, profiles: profiles },
-            server.route.bind(server));
-        addonLoader.hook(addon.HOOKS.HAPI_PLUGINS, { conf: serverConfig }, function(addonPlugins){
-            serverPlugins = serverPlugins.concat(addonPlugins);
-        });
+        if (serverConfig.DEBUG) {
+            server.route(require('./routes/debug')(flamingo));
+        }
 
         server.register(serverPlugins, function (err) {
             if (err) {

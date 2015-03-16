@@ -1,0 +1,209 @@
+<html lang="">
+<head>
+    <title>Debug - <%= pkg.name %>@<%= pkg.version %></title>
+    <style>
+
+        body {
+            background: #ecf0f1;
+            font-family: sans-serif;
+            -webkit-font-smoothing: antialiased;
+            color: #333;
+            margin: 60px 0 0;
+        }
+
+        h1 {
+            width: 100%;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: fixed;
+            top: 0;
+            margin: 0;
+            padding: 10px;
+            background: #34495e;
+            color: #ecf0f1;
+            font-size: 16px;
+        }
+        h1 span{
+            background: #2c3e50;
+            text-transform: none;
+            padding: 5px;
+            border-radius: 2px;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0;
+        }
+
+        thead th{
+            margin: 0;
+            padding: 0;
+        }
+        thead th a {
+            display: block;
+            text-transform: uppercase;
+            font-weight: bold;
+            padding: 5px 10px;
+            color: #ecf0f1;
+            text-decoration: none;
+        }
+
+        thead th:nth-child(n+2) {
+            text-align: left;
+        }
+
+        tbody td {
+            text-align: center;
+            white-space: nowrap;
+            padding: 5px 0;
+        }
+
+        tbody td:nth-child(n+2) {
+            text-align: left;
+            padding-left: 10px;
+        }
+
+        figure {
+            vertical-align: bottom;
+            margin: 0;
+            padding: 5px;
+            display: inline-block;
+        }
+        figure img{
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAAAAAA6mKC9AAAAGElEQVQYV2N4DwX/oYBhgARgDJjEAAkAAEC99wFuu0VFAAAAAElFTkSuQmCC);
+        }
+
+        figcaption {
+            text-align: center;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            color: #ecf0f1;
+            font-weight: bold;
+            padding: 5px;
+        }
+
+        thead th:nth-child(6n+2) a { color: #16a085; border-bottom: 3px solid #16a085; }
+        thead th:nth-child(6n+3) a { color: #27ae60; border-bottom: 3px solid #27ae60;}
+        thead th:nth-child(6n+4) a { color: #2980b9; border-bottom: 3px solid #2980b9;}
+        thead th:nth-child(6n+5) a { color: #8e44ad; border-bottom: 3px solid #8e44ad;}
+        thead th:nth-child(6n+6) a { color: #d35400; border-bottom: 3px solid #d35400;}
+        thead th:nth-child(6n+7) a { color: #c0392b; border-bottom: 3px solid #c0392b;}
+
+        tbody td:nth-child(6n+2) figcaption { background-color: #1abc9c; }
+        tbody td:nth-child(6n+3) figcaption { background-color: #2ecc71; }
+        tbody td:nth-child(6n+4) figcaption { background-color: #3498db; }
+        tbody td:nth-child(6n+5) figcaption { background-color: #9b59b6; }
+        tbody td:nth-child(6n+6) figcaption { background-color: #e67e22; }
+        tbody td:nth-child(6n+7) figcaption { background-color: #e74c3c; }
+
+        tbody td:nth-child(6n+2) figure { background-color: #16a085; }
+        tbody td:nth-child(6n+3) figure { background-color: #27ae60; }
+        tbody td:nth-child(6n+4) figure { background-color: #2980b9; }
+        tbody td:nth-child(6n+5) figure { background-color: #8e44ad; }
+        tbody td:nth-child(6n+6) figure { background-color: #d35400; }
+        tbody td:nth-child(6n+7) figure { background-color: #c0392b; }
+
+        tbody td:first-child{
+            text-transform: uppercase;
+            font-weight: bold;
+            background: transparent;
+        }
+    </style>
+    <script type="text/javascript">
+        var HAS_PERFORMANCE = performance && performance.getEntries,
+            allSize = 0;
+
+        // @via http://stackoverflow.com/a/18333201
+        function bytes(string) {
+            var escaped_string = encodeURI(string);
+            if (escaped_string.indexOf("%") != -1) {
+                var count = escaped_string.split("%").length - 1;
+                count = count == 0 ? 1 : count;
+                count = count + (escaped_string.length - (count * 3));
+            }
+            else {
+                count = escaped_string.length;
+            }
+            return count;
+        }
+        function size(image) {
+            var canvas = document.createElement("canvas"),
+                ctx = canvas.getContext("2d");
+
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image, 0, 0);
+            return bytes(canvas.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, ""));
+        }
+        function displayTiming(el) {
+            if (HAS_PERFORMANCE) {
+                var url = el.src,
+                    entries = performance.getEntriesByType('resource'),
+                    span = el.nextElementSibling,
+                    entry,
+                    fileSize = size(el);
+
+                allSize += fileSize;
+
+                entry = entries.filter(function (entry) {
+                    return entry.name.indexOf(url) !== -1;
+                });
+                if (entry.length) {
+                    span.innerHTML = entry[0].duration.toFixed(3) + 'ms ' + (fileSize / 1024).toFixed(2) + 'kB';
+                }
+            } else {
+                console.warn('no performance api, can\'t display timings');
+            }
+        }
+        function displayAllTiming(){
+            if (HAS_PERFORMANCE) {
+                setTimeout(function () {
+                    var span = document.querySelector('h1 span'),
+                        entries = performance.getEntriesByType('resource'),
+                        timing = performance.timing,
+                        pageLoadTime = timing.loadEventEnd - timing.navigationStart;
+
+                    span.innerHTML = 'resources: ' + entries.length +
+                    ' | time: ' + pageLoadTime + 'ms' + ' &asymp; ' + (Math.round(pageLoadTime / 1000)).toFixed(0) + 's' +
+                    ' | size: ' + (allSize / 1024).toFixed(2) + 'kB';
+                }, 10);
+            } else {
+                console.warn('no performance api, can\'t display timings');
+            }
+        }
+    </script>
+</head>
+<body onload="displayAllTiming()">
+    <h1>Debug - <%= pkg.name %>@<%= pkg.version %> <span>&#128337;</span></h1>
+    <table>
+        <thead>
+            <tr>
+                <th><a>Processor</a></th>
+                <% _.forEach(profileNames, function(name){ %>
+                    <th><a href="?profiles=<%= name %>"><%= name %></a></th>
+                <% }) %>
+            </tr>
+        </thead>
+        <tbody>
+        <% _.forEach(processors, function(processor){ %>
+            <tr>
+                <td><%= processor %></td>
+                <% _.forEach(profileNames, function(name){ %>
+                    <td>
+                        <% _.forEach(urls, function(url){ %>
+                            <% _.forEach(sizes, function(size){ %>
+                            <figure>
+                                <img onload="displayTiming(this)"
+                                         src="<%= base %>convert/<%= name %>/<%= url %>?processor=<%= processor %>&width=<%= size %>"
+                                         alt=""/>
+                                <figcaption>&#128337;</figcaption>
+                            </figure>
+                            <% }) %>
+                        <% }) %>
+                    </td>
+                <% }) %>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</body>

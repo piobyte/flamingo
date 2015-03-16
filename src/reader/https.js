@@ -5,24 +5,30 @@ var request = require('request'),
     RSVP = require('rsvp');
 
 module.exports = function (fileUrl) {
-    return new RSVP.Promise(function (resolve) {
-        resolve({
-            stream: function () {
-                return new RSVP.Promise(function (resolve, reject) {
-                    var buf = [],
-                        stream = request({
-                            url: fileUrl.href,
-                            timeout: conf.READER.REQUEST.TIMEOUT,
-                            headers: {
-                                'User-Agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'
-                            }
-                        });
-                    stream.on('data', function (data) { buf.push(data); });
-                    stream.on('error', function (err) { reject(err); });
-                    stream.on('end', function () { resolve(Buffer.concat(buf)); });
+    return RSVP.Promise.resolve({
+        stream: function () {
+            return new RSVP.Promise(function (resolve, reject) {
+                var stream = request({
+                        url: fileUrl.href,
+                        timeout: conf.READER.REQUEST.TIMEOUT,
+                        headers: { 'User-Agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')' }
+                    });
+
+                // workaround via http://stackoverflow.com/a/26163128
+                stream.pause();
+                stream.on('error', function (err) {
+                    reject(err);
                 });
-            },
-            type: readerType.REMOTE
-        });
+                stream.on('response', function (response) {
+                    if (response.statusCode < 400) {
+                        resolve(stream);
+                        stream.resume();
+                    } else {
+                        reject(response);
+                    }
+                });
+            });
+        },
+        type: readerType.REMOTE
     });
 };

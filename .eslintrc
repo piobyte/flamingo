@@ -7,11 +7,16 @@
 
     "globals": {
         "describe": true,
-        "it": true
+        "it": true,
+        "beforeEach": true,
+        "before": true,
+        "after": true,
+        "afterEach": true
     },
 
     "rules": {
         "eol-last": 0,
+        "comma-spacing": 0,
         "no-alert": 2,
         "no-array-constructor": 2,
         "no-bitwise": 2,

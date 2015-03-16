@@ -15,6 +15,7 @@ __Requires graphicsmagick >= 1.3.18 if `NATIVE_AUTO_ORIENT` is true.__
 - documentation
 - allow profiles to modify readers/writers
 - addon hook: logger
+- profile local
 
 ## Architecture
 
@@ -29,7 +30,6 @@ Flamingo uses a REST api. You can disable specific routes using the `config.js` 
 
 - `GET` `/` - Flamingo index page <sup>ROUTES.INDEX</sup>
 - `GET` `/convert/{profile}/{url}` - convert item from url using a given profile <sup>ROUTES.PROFILE_CONVERT</sup>
-- `GET` `/convert/{execution}` - custom conversation <sup>ROUTES.CUSTOM_CONVERT</sup>
 
 ## Config
 
@@ -41,13 +41,11 @@ __environment variables -> config mappings__
 
 - `PORT` -> `PORT`
 - `NATIVE_AUTO_ORIENT` -> `NATIVE_AUTO_ORIENT`
-- `ROUTE_CUSTOM_CONVERT` -> `ROUTES.CUSTOM_CONVERT`
 - `ROUTE_PROFILE_CONVERT` -> `ROUTES.PROFILE_CONVERT`
 - `ROUTE_INDEX` -> `ROUTES.ROUTE_INDEX`
 - `CRYPTO_IV` -> `CRYPTO.IV`
 - `CRYPTO_KEY` -> `CRYPTO.KEY`
 - `CRYPTO_CIPHER` -> `CRYPTO.CIPHER`
-- `PROFILES_DIR` -> `PROFILES_DIR`
 - `READER_REQUEST_TIMEOUT` -> `READER.REQUEST.TIMEOUT`
 
 - `SENTRY_DSN` -> `SENTRY_DSN`

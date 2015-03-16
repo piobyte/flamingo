@@ -1,9 +1,8 @@
-var fs = require('fs'),
-    forEach = require('lodash/collection/forEach'),
-    path = require('path'),
+/* @flow weak */
+var forEach = require('lodash/collection/forEach'),
     RSVP = require('rsvp');
 
-module.exports = function (filePath, allowedPaths) {
+module.exports = function (filePath/*: string*/, allowedPaths/*: Array<string>*/) {
     return new RSVP.Promise(function (resolve, reject) {
         var validLocation = false;
         forEach(allowedPaths, function (validFile) {

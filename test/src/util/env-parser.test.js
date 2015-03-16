@@ -36,6 +36,11 @@ describe('env-parser', function () {
         assert.equal(envParser.int(42)(), 42);
     });
 
+    it('checks that the objectInt parser works', function () {
+        assert.equal(envParser.objectInt('width', 200)({height: 100}), 200);
+        assert.equal(envParser.objectInt('width', 200)({width: 100}), 100);
+    });
+
     it('checks that the buffer parser works', function () {
         assert.ok(compareFunction(new Buffer('wasd'), envParser.buffer('wasd')));
     });
