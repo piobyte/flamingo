@@ -87,14 +87,21 @@ var config = {
             //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
             //    if (err) { reject(err); return; }
                 try {
-                    var cipher = crypto.createCipheriv(config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV);
+                    var read,
+                        cipher = crypto.createCipheriv(config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV);
                     cipher.end(plaintext, 'utf8');
+
+                    read = cipher.read();
+                    if (read !== null) {
+                        resolve(read.toString('utf8'));
+                    } else {
+                        reject('Cant\'t encode given plaintext');
+                    }
+
                 } catch(err) {
                     console.error(err);
                     reject(err);
-                    return;
                 }
-                resolve(cipher.read().toString('base64'));
             //});
         });
     },
@@ -108,14 +115,21 @@ var config = {
             //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
             //    if (err) { reject(err); return; }
                 try {
-                    var decipher = crypto.createDecipheriv(config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV);
+                    var read,
+                        decipher = crypto.createDecipheriv(config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV);
+
                     decipher.end(plaintext, 'base64');
+                    read = decipher.read();
+
+                    if (read !== null) {
+                        resolve(read.toString('utf8'));
+                    } else {
+                        reject('Cant\'t decode given plaintext');
+                    }
                 } catch(err) {
                     console.error(err);
                     reject(err);
-                    return;
                 }
-                resolve(decipher.read().toString('utf8'));
             //})
         });
     }

@@ -1,4 +1,4 @@
-var pkgName = require('../package.json').name,
+var pkg = require('../package.json'),
     conf = require('../config'),
     bunyan = require('bunyan');
 
@@ -6,7 +6,7 @@ var loggers = {},
     streams = [],
     ravenClient,
     genLogger = function (name) {
-        name = name || pkgName;
+        name = name || pkg.name;
         if (!loggers[name]) {
             loggers[name] = bunyan.createLogger({
                 name: name,
@@ -39,6 +39,7 @@ if (conf.SENTRY_DSN) {
                 obj.msg = 'error parsing log message';
                 obj.level = bunyan.FATAL;
             }
+            obj.flamingo = { version: pkg.version };
             ravenClient.captureMessage(obj.msg, {
                 level: levels[obj.level],
                 extra: obj
