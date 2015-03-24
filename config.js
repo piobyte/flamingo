@@ -5,6 +5,11 @@ var crypto = require('crypto'),
 
 var config = {
     /**
+     * Enable native auto orient (requires graphicsmagick >= 1.3.18)
+     */
+    NATIVE_AUTO_ORIENT: true,
+
+    /**
      * enable/disable specific routes
      */
     ROUTES: {
