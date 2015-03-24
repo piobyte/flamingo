@@ -141,7 +141,6 @@ config = envConfig(config, process.env, [
     ['MEMWATCH', 'MEMWATCH', envParser.boolean],
     ['NATIVE_AUTO_ORIENT', 'NATIVE_AUTO_ORIENT', envParser.boolean],
     ['SENTRY_DSN', 'SENTRY_DSN'],
-    ['ROUTE_CUSTOM_CONVERT', 'ROUTES.CUSTOM_CONVERT', envParser.boolean],
     ['ROUTE_PROFILE_CONVERT', 'ROUTES.PROFILE_CONVERT', envParser.boolean],
     ['ROUTE_INDEX', 'ROUTES.ROUTE_INDEX', envParser.boolean],
     ['ROUTE_S3', 'ROUTES.ROUTE_S3', envParser.boolean],
