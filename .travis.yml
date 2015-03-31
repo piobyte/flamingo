@@ -1,7 +1,11 @@
 language: node_js
 node_js:
   - "0.10"
-install:
+  - "0.12"
+  - iojs
+before_install:
+  - curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo bash -
   - sudo apt-get update -y
   - sudo apt-get install -y graphicsmagick imagemagick libvips-dev ffmpeg
+install:
   - npm install
