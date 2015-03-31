@@ -1,35 +1,52 @@
+/**
+ * Flamingo config module
+ * @module flamingo/config
+ */
+
 var crypto = require('crypto'),
     envParser = require('./src/util/env-parser'),
     envConfig = require('./src/util/env-config'),
     RSVP = require('rsvp');
 
-var config = {
+/**
+ * @namespace CONFIG
+ * @type {Object}
+ */
+var CONFIG = {
     /**
      * Enable some debug features, like host:port/debug for testing existing routes, configurations
+     * @type {boolean}
      */
     DEBUG: false,
 
     /**
      * Default mimetype for default profile image conversion
+     * @see https://en.wikipedia.org/wiki/Internet_media_type#Type_image
+     * @type {String}
      */
     DEFAULT_MIME: 'image/png',
 
     /**
      * Enable native auto orient (requires graphicsmagick >= 1.3.18)
+     * @type {boolean}
      */
     NATIVE_AUTO_ORIENT: true,
 
     /**
      * enable/disable specific routes
+     * @type {object}
+     * @param {boolean} INDEX if enabled, register [index route]{@link module:flamingo/routes/index}
+     * @param {boolean} PROFILE_CONVERT if enabled, register [profile route]{@link module:flamingo/routes/profile}
      */
     ROUTES: {
         INDEX: true,
-        // /convert/{profile}/{url}
         PROFILE_CONVERT: true
     },
 
     /**
      * reader options
+     * @type {object}
+     * @param {number} REQUEST.TIMEOUT default request timeout
      */
     READER: {
         REQUEST: {
@@ -39,38 +56,49 @@ var config = {
     },
 
     /**
-     * https://getsentry.com/welcome/ DSN (sentry logging is disabled if you don't set it)
+     * DSN (sentry logging is disabled if you don't set it)
+     * @see  {@link https://getsentry.com/welcome/}
+     * @type {string|undefined}
      */
     SENTRY_DSN: undefined,
 
     /**
      * server port
+     * @type {number}
      */
     PORT: 3000,
 
+    /**
+     * preprocessor options
+     * @type {object}
+     * @param {number} VIDEO.KILL_TIMEOUT kill ffmpeg after given amount of milliseconds. Use `-1` to disable
+     */
     PREPROCESSOR: {
         VIDEO: {
-            /**
-             * kill ffmpeg after given amount of milliseconds. Use `-1` to disable.
-             */
             KILL_TIMEOUT: 2 * 60 * 1000
         }
     },
+    /**
+     * access whitelists
+     * @type {object}
+     * @param {string[]} READ list of whitelisted read locations
+     * @param {string[]} WRITE list of whitelisted write locations
+     */
     ACCESS: {
-        /**
-         * Array of local files and folders where the server has read access.
-         */
         READ: [
             '/vagrant', '/tmp/flamingo'
         ],
-        /**
-         * Array of local files and folgers where the server has write access.
-         */
         WRITE: [
             '/vagrant', '/tmp/flamingo'
         ]
     },
-    // !!! CHANGE THIS IF YOU WANT TO USE IT !!!
+    /**
+     * crypto settings (IF YOU WANT TO USE CRYPTO, CHANGE THE DEFAULT VALUES)
+     * @type {object}
+     * @param {buffer} KEY key buffer
+     * @param {buffer} IV iv buffer
+     * @param {string} CIPHER crypto cipher
+     */
     CRYPTO: {
         KEY: new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64'),
         IV: new Buffer('_ag3WU77'),
@@ -93,7 +121,7 @@ var config = {
             //    if (err) { reject(err); return; }
                 try {
                     var read,
-                        cipher = crypto.createCipheriv(config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV);
+                        cipher = crypto.createCipheriv(CONFIG.CRYPTO.CIPHER, CONFIG.CRYPTO.KEY, CONFIG.CRYPTO.IV);
                     cipher.end(plaintext, 'utf8');
 
                     read = cipher.read();
@@ -112,7 +140,7 @@ var config = {
     /**
      * Function to decode a given base64 encoded string
      * @param {String} plaintext base64 encoded cipher text
-     * @return {String} decoded String
+     * @return {Promise} promise that resolves with plaintext
      */
     DECODE_PAYLOAD: /* istanbul ignore next */ function (plaintext) {
         return new RSVP.Promise(function (resolve, reject) {
@@ -120,7 +148,7 @@ var config = {
             //    if (err) { reject(err); return; }
                 try {
                     var read,
-                        decipher = crypto.createDecipheriv(config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV);
+                        decipher = crypto.createDecipheriv(CONFIG.CRYPTO.CIPHER, CONFIG.CRYPTO.KEY, CONFIG.CRYPTO.IV);
 
                     decipher.end(plaintext, 'base64');
                     read = decipher.read();
@@ -139,7 +167,7 @@ var config = {
 };
 
 // load base config from env
-config = envConfig(config, process.env, [
+CONFIG = envConfig(CONFIG, process.env, [
     ['DEBUG', 'DEBUG', envParser.boolean],
     ['DEFAULT_MIME', 'DEFAULT_MIME'],
 
@@ -159,4 +187,4 @@ config = envConfig(config, process.env, [
     ['READER_REQUEST_TIMEOUT', 'READER.REQUEST.TIMEOUT', envParser.int(10 * 1000)]
 ]);
 
-module.exports = config;
+module.exports = CONFIG;

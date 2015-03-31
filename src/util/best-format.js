@@ -1,3 +1,8 @@
+/**
+ * Accept header media type parsing module
+ * @module flamingo/src/util/best-format
+ */
+
 var mimeparse = require('mimeparse');
 
 function parseRanges(ranges) {
@@ -10,6 +15,21 @@ function parseRanges(ranges) {
 
 var DEFAULT_SUPPORTED = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'image/tiff'];
 
+/**
+ * Function to get a media type from a given accept handler using a default media type as fallback.
+ * @param {string} acceptHeader accept request-header
+ * @param {string} defaultMime fallback media type
+ * @returns {{mime: String, type: String}} best fitting media type object
+ * @example
+ * bestFormat('image/webp,*\/*;q=0.8', 'image/png')
+ * // {mime: 'image/webp', type: 'webp'}
+ *
+ * bestFormat('*\/*;q=0.8', 'image/png')
+ * // {mime: 'image/png', type: 'png'}
+ *
+ * bestFormat('image/jpeg,image/png,image/svg+xml,image/*;q=0.8,*\/*;q=0.5', 'image/png')
+ * // {mime: 'image/jpeg', type: 'jpeg'}
+ */
 module.exports = function (acceptHeader, defaultMime) {
     if (acceptHeader) {
         var parsedHeader = parseRanges(acceptHeader),

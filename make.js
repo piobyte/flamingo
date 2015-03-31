@@ -46,7 +46,7 @@ target.test = function () {
 
 target.docs = function () {
     if (some([
-        exec(JSDOC + ' ' + JS_FILES + ' -d docs').code
+        exec(JSDOC + ' ' + JS_FILES + ' --template node_modules/jsdoc-baseline --package package.json -R README.md -d docs').code
     ])) {
         exit(1);
     }

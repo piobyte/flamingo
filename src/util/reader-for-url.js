@@ -3,17 +3,18 @@
  */
 
 var reader = {
-        file: require('../reader/file'),
-        data: require('../reader/data'),
-        http: require('../reader/https'),
-        https: require('../reader/https')
-    };
+    file: require('../reader/file'),
+    data: require('../reader/data'),
+    http: require('../reader/https'),
+    https: require('../reader/https')
+};
 
 /**
  * Tries to find a reader for a given parsed url.
- * @param {Object} parsedUrl object containing a protocol (result of `url.parse(myUrl)`)
- * @param {String|null} parsedUrl.protocol url protocol
+ * @param {Object} parsedUrl object containing a protocol (i.e. result of `url.parse(myUrl)`)
  * @returns {Object|undefined} writer if found, `undefined` otherwise
+ * @example
+ * readerForUrl('data:text/plain;base64,ZGF0YQ==') // data reader
  */
 module.exports = function (parsedUrl/*: {protocol:string} */) {
     var foundReader;

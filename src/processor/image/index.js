@@ -10,19 +10,17 @@ var processors = {
 
 /**
  * Function that takes an array with processing operations and returns a function that can be called with an stream.
- * The function will return a promise and resolve a stream.
- * This stream is converted by gm using the given processing operations.
+ * This stream is converted using the given transformations array.
  *
- * @see https://github.com/aheckman#n/gm
- * @param {Array} processQueue gm processing operations
- * @returns {Function} see description
+ * @param {Array} transformations of processor transformations
+ * @returns {Function} function to convert a stream
  * @example
- * image([{ id: 'format', format: 'jpg'}])(fs.createReadStream('sample.png')
- *      .then((resultStream) => {...})
+ * image([{ processor: 'sharp', pipe: (sharp) => sharp.toFormat('jpeg') }])(fs.createReadStream('sample.png')
+ * // converted image stream
  */
-module.exports = function (processQueue) {
+module.exports = function (transformations) {
     return function (stream) {
-        processQueue.forEach(function (item) {
+        transformations.forEach(function (item) {
             stream = processors[item.processor](item.pipe, stream);
         });
 
