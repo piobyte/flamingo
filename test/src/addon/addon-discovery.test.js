@@ -35,7 +35,7 @@ describe('addon-loader', function () {
     });
 
     it('should do nothing if invalid package path', function () {
-        discovery.fromPackage('../../fixtures');
+        discovery.fromPackage(path.join(__dirname, '../../fixtures'));
     });
 
     it('should load the addon package.json', function () {
