@@ -5,7 +5,10 @@ FROM dockerfile/nodejs:latest
 RUN add-apt-repository ppa:mc3man/trusty-media
 
 # Install graphicsmagick, ffmpeg
-RUN apt-get update && apt-get install -y graphicsmagick imagemagick libvips-dev ffmpeg
+RUN apt-get update && apt-get install -y graphicsmagick imagemagick ffmpeg
+
+# Install vips
+RUN bash preinstall.sh
 
 # Install some global utility tools
 RUN npm install -g pm2
