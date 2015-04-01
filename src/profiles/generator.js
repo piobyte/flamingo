@@ -22,6 +22,7 @@ var avatarGenerator = function (dimension) {
                                 .rotate()
                                 .toFormat(format.type)
                                 .resize(dim, dim)
+                                .background('white').flatten()
                                 .min()
                                 .crop(sharp.gravity.center);
                         }}
@@ -43,8 +44,7 @@ var avatarGenerator = function (dimension) {
                         { processor: 'sharp', pipe: function (instance) {
                             return instance
                                 .rotate()
-                                .background('white')
-                                .flatten()
+                                .background('white').flatten()
                                 .toFormat(format.type)
                                 .resize(dim, dim)
                                 .min()

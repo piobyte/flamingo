@@ -19,19 +19,21 @@ var profiles = {
                             pipe = pipe.options({imageMagick: true});
                         }
                         return pipe
-                            .rotate('transparent', 270)
+                            .rotate('white', 270)
+                            .background('white')
                             .resize(dim, dim + '^')
                             .gravity('Center')
-                            .extent(dim, dim)
+                            .extent(dim, dim, 'white')
                             .setFormat(format.type);
                     }
                 });
             } else {
                 process.push({
                     processor: 'sharp', pipe: function (pipe) {
-                        return pipe
-                            .rotate(270)
+                        return pipe.rotate(270)
                             .resize(dim, dim)
+                            .background('white')
+                            .flatten()
                             .toFormat(format.type);
                     }
                 });
@@ -52,14 +54,15 @@ var profiles = {
                         if (format.type === 'webp') {
                             pipe = pipe.options({imageMagick: true});
                         }
-                        return pipe.background('transparent').resize(dim, dim + '^').gravity('Center').extent(dim, dim).setFormat(format.type);
+                        return pipe.resize(dim, dim + '^').gravity('Center').extent(dim, dim).setFormat(format.type);
                     }
                 });
             } else {
                 process.push({
                     processor: 'sharp', pipe: function (pipe) {
                         return pipe.resize(dim, dim)
-                            .toFormat(format.type);
+                            .background('white')
+                            .flatten().toFormat(format.type);
                     }
                 });
             }
@@ -82,14 +85,15 @@ var profiles = {
                         if (format.type === 'webp') {
                             pipe = pipe.options({imageMagick: true});
                         }
-                        return pipe.flip().background('transparent').resize(dim, dim + '^').gravity('Center').extent(dim, dim).setFormat(format.type);
+                        return pipe.flip().resize(dim, dim + '^').gravity('Center').extent(dim, dim).setFormat(format.type);
                     }
                 });
             } else {
                 process.push({
                     processor: 'sharp', pipe: function (pipe) {
-                        return pipe.flip().resize(dim, dim)
-                            .toFormat(format.type);
+                        return pipe.flip()
+                            .background('white').flatten()
+                            .resize(dim, dim).toFormat(format.type);
                     }
                 });
             }
@@ -153,6 +157,7 @@ var profiles = {
                         }
                         return pipe
                             .autoOrient()
+                            .background('white')
                             .setFormat(format.type)
                             .resize(dim, dim + '^')
                             .gravity('Center')
@@ -164,6 +169,7 @@ var profiles = {
                     processor: 'sharp', pipe: function (pipe) {
                         return pipe
                             .rotate()
+                            .background('white').flatten()
                             .toFormat(format.type)
                             .resize(dim, dim)
                             .min()
