@@ -3,19 +3,25 @@
 [![Dependency Status](https://david-dm.org/piobyte/flamingo.svg)](https://david-dm.org/piobyte/flamingo)
 [![Code Climate](https://codeclimate.com/github/piobyte/flamingo.png)](https://codeclimate.com/github/piobyte/flamingo)
 [![npm version](https://badge.fury.io/js/flamingo.svg)](https://www.npmjs.com/package/flamingo)
+![MIT licensed](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
 Flamingo is a simple, [hapi](http://hapijs.com/) based, HTTP server that allows you to convert media files to images.
-Internally it uses [gm](https://github.com/aheckmann/gm) and [ffmpeg](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg) to convert image and video files.
+Internally it uses [sharp](https://github.com/lovell/sharp), [gm](https://github.com/aheckmann/gm) and [ffmpeg](https://github.com/fluent-ffmpeg/node-fluent-ffmpeg) to convert image and video files.
 
 __Requires graphicsmagick >= 1.3.18 if `NATIVE_AUTO_ORIENT` is true.__
+
+## Requirements
+
+- [vips](http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS)
+- [graphicsmagick](http://www.graphicsmagick.org/) (if `NATIVE_AUTO_ORIENT` is true, version >= 1.3.18)
+- [imagemagick](http://www.imagemagick.org/) if webp is used
 
 ## TODO
 
 - /convert/{profile} refactor
-- documentation
+- [documentation](https://piobyte.github.io/flamingo/)
 - allow profiles to modify readers/writers
 - addon hook: logger
-- profile local
 
 ## Architecture
 
