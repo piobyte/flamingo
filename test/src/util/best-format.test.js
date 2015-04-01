@@ -2,11 +2,11 @@ var assert = require('assert');
 
 describe('best-format', function () {
     var bestFormat = require('../../../src/util/best-format');
-
-    it('should return webp if accept requests it', function () {
-        // default webkit accept header
-        assert.strictEqual(bestFormat('image/webp,*/*;q=0.8', 'image/png').mime, 'image/webp');
-    });
+    //
+    //it('should return webp if accept requests it', function () {
+    //    // default webkit accept header
+    //    assert.strictEqual(bestFormat('image/webp,*/*;q=0.8', 'image/png').mime, 'image/webp');
+    //});
 
     it('should return first matching mime if accept requests it', function () {
         assert.strictEqual(bestFormat('image/jpeg,image/png,image/svg+xml,image/*;q=0.8,*/*;q=0.5', 'image/png').mime, 'image/jpeg');

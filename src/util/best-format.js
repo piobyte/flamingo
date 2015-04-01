@@ -13,7 +13,7 @@ function parseRanges(ranges) {
     return parsedRanges;
 }
 
-var DEFAULT_SUPPORTED = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'image/tiff'];
+var DEFAULT_SUPPORTED = ['image/png', 'image/jpeg', /*'image/webp', */'image/gif', 'image/svg+xml', 'image/tiff'];
 
 /**
  * Function to get a media type from a given accept handler using a default media type as fallback.
