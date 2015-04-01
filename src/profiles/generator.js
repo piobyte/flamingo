@@ -17,14 +17,16 @@ var avatarGenerator = function (dimension) {
                 resolve({
                     response: { header: { 'Content-Type': format.mime }},
                     process: [
-                        { processor: 'sharp', pipe: function (instance) {
-                            return instance
-                                .rotate()
-                                .toFormat(format.type)
-                                .resize(dim, dim)
-                                .background('white').flatten()
-                                .min()
-                                .crop(sharp.gravity.center);
+                        { processor: 'gm', pipe: function (pipe) {
+                            if (format.type === 'webp') {
+                                pipe = pipe.options({imageMagick: true});
+                            }
+                            return pipe
+                                .autoOrient()
+                                .setFormat(format.type)
+                                .resize(dim, dim + '^')
+                                .gravity('Center')
+                                .extent(dim, dim);
                         }}
                     ]
                 });

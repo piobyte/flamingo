@@ -6,7 +6,8 @@
 var mimeparse = require('mimeparse');
 
 function parseRanges(ranges) {
-    var parsedRanges = [], rangeParts = ranges.split(',');
+    var parsedRanges = [],
+        rangeParts = ranges.split(',');
     for (var i = 0; i < rangeParts.length; i++) {
         parsedRanges.push(mimeparse.parseMediaRange(rangeParts[i]));
     }
@@ -33,7 +34,9 @@ var DEFAULT_SUPPORTED = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', '
 module.exports = function (acceptHeader, defaultMime) {
     if (acceptHeader) {
         var parsedHeader = parseRanges(acceptHeader),
-            joinedParsedHeader = parsedHeader.map(function (h) { return h[0] + '/' + h[1]; }),
+            joinedParsedHeader = parsedHeader.map(function (h) {
+                return h[0] + '/' + h[1];
+            }),
             bestMatch,
             highestFitness = 0,
             highestSupported;
@@ -58,7 +61,7 @@ module.exports = function (acceptHeader, defaultMime) {
             /* istanbul ignore next */
             if (aIndex === -1 && bIndex > 0) {
                 return 1;
-            } else if(bIndex === -1 && aIndex > 0) {
+            } else if (bIndex === -1 && aIndex > 0) {
                 return -1;
             } else {
                 return aIndex < bIndex ? -1 : 1;
@@ -68,7 +71,7 @@ module.exports = function (acceptHeader, defaultMime) {
         if (highestSupported.length === 1) {
             bestMatch = highestSupported[0];
             /* istanbul ignore else */
-        } else if(highestSupported.length > 1){
+        } else if (highestSupported.length > 1) {
             // take first element
             bestMatch = highestSupported[0];
         }
@@ -76,5 +79,7 @@ module.exports = function (acceptHeader, defaultMime) {
         bestMatch = defaultMime;
     }
 
-    return {mime: bestMatch, type: bestMatch.split('/')[1]};
+    return typeof bestMatch === 'string' ?
+        { mime: bestMatch, type: bestMatch.split('/')[1]} :
+        { mime: defaultMime, type: defaultMime.split('/') };
 };
