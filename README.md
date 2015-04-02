@@ -12,6 +12,7 @@ __Requires graphicsmagick >= 1.3.18 if `NATIVE_AUTO_ORIENT` is true.__
 
 ## Requirements
 
+- node 0.12.x or io.js
 - [vips](http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS)
 - [graphicsmagick](http://www.graphicsmagick.org/) (if `NATIVE_AUTO_ORIENT` is true, version >= 1.3.18)
 - [imagemagick](http://www.imagemagick.org/) if webp is used

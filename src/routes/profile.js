@@ -28,7 +28,7 @@ module.exports = function (flamingo) {
                 /*eslint new-cap: 0*/
                 RSVP.hash({
                     url: conf.DECODE_PAYLOAD(decodeURIComponent(req.params.url)),
-                    profile: profiles[profileParam](req)
+                    profile: profiles[profileParam](req, conf)
                 }).then(function (data) {
                     var parsedUrl = url.parse(data.url),
                         reader = readerForUrl(parsedUrl);

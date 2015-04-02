@@ -7,7 +7,8 @@ var Hapi = require('hapi'),
     addon = require('./addon'),
     pkg = require('../package.json');
 
-var logger = require('./logger')('server');
+var logger = require('./logger')('server'),
+    DEBUG_PROFILES_FILE = 'debug.js';
 
 var ratifyOptions = {
     apiVersion: pkg.version
@@ -31,7 +32,9 @@ module.exports = function (serverConfig, addons) {
 
         var profilesPath = path.join(__dirname, 'profiles');
         /*eslint no-sync: 0*/
-        fs.readdirSync(profilesPath).forEach(function (file) {
+        fs.readdirSync(profilesPath).filter(function (file) {
+            return serverConfig.DEBUG ? file : file !== DEBUG_PROFILES_FILE;
+        }).forEach(function (file) {
             merge(flamingo.profiles, require(path.join(profilesPath, file)));
         });
 

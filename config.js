@@ -44,6 +44,17 @@ var CONFIG = {
     },
 
     /**
+     * Object containing flags for supported features. These fields will be overwritting after starting flamingo.
+     * @type {object}
+     * @param {boolean} GM.WEBP if true, gm supports converting to webp
+     */
+    SUPPORTED: {
+        GM: {
+            WEBP: false
+        }
+    },
+
+    /**
      * reader options
      * @type {object}
      * @param {number} REQUEST.TIMEOUT default request timeout

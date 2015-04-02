@@ -110,46 +110,20 @@
         }
     </style>
     <script type="text/javascript">
-        var HAS_PERFORMANCE = performance && performance.getEntries,
-            allSize = 0;
+        var HAS_PERFORMANCE = performance && performance.getEntries;
 
-        // @via http://stackoverflow.com/a/18333201
-        function bytes(string) {
-            var escaped_string = encodeURI(string);
-            if (escaped_string.indexOf("%") != -1) {
-                var count = escaped_string.split("%").length - 1;
-                count = count == 0 ? 1 : count;
-                count = count + (escaped_string.length - (count * 3));
-            }
-            else {
-                count = escaped_string.length;
-            }
-            return count;
-        }
-        function size(image) {
-            var canvas = document.createElement("canvas"),
-                ctx = canvas.getContext("2d");
-
-            canvas.width = image.width;
-            canvas.height = image.height;
-            ctx.drawImage(image, 0, 0);
-            return bytes(canvas.toDataURL("image/png").replace(/^data:image\/(png|jpg);base64,/, ""));
-        }
         function displayTiming(el) {
             if (HAS_PERFORMANCE) {
                 var url = el.src,
                     entries = performance.getEntriesByType('resource'),
                     span = el.nextElementSibling,
-                    entry,
-                    fileSize = size(el);
-
-                allSize += fileSize;
+                    entry;
 
                 entry = entries.filter(function (entry) {
                     return entry.name.indexOf(url) !== -1;
                 });
                 if (entry.length) {
-                    span.innerHTML = entry[0].duration.toFixed(3) + 'ms ' + (fileSize / 1024).toFixed(2) + 'kB';
+                    span.innerHTML = entry[0].duration.toFixed(3) + 'ms';
                 }
             } else {
                 console.warn('no performance api, can\'t display timings');
@@ -164,8 +138,7 @@
                         pageLoadTime = timing.loadEventEnd - timing.navigationStart;
 
                     span.innerHTML = 'resources: ' + entries.length +
-                    ' | time: ' + pageLoadTime + 'ms' + ' &asymp; ' + (Math.round(pageLoadTime / 1000)).toFixed(0) + 's' +
-                    ' | size: ' + (allSize / 1024).toFixed(2) + 'kB';
+                    ' | time: ' + pageLoadTime + 'ms' + ' &asymp; ' + (Math.round(pageLoadTime / 1000)).toFixed(0) + 's';
                 }, 10);
             } else {
                 console.warn('no performance api, can\'t display timings');

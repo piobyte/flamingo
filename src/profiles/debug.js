@@ -2,17 +2,17 @@ var RSVP = require('rsvp'),
     sharp = require('sharp'),
     bestFormat = require('../util/best-format'),
     clamp = require('clamp'),
-    config = require('../../config'),
     envParser = require('../util/env-parser');
 
 var profiles = {
-    'debug-rotate': function (request) {
+    'debug-rotate': function (request, config) {
         return new RSVP.Promise(function (resolve) {
             var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
                 format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
                 process = [];
 
             if (request.query.processor === 'gm') {
+                if (!config.SUPPORTED.GM.WEBP) { format = {type: 'png', mime: 'image/png'}; }
                 process.push({
                     processor: 'gm', pipe: function (pipe) {
                         if (format.type === 'webp') {
@@ -23,7 +23,7 @@ var profiles = {
                             .background('white')
                             .resize(dim, dim + '^')
                             .gravity('Center')
-                            .extent(dim, dim, 'white')
+                            .extent(dim, dim)
                             .setFormat(format.type);
                     }
                 });
@@ -42,13 +42,14 @@ var profiles = {
             resolve({response: {header: {'Content-Type': format.mime}}, process: process});
         });
     },
-    'debug-resize': function (request) {
+    'debug-resize': function (request, config) {
         return new RSVP.Promise(function (resolve) {
             var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
                 format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
                 process = [];
 
             if (request.query.processor === 'gm') {
+                if (!config.SUPPORTED.GM.WEBP) { format = {type: 'png', mime: 'image/png'}; }
                 process.push({
                     processor: 'gm', pipe: function (pipe) {
                         if (format.type === 'webp') {
@@ -73,13 +74,14 @@ var profiles = {
             });
         });
     },
-    'debug-flip': function (request) {
+    'debug-flip': function (request, config) {
         return new RSVP.Promise(function (resolve) {
             var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
                 format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
                 process = [];
 
             if (request.query.processor === 'gm') {
+                if (!config.SUPPORTED.GM.WEBP) { format = {type: 'png', mime: 'image/png'}; }
                 process.push({
                     processor: 'gm', pipe: function (pipe) {
                         if (format.type === 'webp') {
@@ -103,13 +105,14 @@ var profiles = {
             });
         });
     },
-    'debug-preview-image': function (request) {
+    'debug-preview-image': function (request, config) {
         return new RSVP.Promise(function (resolve) {
             var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
                 format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
                 process = [];
 
             if (request.query.processor === 'gm') {
+                if (!config.SUPPORTED.GM.WEBP) { format = {type: 'png', mime: 'image/png'}; }
                 process.push({
                     processor: 'gm', pipe: function (pipe) {
                         if (format.type === 'webp') {
@@ -143,13 +146,14 @@ var profiles = {
             });
         });
     },
-    'debug-avatar-image': function (request) {
+    'debug-avatar-image': function (request, config) {
         return new RSVP.Promise(function (resolve) {
             var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
                 format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
                 process = [];
 
             if (request.query.processor === 'gm') {
+                if (!config.SUPPORTED.GM.WEBP) { format = {type: 'png', mime: 'image/png'}; }
                 process.push({
                     processor: 'gm', pipe: function (pipe) {
                         if (format.type === 'webp') {

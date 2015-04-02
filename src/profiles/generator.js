@@ -4,15 +4,16 @@ var RSVP = require('rsvp'),
     envParser = require('../util/env-parser'),
     bestFormat = require('../util/best-format'),
     clamp = require('clamp'),
-    config = require('../../config'),
     isPlainObject = require('lodash/lang/isPlainObject');
 
 var avatarGenerator = function (dimension) {
-        return function (request) {
+        return function (request, config) {
             return new RSVP.Promise(function (resolve) {
                 // override dimension with query.width
                 var dim = clamp(envParser.objectInt('width', dimension)(request.query), 10, 1024),
                     format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
+
+                if (!config.SUPPORTED.GM.WEBP) { format = {type: 'png', mime: 'image/png'}; }
 
                 resolve({
                     response: { header: { 'Content-Type': format.mime }},
@@ -34,7 +35,7 @@ var avatarGenerator = function (dimension) {
         };
     },
     previewGenerator = function (dimension) {
-        return function (request) {
+        return function (request, config) {
             return new RSVP.Promise(function (resolve) {
                 // override dimension with query.width
                 var dim = clamp(envParser.objectInt('width', dimension)(request.query), 10, 1024),
