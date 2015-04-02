@@ -81,5 +81,5 @@ module.exports = function (acceptHeader, defaultMime) {
 
     return typeof bestMatch === 'string' ?
         { mime: bestMatch, type: bestMatch.split('/')[1]} :
-        { mime: defaultMime, type: defaultMime.split('/') };
+        { mime: defaultMime, type: defaultMime.split('/')[1] };
 };
