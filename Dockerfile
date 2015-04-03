@@ -8,16 +8,18 @@ RUN add-apt-repository ppa:mc3man/trusty-media
 RUN apt-get update && apt-get install -y graphicsmagick imagemagick ffmpeg pkg-config
 
 # Install some global utility tools
-RUN npm install -g pm2
+RUN npm config set production; npm install -g forever
+
+# Install vips
+COPY preinstall.sh /tmp/
+RUN sh /tmp/preinstall.sh; rm /tmp/preinstall.sh
 
 # Bundle app source
 COPY . /data
-
-# Install vips
-RUN cd /data; sh preinstall.sh
+RUN cd /data;
 
 # Install app dependencies
-RUN cd /data; npm install
+RUN npm install; npm dedupe
 
 # Define working directory.
 WORKDIR /data
@@ -26,4 +28,4 @@ WORKDIR /data
 EXPOSE 3000
 
 # Define default command.
-CMD ["pm2", "start", "-x", "index.js", "--no-daemon"]
+CMD ["forever", "index.js"]

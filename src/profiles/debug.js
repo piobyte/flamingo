@@ -61,9 +61,7 @@ var profiles = {
             } else {
                 process.push({
                     processor: 'sharp', pipe: function (pipe) {
-                        return pipe.resize(dim, dim)
-                            .background('white')
-                            .flatten().toFormat(format.type);
+                        return pipe.resize(dim, dim).background('white').flatten().toFormat(format.type);
                     }
                 });
             }

@@ -1,3 +1,4 @@
+/* @flow weak */
 /**
  * GraphicsMagick/ImageMagick image processor module
  * @module flamingo/src/processor/image/gm
@@ -22,7 +23,7 @@ var conf = require('../../../config'),
  *      .then((resultStream) => {...})
  */
 
-module.exports = function (pipeline, stream) {
+module.exports = function (pipeline/*: function */, stream) {
     var graphics = gm(stream).options({nativeAutoOrient: !!conf.NATIVE_AUTO_ORIENT});
     return pipeline(graphics).stream();
 };

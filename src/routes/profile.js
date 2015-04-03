@@ -1,3 +1,4 @@
+/* @flow weak */
 var url = require('url'),
     boom = require('boom'),
     RSVP = require('rsvp'),
@@ -9,7 +10,7 @@ var url = require('url'),
 
 var logger = require('../logger')('route:profile');
 
-module.exports = function (flamingo) {
+module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: string; path: string; config: {handler: function} }*/ {
     var conf = flamingo.conf,
         profiles = flamingo.profiles;
 

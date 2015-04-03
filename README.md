@@ -19,10 +19,10 @@ __Requires graphicsmagick >= 1.3.18 if `NATIVE_AUTO_ORIENT` is true.__
 
 ## TODO
 
-- /convert/{profile} refactor
 - [documentation](https://piobyte.github.io/flamingo/)
 - allow profiles to modify readers/writers
 - addon hook: logger
+- enable flow for `src/logger`, `src/reader/https`, `src/routes/index` (complains about `require('../package.json')`: `Required module not found`)
 
 ## Architecture
 
@@ -41,6 +41,7 @@ Flamingo uses a REST api. You can disable specific routes using the `config.js` 
 ## Config
 
 Modify `config.js` or set environment variables.
+See [docs/config](https://piobyte.github.io/flamingo/module-flamingo_config-CONFIG.html) for more information for each configuration variable.
 __Note:__ if you're using the docker config, don't change the port to something other than 3000
 (port 3000 is exposed from the docker image).
 
@@ -80,17 +81,7 @@ To allow short urls, you can create presets in the `src/profiles/` directory.
 Profiles use promises (via [rsvp.js](https://github.com/tildeio/rsvp.js)) to allow more complex asynchronous behaviors
 (i.e. get face position, crop to center face).
 
-If you want to use more than the default profiles (`src/profiles`), set a path to another directory using `conf.PROFILES_DIR` or `ENV.PROFILES_DIR`.
-This will load all files in the defined directory and add them to the default profiles.
-
-### External profile files/directory rules
-
-- An external profile file (not located in `src/profiles`) __can\`t__ use `require('module')` to load project dependencies.
-- A profiles file should only contain one `module.exports` that exports an object containing profile name (key) and profile generation function (value).
-- The profile generation function should return a promise that resolves an object containing an array of operations (`process` object property) that can be used in the processor.
-As of now, the profile function is invoked with the `RSVP` object (to create a promise) and the request query object by default.
-
-Besides the `process` field there is support for more customization:
+Each profile promise must resolve an object containing various fields:
 
 - `response` {Object}
     - `header` {Object}
@@ -100,23 +91,21 @@ Besides the `process` field there is support for more customization:
 ### Example
 
 - convert to `jpg`
-- resize an image to 200x200 pixel by [treating width and height as minimum values](http://www.graphicsmagick.org/GraphicsMagick.html#details-geometry)
-- result is an squared image that is fully filled with the source image without containing whitespace
-- set response header `Content-Type` to `image/jpg`
+- resize an image to 200x200 pixel
+- set background color to `white`
+- set response header `Content-Type` to `image/jpeg`
 - available on `/convert/my-profile/{cipher}`
 
 ```
 module.exports = {
     'my-profile': function (RSVP, query) {
         return new RSVP.Promise(function (resolve) {
-            resolve({ response: { header: {
-                    'Content-Type': 'image/jpg'
-                }},
-                process: [
-                    { id: 'format', format: 'jpg' },
-                    { id: 'resize', width: 200, height: '200^'},
-                    { id: 'extent', width: 200, height: 200 }
-                ]
+            resolve({ response: { header: { 'Content-Type': 'image/jpeg' }},
+                process: [{
+                    processor: 'sharp', pipe: function (pipe) {
+                        return pipe.resize(200, 200).background('white').flatten().toFormat('jpeg');
+                    }
+                }]
             });
         });
     }
@@ -125,9 +114,12 @@ module.exports = {
 
 ## Addons
 
+Flamingo addons only interact with the base flamingo installation using specified hooks, ie.: `"ENV", "CONF", "PROFILES", "ROUTES", "HAPI_PLUGINS"`.
+For detailed information on available hooks and some examples, look at the [addon documentation](https://piobyte.github.io/flamingo/module-flamingo_src_addon.HOOKS.html).
+
 ###Installation
 
-Use npm to install flamingo addons. Example: `npm install flamingo-s3`.
+Use npm to install flamingo addons. Example: `npm install flamingo-s3` (Example addon available at [https://github.com/piobyte/flaminfo-s3]).
 Modify the addon config by overwriting fields inside your `config.js`. The config loading order is as follows:
 
 1. load addon config
@@ -138,36 +130,3 @@ Modify the addon config by overwriting fields inside your `config.js`. The confi
 
 Flamingo will detect package dependencies (and development dependencies [`devDependencies`]) that contain the `"flamingo-addon"` keyword.
 Using the specified entry point it'll load the addon.
-
-###Development - Hooks
-
-Flamingo addons only interact with the base flamingo installation using specified hooks, ie.: `"ENV", "CONF", "PROFILES", "ROUTES", "HAPI_PLUGINS"`.
-Each hook inside an addon must return a function that returns an expected value. To make it easier to change hook names,
-use the exported `HOOKS` from the `src/addon.js` module (ie. `addon.HOOK.CONF`).
-
-__ENV__ hook:
-
-The `"ENV"` hook allows you to extend environment variable parsing.
-It must export a function that returns an array of configurations compatible with the `src/util/env-config.js` module.
-See the `env-config` module documentation for more information.
-
-__CONF__ hook:
-
-The `"CONF"` hook allows you to set default parameter for your addon.
-It will merge the config object with the flamingo config (`config.js`).
-It must export a function that returns an object.
-
-__PROFILES__ hook:
-
-The `"PROFILES"` hook allows you to register additional profiles that are available inside the profile conversion route (`src/routes/profile.js`).
-It must export a function that returns an object.
-
-__ROUTES__ hook:
-
-The `"ROUTES"` hook allows you to register additional [hapi routes](http://hapijs.com/tutorials/routing#routes).
-It must export a function that returns an array of route registration objects
-
-__HAPI_PLUGINS__ hook:
-
-The `"HAPI_PLUGINS"` hook allows you to register additional [hapi plugins](http://hapijs.com/tutorials/plugins#loading-a-plugin).
-It must export a function that returns an array of plugin registrations.

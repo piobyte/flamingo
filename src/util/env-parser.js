@@ -39,7 +39,7 @@ module.exports = {
      * parser.objectInt('height', 200)({height: 100}); //100
      */
     objectInt: function (field/*: string */, def/*: number*/) {
-        return function(obj/*: object*/)/*: number*/ {
+        return function(obj/*: {} */)/*: number*/ {
             return module.exports.int(def)(obj[field]);
         };
     },
@@ -50,7 +50,7 @@ module.exports = {
      * @example
      * parser.buffer('_ag3WU77') // new Buffer('_ag3WU77')
      */
-    buffer: function (val) { return new Buffer(val); },
+    buffer: function (val/*: string */) { return new Buffer(val); },
     /**
      * Convert a value to a base64 Buffer
      * @param {*} val value to convert
@@ -58,7 +58,7 @@ module.exports = {
      * @example
      * parser.buffer64('DjiZ7AWTeNh38zoQiZ76gw==') // new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64')
      */
-    buffer64: function (val) { return new Buffer(val, 'base64'); },
+    buffer64: function (val/*: string */) { return new Buffer(val, 'base64'); },
     /**
      * Create a function that converts an input string to an object
      * @param {String} idField field that is used to get a object root value

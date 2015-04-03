@@ -1,10 +1,11 @@
+/* @flow weak */
 var envConfig = require('./../util/env-config'),
     addon = require('./index'),
     assign = require('lodash/object/assign'),
     merge = require('lodash/object/merge'),
     partial = require('lodash/function/partial');
 
-module.exports = function (addons/*: {callback: function} */) {
+module.exports = function (addons/*: {callback: function} */)/*: {callback: function} */ {
     addons.callback(addon.HOOKS.CONF, function (conf) {
         return function (addonConf) {
             merge(conf, merge(addonConf, conf));

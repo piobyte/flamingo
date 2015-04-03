@@ -1,3 +1,4 @@
+/* @flow weak */
 /**
  * Accept header media type parsing module
  * @module flamingo/src/util/best-format
@@ -5,7 +6,7 @@
 
 var mimeparse = require('mimeparse');
 
-function parseRanges(ranges) {
+function parseRanges(ranges/*:string*/) {
     var parsedRanges = [],
         rangeParts = ranges.split(',');
     for (var i = 0; i < rangeParts.length; i++) {
@@ -31,7 +32,7 @@ var DEFAULT_SUPPORTED = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', '
  * bestFormat('image/jpeg,image/png,image/svg+xml,image/*;q=0.8,*\/*;q=0.5', 'image/png')
  * // {mime: 'image/jpeg', type: 'jpeg'}
  */
-module.exports = function (acceptHeader, defaultMime) {
+module.exports = function (acceptHeader/*:string*/, defaultMime/*:string*/)/*: {mime: string; type: string }*/ {
     if (acceptHeader) {
         var parsedHeader = parseRanges(acceptHeader),
             joinedParsedHeader = parsedHeader.map(function (h) {

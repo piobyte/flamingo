@@ -193,8 +193,6 @@ CONFIG = envConfig(CONFIG, process.env, [
     ['CRYPTO_KEY', 'CRYPTO.KEY', envParser.buffer64],
     ['CRYPTO_CIPHER', 'CRYPTO.CIPHER', envParser.buffer],
 
-    ['PROFILES_DIR', 'PROFILES_DIR'],
-
     ['READER_REQUEST_TIMEOUT', 'READER.REQUEST.TIMEOUT', envParser.int(10 * 1000)]
 ]);
 

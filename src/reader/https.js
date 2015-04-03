@@ -4,7 +4,7 @@ var request = require('request'),
     conf = require('../../config'),
     RSVP = require('rsvp');
 
-module.exports = function (fileUrl) {
+module.exports = function (fileUrl/*: {href: string} */) {
     return RSVP.Promise.resolve({
         stream: function () {
             return new RSVP.Promise(function (resolve, reject) {

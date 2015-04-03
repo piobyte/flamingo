@@ -1,3 +1,4 @@
+/* @flow weak */
 var boom = require('boom');
 
 var codes = {
@@ -7,7 +8,7 @@ var codes = {
     Forbidden: boom.forbidden
 };
 
-module.exports = function (reply, error) {
+module.exports = function (reply/*: function */, error) {
     var code = error.code || error.statusCode,
         message = error.message || error.name;
 

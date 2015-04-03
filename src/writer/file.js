@@ -1,3 +1,4 @@
+/* @flow weak */
 var fs = require('fs'),
     fileAccessAllowed = require('../util/file-access-allowed'),
     conf = require('../../config'),

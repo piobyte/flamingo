@@ -32,7 +32,6 @@
     "request": "^2.54.0",
     "rsvp": "^3.0.13",
     "sharp": "^0.9.3",
-    "stream-buffers": "^2.1.0",
     "temp": "^0.8.1",
     "through2": "^0.6.3"
   },

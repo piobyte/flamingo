@@ -1,3 +1,4 @@
+/* @flow weak */
 /**
  * @module flamingo/src/util/reader-for-url
  */
@@ -12,11 +13,11 @@ var reader = {
 /**
  * Tries to find a reader for a given parsed url.
  * @param {Object} parsedUrl object containing a protocol (i.e. result of `url.parse(myUrl)`)
- * @returns {Object|undefined} writer if found, `undefined` otherwise
+ * @returns {String|undefined} writer if found, `undefined` otherwise
  * @example
  * readerForUrl('data:text/plain;base64,ZGF0YQ==') // data reader
  */
-module.exports = function (parsedUrl/*: {protocol:string} */) {
+module.exports = function (parsedUrl/*: {protocol:string} */)/*: ?function */ {
     var foundReader;
 
     if (parsedUrl.protocol !== null) {

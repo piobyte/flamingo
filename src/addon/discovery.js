@@ -1,3 +1,4 @@
+/* @flow weak */
 var fs = require('fs'),
     assign = require('lodash/object/assign'),
     path = require('path');
@@ -6,7 +7,7 @@ var logger = require('./../logger')('addon-discovery');
 
 var ADDON_KEYWORD = 'flamingo-addon';
 
-function resolvePkg(addon/*: {path: string}*/) {
+function resolvePkg(addon/*: {path: string; hooks: {}; pkg: {name: string; main: string}}*/) {
     var main = addon.pkg.main || 'index.js',
         mainPath,
         loadedAddon;
@@ -40,7 +41,7 @@ function fromPackage(packagePath/*: string */) {
     }
 }
 
-function discover(rootDir, pkg) {
+function discover(rootDir/*: string */, pkg/*: {dependencies: any; devDependencies: any} */) {
     var deps = assign({}, pkg.dependencies, pkg.devDependencies);
 
     return Object.keys(deps).map(function (dependency) {

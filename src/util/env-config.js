@@ -1,3 +1,4 @@
+/* @flow weak */
 var forEach = require('lodash/collection/forEach'),
     isFunction = require('lodash/lang/isFunction');
 
@@ -31,7 +32,7 @@ var pathSet = function (object, path, value) {
  * @param {Array} mappings Environment to object mappings
  * @returns {Object} updated config
  */
-module.exports = function (config, environment, mappings) {
+module.exports = function (config/*: {} */, environment/*: {} */, mappings)/*: {} */ {
     forEach(mappings, function (mapping) {
         var envProp = mapping[0],
             objPath = mapping[1],

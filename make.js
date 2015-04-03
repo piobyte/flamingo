@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* global rm ,target, echo, find, exit, exec */
+/* global rm ,target, echo, find, exit, exec, which */
 
 require('shelljs/make');
 
@@ -15,6 +15,7 @@ var MAKEFILE = './make.js',
     ESLINT = './node_modules/eslint/bin/eslint.js',
     MOCHA = './node_modules/mocha/bin/_mocha',
     JSDOC = './node_modules/jsdoc/jsdoc.js',
+    FLOW = 'flow',
 
     JS_FILES = find('src/').filter(ends('.js')).concat('index.js', 'config.js').join(' '),
     TEST_FILES = find('test/').filter(ends('.test.js')).join(' ');
@@ -34,8 +35,21 @@ target.lint = function () {
     }
 };
 
+target['type-check'] = function () {
+    if(!which(FLOW)) {
+        echo('flow command not available, skipping type checking');
+    } else {
+        if (some([
+            exec(FLOW + ' check').code
+        ])) {
+            exit(1);
+        }
+    }
+};
+
 target.test = function () {
     target.lint();
+    target['type-check']();
     if (some([
         exec(ISTANBUL + ' cover ' + MOCHA + ' -- -b -R tap -c ' + TEST_FILES).code,
         exec(ISTANBUL + ' check-coverage --statement 99 --branch 98 --function 99 --lines 99').code

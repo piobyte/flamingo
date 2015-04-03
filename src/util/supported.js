@@ -1,3 +1,4 @@
+/* @flow weak */
 var RSVP = require('rsvp'),
     temp = require('temp'),
     path = require('path'),
@@ -30,7 +31,7 @@ function hasGmWebp(){
     });
 }
 
-module.exports = function () {
+module.exports = function ()/*: function */ {
     var supported = {GM: {}};
     temp.track();
 
@@ -41,6 +42,7 @@ module.exports = function () {
         temp.cleanupSync();
 
         supported.GM.WEBP = results[0];
+
         return supported;
     });
 };

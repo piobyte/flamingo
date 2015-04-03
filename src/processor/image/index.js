@@ -1,3 +1,4 @@
+/* @flow weak */
 /**
  * Image processor module
  * @module flamingo/src/processor/image
@@ -18,7 +19,7 @@ var processors = {
  * image([{ processor: 'sharp', pipe: (sharp) => sharp.toFormat('jpeg') }])(fs.createReadStream('sample.png')
  * // converted image stream
  */
-module.exports = function (transformations) {
+module.exports = function (transformations/*: Array<{processor: string; pipe: function}>*/)/*: function */ {
     return function (stream) {
         transformations.forEach(function (item) {
             stream = processors[item.processor](item.pipe, stream);

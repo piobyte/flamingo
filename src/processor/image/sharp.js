@@ -1,3 +1,4 @@
+/* @flow weak */
 /**
  * vips image processor module
  * @module flamingo/src/processor/image/sharp
@@ -19,7 +20,7 @@ var sharp = require('sharp');
  * sharpProcessor((sharpInstance) => sharpInstance.rotate(), fs.createReadStream('sample.png'))
  */
 
-module.exports = function (pipeline, stream) {
+module.exports = function (pipeline/*: function */, stream) {
     var pipe = pipeline(sharp());
     return stream.pipe(pipe);
 };
