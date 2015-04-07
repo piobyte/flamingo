@@ -163,13 +163,14 @@
                 <td><%= processor %></td>
                 <% _.forEach(profileNames, function(name){ %>
                     <td>
-                        <% _.forEach(urls, function(url){ %>
+                        <% _.forEach(urls, function(url, index){ %>
                             <% _.forEach(sizes, function(size){ %>
                             <figure>
                                 <img onload="displayTiming(this)"
                                          src="<%= base %>convert/<%= name %>/<%= url %>?processor=<%= processor %>&width=<%= size %>"
                                          alt=""/>
                                 <figcaption>&#128337;</figcaption>
+                                <figcaption><%= plainUrls[index].split('/').slice(-1) %></figcaption>
                             </figure>
                             <% }) %>
                         <% }) %>
