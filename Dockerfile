@@ -5,7 +5,10 @@ FROM dockerfile/nodejs:latest
 RUN add-apt-repository ppa:mc3man/trusty-media
 
 # Install graphicsmagick, ffmpeg
-RUN apt-get update && apt-get install -y graphicsmagick imagemagick ffmpeg pkg-config
+RUN apt-get update && apt-get install -y graphicsmagick imagemagick ffmpeg pkg-config git unzip
+
+# Install libvips dependencies
+RUN apt-get update && apt-get install -y automake build-essential gobject-introspection gtk-doc-tools libglib2.0-dev libjpeg-turbo8-dev libpng12-dev libwebp-dev libtiff5-dev libexif-dev libgsf-1-dev liblcms2-dev libxml2-dev swig libmagickcore-dev curl
 
 # Install some global utility tools
 RUN npm config set production; npm install -g forever

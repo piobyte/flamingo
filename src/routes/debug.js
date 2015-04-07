@@ -6,36 +6,34 @@ var pkg = require('../../package.json'),
 
 /*eslint no-sync:0 */
 var URLS,
+    HOST = 'http://localhost:4000',
     htmlTemplate = template(require('fs').readFileSync(__dirname + '/debug-template.html'));
 
 RSVP.all([
     /*eslint new-cap: 0*/
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/hs-2006-10-a-2560x1024_wallpaper.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/Gran-Turismo-6_2013_05-15-13_108.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/20150311-210332.png'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/20150303-120347.png'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/20150306-230321.png'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/Tux.png'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/ghibli_orig.jpg'),
-    //
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Portrait_1.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Portrait_2.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Portrait_3.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Portrait_4.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Portrait_5.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Portrait_6.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Portrait_7.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Portrait_8.jpg'),
-    //
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Landscape_1.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Landscape_2.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Landscape_3.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Landscape_4.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Landscape_5.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Landscape_6.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Landscape_7.jpg'),
-    //conf.ENCODE_PAYLOAD('http://localhost:4000/exif-orientation-examples/Landscape_8.jpg'),
-    conf.ENCODE_PAYLOAD('http://localhost:4000/app-icon.png')
+    conf.ENCODE_PAYLOAD(HOST + '/Gran-Turismo-6_2013_05-15-13_108.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/Tux.png'),
+    conf.ENCODE_PAYLOAD(HOST + '/ghibli_orig.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/app-icon.png'),
+    conf.ENCODE_PAYLOAD(HOST + '/animated.gif'),
+
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Portrait_1.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Portrait_2.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Portrait_3.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Portrait_4.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Portrait_5.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Portrait_6.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Portrait_7.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Portrait_8.jpg'),
+
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Landscape_1.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Landscape_2.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Landscape_3.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Landscape_4.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Landscape_5.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Landscape_6.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Landscape_7.jpg'),
+    conf.ENCODE_PAYLOAD(HOST + '/exif-orientation-examples/Landscape_8.jpg')
 ]).then(function (urls) {
     URLS = urls.map(function (url) {
         return encodeURIComponent(url);
@@ -69,7 +67,7 @@ module.exports = function (flamingo) {
                 profileNames: profileNames,
                 urls: URLS,
                 debugs: [],
-                sizes: _.range(20, 200, 10),
+                sizes: _.range(50, 250, 100),
                 base: base,
                 processors: processors
             }));
