@@ -4,11 +4,12 @@ var RSVP = require('rsvp'),
     ffmpeg = require('fluent-ffmpeg'),
     cfg = require('../../config');
 
-var logger = require('../logger')('preprocessor:video');
+var Promise = RSVP.Promise,
+    logger = require('../logger')('preprocessor:video');
 
 module.exports = function (options) {
     return function (readerResult) {
-        return new RSVP.Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             var cmd,
                 tmpName = temp.path({suffix: '.png'}),
                 killTimeoutId;

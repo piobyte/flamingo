@@ -6,8 +6,10 @@ var RSVP = require('rsvp'),
     through2 = require('through2'),
     gmProcessor = require('../processor/image/gm');
 
+var Promise = RSVP.Promise;
+
 function hasGmWebp(){
-    return new RSVP.Promise(function (resolve) {
+    return new Promise(function (resolve) {
         var resultLength = 0,
             out = temp.createWriteStream(),
             input = fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/base64.png'));

@@ -1,5 +1,4 @@
-var RSVP = require('rsvp'),
-    through = require('through2');
+var through = require('through2');
 
 /**
  * Creates a function that calls the given reply function with a stream
@@ -10,15 +9,13 @@ var RSVP = require('rsvp'),
  */
 module.exports = function (path, reply, options) {
     return function (stream) {
-        return new RSVP.Promise(function (resolve) {
-            // use through because hapi sometimes didn't trigger the read
-            var r = reply(stream.pipe(through()));
-            if (options && options.header) {
-                Object.keys(options.header).forEach(function (property) {
-                    r.header(property, options.header[property]);
-                });
-            }
-            resolve(r);
-        });
+        // use through because hapi sometimes didn't trigger the read
+        var r = reply(stream.pipe(through()));
+        if (options && options.header) {
+            Object.keys(options.header).forEach(function (property) {
+                r.header(property, options.header[property]);
+            });
+        }
+        return r;
     };
 };

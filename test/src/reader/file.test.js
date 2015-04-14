@@ -6,12 +6,12 @@ var fixture = require('../../test-util/fixture'),
     path = require('path'),
     url = require('url'),
     fs = require('fs'),
-    RSVP = require('rsvp'),
+    Promise = require('rsvp').Promise,
     fileReader = require('../../../src/reader/file'),
     assert = require('assert');
 
 var compareFileFixtures = function (fixturePath) {
-    return new RSVP.Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var TEST_WHITELIST = ['/tmp', path.resolve(__dirname, '../../')];
         fileReader(url.parse('file://' + fixture.fullFixturePath(fixturePath)), TEST_WHITELIST).then(function (readResult) {
             temp.track();

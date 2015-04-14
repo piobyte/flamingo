@@ -1,12 +1,13 @@
 {
   "name": "flamingo",
-  "version": "0.14.12",
+  "version": "0.14.13",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "lint": "node make lint",
-    "test": "node make test"
+    "test": "node make test",
+    "bench": "node make bench"
   },
   "author": "Christian",
   "license": "MIT",
@@ -36,6 +37,7 @@
     "through2": "^0.6.3"
   },
   "devDependencies": {
+    "benchmark": "^1.0.0",
     "eslint": "^0.17.1",
     "istanbul": "^0.3.2",
     "jsdoc": "^3.3.0-beta3",

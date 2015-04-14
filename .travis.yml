@@ -19,6 +19,7 @@ before_install:
 install:
 - npm install
 after_success:
+- npm run bench
 - bash ./deploy-gh-pages.sh
 env:
   global:

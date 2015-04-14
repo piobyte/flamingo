@@ -8,6 +8,7 @@ var Hapi = require('hapi'),
     pkg = require('../package.json');
 
 var logger = require('./logger')('server'),
+    Promise = RSVP.Promise,
     DEBUG_PROFILES_FILE = 'debug.js';
 
 var ratifyOptions = {
@@ -15,7 +16,7 @@ var ratifyOptions = {
 };
 
 module.exports = function (serverConfig, addons) {
-    return new RSVP.Promise(function (resolve) {
+    return new Promise(function (resolve) {
         var server = new Hapi.Server({ debug: false }),
             serverPlugins = [{ register: require('ratify'), options: ratifyOptions }],
             flamingo = { conf: serverConfig, profiles: {}, addons: addons};

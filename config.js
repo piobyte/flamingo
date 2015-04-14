@@ -8,6 +8,8 @@ var crypto = require('crypto'),
     envConfig = require('./src/util/env-config'),
     RSVP = require('rsvp');
 
+var Promise = RSVP.Promise;
+
 /**
  * @namespace CONFIG
  * @type {Object}
@@ -127,7 +129,7 @@ var CONFIG = {
      * @return {String} base64 encoded ciphertext
      */
     ENCODE_PAYLOAD: /* istanbul ignore next */ function (plaintext) {
-        return new RSVP.Promise(function(resolve, reject){
+        return new Promise(function(resolve, reject){
             //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
             //    if (err) { reject(err); return; }
                 try {
@@ -154,7 +156,7 @@ var CONFIG = {
      * @return {Promise} promise that resolves with plaintext
      */
     DECODE_PAYLOAD: /* istanbul ignore next */ function (plaintext) {
-        return new RSVP.Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
             //    if (err) { reject(err); return; }
                 try {

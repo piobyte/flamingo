@@ -6,13 +6,15 @@ var fs = require('fs'),
     path = require('path'),
     RSVP = require('rsvp');
 
+var Promise = RSVP.Promise;
+
 module.exports = function (outputUrl/*: {path: string}*/, reply/*: function*/) {
     return function (stream) {
         var outputPath = path.normalize(outputUrl.path),
             outputDir = path.dirname(outputPath);
 
         return fileAccessAllowed(path.normalize(outputPath), conf.ACCESS.WRITE).then(function () {
-            return new RSVP.Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 mkdirp(outputDir, function (err) {
                     if (err) {
                         reject(err);

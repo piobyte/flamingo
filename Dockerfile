@@ -12,12 +12,12 @@ RUN apt-get update && \
     apt-get install -y automake gtk-doc-tools build-essential swig \
     gobject-introspection libglib2.0-dev libjpeg-turbo8-dev libpng12-dev libwebp-dev libtiff5-dev libexif-dev libgsf-1-dev liblcms2-dev libxml2-dev libmagickwand-dev libmagickcore-dev
 
-# Install some global utility tools
-RUN npm config set production; npm install -g forever
-
 # Install vips
 COPY preinstall.sh /tmp/
 RUN sh /tmp/preinstall.sh; rm /tmp/preinstall.sh
+
+# Install some global utility tools
+RUN npm config set production; npm install -g forever
 
 # Bundle app source
 COPY . /data

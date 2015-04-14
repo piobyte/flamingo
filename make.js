@@ -65,3 +65,5 @@ target.docs = function () {
         exit(1);
     }
 };
+
+target.bench = require('./targets/bench');

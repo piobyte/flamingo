@@ -4,10 +4,12 @@ var request = require('request'),
     conf = require('../../config'),
     RSVP = require('rsvp');
 
+var Promise = RSVP.Promise;
+
 module.exports = function (fileUrl/*: {href: string} */) {
-    return RSVP.Promise.resolve({
+    return RSVP.resolve({
         stream: function () {
-            return new RSVP.Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 var stream = request({
                         url: fileUrl.href,
                         timeout: conf.READER.REQUEST.TIMEOUT,

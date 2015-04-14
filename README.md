@@ -78,9 +78,6 @@ To generate an expected request you have to encrypt your initial request using `
 ## Profiles
 
 To allow short urls, you can create presets in the `src/profiles/` directory.
-Profiles use promises (via [rsvp.js](https://github.com/tildeio/rsvp.js)) to allow more complex asynchronous behaviors
-(i.e. get face position, crop to center face).
-
 Each profile promise must resolve an object containing various fields:
 
 - `response` {Object}
@@ -98,8 +95,8 @@ Each profile promise must resolve an object containing various fields:
 
 ```
 module.exports = {
-    'my-profile': function (RSVP, query) {
-        return new RSVP.Promise(function (resolve) {
+    'my-profile': function (request, query) {
+        return new Promise(function (resolve) {
             resolve({ response: { header: { 'Content-Type': 'image/jpeg' }},
                 process: [{
                     processor: 'sharp', pipe: function (pipe) {

@@ -3,7 +3,6 @@ var addonDiscovery = require('./discovery'),
     noop = require('lodash/utility/noop'),
     forOwn = require('lodash/object/forOwn'),
     callbacks = require('./callbacks'),
-    forEach = require('lodash/collection/forEach'),
     reduce = require('lodash/collection/reduce');
 
 var _callbacks = {},
@@ -53,9 +52,9 @@ exports.hook = function(hookName, hookConfig) {
             // @via https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
             var $_len = arguments.length; var args = new Array($_len); for(var $_i = 0; $_i < $_len; ++$_i) {args[$_i] = arguments[$_i]; }
 
-            forEach(_hooks[hookName], function (data) {
-                _callbacks[hookName].apply(undefined, args)(data.hook(hookConfig));
-            });
+            for (var i = 0; i < _hooks[hookName].length; i++) {
+                _callbacks[hookName].apply(undefined, args)(_hooks[hookName][i].hook(hookConfig));
+            }
         };
     }
 

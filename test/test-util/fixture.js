@@ -4,8 +4,9 @@ var RSVP = require('rsvp'),
 
 const BASE_PATH = 'test/fixtures/';
 
-var loadFixture = function (fixturePath) {
-        return new RSVP.Promise(function (resolve, reject) {
+var Promise = RSVP.Promise,
+    loadFixture = function (fixturePath) {
+        return new Promise(function (resolve, reject) {
             fs.readFile(path.resolve(__dirname, '../../', BASE_PATH + fixturePath), {
                 encoding: 'utf-8'
             }, function (err, data) {
