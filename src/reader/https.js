@@ -17,6 +17,7 @@ module.exports = function (fileUrl/*: {href: string} */) {
                 // workaround via http://stackoverflow.com/a/26163128
                 stream.pause();
                 stream.on('error', function (err) {
+                    err.signal = fileUrl.href;
                     reject(err);
                 });
                 stream.on('response', function (response) {
