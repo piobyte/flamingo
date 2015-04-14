@@ -2,26 +2,28 @@ language: node_js
 cache:
   apt: true
   directories:
-    - node_modules
+  - node_modules
 node_js:
-#  - "0.10"
-  - "0.12"
-  - iojs
+- '0.12'
+- iojs
 before_install:
-  # for travis ubuntu 12.xx
-  - sudo add-apt-repository -y ppa:lyrasis/precise-backports
-  - sudo apt-get update -y
-  - sudo apt-get install -y graphicsmagick imagemagick ffmpeg
-  # build vips
-  - sudo apt-get install -y automake build-essential gobject-introspection gtk-doc-tools libglib2.0-dev libjpeg-turbo8-dev libpng12-dev libwebp-dev libtiff4-dev libexif-dev libgsf-1-dev liblcms2-dev libxml2-dev swig libmagickcore-dev curl
-  - sudo bash ./preinstall.sh
-  # flow for type checking
-  - wget http://flowtype.org/downloads/flow-linux64-latest.zip -O /tmp/flow.zip; unzip /tmp/flow.zip -d /tmp; export PATH=$PATH:/tmp/flow/
+- sudo add-apt-repository -y ppa:lyrasis/precise-backports
+- sudo apt-get update -y
+- sudo apt-get install -y graphicsmagick imagemagick ffmpeg
+- sudo apt-get install -y automake build-essential gobject-introspection gtk-doc-tools
+  libglib2.0-dev libjpeg-turbo8-dev libpng12-dev libwebp-dev libtiff4-dev libexif-dev
+  libgsf-1-dev liblcms2-dev libxml2-dev swig libmagickcore-dev curl
+- sudo bash ./preinstall.sh
+- wget http://flowtype.org/downloads/flow-linux64-latest.zip -O /tmp/flow.zip; unzip
+  /tmp/flow.zip -d /tmp; export PATH=$PATH:/tmp/flow/
 install:
-  - npm install
+- npm install
 after_success:
-  - bash ./deploy-gh-pages.sh
+- bash ./deploy-gh-pages.sh
 env:
   global:
   - GH_REF: github.com/piobyte/flamingo.git
-  - secure: "JMdtUr8MWYN0mhWiwivcWGhGXUOJnOv5UGSfsurYsGVKyqK0qRJMVmf+bezMkIhxktcq6RJNAmYq/1wsh1mqU/iHoWaAHeOtZoMYItYgIco6GJgfYJ2Dhb46WiRbDzi5qcEjCV3fDb3K8OXePWVcBoGAvp5e+pH3vvvw0SgAjBY="
+  - secure: JMdtUr8MWYN0mhWiwivcWGhGXUOJnOv5UGSfsurYsGVKyqK0qRJMVmf+bezMkIhxktcq6RJNAmYq/1wsh1mqU/iHoWaAHeOtZoMYItYgIco6GJgfYJ2Dhb46WiRbDzi5qcEjCV3fDb3K8OXePWVcBoGAvp5e+pH3vvvw0SgAjBY=
+notifications:
+  slack:
+    secure: gSLT//7zFcT1AVj99og8Bq320pgKyHPqIU84uaSytdM5Tolwrbpf4uAXRv3pXGXWkg8B2wuKhazp9dFodzgEUOJL6YIpNa+n7gVuef5I28SPicx56HrCdcIkXM6INHmhldrfjm0NnZrvoZkvGOwQd4Gz3y6cRLYchEdqYXLi3Yc=
