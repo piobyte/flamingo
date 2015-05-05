@@ -32,7 +32,7 @@
     "raven": "^0.7.2",
     "request": "^2.54.0",
     "rsvp": "^3.0.13",
-    "sharp": "git://github.com/lovell/sharp.git#judgement",
+    "sharp": "git://github.com/lovell/sharp.git",
     "temp": "^0.8.1",
     "through2": "^0.6.3"
   },

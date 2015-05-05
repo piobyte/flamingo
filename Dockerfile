@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y graphicsmagick imagemagick ffmpeg pkg-c
 # Install libvips dependencies
 RUN apt-get update && \
     apt-get install -y automake gtk-doc-tools build-essential swig \
-    gobject-introspection libglib2.0-dev libjpeg-turbo8-dev libpng12-dev libwebp-dev libtiff5-dev libexif-dev libgsf-1-dev liblcms2-dev libxml2-dev libmagickwand-dev libmagickcore-dev
+    gobject-introspection libglib2.0-dev libjpeg-dev libpng12-dev libwebp-dev libtiff5-dev libexif-dev libgsf-1-dev liblcms2-dev libxml2-dev libmagickwand-dev libmagickcore-dev
 
 # Install vips
 COPY preinstall.sh /tmp/
