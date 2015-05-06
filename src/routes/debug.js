@@ -27,8 +27,8 @@ var URLS,
         '/w3c_home_animation.mng',
         '/w3c_home_gray.gif',
         '/w3c_home_gray.png',
-
-         //via http://wiesmann.codiferes.net/share/bitmaps/
+        //
+        // //via http://wiesmann.codiferes.net/share/bitmaps/
         '/test_pattern.xbm',
         '/test_pattern1.png',
         '/test_pattern8.png',
@@ -46,14 +46,14 @@ var URLS,
         '/test_pattern.tga',
         '/test_pattern.bmp',
         '/test_pattern.tif',
-
-        '/Gran-Turismo-6_2013_05-15-13_108.jpg',
-        '/Tux.png',
-        '/ghibli_orig.jpg',
-        '/app-icon.png',
-        '/animated.gif',
-        '/Testing_ToneValueDifferentiation-en.tif',
-
+        //
+        //'/Gran-Turismo-6_2013_05-15-13_108.jpg',
+        //'/Tux.png',
+        //'/ghibli_orig.jpg',
+        //'/app-icon.png',
+        //'/animated.gif',
+        //'/Testing_ToneValueDifferentiation-en.tif',
+        //
         '/exif-orientation-examples/Portrait_1.jpg',
         '/exif-orientation-examples/Portrait_2.jpg',
         '/exif-orientation-examples/Portrait_3.jpg',

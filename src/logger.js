@@ -51,7 +51,7 @@ if (conf.SENTRY_DSN) {
             try {
                 obj = JSON.parse(msg);
             } catch (e) {
-                obj.msg = 'error parsing log message';
+                obj.msg = 'Error parsing log message. This happens if bunyan creates an invalid JSON string. (In theory it should never happen)';
                 obj.level = bunyan.FATAL;
             }
             obj.flamingo = { version: pkg.version };

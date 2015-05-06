@@ -32,6 +32,7 @@ module.exports = function (fileUrl/*: {href: string} */) {
                 });
             });
         },
+        url: fileUrl,
         type: readerType.REMOTE
     });
 };

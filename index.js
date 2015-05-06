@@ -13,7 +13,6 @@ process.on('uncaughtException', function (err) {
 });
 
 addons.load(__dirname, pkg);
-
 addons.hook(addon.HOOKS.CONF)(conf);
 addons.hook(addon.HOOKS.ENV)(conf, process.env);
 

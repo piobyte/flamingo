@@ -2,13 +2,13 @@
 var url = require('url'),
     boom = require('boom'),
     RSVP = require('rsvp'),
-    readerForUrl = require('../util/reader-for-url'),
-    errorReply = require('../util/error-reply'),
-    unfoldReaderResult = require('../util/unfold-reader-result'),
-    responseWriter = require('../writer/response'),
-    imageProcessor = require('../processor/image');
+    readerForUrl = require('../../util/reader-for-url'),
+    errorReply = require('../../util/error-reply'),
+    unfoldReaderResult = require('../../util/unfold-reader-result'),
+    responseWriter = require('../../writer/response'),
+    imageProcessor = require('../../processor/image');
 
-var logger = require('../logger')('route:profile');
+var logger = require('../../logger')('route:profile');
 
 module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: string; path: string; config: {handler: function} }*/ {
     var conf = flamingo.conf,
@@ -16,7 +16,7 @@ module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: 
 
     return {
         method: 'GET',
-        path: '/convert/{profile}/{url}',
+        path: '/convert/image/{profile}/{url}',
         config: {
             cors: true,
             handler: function (req, reply) {
