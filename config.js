@@ -38,6 +38,14 @@ var CONFIG = {
     NATIVE_AUTO_ORIENT: true,
 
     /**
+     * Enable to allow reader redirects. (Useful against SSRF redirects)
+     * @see Environment: 'ALLOW_READ_REDIRECT'
+     * @see SSRF bible
+     * @type {boolean}
+     */
+    ALLOW_READ_REDIRECT: false,
+
+    /**
      * enable/disable specific routes
      * @see Environment: 'ROUTE_INDEX', 'ROUTE_PROFILE_CONVERT_IMAGE', 'ROUTE_PROFILE_CONVERT_VIDEO'
      * @type {object}
@@ -101,18 +109,34 @@ var CONFIG = {
         }
     },
     /**
-     * access whitelists
+     * access whitelist
      * @type {object}
-     * @param {string[]} READ list of whitelisted read locations
-     * @param {string[]} WRITE list of whitelisted write locations
+     * @param {boolean} HTTPS.ENABLED if true, enables the https reader whitelist filter (will be set to true by default in the next release)
+     * @param {object[]} HTTPS.READ array containing objects with fields that have to be on the parsed url to be a valid read url
+     * @param {object[]} HTTPS.WRITE array containing objects with fields that have to be on the parsed url to be a valid write url
+     * @param {string[]} FILE.READ list of whitelisted read locations
+     * @param {string[]} FILE.WRITE list of whitelisted write locations
+     * @see https://iojs.org/api/url.html#url_url_format_urlobj
+     * @example
+     * ACCESS: {
+     *  FILE: {
+     *      READ: ['/tmp'] // only allow file input from `/tmp`
+     *  }
+     *  HTTPS: {
+     *      READ: [{protocol: 'https:'}] // only allow https input urls
+     *  }
+     * }
      */
     ACCESS: {
-        READ: [
-            '/vagrant', '/tmp/flamingo'
-        ],
-        WRITE: [
-            '/vagrant', '/tmp/flamingo'
-        ]
+        FILE: {
+            READ: [],
+            WRITE: []
+        },
+        HTTPS: {
+            ENABLED: false,
+            READ: [],
+            WRITE: []
+        }
     },
     /**
      * crypto settings (IF YOU WANT TO USE CRYPTO, CHANGE THE DEFAULT VALUES)
@@ -199,6 +223,7 @@ CONFIG = envConfig(CONFIG, process.env, [
     ['DEBUG', 'DEBUG', envParser.boolean],
     ['DEFAULT_MIME', 'DEFAULT_MIME'],
     ['NATIVE_AUTO_ORIENT', 'NATIVE_AUTO_ORIENT', envParser.boolean],
+    ['ALLOW_READ_REDIRECT', 'ALLOW_READ_REDIRECT', envParser.boolean],
 
     ['ROUTE_INDEX', 'ROUTES.INDEX', envParser.boolean],
     ['ROUTE_PROFILE_CONVERT_IMAGE', 'ROUTES.PROFILE_CONVERT_IMAGE', envParser.boolean],

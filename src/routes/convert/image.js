@@ -39,7 +39,7 @@ module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: 
                     }
 
                     // build processing queue
-                    reader(parsedUrl, conf.ACCESS.READ)
+                    reader(parsedUrl, conf.ACCESS)
                         .then(unfoldReaderResult)
                         .then(imageProcessor(data.profile.process))
                         .then(responseWriter(null, reply, data.profile.response))

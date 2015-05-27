@@ -1,6 +1,6 @@
 {
   "name": "flamingo",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
@@ -23,16 +23,16 @@
     "bunyan": "^1.0.1",
     "clamp": "^1.0.1",
     "fluent-ffmpeg": "^2.0.1",
-    "gm": "git+https://github.com/aheckmann/gm.git#f47b430815a0e4de0677611b50cac3bee9b1ba9c",
-    "hapi": "^8.4.0",
+    "gm": "^1.18.1",
+    "hapi": "^8.5.3",
     "lodash": "^3.1.0",
     "mimeparse": "^0.1.4",
     "mkdirp": "^0.5.0",
     "ratify": "^0.8.0",
     "raven": "^0.7.2",
-    "request": "^2.54.0",
+    "request": "^2.56.0",
     "rsvp": "^3.0.13",
-    "sharp": "git+https://github.com/lovell/sharp.git#33782d3c83e596c5fd022ffc8b2b98fd54fbdd8c",
+    "sharp": "^0.10.0",
     "temp": "^0.8.1",
     "through2": "^0.6.3"
   },
@@ -43,6 +43,7 @@
     "jsdoc": "^3.3.0-beta3",
     "jsdoc-baseline": "https://github.com/hegemonic/baseline/tarball/master",
     "mocha": "^2.2.1",
+    "nock": "^2.3.0",
     "shelljs": "^0.4.0",
     "sinon": "^1.14.1"
   }
