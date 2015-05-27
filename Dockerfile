@@ -1,15 +1,22 @@
-# Pull base image.
-FROM dockerfile/nodejs:latest
+FROM ubuntu:14.04
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y software-properties-common curl
+
+# install node
+RUN curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
+RUN apt-get install -y nodejs
 
 # add ffmpeg repo
-RUN add-apt-repository ppa:mc3man/trusty-media
+RUN add-apt-repository -y ppa:mc3man/trusty-media && apt-get update && apt-get dist-upgrade -y
 
 # Install graphicsmagick, ffmpeg
-RUN apt-get update && apt-get install -y graphicsmagick imagemagick ffmpeg pkg-config git unzip curl
+RUN apt-get install -y graphicsmagick imagemagick ffmpeg pkg-config git unzip
 
 # Install libvips dependencies
 RUN apt-get update && \
-    apt-get install -y automake gtk-doc-tools build-essential swig \
+    apt-get install -y wget automake gtk-doc-tools build-essential swig \
     gobject-introspection libglib2.0-dev libjpeg-dev libpng12-dev libwebp-dev libtiff5-dev libexif-dev libgsf-1-dev liblcms2-dev libxml2-dev libmagickwand-dev libmagickcore-dev
 
 # Install vips

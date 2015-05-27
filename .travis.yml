@@ -12,7 +12,7 @@ before_install:
 - sudo apt-get install -y graphicsmagick imagemagick ffmpeg
 - sudo apt-get install -y automake build-essential gobject-introspection gtk-doc-tools
   libglib2.0-dev libjpeg-dev libpng12-dev libwebp-dev libtiff4-dev libexif-dev
-  libgsf-1-dev liblcms2-dev libxml2-dev swig libmagickcore-dev curl
+  libgsf-1-dev liblcms2-dev libxml2-dev swig libmagickcore-dev curl wget
 - sudo bash ./preinstall.sh
 - wget http://flowtype.org/downloads/flow-linux64-latest.zip -O /tmp/flow.zip; unzip
   /tmp/flow.zip -d /tmp; export PATH=$PATH:/tmp/flow/
