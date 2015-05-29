@@ -5,7 +5,7 @@ var RSVP = require('rsvp'),
 var Readable = stream.Readable,
     B64_DELIMITER = 'base64,';
 
-module.exports = function (url) {
+module.exports = function (url/*: {host: string, href: string} */) {
     var type = url.host,
         encoded = url.href.substring(url.href.indexOf(B64_DELIMITER) + B64_DELIMITER.length, url.href.length),
         promise;
@@ -25,7 +25,7 @@ module.exports = function (url) {
 
         promise = RSVP.resolve({
             stream: function () {
-                return rs;
+                return RSVP.resolve(rs);
             },
             path: null,
             type: readerType.DATA

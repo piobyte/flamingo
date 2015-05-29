@@ -11,8 +11,10 @@ var exists = function(filePath) {
     });
 };
 
-module.exports = function (filePath/*: {path: string} */, readWhitelist/*: Array<string>*/) {
-    var normPath = path.normalize(filePath.path);
+module.exports = function (filePath/*: {path: string} */, access/*: {FILE: {READ: Array<string>, WRITE: Array<string>}}*/) {
+    var readWhitelist = access.FILE.READ,
+        normPath = path.normalize(filePath.path);
+
     return RSVP.resolve(accessAllowed(normPath, readWhitelist)).then(function () {
         return exists(normPath).then(function (pathExists) {
             if (!pathExists) {
