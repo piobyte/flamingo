@@ -93,7 +93,7 @@ var suites = {
                     .add(profileName + '#gm', {
                         defer: true,
                         fn: function (deferred) {
-                            httpReader(url.parse(HOST)).then(function (data) {
+                            httpReader(url.parse(HOST), {HTTPS: {ENABLED: false}}).then(function (data) {
                                 data.stream().then(function (rstream) {
                                     debugProfiles[profileName]({
                                         headers: {},
@@ -116,7 +116,7 @@ var suites = {
                     .add(profileName + '#vips', {
                         defer: true,
                         fn: function (deferred) {
-                            httpReader(url.parse(HOST)).then(function (data) {
+                            httpReader(url.parse(HOST), {HTTPS: {ENABLED: false}}).then(function (data) {
                                 data.stream().then(function (rstream) {
                                     debugProfiles[profileName]({
                                         headers: {}, query: {}
