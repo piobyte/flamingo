@@ -19,7 +19,7 @@ Internally it uses [sharp](https://github.com/lovell/sharp), [gm](https://github
 
 - [documentation](https://piobyte.github.io/flamingo/)
 - ~~allow profiles to modify readers/writers~~ isn't needed atm but can be added in a backwards compatible manner.
-- ~~addon hook: logger
+- ~~addon hook: logger~~
 - ~~enable flow for `src/logger`, `src/reader/https`, `src/routes/index` (complains about `require('../package.json')`: `Required module not found`)~~ can be added when [flow#167](https://github.com/facebook/flow/issues/167) is ready
 - ~~autodetect: https://github.com/seangarner/node-stream-mmmagic~~ can be added without conflicting existing routes, something like `/convert/auto/{profile}/{url}`
 
@@ -113,8 +113,8 @@ For detailed information on available hooks and some examples, look at the [addo
 
 __"official" addons__
 
-- [flamingo-s3](https://github.com/piobyte/flaminfo-s3): enable aws s3 integration
-- [flamingo-sentry](https://github.com/piobyte/flaminfo-sentry): enable sentry error logging
+- [flamingo-s3](https://github.com/piobyte/flamingo-s3): enable aws s3 integration
+- [flamingo-sentry](https://github.com/piobyte/flamingo-sentry): enable sentry error logging
 
 ###Installation
 
