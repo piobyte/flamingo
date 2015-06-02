@@ -65,5 +65,18 @@ exports.HOOKS = {
      *
      * @see http://hapijs.com/tutorials/plugins#loading-a-plugin
      */
-    HAPI_PLUGINS: 'HAPI_PLUGINS'
+    HAPI_PLUGINS: 'HAPI_PLUGINS',
+
+    /**
+     * Hook that allows you to register additional bunyan log streams.
+     * Note: As of now, it can't add logs that were generated before the addon is initialized to the addon stream.
+     *
+     * @see https://github.com/trentm/node-bunyan#streams-introduction
+     * @example
+     * exports[addon.HOOKS.LOG_STREAM] = [{
+     *  stream: process.stderr,
+     *  level: "debug"
+     * }]
+     */
+    LOG_STREAM: 'LOG_STREAM'
 };

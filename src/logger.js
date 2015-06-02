@@ -4,66 +4,58 @@
  */
 
 var pkg = require('../package.json'),
-    conf = require('../config'),
     bunyan = require('bunyan');
 
-var loggers = {},
-    streams = [],
-    ravenClient,
+/*eslint no-underscore-dangle: 0*/
+var _loggers = {},
+    streamDefs = [{stream: process.stdout}],
     /**
      * Create a bunyan logger using a given name.
      * @see https://github.com/trentm/node-bunyan
      * @param {String} [name=package.name] logger name
      * @returns {Object} bunyan logger
+     * @example
+     * logger.build('foo') // bunyan logger with name foo
      */
-    genLogger = function (name/*: ?string */) {
+    build = function (name/*: ?string */) {
         /* istanbul ignore next */
         name = name || pkg.name;
 
         /* istanbul ignore else */
-        if (!loggers[name]) {
-            loggers[name] = bunyan.createLogger({
+        if (!_loggers[name]) {
+            _loggers[name] = bunyan.createLogger({
                 name: name,
-                streams: streams
+                streams: streamDefs
             });
         }
-        return loggers[name];
+        return _loggers[name];
+    },
+
+    /**
+     * Wrapper around bunyan `Logger.prototype.addStream` to add a new stream definitions.
+     * It updates all existing loggers and adds the definitions for future logger creations.
+     * @see https://github.com/trentm/node-bunyan#streams
+     * @param {Object[]} newStreamDefs bunyan stream definitions
+     * @return {void}
+     * @example
+     * logger.addStreams([{
+     *  stream: process.stderr,
+     *  level: "debug"
+     * }]) // adds stderr output for debug level logs
+     */
+    addStreams = function (newStreamDefs) {
+        // add def to defs for future loggers
+        streamDefs = streamDefs.concat(newStreamDefs);
+
+        // update existing loggers
+        Object.keys(_loggers).forEach(function (loggerName) {
+            newStreamDefs.forEach(function (streamDef) {
+                _loggers[loggerName].addStream(streamDef);
+            });
+        });
     };
 
-/* istanbul ignore if */
-if (conf.SENTRY_DSN) {
-    var raven = require('raven');
-    var levels = {};
-    levels[bunyan.DEBUG] = 'debug';
-    levels[bunyan.INFO] = 'info';
-    levels[bunyan.WARN] = 'warning';
-    levels[bunyan.ERROR] = 'error';
-    levels[bunyan.FATAL] = 'fatal';
-    ravenClient = new raven.Client(conf.SENTRY_DSN);
-
-    streams = [{
-        level: bunyan.INFO,
-        stream: process.stdout
-    }, {
-        level: bunyan.WARN,
-        stream: { write: function (msg) {
-            var obj = {};
-            try {
-                obj = JSON.parse(msg);
-            } catch (e) {
-                obj.msg = 'Error parsing log message. This happens if bunyan creates an invalid JSON string. (In theory it should never happen)';
-                obj.level = bunyan.FATAL;
-            }
-            obj.flamingo = { version: pkg.version };
-            ravenClient.captureMessage(obj.msg, {
-                level: levels[obj.level],
-                extra: obj
-            });
-        }}
-    }];
-    genLogger('logger').info('using sentry');
-} else {
-    streams = [{ stream: process.stdout }];
-}
-
-module.exports = genLogger;
+module.exports = {
+    build: build,
+    addStreams: addStreams
+};

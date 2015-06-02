@@ -3,7 +3,7 @@ var ffmpeg = require('fluent-ffmpeg'),
     assert = require('assert'),
     cfg = require('../../../config');
 
-var logger = require('../../logger')('preprocessor:video');
+var logger = require('../../logger').build('preprocessor:video');
 
 module.exports = function (options) {
     return function (readerResult) {

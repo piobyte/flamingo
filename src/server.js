@@ -8,7 +8,7 @@ var Hapi = require('hapi'),
     deprecate = require('./util/deprecate'),
     pkg = require('../package.json');
 
-var logger = require('./logger')('server'),
+var logger = require('./logger').build('server'),
     Promise = RSVP.Promise,
     DEBUG_PROFILES_FILE = 'debug.js';
 

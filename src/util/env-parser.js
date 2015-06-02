@@ -3,6 +3,7 @@
  * Environment value parser module
  * @module flamingo/src/util/env-parser
  */
+var deprecate = require('./deprecate');
 
 module.exports = {
     /**
@@ -20,8 +21,8 @@ module.exports = {
      * @param {number} def default value in case of non number
      * @returns {Function} function to convert a value to a number
      * @example
-     * parser.intDefault(200)('100') // 100
-     * parser.intDefault(42)('wasd') // 42
+     * parser.int(200)('100') // 100
+     * parser.int(42)('wasd') // 42
      */
     int: function (def/*: number*/)/*: function */ {
         return function(val/*: any*/)/*: number*/{
@@ -63,21 +64,24 @@ module.exports = {
      * Create a function that converts an input string to an object
      * @param {String} idField field that is used to get a object root value
      * @returns {Function} function that converts a string to an object
+     * @deprecated
      * @example
      * parser.objectList('id')('id:foo,bar:baz') // {foo: {bar: 'baz'}}
      * parser.objectList('id')('id:foo,bar:baz;id:foo2,bar:baz') // {foo: {bar: 'baz'}, foo2: {bar: 'baz'}}
      */
     objectList: function(idField/*: string*/) { return function(val/*: string*/) {
-        return val.split(';').reduce(function(all, objectString){
-            if (objectString.length === 0) { return all; }
-            var buildObj = objectString.split(',').reduce(function (obj, propPair) {
-                var v = propPair.split(':');
-                obj[v[0]] = v[1];
-                return obj;
+        return deprecate(function(){
+            return val.split(';').reduce(function(all, objectString){
+                if (objectString.length === 0) { return all; }
+                var buildObj = objectString.split(',').reduce(function (obj, propPair) {
+                    var v = propPair.split(':');
+                    obj[v[0]] = v[1];
+                    return obj;
+                }, {});
+                all[buildObj[idField]] = buildObj;
+                delete buildObj[idField];
+                return all;
             }, {});
-            all[buildObj[idField]] = buildObj;
-            delete buildObj[idField];
-            return all;
-        }, {});
+        }, 'objectList is deprecated, use a raw json object instead');
     }; }
 };

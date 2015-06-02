@@ -23,6 +23,9 @@ module.exports = function (addons/*: {callback: function} */)/*: {callback: func
     addons.callback(addon.HOOKS.HAPI_PLUGINS, function (plugins) {
         return plugins.push.bind(plugins);
     });
+    addons.callback(addon.HOOKS.LOG_STREAM, function (logger) {
+        return logger.addStreams;
+    });
 
     return addons;
 };

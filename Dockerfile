@@ -30,7 +30,7 @@ RUN npm config set production; npm install -g forever
 COPY . /data
 
 # Install app dependencies
-RUN cd /data; npm install; npm dedupe
+RUN cd /data; npm install flamingo-sentry --save; npm install; npm dedupe
 
 # Cleanup (after npm install because node-gyp)
 RUN apt-get remove -y curl automake build-essential && \

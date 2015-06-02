@@ -3,7 +3,7 @@ var fs = require('fs'),
     assign = require('lodash/object/assign'),
     path = require('path');
 
-var logger = require('./../logger')('addon-discovery');
+var logger = require('./../logger').build('addon-discovery');
 
 var ADDON_KEYWORD = 'flamingo-addon';
 

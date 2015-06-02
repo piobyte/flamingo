@@ -94,4 +94,14 @@ describe('hook', function () {
             assert.deepEqual(Object.keys(profiles), ['addonProfile', 'foo-bar']);
         });
     });
+
+    describe('LOG_STREAM', function () {
+        it('call the addStreams method of the logger', function () {
+            var logger = { addStreams: sinon.spy() };
+
+            addons.hook(addon.HOOKS.LOG_STREAM)(logger);
+
+            assert.ok(logger.addStreams.called);
+        });
+    });
 });

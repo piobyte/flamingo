@@ -6,7 +6,7 @@ var addonDiscovery = require('./discovery'),
     reduce = require('lodash/collection/reduce');
 
 var _callbacks = {},
-    logger = require('./../logger')('addon-loader');
+    logger = require('./../logger').build('addon-loader');
 
 /*eslint no-underscore-dangle: 0 */
 var _hooks = {},

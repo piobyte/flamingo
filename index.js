@@ -4,24 +4,25 @@ var server = require('./src/server'),
     addon = require('./src/addon'),
     pkg = require('./package.json'),
     supported = require('./src/util/supported'),
-    loggerGen = require('./src/logger');
+    logger = require('./src/logger');
 
-var logger = loggerGen('index');
+var log = logger.build('index');
 
 process.on('uncaughtException', function (err) {
-    logger.error(err);
+    log.error(err);
 });
 
 addons.load(__dirname, pkg);
 addons.hook(addon.HOOKS.CONF)(conf);
 addons.hook(addon.HOOKS.ENV)(conf, process.env);
+addons.hook(addon.HOOKS.LOG_STREAM, conf)(logger, conf);
 
 supported().then(function(SUPPORTED){
     conf.SUPPORTED = SUPPORTED;
-    logger.info('starting with supported features', SUPPORTED);
+    log.info('starting with supported features', SUPPORTED);
     server(conf, addons).then(function () {
-        logger.info('Server listening on port ' + conf.PORT);
+        log.info('Server listening on port ' + conf.PORT);
     }, function (err) {
-        logger.err(err);
+        log.err(err);
     });
 });

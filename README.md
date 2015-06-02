@@ -19,7 +19,7 @@ Internally it uses [sharp](https://github.com/lovell/sharp), [gm](https://github
 
 - [documentation](https://piobyte.github.io/flamingo/)
 - ~~allow profiles to modify readers/writers~~ isn't needed atm but can be added in a backwards compatible manner.
-- addon hook: logger
+- ~~addon hook: logger
 - ~~enable flow for `src/logger`, `src/reader/https`, `src/routes/index` (complains about `require('../package.json')`: `Required module not found`)~~ can be added when [flow#167](https://github.com/facebook/flow/issues/167) is ready
 - ~~autodetect: https://github.com/seangarner/node-stream-mmmagic~~ can be added without conflicting existing routes, something like `/convert/auto/{profile}/{url}`
 
@@ -43,6 +43,7 @@ The `{url}` needs to be base64 encoded. See [#crypto](#crypto) for more informat
 ## Config
 
 Modify `config.js` or set environment variables. See [CONFIG](https://piobyte.github.io/flamingo/module-flamingo_config-CONFIG.html) for fields and their description.
+
 __Note:__ if you're using the docker config, don't change the port to something other than 3000 (port 3000 is exposed from the docker image).
 
 To allow configuration without modifying the config file, there are some environment variable mappings.
@@ -110,9 +111,14 @@ module.exports = {
 Flamingo addons only interact with the base flamingo installation using specified hooks, ie.: `"ENV", "CONF", "PROFILES", "ROUTES", "HAPI_PLUGINS"`.
 For detailed information on available hooks and some examples, look at the [addon documentation](https://piobyte.github.io/flamingo/module-flamingo_src_addon.HOOKS.html).
 
+__"official" addons__
+
+- [flamingo-s3](https://github.com/piobyte/flaminfo-s3): enable aws s3 integration
+- [flamingo-sentry](https://github.com/piobyte/flaminfo-sentry): enable sentry error logging
+
 ###Installation
 
-Use npm to install flamingo addons. Example: `npm install flamingo-s3` (Example addon available at [https://github.com/piobyte/flaminfo-s3]).
+Use npm to install flamingo addons. Example: `npm install flamingo-s3` (Example addon available at [piobyte/flaminfo-s3](https://github.com/piobyte/flaminfo-s3)).
 Modify the addon config by overwriting fields inside your `config.js`. The config loading order is as follows:
 
 1. load addon config

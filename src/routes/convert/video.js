@@ -9,7 +9,7 @@ var url = require('url'),
     videoPreprocessor = require('../../preprocessor/video/index'),
     imageProcessor = require('../../processor/image');
 
-var logger = require('../../logger')('route:profile');
+var logger = require('../../logger').build('route:profile');
 
 module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: string; path: string; config: {handler: function} }*/ {
     var conf = flamingo.conf,
