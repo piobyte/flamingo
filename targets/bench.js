@@ -13,16 +13,23 @@ temp.track();
 
 var Promise = RSVP.Promise,
     CONVERT_PROFILES = ['debug-rotate', 'debug-preview-image', 'debug-avatar-image'],
-    filePath = path.join(__dirname, '../test/fixtures/images/Saturn_from_Cassini_Orbiter_(2004-10-06).jpg'),
     IMAGE_HOST = '127.0.0.1',
     IMAGE_HOST_PORT = 43722, // some random unused port
     HOST = 'http://' + IMAGE_HOST + ':' + IMAGE_HOST_PORT + '/Saturn_from_Cassini_Orbiter_(2004-10-06).jpg';
 
+var FILES = [{
+    desc: 'SMALL-IMAGE (jpg): saturn-640x316px',
+    path: path.join(__dirname, '../test/fixtures/images/640px-Saturneclipse.jpg')
+},{
+    desc: 'LARGE-IMAGE (jpg): saturn-8888x4544px',
+    path: path.join(__dirname, '../test/fixtures/images/Saturn_from_Cassini_Orbiter_(2004-10-06).jpg')
+}];
+
 var suites = {
-    'convert-local': function () {
+    'convert-local': function (description, filePath) {
         var prom = Promise.resolve(),
             streamFunction = function (deferred) {
-                return function(data) {
+                return function (data) {
                     var wstream = temp.createWriteStream(),
                         rstream = fs.createReadStream(filePath);
 
@@ -37,19 +44,23 @@ var suites = {
                     console.log('suite convert-local');
 
                     var suite = new Benchmark.Suite(),
-                        gmOptions = { SUPPORTED: {GM: {WEBP: true}}, DEFAULT_MIME: 'image/png' },
-                        gmRequest = { headers: {}, query: {processor: 'gm'}},
-                        vipsOptions = { DEFAULT_MIME: 'image/png' },
+                        gmOptions = {SUPPORTED: {GM: {WEBP: true}}, DEFAULT_MIME: 'image/png'},
+                        gmRequest = {headers: {}, query: {processor: 'gm'}},
+                        vipsOptions = {DEFAULT_MIME: 'image/png'},
                         vipsRequest = {headers: {}, query: {}};
 
                     // start benchmarking
                     suite
-                        .add(profileName + '#gm', { defer: true, fn: function (deferred) {
-                            debugProfiles[profileName](gmRequest, gmOptions).then(streamFunction(deferred));
-                        }})
-                        .add(profileName + '#vips', { defer: true, fn: function (deferred) {
-                            debugProfiles[profileName](vipsRequest, vipsOptions).then(streamFunction(deferred));
-                        }})
+                        .add(description + '-' + profileName + '#gm', {
+                            defer: true, fn: function (deferred) {
+                                debugProfiles[profileName](gmRequest, gmOptions).then(streamFunction(deferred));
+                            }
+                        })
+                        .add(description + '-' + profileName + '#vips', {
+                            defer: true, fn: function (deferred) {
+                                debugProfiles[profileName](vipsRequest, vipsOptions).then(streamFunction(deferred));
+                            }
+                        })
                         .on('cycle', function (event) {
                             console.log(String(event.target));
                         })
@@ -69,15 +80,15 @@ var suites = {
 
         return prom;
     },
-    'convert-remote': function () {
+    'convert-remote': function (description, filePath) {
         var prom = Promise.resolve(),
             server = startImageServer();
 
         function startImageServer() {
             // TODO: maybe launch in another process
             var server = http.createServer(function (req, res) {
-                res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-                fs.createReadStream(filePath).pipe(res, { end: true });
+                res.writeHead(200, {'Content-Type': 'image/jpeg'});
+                fs.createReadStream(filePath).pipe(res, {end: true});
             });
             server.timeout = 4 * 1000; // 4 sec
             server.listen(IMAGE_HOST_PORT, IMAGE_HOST);
@@ -90,7 +101,7 @@ var suites = {
                 var suite = new Benchmark.Suite();
 
                 suite
-                    .add(profileName + '#gm', {
+                    .add(description + '-' + profileName + '#gm', {
                         defer: true,
                         fn: function (deferred) {
                             httpReader(url.parse(HOST), {HTTPS: {ENABLED: false}}).then(function (data) {
@@ -113,7 +124,7 @@ var suites = {
                             });
                         }
                     })
-                    .add(profileName + '#vips', {
+                    .add(description + '-' + profileName + '#vips', {
                         defer: true,
                         fn: function (deferred) {
                             httpReader(url.parse(HOST), {HTTPS: {ENABLED: false}}).then(function (data) {
@@ -164,11 +175,18 @@ var suites = {
     }
 };
 
+function runSuite(promise, description, filePath) {
+    Object.keys(suites).forEach(function (suiteName) {
+        promise = promise.then(suites[suiteName].bind(null, description, filePath));
+    });
+    return promise;
+}
+
 module.exports = function () {
     var prom = Promise.resolve();
 
-    Object.keys(suites).forEach(function (suiteName) {
-        prom = prom.then(suites[suiteName]);
+    FILES.forEach(function (file) {
+        prom = runSuite(prom, file.desc, file.path);
     });
 
     prom.finally(function () {

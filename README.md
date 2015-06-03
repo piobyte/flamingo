@@ -18,6 +18,7 @@ Internally it uses [sharp](https://github.com/lovell/sharp), [gm](https://github
 ## 1.0.0 TODO
 
 - [documentation](https://piobyte.github.io/flamingo/)
+- remove deprecated methods
 - ~~enable flow for `src/logger`, `src/reader/https`, `src/routes/index` (complains about `require('../package.json')`: `Required module not found`)~~ can be added when [flow#167](https://github.com/facebook/flow/issues/167) is ready
 
 ## Architecture

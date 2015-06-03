@@ -63,8 +63,7 @@ module.exports = function (serverConfig, addons) {
                 method: 'GET', path: '/convert/{profile}/{url}', handler: function (req, reply) {
                     deprecate(function () {
                             imageRequestHandler.config.handler(req, reply);
-                        },
-                        '/convert/{profile}/{url} will be removed before 1.0.0. Use /convert/image/{profile}/{url} instead.');
+                        }, '/convert/{profile}/{url} will be removed before 1.0.0. Use /convert/image/{profile}/{url} instead.');
                 }
             });
         }
