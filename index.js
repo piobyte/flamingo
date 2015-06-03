@@ -15,6 +15,8 @@ process.on('uncaughtException', function (err) {
 addons.load(__dirname, pkg);
 addons.hook(addon.HOOKS.CONF)(conf);
 addons.hook(addon.HOOKS.ENV)(conf, process.env);
+
+// log addons after addon conf + env updated the config
 addons.hook(addon.HOOKS.LOG_STREAM, conf)(logger, conf);
 
 supported().then(function(SUPPORTED){

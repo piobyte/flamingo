@@ -5,7 +5,7 @@ var fs = require('fs'),
     path = require('path'),
     RSVP = require('rsvp');
 
-var exists = function(filePath) {
+var exists = function(filePath/*: string */) {
     return new RSVP.Promise(function (resolve) {
         fs.exists(filePath, function (doesExist) { resolve(doesExist); });
     });

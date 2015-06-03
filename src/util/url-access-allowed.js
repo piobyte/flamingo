@@ -1,3 +1,4 @@
+/* @flow */
 /**
  * Url whitelist module
  * @module flamingo/src/util/read-allowed
@@ -13,7 +14,7 @@ var some = require('lodash/collection/some'),
  * @param {Array} whitelist Array of protocol fields that are whitelisted
  * @return {boolean} true if the url is whitelisted
  */
-module.exports = function readAllowed(url/*: {protocol:string} */, whitelist) {
+module.exports = function readAllowed(url/*: {[key: string]: string} */, whitelist/*: Array<{[key: string]: string}> */) {
     return some(whitelist, function (whitelistUrl) {
         return every(keys(whitelistUrl), function (whitelistKey) {
             // url needs to have the whitelisted key → if not early return

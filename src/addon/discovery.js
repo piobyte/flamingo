@@ -24,7 +24,7 @@ function resolvePkg(addon/*: {path: string; hooks: {}; pkg: {name: string; main:
     return loadedAddon;
 }
 
-function fromPackage(packagePath/*: string */) {
+function fromPackage(packagePath/*: string */)/*: ?{path: string, pkg: {name: string}} */ {
     var pkg = path.join(packagePath, 'package.json');
     if (fs.existsSync(pkg)) {
         var content = require(pkg);

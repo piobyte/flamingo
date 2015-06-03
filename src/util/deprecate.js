@@ -1,3 +1,4 @@
+/* @flow weak */
 /**
  * Function deprecation module
  * @module flamingo/src/util/deprecate

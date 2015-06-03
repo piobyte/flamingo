@@ -1,3 +1,8 @@
+/**
+ * Flamingo debug route
+ * @module flamingo/src/routes/debug
+ */
+
 var pkg = require('../../package.json'),
     RSVP = require('rsvp'),
     conf = require('../../config'),
@@ -81,6 +86,13 @@ RSVP.all(
     });
 });
 
+/**
+ * Function to generate the debug route hapi configuration
+ * @param {{conf: object, profiles: object}} flamingo configuration
+ * @return {{method: string, path: string, handler: Function}} hapi route configuration
+ * @see http://hapijs.com/api#serverrouteoptions
+ * @see GET /debug
+ */
 module.exports = function (flamingo) {
     return {
         method: 'GET',

@@ -1,4 +1,8 @@
 /* @flow weak */
+/**
+ * Flamingo file writer
+ * @module flamingo/src/writer/file
+ */
 var fs = require('fs'),
     fileAccessAllowed = require('../util/file-access-allowed'),
     conf = require('../../config'),
@@ -8,6 +12,12 @@ var fs = require('fs'),
 
 var Promise = RSVP.Promise;
 
+/**
+ * Creates a function that calls the given reply function with a stream
+ * @param {{path: string}} outputUrl Output url
+ * @param {function} reply Function that replies a given stream
+ * @return {Function} function that writes a stream to a given file
+ */
 module.exports = function (outputUrl/*: {path: string}*/, reply/*: function*/) {
     return function (stream) {
         var outputPath = path.normalize(outputUrl.path),

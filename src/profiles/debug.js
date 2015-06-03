@@ -1,3 +1,4 @@
+/* @flow weak */
 var RSVP = require('rsvp'),
     sharp = require('sharp'),
     bestFormat = require('../util/best-format'),

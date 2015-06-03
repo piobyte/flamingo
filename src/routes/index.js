@@ -1,5 +1,16 @@
 var pkg = require('../../package.json');
 
+/**
+ * Flamingo index route
+ * @module flamingo/src/routes/index
+ */
+
+/**
+ * Function to generate the index route hapi configuration
+ * @return {{method: string, path: string, config: {handler: Function}}} hapi route configuration
+ * @see http://hapijs.com/api#serverrouteoptions
+ * @see GET /
+ */
 module.exports = function ()/*: {method: string; path: string; config: {handler: function} }*/ {
     return {
         method: 'GET',

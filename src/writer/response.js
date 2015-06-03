@@ -1,3 +1,8 @@
+/* @flow weak */
+/**
+ * Flamingo response writer
+ * @module flamingo/src/writer/response
+ */
 var through = require('through2');
 
 /**
@@ -7,7 +12,7 @@ var through = require('through2');
  * @param {Object} [options] Additional response options
  * @return {Function} Function that replies a given stream
  */
-module.exports = function (path, reply, options) {
+module.exports = function (path, reply/*: function */, options/*: {header: {[key: string]: string}} */) {
     return function (stream) {
         // use through because hapi sometimes didn't trigger the read
         var r = reply(stream.pipe(through()));

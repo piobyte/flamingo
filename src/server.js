@@ -84,6 +84,6 @@ module.exports = function (serverConfig, addons) {
             }
         });
     }).catch(function (err) {
-            logger.warn(err);
-        });
+        logger.warn(err);
+    });
 };

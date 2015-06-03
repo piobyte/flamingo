@@ -1,4 +1,8 @@
 /* @flow weak */
+/**
+ * Flamingo video convert route
+ * @module flamingo/src/routes/convert/video
+ */
 var url = require('url'),
     boom = require('boom'),
     RSVP = require('rsvp'),
@@ -11,6 +15,13 @@ var url = require('url'),
 
 var logger = require('../../logger').build('route:profile');
 
+/**
+ * Function to generate the image convert route hapi configuration
+ * @param {{conf: object, profiles: object}} flamingo configuration
+ * @return {{method: string, path: string, config: {cors: boolean, handler: Function}}} hapi route configuration
+ * @see http://hapijs.com/api#serverrouteoptions
+ * @see GET /convert/video/{profile}/{url}
+ */
 module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: string; path: string; config: {handler: function} }*/ {
     var conf = flamingo.conf,
         profiles = flamingo.profiles;

@@ -11,6 +11,7 @@
  * Hooks to register addon functionality.
  * @namespace
  * @type {}
+ * @readonly
  */
 exports.HOOKS = {
     /**
@@ -18,6 +19,7 @@ exports.HOOKS = {
      * It must export a function that returns an array of configurations compatible with the `src/util/env-config.js` module.
      * See the `env-config` module documentation for more information.
      *
+     * @readonly
      * @example
      *   exports[addon.HOOKS.ENV] = function () {
      *       return [
@@ -31,6 +33,7 @@ exports.HOOKS = {
      * It must export a function that returns an object.
      * It will merge the addon config object with the flamingo config (`config.js`).
      *
+     * @readonly
      * @example
      *   exports[addon.HOOKS.CONF] = function () { return {
      *       AWS: {
@@ -44,12 +47,14 @@ exports.HOOKS = {
     /**
      * Hook that allows you to register additional profiles that are available inside the profile conversion route (`src/routes/profile.js`).
      * It must export a function that returns an object.
+     * @readonly
      */
     PROFILES: 'PROFILES',
     /**
      * Hook that allows you to register additional hapi routes.
      * It must export a function that returns an array of route registration objects
      *
+     * @readonly
      * @see http://hapijs.com/tutorials/routing#routes
      * @example
      * exports[addon.HOOKS.ROUTES] = [{
@@ -63,6 +68,7 @@ exports.HOOKS = {
      * Hook that allows you to register additional hapi plugins.
      * It must export a function that returns an array of plugin registrations.
      *
+     * @readonly
      * @see http://hapijs.com/tutorials/plugins#loading-a-plugin
      */
     HAPI_PLUGINS: 'HAPI_PLUGINS',
@@ -71,6 +77,7 @@ exports.HOOKS = {
      * Hook that allows you to register additional bunyan log streams.
      * Note: As of now, it can't add logs that were generated before the addon is initialized to the addon stream.
      *
+     * @readonly
      * @see https://github.com/trentm/node-bunyan#streams-introduction
      * @example
      * exports[addon.HOOKS.LOG_STREAM] = [{

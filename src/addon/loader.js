@@ -1,3 +1,4 @@
+/* @flow weak */
 var addonDiscovery = require('./discovery'),
     assert = require('assert'),
     noop = require('lodash/utility/noop'),
@@ -17,7 +18,7 @@ exports.unload = function () {
     _hooks = {};
 };
 
-exports.load = function (root, pkg) {
+exports.load = function (root/*: string */, pkg) {
     var addons = addonDiscovery.discover(root, pkg);
     logger.info('using addons', addons.map(function (addon) { return addon.pkg.name + '@' + addon.pkg.version; }));
     _loaded = true;
@@ -37,10 +38,10 @@ exports.load = function (root, pkg) {
     callbacks(exports);
 };
 
-exports.callback = function (hookName, callback) {
+exports.callback = function (hookName/*: string */, callback/*: function */) {
     _callbacks[hookName] = callback;
 };
-exports.hook = function(hookName, hookConfig) {
+exports.hook = function(hookName/*: string */, hookConfig/*: any */) {
     assert(_loaded, 'addons have to be loaded before calling any hooks');
     assert(_callbacks[hookName], 'no registered callback for ' + hookName);
 

@@ -18,10 +18,7 @@ Internally it uses [sharp](https://github.com/lovell/sharp), [gm](https://github
 ## 1.0.0 TODO
 
 - [documentation](https://piobyte.github.io/flamingo/)
-- ~~allow profiles to modify readers/writers~~ isn't needed atm but can be added in a backwards compatible manner.
-- ~~addon hook: logger~~
 - ~~enable flow for `src/logger`, `src/reader/https`, `src/routes/index` (complains about `require('../package.json')`: `Required module not found`)~~ can be added when [flow#167](https://github.com/facebook/flow/issues/167) is ready
-- ~~autodetect: https://github.com/seangarner/node-stream-mmmagic~~ can be added without conflicting existing routes, something like `/convert/auto/{profile}/{url}`
 
 ## Architecture
 
@@ -44,17 +41,16 @@ The `{url}` needs to be base64 encoded. See [#crypto](#crypto) for more informat
 
 Modify `config.js` or set environment variables. See [CONFIG](https://piobyte.github.io/flamingo/module-flamingo_config-CONFIG.html) for fields and their description.
 
-__Note:__ if you're using the docker config, don't change the port to something other than 3000 (port 3000 is exposed from the docker image).
+__Note:__ if you're using the `Dockerfile`, don't change the port to anything other than 3000 (port 3000 is exposed from the container).
 
 To allow configuration without modifying the config file, there are some environment variable mappings.
-If they're set, the default config will be overwritten. If an environment mapping exists,
-it's documented under the `Environment` keyword. (i.e. `Environment: 'DEBUG'`)
+If they're set, the default config will be overwritten.
+If an environment mapping exists, it's documented under the `Environment` keyword. (i.e. `Environment: 'DEBUG'`)
 
 ### CRYPTO
 
 By default the `/convert/*/{profile}/{url}` route accepts an encrypted url.
-If you don't want to encrypt the url beforehand, you can disable crypto with the [`CRYPTO.ENABLED`](http://localhost:63342/flamingo/docs/module-flamingo_config-CONFIG.html#.CRYPTO) variable.
-That way the convert route only reads the base64 encoded url.
+If you don't want to encrypt the url beforehand, you can disable crypto with the [`CRYPTO.ENABLED`](https://piobyte.github.io/flamingo/module-flamingo_config-CONFIG.html#.CRYPTO) variable.
 
 __Change these values if you want to use this server in a production environment__
 
@@ -93,14 +89,12 @@ __Example__
 // src/profiles/examples.js
 module.exports = {
     'my-profile': function (request, query) {
-        return new Promise(function (resolve) {
-            resolve({ response: { header: { 'Content-Type': 'image/jpeg' }},
-                process: [{
-                    processor: 'sharp', pipe: function (pipe) {
-                        return pipe.resize(200, 200).background('white').flatten().toFormat('jpeg');
-                    }
-                }]
-            });
+        return Promise.resolve({ response: { header: { 'Content-Type': 'image/jpeg' }},
+            process: [{
+                processor: 'sharp', pipe: function (pipe) {
+                    return pipe.resize(200, 200).background('white').flatten().toFormat('jpeg');
+                }
+            }]
         });
     }
 };
@@ -108,8 +102,8 @@ module.exports = {
 
 ## Addons
 
-Flamingo addons only interact with the base flamingo installation using specified hooks, ie.: `"ENV", "CONF", "PROFILES", "ROUTES", "HAPI_PLUGINS"`.
-For detailed information on available hooks and some examples, look at the [addon documentation](https://piobyte.github.io/flamingo/module-flamingo_src_addon.HOOKS.html).
+Flamingo addons only interact with the base flamingo installation using specific hooks, ie.: `"ENV", "CONF", "PROFILES", "ROUTES", "HAPI_PLUGINS"`.
+For detailed information on available hooks and some examples, look at the [addon documentatierron](https://piobyte.github.io/flamingo/module-flamingo_src_addon.HOOKS.html).
 
 __"official" addons__
 
@@ -118,8 +112,10 @@ __"official" addons__
 
 ###Installation
 
-Use npm to install flamingo addons. Example: `npm install flamingo-s3` (Example addon available at [piobyte/flaminfo-s3](https://github.com/piobyte/flaminfo-s3)).
-Modify the addon config by overwriting fields inside your `config.js`. The config loading order is as follows:
+Use npm to install flamingo addons. Example: `npm install flamingo-s3 --save`.
+Modify the addon config by overwriting fields inside your `config.js`.
+
+The config loading order is as follows:
 
 1. load addon config
 2. merge addon config with flamingo config (flamingo `config.js` fields will overwrite addon fields)
@@ -128,4 +124,4 @@ Modify the addon config by overwriting fields inside your `config.js`. The confi
 ###Discovery
 
 Flamingo will detect package dependencies (and development dependencies [`devDependencies`]) that contain the `"flamingo-addon"` keyword.
-Using the specified entry point it'll load the addon.
+Using the specified entry point it'll load the addon and use its hooks.

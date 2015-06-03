@@ -1,12 +1,13 @@
 #!/usr/bin/env node
-/* global rm ,target, echo, find, exit, exec, which */
+/* global target, echo, find, exit, exec, which */
 
 require('shelljs/make');
 
 var partialRight = require('lodash/function/partialRight'),
     endsWith = require('lodash/string/endsWith'),
     ary = require('lodash/function/ary'),
-    some = require('lodash/collection/some');
+    some = require('lodash/collection/some'),
+    pkg = require('./package.json');
 
 function ends(val) { return ary(partialRight(endsWith, val), 1); }
 
@@ -64,6 +65,16 @@ target.docs = function () {
     ])) {
         exit(1);
     }
+};
+
+target.help = function () {
+    echo(pkg.name + '@' + pkg.version);
+    echo(pkg.description);
+    echo();
+    echo('available `node make` targets:');
+    Object.keys(target).forEach(function (targetKey) {
+        echo('\t' + targetKey);
+    });
 };
 
 target.bench = require('./targets/bench');

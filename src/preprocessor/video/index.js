@@ -1,3 +1,4 @@
+/* @flow weak */
 var ffmpeg = require('fluent-ffmpeg'),
     RSVP = require('rsvp'),
     assert = require('assert'),
