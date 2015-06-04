@@ -122,8 +122,7 @@ var profiles = {
 
                     return pipe
                         .rotate()
-                        .background('white')
-                        .flatten()
+                        .background('white').flatten()
                         .toFormat(format.type)
                         .resize(dim, dim)
                         .min()

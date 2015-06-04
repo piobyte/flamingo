@@ -5,7 +5,7 @@ set -e
 rm -rf docs || exit 0;
 mkdir docs;
 
-node make docs
+npm run docs
 
 ( cd docs
  git init

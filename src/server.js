@@ -5,21 +5,16 @@ var Hapi = require('hapi'),
     fs = require('fs'),
     path = require('path'),
     addon = require('./addon'),
-    deprecate = require('./util/deprecate'),
-    pkg = require('../package.json');
+    deprecate = require('./util/deprecate');
 
 var logger = require('./logger').build('server'),
     Promise = RSVP.Promise,
     DEBUG_PROFILES_FILE = 'debug.js';
 
-var ratifyOptions = {
-    apiVersion: pkg.version
-};
-
 module.exports = function (serverConfig, addons) {
     return new Promise(function (resolve) {
         var server = new Hapi.Server({debug: false}),
-            serverPlugins = [{register: require('ratify'), options: ratifyOptions}],
+            serverPlugins = [],
             flamingo = {conf: serverConfig, profiles: {}, addons: addons};
 
         server.connection({

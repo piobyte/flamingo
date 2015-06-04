@@ -5,19 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-
     "typecheck": "command -v flow >/dev/null 2>&1 && flow check || { echo \"flow command not available, skipping type checking\" >&2; }",
-    "lint": "node node_modules/eslint/bin/eslint.js index.js test src",
-
-    "predocs": "rm -r docs",
+    "lint": "node node_modules/eslint/bin/eslint.js index.js test src targets",
+    "predocs": "rm -r docs 2>/dev/null || true",
     "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r --template node_modules/jsdoc-baseline --package package.json -R README.md -d docs",
-
     "pretest": "npm run lint && npm run typecheck",
     "test": "TEST=true npm run cover",
-
     "bench": "node targets/bench",
-
-    "precover": "rm -r coverage",
+    "precover": "rm -r coverage 2>/dev/null || true",
     "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -b --recursive -R dot -c",
     "postcover": "node node_modules/istanbul/lib/cli.js check-coverage"
   },
@@ -32,29 +27,30 @@
   },
   "dependencies": {
     "boom": "^2.6.1",
-    "bunyan": "^1.0.1",
+    "bunyan": "^1.4.0",
     "clamp": "^1.0.1",
     "fluent-ffmpeg": "^2.0.1",
     "gm": "^1.18.1",
-    "hapi": "^8.5.3",
+    "hapi": "^8.6.1",
     "lodash": "^3.1.0",
     "mimeparse": "^0.1.4",
     "mkdirp": "^0.5.0",
-    "ratify": "^0.8.0",
     "request": "^2.56.0",
     "rsvp": "^3.0.13",
     "sharp": "^0.10.0",
-    "temp": "^0.8.1",
+    "temp": "^0.8.3",
     "through2": "^0.6.3"
   },
   "devDependencies": {
+    "aws-sdk": "^2.1.33",
     "benchmark": "^1.0.0",
     "eslint": "^0.22.1",
     "istanbul": "^0.3.2",
-    "jsdoc": "^3.3.0-beta3",
+    "jsdoc": "^3.3.1",
     "jsdoc-baseline": "https://github.com/hegemonic/baseline/tarball/master",
     "mocha": "^2.2.1",
-    "nock": "^2.3.0",
+    "nock": "^2.4.1",
+    "node-uuid": "^1.4.3",
     "sinon": "^1.14.1"
   }
 }
