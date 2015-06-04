@@ -2,9 +2,8 @@ var RSVP = require('rsvp'),
     path = require('path'),
     fs = require('fs');
 
-const BASE_PATH = 'test/fixtures/';
-
-var Promise = RSVP.Promise,
+var BASE_PATH = 'test/fixtures/',
+    Promise = RSVP.Promise,
     loadFixture = function (fixturePath) {
         return new Promise(function (resolve, reject) {
             fs.readFile(path.resolve(__dirname, '../../', BASE_PATH + fixturePath), {

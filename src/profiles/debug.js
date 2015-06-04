@@ -108,9 +108,10 @@ var profiles = {
                     }
 
                     return pipe.autoOrient()
-                        .background('white')
                         .setFormat(format.type)
                         .resize(dim, dim + '^')
+                        .background('white')
+                        .flatten()
                         .gravity('Center')
                         .extent(dim, dim);
                 }
@@ -147,9 +148,9 @@ var profiles = {
                     }
                     return pipe
                         .autoOrient()
-                        .background('white')
                         .setFormat(format.type)
                         .resize(dim, dim + '^')
+                        .background('transparent')
                         .gravity('Center')
                         .extent(dim, dim);
                 }
@@ -159,7 +160,6 @@ var profiles = {
                 processor: 'sharp', pipe: function (pipe) {
                     return pipe
                         .rotate()
-                        .background('white').flatten()
                         .toFormat(format.type)
                         .resize(dim, dim)
                         .min()

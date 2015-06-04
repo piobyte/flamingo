@@ -24,6 +24,7 @@ module.exports = {
                         .autoOrient()
                         .setFormat(format.type)
                         .resize(dim, dim + '^')
+                        .background('transparent')
                         .gravity('Center')
                         .extent(dim, dim);
                 }}

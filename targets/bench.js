@@ -182,14 +182,12 @@ function runSuite(promise, description, filePath) {
     return promise;
 }
 
-module.exports = function () {
-    var prom = Promise.resolve();
+var prom = Promise.resolve();
 
-    FILES.forEach(function (file) {
-        prom = runSuite(prom, file.desc, file.path);
-    });
+FILES.forEach(function (file) {
+    prom = runSuite(prom, file.desc, file.path);
+});
 
-    prom.finally(function () {
-        temp.cleanupSync();
-    });
-};
+prom.finally(function () {
+    temp.cleanupSync();
+});

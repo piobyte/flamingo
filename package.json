@@ -1,13 +1,25 @@
 {
   "name": "flamingo",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0-rc.4",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "lint": "node make lint",
-    "test": "node make test",
-    "bench": "node make bench"
+
+    "typecheck": "command -v flow >/dev/null 2>&1 && flow check || { echo \"flow command not available, skipping type checking\" >&2; }",
+    "lint": "node node_modules/eslint/bin/eslint.js index.js test src",
+
+    "predocs": "rm -r docs",
+    "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r --template node_modules/jsdoc-baseline --package package.json -R README.md -d docs",
+
+    "pretest": "npm run lint && npm run typecheck",
+    "test": "TEST=true npm run cover",
+
+    "bench": "node targets/bench",
+
+    "precover": "rm -r coverage",
+    "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -b --recursive -R dot -c",
+    "postcover": "node node_modules/istanbul/lib/cli.js check-coverage"
   },
   "author": "Christian",
   "license": "MIT",
@@ -43,7 +55,6 @@
     "jsdoc-baseline": "https://github.com/hegemonic/baseline/tarball/master",
     "mocha": "^2.2.1",
     "nock": "^2.3.0",
-    "shelljs": "^0.5.0",
     "sinon": "^1.14.1"
   }
 }

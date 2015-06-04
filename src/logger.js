@@ -8,7 +8,8 @@ var pkg = require('../package.json'),
 
 /*eslint no-underscore-dangle: 0*/
 var _loggers = {},
-    streamDefs = [{stream: process.stdout}],
+    // disable stdout logging for test env
+    streamDefs = process.env.TEST ? [] /* istanbul ignore next */ : [{stream: process.stdout}],
     /**
      * Create a bunyan logger using a given name.
      * @see https://github.com/trentm/node-bunyan
@@ -28,6 +29,7 @@ var _loggers = {},
                 streams: streamDefs
             });
         }
+
         return _loggers[name];
     },
 
