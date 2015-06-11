@@ -11,6 +11,7 @@
     "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r --template node_modules/jsdoc-baseline --package package.json -R README.md -d docs",
     "pretest": "npm run lint && npm run typecheck",
     "test": "TEST=true npm run cover",
+    "preversion": "npm test",
     "bench": "node targets/bench",
     "precover": "rm -r coverage 2>/dev/null || true",
     "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -b --recursive -R dot -c",

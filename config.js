@@ -198,14 +198,13 @@ CONFIG.ENCODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
                     cipher = crypto.createCipheriv(CONFIG.CRYPTO.CIPHER, CONFIG.CRYPTO.KEY, CONFIG.CRYPTO.IV);
 
                 cipher.end(plaintext, 'utf8');
-
                 read = cipher.read();
+
                 if (read !== null) {
                     resolve(read.toString('base64'));
                 } else {
                     reject('Cant\'t encode given plaintext');
                 }
-
             } catch (err) {
                 reject(err);
             }

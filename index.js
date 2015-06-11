@@ -22,9 +22,9 @@ addons.hook(addon.HOOKS.LOG_STREAM, conf)(logger, conf);
 supported().then(function(SUPPORTED){
     conf.SUPPORTED = SUPPORTED;
     log.info('starting with supported features', SUPPORTED);
-    server(conf, addons).then(function () {
+    return server(conf, addons).then(function () {
         log.info('Server listening on port ' + conf.PORT);
-    }, function (err) {
-        log.err(err);
     });
+}).catch(function(err){
+    log.error(err);
 });
