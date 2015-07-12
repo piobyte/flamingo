@@ -48,26 +48,4 @@ describe('env-parser', function () {
     it('checks that the buffer base64 parser works', function () {
         assert.ok(compareFunction(new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64'), envParser.buffer64('DjiZ7AWTeNh38zoQiZ76gw==')));
     });
-
-    it('checks that the objectList parser works', function () {
-        assert.deepEqual(envParser.objectList('id')('id:foo,bar:baz,lorem:ipsum'), {
-            foo: {
-                bar: 'baz',
-                lorem: 'ipsum'
-            }
-        });
-        assert.deepEqual(envParser.objectList('id')('id:foo,bar:baz;id:foo2,key:val'), {
-            foo: {
-                bar: 'baz'
-            },
-            foo2: {
-                key: 'val'
-            }
-        });
-        assert.deepEqual(envParser.objectList('id')('id:foo,bar:baz;'), {
-            foo: {
-                bar: 'baz'
-            }
-        });
-    });
 });

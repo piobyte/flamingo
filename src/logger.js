@@ -8,6 +8,29 @@ var pkg = require('../package.json'),
 
 /*eslint no-underscore-dangle: 0*/
 var _loggers = {},
+    serializers = {
+        request: function(request){
+            return {
+                headers: request.headers,
+                path: request.path,
+                route: {
+                    path: request.route.path,
+                    method: request.route.method
+                },
+                method: request.method
+            };
+        },
+        error: function(error) {
+            // via http://stackoverflow.com/a/18391400
+            var raw = {};
+
+            Object.getOwnPropertyNames(error).forEach(function (key) {
+                raw[key] = error[key];
+            });
+
+            return raw;
+        }
+    },
     // disable stdout logging for test env
     streamDefs = process.env.TEST ? [] /* istanbul ignore next */ : [{stream: process.stdout}],
     /**
@@ -26,7 +49,8 @@ var _loggers = {},
         if (!_loggers[name]) {
             _loggers[name] = bunyan.createLogger({
                 name: name,
-                streams: streamDefs
+                streams: streamDefs,
+                serializers: serializers
             });
         }
 
@@ -58,6 +82,7 @@ var _loggers = {},
     };
 
 module.exports = {
+    serializers: serializers,
     build: build,
     addStreams: addStreams
 };

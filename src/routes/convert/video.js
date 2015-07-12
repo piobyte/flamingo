@@ -13,7 +13,7 @@ var url = require('url'),
     videoPreprocessor = require('../../preprocessor/video/index'),
     imageProcessor = require('../../processor/image');
 
-var logger = require('../../logger').build('route:profile');
+var logger = require('../../logger').build('route:convert/video');
 
 /**
  * Function to generate the image convert route hapi configuration
@@ -51,18 +51,18 @@ module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: 
                     }
 
                     // build processing queue
-                    reader(parsedUrl, conf.ACCESS.READ)
+                    return reader(parsedUrl, conf.ACCESS.READ)
                         .then(videoPreprocessor({ seekPercent: 0.1 }))
                         .then(unfoldReaderResult)
                         .then(imageProcessor(data.profile.process))
-                        .then(responseWriter(null, reply, data.profile.response))
-                        .catch(function (err) {
-                            logger.warn(err);
-                            errorReply(reply, err);
-                        });
+                        .then(responseWriter(null, reply, data.profile.response));
+
                 }).catch(function (err) {
-                    logger.warn(err);
-                    reply(boom.badRequest('Error decrypting payload', err));
+                    logger.error({
+                        error: err,
+                        request: req
+                    }, 'Video convert error for ' + req.path);
+                    errorReply(reply, err, req);
                 });
             }
         }

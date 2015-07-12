@@ -19,7 +19,7 @@ function resolvePkg(addon/*: {path: string; hooks: {}; pkg: {name: string; main:
         addon.hooks = require(mainPath);
         loadedAddon = addon;
     } else {
-        logger.warn('can\'t find entrypoint for addon:', addon.pkg.name);
+        logger.warn('can\'t find entrypoint for addon: ' + addon.pkg.name);
     }
     return loadedAddon;
 }

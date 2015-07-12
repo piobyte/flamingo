@@ -31,6 +31,7 @@ module.exports = function (fileUrl/*: {href: string} */, access/*: {HTTPS: {ENAB
                             resolve(stream);
                             stream.resume();
                         } else {
+                            stream.destroy();
                             reject(response);
                         }
                     });

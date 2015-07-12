@@ -1,5 +1,6 @@
 /* @flow weak */
-var boom = require('boom');
+var boom = require('boom'),
+    http = require('http');
 
 var codes = {
     ETIMEDOUT: boom.gatewayTimeout,
@@ -12,13 +13,11 @@ module.exports = function (reply/*: function */, error) {
     var code = error.code || error.statusCode,
         message = error.message || error.name;
 
-    if (code && codes.hasOwnProperty(code)) {
+    if (error instanceof http.IncomingMessage && error.hasOwnProperty('statusCode')) {
+        reply(boom.create(error.statusCode));
+    } else if (code && codes.hasOwnProperty(code)) {
         reply(codes[code](message));
     } else {
-        reply({
-            statusCode: 500,
-            error: 'Internal Server Error',
-            message: 'Internal Server Error'
-        }).code(500);
+        reply(boom.internal());
     }
 };

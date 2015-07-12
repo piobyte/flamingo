@@ -23,7 +23,7 @@ exports.HOOKS = {
      * @example
      *   exports[addon.HOOKS.ENV] = function () {
      *       return [
-     *           ['AWS_S3_BUCKETS', 'AWS.S3.BUCKETS', envParser.objectList('alias')]
+     *           ['AWS_S3_BUCKETS', 'AWS.S3.BUCKETS', JSON.parse]
      *       ]
      *   };
      */

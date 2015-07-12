@@ -37,7 +37,7 @@ module.exports = function (options) {
                                 logger.debug('Spawned ffmpeg with command: ' + commandLine);
                             })
                             .on('error', function (e) {
-                                logger.warn('error', e);
+                                logger.error({error: e}, 'Video processing error');
                             })
                             .on('end', function () {
                                 logger.debug('ffmpeg end');

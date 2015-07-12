@@ -20,7 +20,11 @@ exports.unload = function () {
 
 exports.load = function (root/*: string */, pkg) {
     var addons = addonDiscovery.discover(root, pkg);
-    logger.info('using addons', addons.map(function (addon) { return addon.pkg.name + '@' + addon.pkg.version; }));
+
+    /* istanbul ignore next */
+    if (addons.length) {
+        logger.info('using addons: ' + addons.map(function (addon) { return addon.pkg.name + '@' + addon.pkg.version; }).join(', '));
+    }
     _loaded = true;
 
     _hooks = reduce(addons, function (hooks, addon) {

@@ -25,7 +25,10 @@ module.exports = function (serverConfig, addons) {
         logger.info(isArray(tags) ? tags.join(' ') : tags, ev.data);
     });
     server.on('request-error', function (request, err) {
-        logger.error(err);
+        logger.error({
+            request: request,
+            error: err
+        }, 'Request error for ' + request.path);
     });
 
     /*eslint no-sync: 0*/
@@ -39,7 +42,7 @@ module.exports = function (serverConfig, addons) {
     addons.hook(addon.HOOKS.ROUTES, flamingo)(server);
     addons.hook(addon.HOOKS.HAPI_PLUGINS, flamingo)(serverPlugins);
 
-    logger.info('available profiles', Object.keys(flamingo.profiles));
+    logger.info('available profiles: ' + Object.keys(flamingo.profiles).join(', '));
 
     // apply routes
     server.route(compact([
