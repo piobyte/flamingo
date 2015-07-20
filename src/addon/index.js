@@ -8,15 +8,16 @@
  */
 
 /**
- * Hooks to register addon functionality.
+ * Hooks to register flamino addon functionality.
  * @namespace
  * @type {}
  * @readonly
  */
 exports.HOOKS = {
+
     /**
      * Hook that allows you to extend environment variable parsing.
-     * It must export a function that returns an array of configurations compatible with the `src/util/env-config.js` module.
+     * It must export a function that returns an array of configurations, compatible with the `src/util/env-config.js` module.
      * See the `env-config` module documentation for more information.
      *
      * @readonly
@@ -28,6 +29,7 @@ exports.HOOKS = {
      *   };
      */
     ENV: 'ENV',
+
     /**
      * Hook that hook allows you to set default parameter for your addon.
      * It must export a function that returns an object.
@@ -44,12 +46,26 @@ exports.HOOKS = {
      *   }};
      */
     CONF: 'CONF',
+
     /**
      * Hook that allows you to register additional profiles that are available inside the profile conversion route (`src/routes/profile.js`).
      * It must export a function that returns an object.
      * @readonly
+     * @example
+     * exports[addon.HOOKS.PROFILES] = {
+     *    'my-profile': function (request, query) {
+     *        return Promise.resolve({ response: { header: { 'Content-Type': 'image/jpeg' }},
+     *            process: [{
+     *                processor: 'sharp', pipe: function (pipe) {
+     *                    return pipe.resize(200, 200).background('white').flatten().toFormat('jpeg');
+     *                }
+     *            }]
+     *        });
+     *    }
+     * }
      */
     PROFILES: 'PROFILES',
+
     /**
      * Hook that allows you to register additional hapi routes.
      * It must export a function that returns an array of route registration objects
@@ -60,10 +76,14 @@ exports.HOOKS = {
      * exports[addon.HOOKS.ROUTES] = [{
      *     method: 'GET',
      *     path: '/my/route',
-     *     handler: function (req, reply) { // handle request }
+     *     handler: function (req, reply) {
+     *         // handle request
+     *         reply('ok');
+     *     }
      * }]
      */
     ROUTES: 'ROUTES',
+
     /**
      * Hook that allows you to register additional hapi plugins.
      * It must export a function that returns an array of plugin registrations.

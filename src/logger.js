@@ -4,13 +4,17 @@
  */
 
 var pkg = require('../package.json'),
+    util = require('util'),
     bunyan = require('bunyan');
 
 /*eslint no-underscore-dangle: 0*/
 var _loggers = {},
+    _serializerError = function (type, input) {
+        return {_serializerError: 'serializer ' + type + ' got invalid input: ' + util.inspect(input)};
+    },
     serializers = {
-        request: function(request){
-            return {
+        request: function (request) {
+            return typeof request === 'object' && request.hasOwnProperty('route') ? {
                 headers: request.headers,
                 path: request.path,
                 route: {
@@ -18,20 +22,20 @@ var _loggers = {},
                     method: request.route.method
                 },
                 method: request.method
-            };
+            } :
+                _serializerError('request', request);
         },
-        error: function(error) {
+        error: function (error) {
             // via http://stackoverflow.com/a/18391400
-            var raw = {};
-
-            Object.getOwnPropertyNames(error).forEach(function (key) {
-                raw[key] = error[key];
-            });
-
-            return raw;
+            return typeof error === 'object' ?
+                Object.getOwnPropertyNames(error).reduce(function (raw, key) {
+                    raw[key] = error[key];
+                    return raw;
+                }, {}) :
+                _serializerError('error', error);
         }
     },
-    // disable stdout logging for test env
+// disable stdout logging for test env
     streamDefs = process.env.TEST ? [] /* istanbul ignore next */ : [{stream: process.stdout}],
     /**
      * Create a bunyan logger using a given name.

@@ -11,6 +11,12 @@ var exists = function(filePath/*: string */) {
     });
 };
 
+/**
+ * Function that resolves a read configuration for a given file
+ * @param {path} filePath path to the file to read
+ * @param {object} access read/write access configuration
+ * @return {Promise} resolves with the file read configuration
+ */
 module.exports = function (filePath/*: {path: string} */, access/*: {FILE: {READ: Array<string>, WRITE: Array<string>}}*/) {
     var readWhitelist = access.FILE.READ,
         normPath = path.normalize(filePath.path);

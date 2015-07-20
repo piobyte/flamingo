@@ -1,4 +1,7 @@
 /* @flow weak */
+/**
+ * @module flamingo/src/addon/discovery
+ */
 var fs = require('fs'),
     assign = require('lodash/object/assign'),
     path = require('path');
@@ -24,6 +27,12 @@ function resolvePkg(addon/*: {path: string; hooks: {}; pkg: {name: string; main:
     return loadedAddon;
 }
 
+/**
+ * Generates an object containing useful information (package.json content, package path) for a given dependency package path,
+ * if the package keywords mathes the `ADDON_KEYWORD` value.
+ * @param {string} packagePath path to a given node package
+ * @return {{path: *, pkg: *}} Object if the package keywords math the `ADDON_KEYWORD` value
+ */
 function fromPackage(packagePath/*: string */)/*: ?{path: string, pkg: {name: string}} */ {
     var pkg = path.join(packagePath, 'package.json');
     if (fs.existsSync(pkg)) {
@@ -41,14 +50,24 @@ function fromPackage(packagePath/*: string */)/*: ?{path: string, pkg: {name: st
     }
 }
 
+/**
+ * Function to discover addons by checking each package dependency by looking in the rootDir/`node_modules` directory
+ * @param {String} rootDir root directory string path
+ * @param {object} pkg npm package.json object
+ * @return {Array.<T>} discovered addons
+ */
 function discover(rootDir/*: string */, pkg/*: {dependencies: any; devDependencies: any} */) {
     var deps = assign({}, pkg.dependencies, pkg.devDependencies);
 
-    return Object.keys(deps).map(function (dependency) {
-        return fromPackage(path.join(rootDir, 'node_modules/', dependency, '/'));
-    }).filter(Boolean).map(function (addon) {
-        return resolvePkg(addon);
-    }).filter(Boolean);
+    return Object.keys(deps)
+        .map(function (dependency) {
+            return fromPackage(path.join(rootDir, 'node_modules/', dependency, '/'));
+        })
+        .filter(Boolean)
+        .map(function (addon) {
+            return resolvePkg(addon);
+        })
+        .filter(Boolean);
 }
 
 exports.fromPackage = fromPackage;

@@ -5,6 +5,9 @@ var RSVP = require('rsvp'),
     clamp = require('clamp'),
     envParser = require('../util/env-parser');
 
+/**
+ * Debug profiles that choose a processor based on the `processor` query param
+ */
 var profiles = {
     'debug-rotate': function (request, config) {
         var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),

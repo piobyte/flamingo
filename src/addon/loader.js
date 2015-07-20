@@ -18,6 +18,12 @@ exports.unload = function () {
     _hooks = {};
 };
 
+/**
+ * Function to load all addons starting from a given root using a given pkg
+ * @param {string} root root path
+ * @param {object} pkg package.json object
+ * @returns {void}
+ */
 exports.load = function (root/*: string */, pkg) {
     var addons = addonDiscovery.discover(root, pkg);
 
@@ -45,7 +51,14 @@ exports.load = function (root/*: string */, pkg) {
 exports.callback = function (hookName/*: string */, callback/*: function */) {
     _callbacks[hookName] = callback;
 };
-exports.hook = function(hookName/*: string */, hookConfig/*: any */) {
+
+/**
+ * Creates a function that can be called with additional params that calls all addons for a given hook
+ * @param {string} hookName name of the hook
+ * @param {object} hookConfig config object that is provided to each hook
+ * @return {function} generated hook function
+ */
+exports.hook = function(hookName/*: string */, hookConfig/*: any */)/*: function */ {
     assert(_loaded, 'addons have to be loaded before calling any hooks');
     assert(_callbacks[hookName], 'no registered callback for ' + hookName);
 

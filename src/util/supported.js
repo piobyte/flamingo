@@ -1,4 +1,8 @@
 /* @flow weak */
+/**
+ * Supported features module
+ * @module flamingo/src/util/supported
+ */
 var RSVP = require('rsvp'),
     temp = require('temp'),
     path = require('path'),
@@ -33,6 +37,14 @@ function hasGmWebp(){
     });
 }
 
+/**
+ * Function to check if defined features are supported.
+ * @return {Promise} promise that resolves with an object that contains supported feature flags
+ * @example
+ * supported()
+ *   .then((supported) =>
+ *     console.log(supported.GM.WEBP ? 'webp is supported for gm processor' : 'webp not supported for gm processor'))
+ */
 module.exports = function ()/*: function */ {
     var supported = {GM: {}};
     temp.track();

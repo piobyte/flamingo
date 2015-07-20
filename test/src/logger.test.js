@@ -46,9 +46,11 @@ describe('logger', function () {
             }));
 
         assert.deepEqual(serialized, REQUEST);
+        assert.ok(logger.serializers.request('foo'), 'it doesn\'t break on invalid input');
     });
 
     it('serializes request error objects', function () {
+        /* eslint no-underscore-dangle: 0 */
         var err;
         try{
             JSON.parse('foo');
@@ -58,5 +60,8 @@ describe('logger', function () {
 
         // check if the serialized object has the stack property
         assert.ok(logger.serializers.error(err).hasOwnProperty('stack'));
+        assert.ok(logger.serializers.error('foo')._serializerError.length > 0, 'won\'t break on non error objects');
+        assert.ok(logger.serializers.error(2)._serializerError.length > 0, 'won\'t break on non error objects');
+        assert.ok(logger.serializers.error(NaN)._serializerError.length > 0, 'won\'t break on non error objects');
     });
 });

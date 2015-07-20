@@ -5,6 +5,11 @@ var RSVP = require('rsvp'),
 
 var B64_DELIMITER = 'base64,';
 
+/**
+ * Reader that creates a stream from a file that is located at a base64 encoded path
+ * @param {object} url data url
+ * @returns {Promise} promise that resolves thee stream object
+ */
 module.exports = function (url/*: {host: string, href: string} */) {
     var type = url.host,
         encoded = url.href.substring(url.href.indexOf(B64_DELIMITER) + B64_DELIMITER.length, url.href.length),

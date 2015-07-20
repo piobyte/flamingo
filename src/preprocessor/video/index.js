@@ -2,11 +2,17 @@
 var ffmpeg = require('fluent-ffmpeg'),
     RSVP = require('rsvp'),
     assert = require('assert'),
+    assign = require('lodash/object/assign'),
     cfg = require('../../../config');
 
-var logger = require('../../logger').build('preprocessor:video');
+var logger = require('../../logger').build('preprocessor:video'),
+    defaultOptions = {
+        seekPercent: 0
+    };
 
-module.exports = function (options) {
+module.exports = function (givenOptions) {
+    var options = assign({}, defaultOptions, givenOptions);
+
     return function (readerResult) {
         var ffmpegOptions = {};
 

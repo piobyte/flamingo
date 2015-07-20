@@ -13,7 +13,8 @@ var temp = require('temp'),
 var BENCH_RESULT_TO_S3 = process.env.BENCH_RESULT_TO_S3 === 'true',
     TAGS = process.env.BENCH_TAG ? [process.env.BENCH_TAG] : [],
     id = uuid.v4(),
-    BENCH_FILE = 'benchmark-' + id + '.json.gz',
+    BENCH_FILE = 'benchmark-' + id + '.json',
+    BENCH_FILE_GZ = BENCH_FILE + '.gz',
     RUN_CONFIG = {'async': true},
     CONVERT_PROFILES = ['debug-rotate', 'debug-preview-image', 'debug-avatar-image'], FILES = [{
         desc: 'SMALL-JPG[saturn-640x316px]',
@@ -126,8 +127,8 @@ benchPromise.then(function () {
     };
 
     return BENCH_RESULT_TO_S3 ?
-        gzip(benchmarkResult).then(function (gzipped) { require('./upload-s3')(BENCH_FILE, gzipped); }) :
-        console.log('result:', JSON.stringify(benchmarkResult));
+        gzip(benchmarkResult).then(function (gzipped) { require('./upload-s3')(BENCH_FILE_GZ, gzipped); }) :
+        console.log('result:\n', BENCH_FILE, '\n', JSON.stringify(benchmarkResult));
 }).finally(function () {
     /*eslint no-sync: 0 */
     temp.cleanupSync();

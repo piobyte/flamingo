@@ -1,4 +1,8 @@
 /* @flow weak */
+/**
+ * Environment object mapping module
+ * @module flamingo/src/util/env-config
+ */
 var forEach = require('lodash/collection/forEach'),
     isFunction = require('lodash/lang/isFunction');
 

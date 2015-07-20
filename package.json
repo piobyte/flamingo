@@ -43,7 +43,7 @@
     "through2": "^2.0.0"
   },
   "devDependencies": {
-    "aws-sdk": "^2.1.33",
+    "aws-sdk": "^2.1.39",
     "benchmark": "^1.0.0",
     "eslint": "^0.24.1",
     "istanbul": "^0.3.2",

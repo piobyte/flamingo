@@ -7,6 +7,12 @@ var request = require('request'),
 
 var Promise = RSVP.Promise;
 
+/**
+ * Reader that creates a stream for a given http/https resource
+ * @param {url} fileUrl url to read
+ * @param {object} access access configuration object
+ * @return {promise} resolves with an http(s) read configuration
+ */
 module.exports = function (fileUrl/*: {href: string} */, access/*: {HTTPS: {ENABLED: boolean, READ: Array<{}>, WRITE: Array<{}>}}*/) {
     return access.HTTPS.ENABLED && !readAllowed(fileUrl, access.HTTPS.READ) ?
         RSVP.reject('Read not allowed. See `ACCESS.HTTPS.READ` for more information.', fileUrl) :

@@ -4,7 +4,6 @@
  * @module flamingo/src/util/deprecate
  */
 
-
 var logger = require('../logger').build('deprecate');
 
 /**

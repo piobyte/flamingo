@@ -1,4 +1,8 @@
 /* @flow weak */
+/**
+ * Error reply module
+ * @module flamingo/src/util/error-reply
+ */
 var boom = require('boom'),
     http = require('http');
 
@@ -9,7 +13,15 @@ var codes = {
     Forbidden: boom.forbidden
 };
 
-module.exports = function (reply/*: function */, error) {
+/**
+ * Function that calls the reply function with a given error by extracting useful error fields
+ * and set the response status code accordingly.
+ *
+ * @param {function} reply function to reply to request
+ * @param {object} error error object
+ * @returns {void}
+ */
+module.exports = function (reply/*: function */, error/*: {statusCode: ?string, name: ?string} */) {
     var code = error.code || error.statusCode,
         message = error.message || error.name;
 

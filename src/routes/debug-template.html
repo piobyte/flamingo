@@ -8,13 +8,12 @@
             font-family: sans-serif;
             -webkit-font-smoothing: antialiased;
             color: #333;
-            margin: 60px 0 0;
+            margin: 40px 0 0;
         }
 
-        h1 {
+        .head-bar {
+            z-index: 1;
             width: 100%;
-            font-weight: bold;
-            text-transform: uppercase;
             position: fixed;
             top: 0;
             margin: 0;
@@ -23,22 +22,61 @@
             color: #ecf0f1;
             font-size: 16px;
         }
-        h1 span{
+        .head-bar h1{
+            display: inline-block;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 0;
+            margin: 0;
+            color: #ecf0f1;
+            font-size: 16px;
+        }
+
+        label{
+            cursor: pointer;
+        }
+
+        .head-bar span{
             background: #2c3e50;
             text-transform: none;
             padding: 5px;
             border-radius: 2px;
         }
-
         table {
             width: 100%;
             border-spacing: 0;
+            background: #fff;
+            box-sizing: border-box;
+        }
+
+        th, td{
+            text-align: left;
         }
 
         thead th{
             margin: 0;
-            padding: 0;
+            position: relative;
+            vertical-align: bottom;
+            text-overflow: ellipsis;
+            font-weight: 700;
+            font-size: 14px;
+            color: rgba(0,0,0,.54);
+            text-transform: uppercase;
+            letter-spacing: 0;
+            height: 48px;
+            padding: 0 18px 8px 18px;
+            box-sizing: border-box;
+            background: #fff;
+            border-bottom: 1px solid rgba(0,0,0,.12);
+            border-top: 1px solid rgba(0,0,0,.12);
         }
+        tbody td {
+            position: relative;
+            vertical-align: middle;
+            padding: 5px 10px;
+            box-sizing: border-box;
+        }
+
         thead th a {
             display: block;
             text-transform: uppercase;
@@ -48,82 +86,83 @@
             text-decoration: none;
         }
 
-        thead th:nth-child(n+2) {
-            text-align: left;
+        td[rowspan="<%= urls.length * sizes.length * processors.length %>"]{
+            background: #fafafa;
         }
-
-        tbody td {
-            text-align: center;
-            white-space: nowrap;
-            padding: 5px 0;
+        td[rowspan="<%= urls.length * sizes.length %>"],
+        td[rowspan="<%= urls.length %>"],
+        td:not([rowspan]){
+            background: #f5f5f5;
         }
-
-        tbody td:nth-child(n+2) {
-            text-align: left;
-            padding-left: 10px;
+        td{
+            border-bottom: 1px solid rgba(0,0,0,.12);
+            border-right: 1px solid rgba(0,0,0,.12);
         }
-
-        figure {
-            vertical-align: bottom;
-            margin: 0;
-            padding: 5px;
-            display: inline-block;
+        td:last-child{
+            border-right: 0;
         }
-        figure img{
-            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAAAAAA6mKC9AAAAGElEQVQYV2N4DwX/oYBhgARgDJjEAAkAAEC99wFuu0VFAAAAAElFTkSuQmCC);
+        td a{
+            display: block;
         }
-
-        figcaption {
-            text-align: center;
+        td img{
+            width: 30px;
+            height: 30px;
+        }
+        .expand-img td img{
+            width: auto;
+            height: auto;
+        }
+        .time{
             font-family: 'Source Code Pro', monospace;
-            font-size: 14px;
-            color: #ecf0f1;
-            font-weight: bold;
-            padding: 5px;
+        }
+        .red{
+            background-color: #c62828 !important;
+            color: #fff !important;
+        }
+        .text-center{
+            text-align: center;
         }
 
-        thead th:nth-child(6n+2) a { color: #16a085; border-bottom: 3px solid #16a085; }
-        thead th:nth-child(6n+3) a { color: #27ae60; border-bottom: 3px solid #27ae60;}
-        thead th:nth-child(6n+4) a { color: #2980b9; border-bottom: 3px solid #2980b9;}
-        thead th:nth-child(6n+5) a { color: #8e44ad; border-bottom: 3px solid #8e44ad;}
-        thead th:nth-child(6n+6) a { color: #d35400; border-bottom: 3px solid #d35400;}
-        thead th:nth-child(6n+7) a { color: #c0392b; border-bottom: 3px solid #c0392b;}
-
-        tbody td:nth-child(6n+2) figcaption { background-color: #1abc9c; }
-        tbody td:nth-child(6n+3) figcaption { background-color: #2ecc71; }
-        tbody td:nth-child(6n+4) figcaption { background-color: #3498db; }
-        tbody td:nth-child(6n+5) figcaption { background-color: #9b59b6; }
-        tbody td:nth-child(6n+6) figcaption { background-color: #e67e22; }
-        tbody td:nth-child(6n+7) figcaption { background-color: #e74c3c; }
-
-        tbody td:nth-child(6n+2) figure { background-color: #16a085; }
-        tbody td:nth-child(6n+3) figure { background-color: #27ae60; }
-        tbody td:nth-child(6n+4) figure { background-color: #2980b9; }
-        tbody td:nth-child(6n+5) figure { background-color: #8e44ad; }
-        tbody td:nth-child(6n+6) figure { background-color: #d35400; }
-        tbody td:nth-child(6n+7) figure { background-color: #c0392b; }
-
-        tbody td:first-child{
+        h3{
+            padding: 0;
+            margin: 0;
+        }
+        h3 a{
+            display: block;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 15px;
+            color: #555;
             text-transform: uppercase;
-            font-weight: bold;
-            background: transparent;
+            padding: 18px 18px 9px 18px;
         }
+        h3 a:hover{
+            text-decoration: underline;
+        }
+
     </style>
     <script type="text/javascript">
         var HAS_PERFORMANCE = performance && performance.getEntries;
+
+        function displayError(el) {
+            var element = el.parentElement.parentElement.parentElement.querySelector('.time');
+
+            element.innerHTML = '[ERROR]';
+            element.classList.add('red');
+        }
 
         function displayTiming(el) {
             if (HAS_PERFORMANCE) {
                 var url = el.src,
                     entries = performance.getEntriesByType('resource'),
-                    span = el.nextElementSibling,
+                    time = el.parentElement.parentElement.parentElement.querySelector('.time'),
                     entry;
 
                 entry = entries.filter(function (entry) {
                     return entry.name.indexOf(url) !== -1;
                 });
                 if (entry.length) {
-                    span.innerHTML = entry[0].duration.toFixed(3) + 'ms';
+                    time.innerHTML = entry[0].duration.toFixed(3) + 'ms';
                 }
             } else {
                 console.warn('no performance api, can\'t display timings');
@@ -144,40 +183,61 @@
                 console.warn('no performance api, can\'t display timings');
             }
         }
+        function toggleExpandImg(){
+            document.body.classList.toggle('expand-img');
+        }
     </script>
 </head>
 <body onload="displayAllTiming()">
-    <h1>Debug - <%= pkg.name %>@<%= pkg.version %> <span>&#128337;</span></h1>
+    <div class="head-bar">
+        <h1>Debug - <%= pkg.name %>@<%= pkg.version %> <span>&#128337;</span></h1>
+        <label for="expand-img">expand images <input onchange="toggleExpandImg()" id="expand-img" type="checkbox"/></label>
+    </div>
+
+    <% _.forEach(profileNames, function(name, pId){ %>
+    <h3><a href="?profiles=<%= name %>"><%= name %></a></h3>
+
     <table>
+        <colgroup>
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 10%">
+            <col style="width: 20%">
+            <col style="width: 5%">
+        </colgroup>
         <thead>
             <tr>
-                <th><a>Processor</a></th>
-                <% _.forEach(profileNames, function(name){ %>
-                    <th><a href="?profiles=<%= name %>"><%= name %></a></th>
-                <% }) %>
+                <th>image</th>
+                <th>time</th>
+                <th>processor</th>
+                <th>file</th>
+                <th>size</th>
             </tr>
         </thead>
         <tbody>
-        <% _.forEach(processors, function(processor){ %>
+        <% _.forEach(urls, function(url, uId){ %>
+        <% _.forEach(sizes, function(size, sId){ %>
+        <% _.forEach(processors, function(processor, psId){ %>
             <tr>
+                <td class="text-center">
+                    <a href="<%= base %>convert/image/<%= name %>/<%= url %>?processor=<%= processor %>&width=<%= size %>">
+                        <img onerror="displayError(this)" onload="displayTiming(this)" src="<%= base %>convert/image/<%= name %>/<%= url %>?processor=<%= processor %>&width=<%= size %>" alt="<%= plainUrls[uId].split('/').slice(-1) %>"/>
+                    </a>
+                </td>
+                <td class="time">&#128337;</td>
                 <td><%= processor %></td>
-                <% _.forEach(profileNames, function(name){ %>
-                    <td>
-                        <% _.forEach(urls, function(url, index){ %>
-                            <% _.forEach(sizes, function(size){ %>
-                            <figure>
-                                <img onload="displayTiming(this)"
-                                         src="<%= base %>convert/image/<%= name %>/<%= url %>?processor=<%= processor %>&width=<%= size %>"
-                                         alt=""/>
-                                <figcaption>&#128337;</figcaption>
-                                <figcaption><%= plainUrls[index].split('/').slice(-1) %></figcaption>
-                            </figure>
-                            <% }) %>
-                        <% }) %>
-                    </td>
-                <% }) %>
+                <% if ((sId + psId) % (sizes.length * processors.length) === 0) { %>
+                <td rowspan="<%= sizes.length * processors.length %>"><%= plainUrls[uId].split('/').slice(-1) %></td>
+                <% } %>
+                <% if (psId === 0) { %>
+                <td rowspan="<%= processors.length %>"><%= size %></td>
+                <% } %>
             </tr>
+        <% }) %>
+        <% }) %>
         <% }) %>
         </tbody>
     </table>
+    <% }) %>
 </body>
