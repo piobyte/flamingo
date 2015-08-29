@@ -1,6 +1,6 @@
 {
   "name": "flamingo",
-  "version": "1.0.0-rc.7",
+  "version": "1.0.0-rc.8",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
