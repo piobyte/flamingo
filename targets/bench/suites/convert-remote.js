@@ -2,7 +2,8 @@ var url = require('url'),
   Benchmark = require('benchmark'),
   RSVP = require('rsvp'),
   httpReader = require('../../../src/reader/https'),
-  startImageServer = require('../start-image-server');
+  fs = require('fs'),
+  simpleServer = require('../simple-http-server');
 
 var IMAGE_HOST = '127.0.0.1',
   IMAGE_HOST_PORT = 43722, // some random unused port
@@ -11,7 +12,10 @@ var IMAGE_HOST = '127.0.0.1',
 module.exports = function (suiteConfig) {
   return function (suiteName, description, filePath) {
     var prom = RSVP.Promise.resolve(),
-      server = startImageServer(IMAGE_HOST, IMAGE_HOST_PORT, filePath);
+      server = simpleServer(IMAGE_HOST, IMAGE_HOST_PORT, function(req, res){
+        res.writeHead(200, {'Content-Type': 'image/jpeg'});
+        fs.createReadStream(filePath).pipe(res, {end: true});
+      });
 
     var convertRemote = function (profileName) {
       return new RSVP.Promise(function (resolve) {

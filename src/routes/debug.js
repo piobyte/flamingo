@@ -10,23 +10,17 @@ var pkg = require('../../package.json'),
   template = require('lodash/string/template'),
   fs = require('fs'),
   images = require('../../test/fixtures/images/sharp-bench-assets/index'),
-  path = require('path'),
-  http = require('http');
+  simpleHttpServer = require('../../targets/bench/simple-http-server'),
+  path = require('path');
 
 var DEBUG_PORT = 43723,
   DEBUG_HOST = 'localhost';
 
-function startImageServer(host, port) {
-  var httpServer = http.createServer(function (req, res) {
-    res.writeHead(200, {'Content-Type': 'image/jpeg'});
-    fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/sharp-bench-assets', req.url)).pipe(res, {end: true});
-  });
-  httpServer.timeout = 4 * 1000; // 4 sec
-  httpServer.listen(port, host);
-  return httpServer;
-}
-
-startImageServer('localhost', DEBUG_PORT);
+simpleHttpServer(DEBUG_HOST, DEBUG_PORT, function(req, res){
+  res.writeHead(200, {'Content-Type': 'image/jpeg'});
+  fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/sharp-bench-assets', req.url))
+    .pipe(res, {end: true});
+});
 
 /*eslint no-sync:0 */
 var URLS,
