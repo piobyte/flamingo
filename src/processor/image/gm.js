@@ -8,7 +8,7 @@
  */
 
 var conf = require('../../../config'),
-    gm = require('gm');
+  gm = require('gm');
 
 /**
  * Function that takes an array with processing operations and returns a function that can be called with an stream.
@@ -24,6 +24,6 @@ var conf = require('../../../config'),
  */
 
 module.exports = function (pipeline/*: function */, stream) {
-    var graphics = gm(stream).options({nativeAutoOrient: !!conf.NATIVE_AUTO_ORIENT});
-    return pipeline(graphics).stream();
+  var graphics = gm(stream).options({nativeAutoOrient: !!conf.NATIVE_AUTO_ORIENT});
+  return pipeline(graphics).stream();
 };

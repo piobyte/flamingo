@@ -1,5 +1,5 @@
 module.exports = {
-    FILE: 'file',
-    REMOTE: 'remote',
-    DATA: 'data'
+  FILE: 'file',
+  REMOTE: 'remote',
+  DATA: 'data'
 };

@@ -13,14 +13,14 @@ var through = require('through2');
  * @return {Function} Function that replies a given stream
  */
 module.exports = function (path, reply/*: function */, options/*: {header: {[key: string]: string}} */) {
-    return function (stream) {
-        // use through because hapi sometimes didn't trigger the read
-        var r = reply(stream.pipe(through()));
-        if (options && options.header) {
-            Object.keys(options.header).forEach(function (property) {
-                r.header(property, options.header[property]);
-            });
-        }
-        return r;
-    };
+  return function (stream) {
+    // use through because hapi sometimes didn't trigger the read
+    var r = reply(stream.pipe(through()));
+    if (options && options.header) {
+      Object.keys(options.header).forEach(function (property) {
+        r.header(property, options.header[property]);
+      });
+    }
+    return r;
+  };
 };

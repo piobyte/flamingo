@@ -15,44 +15,44 @@
  */
 exports.HOOKS = {
 
-    /**
-     * Hook that allows you to extend environment variable parsing.
-     * It must export a function that returns an array of configurations, compatible with the `src/util/env-config.js` module.
-     * See the `env-config` module documentation for more information.
-     *
-     * @readonly
-     * @example
-     *   exports[addon.HOOKS.ENV] = function () {
+  /**
+   * Hook that allows you to extend environment variable parsing.
+   * It must export a function that returns an array of configurations, compatible with the `src/util/env-config.js` module.
+   * See the `env-config` module documentation for more information.
+   *
+   * @readonly
+   * @example
+   *   exports[addon.HOOKS.ENV] = function () {
      *       return [
      *           ['AWS_S3_BUCKETS', 'AWS.S3.BUCKETS', JSON.parse]
      *       ]
      *   };
-     */
-    ENV: 'ENV',
+   */
+  ENV: 'ENV',
 
-    /**
-     * Hook that hook allows you to set default parameter for your addon.
-     * It must export a function that returns an object.
-     * It will merge the addon config object with the flamingo config (`config.js`).
-     *
-     * @readonly
-     * @example
-     *   exports[addon.HOOKS.CONF] = function () { return {
+  /**
+   * Hook that hook allows you to set default parameter for your addon.
+   * It must export a function that returns an object.
+   * It will merge the addon config object with the flamingo config (`config.js`).
+   *
+   * @readonly
+   * @example
+   *   exports[addon.HOOKS.CONF] = function () { return {
      *       AWS: {
      *          S3: {
      *              VERSION: '2006-03-01',
      *          }
      *       }
      *   }};
-     */
-    CONF: 'CONF',
+   */
+  CONF: 'CONF',
 
-    /**
-     * Hook that allows you to register additional profiles that are available inside the profile conversion route (`src/routes/profile.js`).
-     * It must export a function that returns an object.
-     * @readonly
-     * @example
-     * exports[addon.HOOKS.PROFILES] = {
+  /**
+   * Hook that allows you to register additional profiles that are available inside the profile conversion route (`src/routes/profile.js`).
+   * It must export a function that returns an object.
+   * @readonly
+   * @example
+   * exports[addon.HOOKS.PROFILES] = {
      *    'my-profile': function (request, query) {
      *        return Promise.resolve({ response: { header: { 'Content-Type': 'image/jpeg' }},
      *            process: [{
@@ -63,17 +63,17 @@ exports.HOOKS = {
      *        });
      *    }
      * }
-     */
-    PROFILES: 'PROFILES',
+   */
+  PROFILES: 'PROFILES',
 
-    /**
-     * Hook that allows you to register additional hapi routes.
-     * It must export a function that returns an array of route registration objects
-     *
-     * @readonly
-     * @see http://hapijs.com/tutorials/routing#routes
-     * @example
-     * exports[addon.HOOKS.ROUTES] = [{
+  /**
+   * Hook that allows you to register additional hapi routes.
+   * It must export a function that returns an array of route registration objects
+   *
+   * @readonly
+   * @see http://hapijs.com/tutorials/routing#routes
+   * @example
+   * exports[addon.HOOKS.ROUTES] = [{
      *     method: 'GET',
      *     path: '/my/route',
      *     handler: function (req, reply) {
@@ -81,29 +81,29 @@ exports.HOOKS = {
      *         reply('ok');
      *     }
      * }]
-     */
-    ROUTES: 'ROUTES',
+   */
+  ROUTES: 'ROUTES',
 
-    /**
-     * Hook that allows you to register additional hapi plugins.
-     * It must export a function that returns an array of plugin registrations.
-     *
-     * @readonly
-     * @see http://hapijs.com/tutorials/plugins#loading-a-plugin
-     */
-    HAPI_PLUGINS: 'HAPI_PLUGINS',
+  /**
+   * Hook that allows you to register additional hapi plugins.
+   * It must export a function that returns an array of plugin registrations.
+   *
+   * @readonly
+   * @see http://hapijs.com/tutorials/plugins#loading-a-plugin
+   */
+  HAPI_PLUGINS: 'HAPI_PLUGINS',
 
-    /**
-     * Hook that allows you to register additional bunyan log streams.
-     * Note: As of now, it can't add logs that were generated before the addon is initialized to the addon stream.
-     *
-     * @readonly
-     * @see https://github.com/trentm/node-bunyan#streams-introduction
-     * @example
-     * exports[addon.HOOKS.LOG_STREAM] = [{
+  /**
+   * Hook that allows you to register additional bunyan log streams.
+   * Note: As of now, it can't add logs that were generated before the addon is initialized to the addon stream.
+   *
+   * @readonly
+   * @see https://github.com/trentm/node-bunyan#streams-introduction
+   * @example
+   * exports[addon.HOOKS.LOG_STREAM] = [{
      *  stream: process.stderr,
      *  level: "debug"
      * }]
-     */
-    LOG_STREAM: 'LOG_STREAM'
+   */
+  LOG_STREAM: 'LOG_STREAM'
 };

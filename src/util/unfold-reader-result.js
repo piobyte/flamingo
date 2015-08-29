@@ -11,5 +11,5 @@
  * @returns {Stream} stream
  */
 module.exports = function (object/*: {stream: function}*/) {
-    return object.stream();
+  return object.stream();
 };

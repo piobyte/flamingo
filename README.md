@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/piobyte/flamingo.png?branch=master)](https://travis-ci.org/piobyte/flamingo)
 [![Dependency Status](https://david-dm.org/piobyte/flamingo.svg)](https://david-dm.org/piobyte/flamingo)
 [![Code Climate](https://codeclimate.com/github/piobyte/flamingo.png)](https://codeclimate.com/github/piobyte/flamingo)
+[![documentation](http://inch-ci.org/github/piobyte/flamingo.svg?branch=master)](http://inch-ci.org/github/piobyte/flamingo)
 [![npm version](https://badge.fury.io/js/flamingo.svg)](https://www.npmjs.com/package/flamingo)
 ![MIT licensed](https://img.shields.io/github/license/piobyte/flamingo.svg)
 

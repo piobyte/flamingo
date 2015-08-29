@@ -16,6 +16,6 @@ var logger = require('../logger').build('deprecate');
  * deprecate(() => myOldFoo(), 'myOldFoo is deprecated, use myNewFoo instead.');
  */
 module.exports = function (deprecatedFunction/*: function */, warning/*: string */) {
-    logger.warn(warning);
-    return deprecatedFunction();
+  logger.warn(warning);
+  return deprecatedFunction();
 };

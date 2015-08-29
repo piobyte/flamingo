@@ -21,6 +21,6 @@ var sharp = require('sharp');
  */
 
 module.exports = function (pipeline/*: function */, stream) {
-    var pipe = pipeline(sharp());
-    return stream.pipe(pipe);
+  var pipe = pipeline(sharp());
+  return stream.pipe(pipe);
 };

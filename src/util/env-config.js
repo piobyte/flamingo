@@ -4,20 +4,20 @@
  * @module flamingo/src/util/env-config
  */
 var forEach = require('lodash/collection/forEach'),
-    isFunction = require('lodash/lang/isFunction');
+  isFunction = require('lodash/lang/isFunction');
 
 var pathSet = function (object, path, value) {
-    var obj = object;
+  var obj = object;
 
-    forEach(path.split('.'), function (segment, index, paths) {
-        var isLast = index + 1 === paths.length;
-        if (!obj.hasOwnProperty(segment)) {
-            obj[segment] = isLast ? value : {};
-        } else if(isLast){
-            obj[segment] = value;
-        }
-        obj = obj[segment];
-    });
+  forEach(path.split('.'), function (segment, index, paths) {
+    var isLast = index + 1 === paths.length;
+    if (!obj.hasOwnProperty(segment)) {
+      obj[segment] = isLast ? value : {};
+    } else if (isLast) {
+      obj[segment] = value;
+    }
+    obj = obj[segment];
+  });
 };
 
 /**
@@ -37,15 +37,15 @@ var pathSet = function (object, path, value) {
  * @returns {Object} updated config
  */
 module.exports = function (config/*: {} */, environment/*: {} */, mappings)/*: {} */ {
-    forEach(mappings, function (mapping) {
-        var envProp = mapping[0],
-            objPath = mapping[1],
-            setVal = mapping[2];
+  forEach(mappings, function (mapping) {
+    var envProp = mapping[0],
+      objPath = mapping[1],
+      setVal = mapping[2];
 
-        if (environment.hasOwnProperty(envProp)) {
-            pathSet(config, objPath,
-                isFunction(setVal) ? setVal(environment[envProp]) : environment[envProp]);
-        }
-    });
-    return config;
+    if (environment.hasOwnProperty(envProp)) {
+      pathSet(config, objPath,
+        isFunction(setVal) ? setVal(environment[envProp]) : environment[envProp]);
+    }
+  });
+  return config;
 };

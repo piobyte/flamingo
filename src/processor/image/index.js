@@ -5,8 +5,8 @@
  */
 
 var processors = {
-    sharp: require('./sharp'),
-    gm: require('./gm')
+  sharp: require('./sharp'),
+  gm: require('./gm')
 };
 
 /**
@@ -20,10 +20,10 @@ var processors = {
  * // converted image stream
  */
 module.exports = function (transformations/*: Array<{processor: string; pipe: function}>*/)/*: function */ {
-    return function (stream) {
-        for (var i = 0; i < transformations.length; i++) {
-            stream = processors[transformations[i].processor](transformations[i].pipe, stream);
-        }
-        return stream;
-    };
+  return function (stream) {
+    for (var i = 0; i < transformations.length; i++) {
+      stream = processors[transformations[i].processor](transformations[i].pipe, stream);
+    }
+    return stream;
+  };
 };

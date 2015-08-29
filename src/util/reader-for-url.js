@@ -4,10 +4,10 @@
  */
 
 var reader = {
-    file: require('../reader/file'),
-    data: require('../reader/data'),
-    http: require('../reader/https'),
-    https: require('../reader/https')
+  file: require('../reader/file'),
+  data: require('../reader/data'),
+  http: require('../reader/https'),
+  https: require('../reader/https')
 };
 
 /**
@@ -18,12 +18,12 @@ var reader = {
  * readerForUrl('data:text/plain;base64,ZGF0YQ==') // data reader
  */
 module.exports = function (parsedUrl/*: {protocol:string} */)/*: ?function */ {
-    var foundReader;
+  var foundReader;
 
-    /* istanbul ignore else */
-    if (parsedUrl.protocol !== null) {
-        foundReader = reader[parsedUrl.protocol.substring(0, parsedUrl.protocol.length - 1)];
-    }
+  /* istanbul ignore else */
+  if (parsedUrl.protocol !== null) {
+    foundReader = reader[parsedUrl.protocol.substring(0, parsedUrl.protocol.length - 1)];
+  }
 
-    return foundReader;
+  return foundReader;
 };
