@@ -5,18 +5,21 @@ cache:
   - node_modules
 node_js:
 - '0.12'
-- 'iojs'
-matrix:
-  allow_failures:
-    - node_js: 'iojs'
+- 'iojs-v2'
+- 'iojs-v3'
+- '4'
+sudo: 9000
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+    - graphicsmagick
+    - imagemagick
 before_install:
-- sudo add-apt-repository -y ppa:lyrasis/precise-backports
-- sudo apt-get update -y
-- sudo apt-get install -y graphicsmagick imagemagick ffmpeg
-- sudo apt-get install -y automake build-essential gobject-introspection gtk-doc-tools
-  libglib2.0-dev libjpeg-dev libpng12-dev libwebp-dev libtiff4-dev libexif-dev
-  libgsf-1-dev liblcms2-dev libxml2-dev swig libmagickcore-dev curl wget
-- sudo bash ./preinstall.sh
+- sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
+- curl -s https://raw.githubusercontent.com/lovell/sharp/master/preinstall.sh | sudo bash -
 - wget http://flowtype.org/downloads/flow-linux64-latest.zip -O /tmp/flow.zip; unzip
   /tmp/flow.zip -d /tmp; export PATH=$PATH:/tmp/flow/
 install:
