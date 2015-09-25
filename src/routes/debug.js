@@ -36,10 +36,10 @@ RSVP.all(
     return conf.ENCODE_PAYLOAD(url);
   })
 ).then(function (urls) {
-    URLS = urls.map(function (url) {
-      return encodeURIComponent(url);
-    });
+  URLS = urls.map(function (url) {
+    return encodeURIComponent(url);
   });
+});
 
 /**
  * Function to generate the debug route hapi configuration

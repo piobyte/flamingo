@@ -30,8 +30,8 @@ exports.load = function (root/*: string */, pkg) {
   /* istanbul ignore next */
   if (addons.length) {
     logger.info('using addons: ' + addons.map(function (addon) {
-        return addon.pkg.name + '@' + addon.pkg.version;
-      }).join(', '));
+      return addon.pkg.name + '@' + addon.pkg.version;
+    }).join(', '));
   }
   _loaded = true;
 
