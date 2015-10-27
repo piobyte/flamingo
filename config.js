@@ -188,14 +188,19 @@ MAPPINGS.push(['CRYPTO_ENABLED', 'CRYPTO.ENABLED', envParser.boolean],
  * @return {Promise} promise that resolves with the encoded payload
  */
 CONFIG.ENCODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
-  return !CONFIG.CRYPTO.ENABLED ?
+  var ENABLED = this.CRYPTO.ENABLED,
+    CIPHER = this.CRYPTO.CIPHER,
+    KEY = this.CRYPTO.KEY,
+    IV = this.CRYPTO.IV;
+
+  return !ENABLED ?
     RSVP.resolve(new Buffer(plaintext).toString('base64')) :
     new RSVP.Promise(function (resolve, reject) {
       //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
       //    if (err) { reject(err); return; }
       try {
         var read,
-          cipher = crypto.createCipheriv(CONFIG.CRYPTO.CIPHER, CONFIG.CRYPTO.KEY, CONFIG.CRYPTO.IV);
+          cipher = crypto.createCipheriv(CIPHER, KEY, IV);
 
         cipher.end(plaintext, 'utf8');
         read = cipher.read();
@@ -219,14 +224,19 @@ CONFIG.ENCODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
  * DECODE_PAYLOAD('foo').then((cipherText) => ...)
  */
 CONFIG.DECODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
-  return !CONFIG.CRYPTO.ENABLED ?
+  var ENABLED = this.CRYPTO.ENABLED,
+    CIPHER = this.CRYPTO.CIPHER,
+    KEY = this.CRYPTO.KEY,
+    IV = this.CRYPTO.IV;
+
+  return !ENABLED ?
     RSVP.resolve(new Buffer(plaintext, 'base64').toString('utf8')) :
     new RSVP.Promise(function (resolve, reject) {
       //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
       //    if (err) { reject(err); return; }
       try {
         var read,
-          decipher = crypto.createDecipheriv(CONFIG.CRYPTO.CIPHER, CONFIG.CRYPTO.KEY, CONFIG.CRYPTO.IV);
+          decipher = crypto.createDecipheriv(CIPHER, KEY, IV);
 
         decipher.end(plaintext, 'base64');
         read = decipher.read();

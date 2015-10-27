@@ -28,6 +28,14 @@ describe('best-format', function () {
       mime: 'image/png',
       type: 'png'
     });
+    assert.deepEqual(bestFormat('text/html', 'image/png'), {
+      mime: 'image/png',
+      type: 'png'
+    });
+    assert.deepEqual(bestFormat('image/*', 'image/png'), {
+      mime: 'image/png',
+      type: 'png'
+    });
     assert.deepEqual(bestFormat('wasd', 'image/png'), {mime: 'image/png', type: 'png'});
     assert.deepEqual(bestFormat('image,png', 'image/png'), {mime: 'image/png', type: 'png'});
   });

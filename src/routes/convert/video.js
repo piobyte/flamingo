@@ -28,7 +28,7 @@ module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: 
 
   return {
     method: 'GET',
-    path: '/convert/video/{profile}/{url}',
+    path: '/video/{profile}/{url}',
     config: {
       cors: true,
       handler: function (req, reply) {
@@ -51,8 +51,8 @@ module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: 
           }
 
           // build processing queue
-          return reader(parsedUrl, conf.ACCESS.READ)
-            .then(videoPreprocessor({seekPercent: 0.1}))
+          return reader(parsedUrl, conf.ACCESS, conf)
+            .then(videoPreprocessor({seekPercent: 0.1}, conf))
             .then(unfoldReaderResult)
             .then(imageProcessor(data.profile.process))
             .then(responseWriter(null, reply, data.profile.response));
@@ -62,7 +62,7 @@ module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: 
             error: err,
             request: req
           }, 'Video convert error for ' + req.path);
-          errorReply(reply, err, req);
+          errorReply(reply, err);
         });
       }
     }

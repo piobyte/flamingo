@@ -12,7 +12,7 @@ var RSVP = require('rsvp'),
 
 var Promise = RSVP.Promise;
 
-function hasGmWebp() {
+function hasGmWebp(conf) {
   return new Promise(function (resolve) {
     var resultLength = 0,
       out = temp.createWriteStream(),
@@ -26,7 +26,7 @@ function hasGmWebp() {
     try {
       gmProcessor(function (pipe) {
         return pipe.options({imageMagick: true}).setFormat('webp');
-      }, input).pipe(through2(function (chunk, enc, callback) {
+      }, input, conf).pipe(through2(function (chunk, enc, callback) {
         resultLength += chunk.length;
         this.push(chunk);
         callback();
@@ -45,12 +45,12 @@ function hasGmWebp() {
  *   .then((supported) =>
  *     console.log(supported.GM.WEBP ? 'webp is supported for gm processor' : 'webp not supported for gm processor'))
  */
-module.exports = function ()/*: function */ {
+module.exports = function (conf)/*: function */ {
   var supported = {GM: {}};
   temp.track();
 
   return RSVP.all([
-    hasGmWebp()
+    hasGmWebp(conf)
   ]).then(function (results) {
     /*eslint no-sync: 0*/
     temp.cleanupSync();

@@ -50,13 +50,16 @@ describe('https? reader', function () {
   });
 
   it('sets the url for error requests', function (done) {
-    nock.disableNetConnect();
-    httpReader(url.parse('http://example.org/'), EXAMPLE_ACCESS).then(function (data) {
+    nock('http://example.org/')
+      .get('/bad')
+      .reply(400, {status: 'Bad Request'});
+
+    httpReader(url.parse('http://example.org/bad'), {HTTPS: {ENABLED: false}}).then(function (data) {
       assert.ok(!!data.stream);
       data.stream().then(function () {
         done('shouldn\'t resolve this request.');
       }, function (reason) {
-        assert.equal(reason.signal, 'http://example.org/');
+        assert.equal(reason.extra, 'http://example.org/bad');
         done();
       });
     });

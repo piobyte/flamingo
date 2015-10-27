@@ -1,49 +1,62 @@
 /* @flow weak */
 var ffmpeg = require('fluent-ffmpeg'),
   RSVP = require('rsvp'),
-  assert = require('assert'),
   assign = require('lodash/object/assign'),
-  cfg = require('../../../config');
+  isFinite = require('lodash/lang/isFinite'),
+  request = require('request'),
+  errors = require('../../util/errors'),
+  pkg = require('../../../package'),
+  deprecate = require('../../util/deprecate'),
+  noop = require('lodash/utility/noop'),
+  globalConfig = require('../../../config');
 
 var logger = require('../../logger').build('preprocessor:video'),
-  defaultOptions = {
+  defaultProcessConf = {
     seekPercent: 0
   };
 
-module.exports = function (givenOptions) {
-  var options = assign({}, defaultOptions, givenOptions);
+module.exports = function (givenProcessConf, config) {
+  var processConf = assign({}, defaultProcessConf, givenProcessConf);
+  /* istanbul ignore next */
+  if (!config) { deprecate(noop, 'Calling a video preprocessor without passing the flamingo config is deprecated. Pass the flamingo config as 3rd parameter.', {id: 'no-global-config'}); }
+
+  var conf = config ? config : /* istanbul ignore next */globalConfig;
 
   return function (readerResult) {
     var ffmpegOptions = {};
 
-    if (cfg.PREPROCESSOR.VIDEO.KILL_TIMEOUT) {
-      ffmpegOptions.timeout = cfg.PREPROCESSOR.VIDEO.KILL_TIMEOUT;
+    /* istanbul ignore else */
+    if (conf.PREPROCESSOR.VIDEO.KILL_TIMEOUT) {
+      ffmpegOptions.timeout = conf.PREPROCESSOR.VIDEO.KILL_TIMEOUT;
     }
 
     function videoProcessor(input) {
       return new RSVP.Promise(function (resolve, reject) {
         ffmpeg.ffprobe(input, function (err, meta) {
           if (err) {
-            reject(err);
+            reject(new errors.InvalidInputError(err.message, err));
           }
           else {
-            assert.ok(meta.hasOwnProperty('format') && meta.format.hasOwnProperty('duration'), 'ffprobe can detect input duration.');
+            if (!meta.hasOwnProperty('format')) {
+              throw new errors.InvalidInputError('Input format is undetectable by ffprobe');
+            }
+
+            var duration = isFinite(meta.format.duration) ? meta.format.duration : 0;
 
             // seek to time and save 1 frame
             resolve(ffmpeg(input, ffmpegOptions)
               .noAudio()
-              .seekInput(meta.format.duration * options.seekPercent)
+              .seekInput(duration * processConf.seekPercent)
               .frames(1)
               .format('image2')
-              //.addOptions(['-movflags frag_keyframe+faststart'])
               .on('codecData', function (data) {
                 logger.debug(data);
               })
               .on('start', function (commandLine) {
-                logger.debug('Spawned ffmpeg with command: ' + commandLine);
+                logger.info('Spawned ffmpeg with command: ' + commandLine);
               })
               .on('error', function (e) {
-                logger.error({error: e}, 'Video processing error');
+                throw new errors.ProcessingError(e.message, e);
               })
               .on('end', function () {
                 logger.debug('ffmpeg end');
@@ -57,7 +70,27 @@ module.exports = function (givenOptions) {
     case 'file':
       return videoProcessor(readerResult.path);
     case 'remote':
-      return videoProcessor(readerResult.url.href);
+      var promise;
+      if (conf.ALLOW_READ_REDIRECT) {
+        promise = videoProcessor(readerResult.url.href);
+      } else {
+        // do HEAD to check if redirect response code because ffprobe/ffmpeg always follow redirects
+        promise = new RSVP.Promise(function (res, rej) {
+          request.head(readerResult.url.href, {
+            timeout: conf.READER.REQUEST.TIMEOUT,
+            headers: {'User-Agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'},
+            followRedirect: false,
+            maxRedirects: 0
+          }, function (err) {
+            if (err) {
+              rej(new errors.InvalidInputError('Error while doing a HEAD request to check for redirects', err));
+            } else {
+              res(videoProcessor(readerResult.url.href));
+            }
+          });
+        });
+      }
+      return promise;
     default:
       return readerResult.stream().then(function (stream) {
         return videoProcessor(stream);

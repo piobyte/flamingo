@@ -15,7 +15,7 @@ module.exports = function (url/*: {host: string, href: string} */) {
     encoded = url.href.substring(url.href.indexOf(B64_DELIMITER) + B64_DELIMITER.length, url.href.length),
     promise;
 
-  if (type === 'image') {
+  if (type === 'image' || type === 'video') {
     /* eslint new-cap: 0, no-underscore-dangle: 0 */
     // only support image base64 data atm
     var buffer = new Buffer(encoded, 'base64'),

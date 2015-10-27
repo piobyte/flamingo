@@ -10,7 +10,7 @@ var pkg = require('../../package.json'),
   template = require('lodash/string/template'),
   fs = require('fs'),
   images = require('../../test/fixtures/images/sharp-bench-assets/index'),
-  simpleHttpServer = require('../../targets/bench/simple-http-server'),
+  simpleHttpServer = require('../../test/test-util/simple-http-server'),
   path = require('path');
 
 var DEBUG_PORT = 43723,

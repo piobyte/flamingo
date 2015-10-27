@@ -16,6 +16,8 @@ module.exports = function (path, reply/*: function */, options/*: {header: {[key
   return function (stream) {
     // use through because hapi sometimes didn't trigger the read
     var r = reply(stream.pipe(through()));
+
+    /* istanbul ignore else */
     if (options && options.header) {
       Object.keys(options.header).forEach(function (property) {
         r.header(property, options.header[property]);

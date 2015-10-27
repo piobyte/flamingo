@@ -31,8 +31,8 @@ Flamingo provides some simple routes that allow you to convert and transform ima
 You can disable specific routes using the `config.js` with the given `ROUTES.*` attributes (i.e. to disable the index route, set `ROUTES.INDEX` to `false` (or via environment parameter `ROUTE_INDEX=false`).
 
 - `GET` `/` - Flamingo index page which contains project metadata (version, issue tracker)<sup>ROUTES.INDEX</sup>
-- `GET` `/convert/image/{profile}/{url}` - convert image from url using a given profile <sup>ROUTES.PROFILE_CONVERT_IMAGE</sup>
-- `GET` `/convert/video/{profile}/{url}` - convert video from url using a given profile <sup>ROUTES.PROFILE_CONVERT_VIDEO</sup> (Note: the video handler isn't used in production, so we can't say anything on how reliable it is)
+- `GET` `/image/{profile}/{url}` - convert image from url using a given profile <sup>ROUTES.PROFILE_CONVERT_IMAGE</sup>
+- `GET` `/video/{profile}/{url}` - convert video from url using a given profile <sup>ROUTES.PROFILE_CONVERT_VIDEO</sup> (Note: the video handler isn't used in production, so we can't say anything on how reliable it is)
 
 The `{url}` needs to be base64 encoded. See [#crypto](#crypto) for more information on how to encrypt the source url.
 
@@ -48,7 +48,7 @@ If an environment mapping exists, it's documented under the `Environment` keywor
 
 ### CRYPTO
 
-By default the `/convert/*/{profile}/{url}` route accepts an encrypted url.
+By default the `/*/{profile}/{url}` route accepts an encrypted url.
 If you don't want to encrypt the url beforehand, you can disable crypto with the [`CRYPTO.ENABLED`](https://piobyte.github.io/flamingo/module-flamingo_config-CONFIG.html#.CRYPTO) variable.
 
 __Change these values if you want to use this server in a production environment__
@@ -82,12 +82,12 @@ __Example__
 - resize an image to 200x200 pixel
 - set background color to `white`
 - set response header `Content-Type` to `image/jpeg`
-- available on `/convert/image/my-profile/{url}`
+- available on `/image/my-profile/{url}`
 
 ```
 // src/profiles/examples.js
 module.exports = {
-    // name the profile `my-profile` → available at `GET /convert/image/my-profile/{url}`
+    // name the profile `my-profile` → available at `GET /image/my-profile/{url}`
     'my-profile': function (request, query) {
         // set the response header field `Content-Type` to `image/jpeg`
         return Promise.resolve({ response: { header: { 'Content-Type': 'image/jpeg' }},
@@ -132,3 +132,35 @@ The config loading order is as follows:
 
 Flamingo will detect package dependencies (and development dependencies [`devDependencies`]) that contain the `"flamingo-addon"` keyword.
 Using the specified entry point it'll load the addon and use its hooks.
+
+## Deprecations
+
+All deprecated behavior will be logged by the `deprecate` logger. 
+Using [bunyan](https://github.com/trentm/node-bunyan) filters it's really easy to only log deprecations with:
+
+- `node index.js | bunyan -c 'this.name === "deprecate"'`
+
+If you want to ignore all deprecation log messages:
+
+- `node index.js | bunyan -c 'this.name !== "deprecate"'`
+
+To filter specific deprecations:
+
+- `node index.js | bunyan -c 'this.name === "deprecate" && this.id === "no-global-config"'`
+
+For more information on bunyan filters visit the [official docs](https://github.com/trentm/node-bunyan#cli-usage)
+
+### Deprecations
+
+#### `no-global-config`
+
+Previously the global flamingo configuration was globally imported (`require('../config')`). 
+This makes it hard to change the config in testing. 
+To help this all functions that require configuration access get the configuration object as a function parameter.
+
+#### `convert-route-moved`
+
+Some route urls are going to be changed:
+
+- `/convert/video/{profile}/{url}` → `/video/{profile}/{url}`
+- `/convert/image/{profile}/{url}` → `/image/{profile}/{url}`

@@ -1,3 +1,4 @@
+/* @flow weak */
 /**
  * Addon module
  *

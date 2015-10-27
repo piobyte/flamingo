@@ -60,8 +60,13 @@ describe('logger', function () {
 
     // check if the serialized object has the stack property
     assert.ok(logger.serializers.error(err).hasOwnProperty('stack'));
-    assert.ok(logger.serializers.error('foo')._serializerError.length > 0, 'won\'t break on non error objects');
     assert.ok(logger.serializers.error(2)._serializerError.length > 0, 'won\'t break on non error objects');
     assert.ok(logger.serializers.error(NaN)._serializerError.length > 0, 'won\'t break on non error objects');
+  });
+
+  it('serializes request error strings', function () {
+    /* eslint no-underscore-dangle: 0 */
+
+    assert.deepEqual(logger.serializers.error('pls halp'), {message: 'pls halp'});
   });
 });

@@ -31,7 +31,21 @@ var images = {
   inputSvg: 'Wikimedia-logo.svg', // http://commons.wikimedia.org/wiki/File:Wikimedia-logo.svg
   inputPsd: 'free-gearhead-pack.psd', // https://dribbble.com/shots/1624241-Free-Gearhead-Vector-Pack
 
-  inputSvs: 'CMU-1-Small-Region.svs' // http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1-Small-Region.svs
+  inputSvs: 'CMU-1-Small-Region.svs', // http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1-Small-Region.svs,
+
+  webpLosslessRoseAlpha: '1_webp_a.webp',
+  webpLosslessRose: '1_webp_ll.webp',
+  webpLosslessTuxAlpha: '2_webp_a.webp',
+  webpLosslessTux: '2_webp_ll.webp',
+  webpLosslessDiceAlpha: '3_webp_a.webp',
+  webpLosslessDice: '3_webp_ll.webp',
+  webpLosslessMendelAlpha: '4_webp_a.webp',
+  webpLosslessMendel: '4_webp_ll.webp',
+  webpLosslessCompassAlpha: '5_webp_a.webp',
+  webpLosslessCompass: '5_webp_ll.webp',
+
+  smallJpeg: '../640px-Saturneclipse.jpg',
+  largeJpeg: '../Saturn_from_Cassini_Orbiter_(2004-10-06).jpg'
 };
 
 exports.all = function () {

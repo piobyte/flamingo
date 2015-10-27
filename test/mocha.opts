@@ -1,4 +1,4 @@
 -b
 --recursive
--R tap
+-R spec
 -c

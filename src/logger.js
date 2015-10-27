@@ -1,9 +1,10 @@
+/* @flow weak */
 /**
  * Logger module
  * @module flamingo/src/logger
  */
 
-var pkg = require('../package.json'),
+var pkg = require('../package'),
   util = require('util'),
   bunyan = require('bunyan');
 
@@ -26,13 +27,20 @@ var _loggers = {},
         _serializerError('request', request);
     },
     error: function (error) {
-      // via http://stackoverflow.com/a/18391400
-      return typeof error === 'object' ?
-        Object.getOwnPropertyNames(error).reduce(function (raw, key) {
+      var type = typeof error;
+
+      switch (type) {
+      case 'object':
+        // via http://stackoverflow.com/a/18391400
+        return Object.getOwnPropertyNames(error).reduce(function (raw, key) {
           raw[key] = error[key];
           return raw;
-        }, {}) :
-        _serializerError('error', error);
+        }, {});
+      case 'string':
+        return {message: error};
+      default:
+        return _serializerError('error', error);
+      }
     }
   },
 // disable stdout logging for test env

@@ -19,7 +19,7 @@ addons.hook(addon.HOOKS.ENV)(conf, process.env);
 // log addons after addon conf + env updated the config
 addons.hook(addon.HOOKS.LOG_STREAM, conf)(logger, conf);
 
-supported().then(function (SUPPORTED) {
+supported(conf).then(function (SUPPORTED) {
   conf.SUPPORTED = SUPPORTED;
   log.info('starting with supported features', SUPPORTED);
   return server(conf, addons).then(function () {

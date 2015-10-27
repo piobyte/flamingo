@@ -1,4 +1,5 @@
-var pkg = require('../../package.json');
+/* @flow weak */
+var pkg = require('../../package');
 
 /**
  * Flamingo index route

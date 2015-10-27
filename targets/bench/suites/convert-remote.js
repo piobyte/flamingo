@@ -3,7 +3,7 @@ var url = require('url'),
   RSVP = require('rsvp'),
   httpReader = require('../../../src/reader/https'),
   fs = require('fs'),
-  simpleServer = require('../simple-http-server');
+  simpleServer = require('../../../test/test-util/simple-http-server');
 
 var IMAGE_HOST = '127.0.0.1',
   IMAGE_HOST_PORT = 43722, // some random unused port
