@@ -2,7 +2,7 @@ var server = require('./src/server'),
   conf = require('./config'),
   addons = require('./src/addon/loader'),
   addon = require('./src/addon'),
-  pkg = require('./package.json'),
+  pkg = require('./package'),
   supported = require('./src/util/supported'),
   logger = require('./src/logger');
 

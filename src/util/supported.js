@@ -8,10 +8,32 @@ var RSVP = require('rsvp'),
   path = require('path'),
   fs = require('fs'),
   through2 = require('through2'),
+  ffmpeg = require('fluent-ffmpeg'),
   gmProcessor = require('../processor/image/gm');
 
 var Promise = RSVP.Promise;
 
+/**
+ * Function to check if ffmpeg/ffprobe is installed and usable
+ * @returns {RSVP.Promise} resolves true or false depending on the ffmpeg/ffprobe support
+ */
+function hasFFmpeg(/*conf*/) {
+  return new Promise(function(resolve){
+    ffmpeg.ffprobe(path.join(__dirname, '../../test/fixtures/videos/trailer_1080p.ogg'), function (err) {
+      resolve(err ? false : true);
+    });
+  });
+}
+
+/**
+ * Function to check if imagemagick webp is supported
+ * @param {} conf
+ * @returns {RSVP.Promise} resolves true or false depending on the imagemagick webp image support
+ * @example
+ * supported()
+ *   .then((supported) =>
+ *     console.log(supported.FFMPEG ? 'ffmpeg is usable' : 'ffmpeg isn\'t usable'))
+ */
 function hasGmWebp(conf) {
   return new Promise(function (resolve) {
     var resultLength = 0,
@@ -50,12 +72,14 @@ module.exports = function (conf)/*: function */ {
   temp.track();
 
   return RSVP.all([
-    hasGmWebp(conf)
+    hasGmWebp(conf),
+    hasFFmpeg(conf)
   ]).then(function (results) {
     /*eslint no-sync: 0*/
     temp.cleanupSync();
 
     supported.GM.WEBP = results[0];
+    supported.FFMPEG = results[1];
 
     return supported;
   });

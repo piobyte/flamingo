@@ -1,10 +1,9 @@
 /*eslint no-console: 0*/
 
 var temp = require('temp'),
-  path = require('path'),
   RSVP = require('rsvp'),
   uuid = require('node-uuid'),
-  pkg = require('../../package.json'),
+  pkg = require('../../package'),
   fingerprint = require('./fingerprint'),
   debugProfiles = require('../../src/profiles/debug'),
   imageProcessors = require('../../src/processor/image'),
@@ -18,13 +17,7 @@ var BENCH_RESULT_TO_S3 = process.env.BENCH_RESULT_TO_S3 === 'true',
   BENCH_FILE_GZ = BENCH_FILE + '.gz',
   RUN_CONFIG = {'async': true},
   CONVERT_PROFILES = ['debug-preview-image', 'debug-avatar-image'],
-  FILES = [{
-    desc: 'SMALL-JPG[saturn-640x316px]',
-    path: path.join(__dirname, '../../test/fixtures/images/640px-Saturneclipse.jpg')
-  }, {
-    desc: 'LARGE-JPG[saturn-8888x4544px]',
-    path: path.join(__dirname, '../../test/fixtures/images/Saturn_from_Cassini_Orbiter_(2004-10-06).jpg')
-  }].concat(sharpAssets.all()),
+  FILES = sharpAssets.all(),
   benchPromise = RSVP.Promise.resolve(),
   suiteObj = {},
   cycleFn = function cycleFn(event) {
@@ -98,7 +91,6 @@ temp.track();
 
 function runSuite(promise, description, filePath) {
   Object.keys(suites).forEach(function (suiteName) {
-    console.log('add suite', suiteName);
     promise = promise.then(suites[suiteName].bind(null, suiteName, description, filePath));
   });
   return promise;

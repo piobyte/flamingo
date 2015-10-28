@@ -3,7 +3,7 @@
  * @module flamingo/src/routes/debug
  */
 
-var pkg = require('../../package.json'),
+var pkg = require('../../package'),
   RSVP = require('rsvp'),
   conf = require('../../config'),
   _ = require('lodash'),

@@ -28,7 +28,6 @@ var images = {
   inputWebPWithTransparency: '5_webp_a.webp', // http://www.gstatic.com/webp/gallery3/5_webp_a.webp
   inputTiff: 'G31D.TIF', // http://www.fileformat.info/format/tiff/sample/e6c9a6e5253348f4aef6d17b534360ab/index.htm
   inputGif: 'Crash_test.gif', // http://upload.wikimedia.org/wikipedia/commons/e/e3/Crash_test.gif
-  inputSvg: 'Wikimedia-logo.svg', // http://commons.wikimedia.org/wiki/File:Wikimedia-logo.svg
   inputPsd: 'free-gearhead-pack.psd', // https://dribbble.com/shots/1624241-Free-Gearhead-Vector-Pack
 
   inputSvs: 'CMU-1-Small-Region.svs', // http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1-Small-Region.svs,
@@ -46,6 +45,9 @@ var images = {
 
   smallJpeg: '../640px-Saturneclipse.jpg',
   largeJpeg: '../Saturn_from_Cassini_Orbiter_(2004-10-06).jpg'
+
+  // svg disabled because https://github.com/aheckmann/gm/issues/466
+  //inputSvg: 'Wikimedia-logo.svg'// http://commons.wikimedia.org/wiki/File:Wikimedia-logo.svg
 };
 
 exports.all = function () {

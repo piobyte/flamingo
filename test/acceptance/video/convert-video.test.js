@@ -94,36 +94,6 @@ describe('convert video', function () {
     }).catch(done);
   });
 
-  it('creates an image from an flv video', function (done) {
-    var SRC_FILE = 'trailer_1080p.flv',
-      HOST = '127.0.0.1',
-      SERVER_PORT = PORT + 1,
-      FILE_PATH = path.join(__dirname, '../../fixtures/videos', SRC_FILE);
-
-    var flamingoServer,
-      httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
-        res.writeHead(200, {});
-        fs.createReadStream(FILE_PATH).pipe(res);
-      });
-
-    startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
-      flamingoServer = s;
-
-      return request('http://' + HOST + ':' + PORT + '/video/avatar-image/' +
-        encode('http://' + HOST + ':' + SERVER_PORT));
-    }).then(function (data) {
-      assert.ok(data);
-      assert.equal(data.statusCode, 200);
-
-      return RSVP.all([
-        RSVP.denodeify(flamingoServer.stop.bind(flamingoServer))(),
-        RSVP.denodeify(httpServer.close.bind(httpServer))()
-      ]).then(function () {
-        done();
-      });
-    }).catch(done);
-  });
-
   it('creates an image from an avi video', function (done) {
     var SRC_FILE = 'trailer_1080p.avi',
       HOST = '127.0.0.1',

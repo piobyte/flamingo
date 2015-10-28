@@ -6,7 +6,7 @@
 var crypto = require('crypto'),
   envParser = require('./src/util/env-parser'),
   envConfig = require('./src/util/env-config'),
-  pkg = require('./package.json'),
+  pkg = require('./package'),
   RSVP = require('rsvp');
 
 var MAPPINGS = [];
@@ -79,6 +79,7 @@ MAPPINGS.push(['ROUTE_INDEX', 'ROUTES.INDEX', envParser.boolean],
  * @param {boolean} [GM.WEBP=false] if true, gm supports converting to webp
  */
 CONFIG.SUPPORTED = {
+  FFMPEG: true,
   GM: {
     WEBP: false
   }

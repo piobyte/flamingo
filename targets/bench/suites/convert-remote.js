@@ -22,7 +22,7 @@ module.exports = function (suiteConfig) {
         new Benchmark.Suite(description).add('GM', {
           defer: true,
           fn: function (deferred) {
-            httpReader(url.parse(HOST), {HTTPS: {ENABLED: false}}).then(function (data) {
+            httpReader(url.parse(HOST), {HTTPS: {ENABLED: false}}, {ALLOW_READ_REDIRECT: 0, READER:{REQUEST:{TIMEOUT: 2000}}}).then(function (data) {
               data.stream().then(function (rstream) {
                 suiteConfig.profiles[profileName]({
                   headers: {},
@@ -35,7 +35,7 @@ module.exports = function (suiteConfig) {
                   wstream.on('finish', function () {
                     deferred.resolve();
                   });
-                  suiteConfig.imageProcessors(profileData.process)(rstream)
+                  suiteConfig.imageProcessors(profileData.process, {})(rstream)
                     .pipe(wstream);
                 });
               });
@@ -45,7 +45,7 @@ module.exports = function (suiteConfig) {
           .add('VIPS', {
             defer: true,
             fn: function (deferred) {
-              httpReader(url.parse(HOST), {HTTPS: {ENABLED: false}}).then(function (data) {
+              httpReader(url.parse(HOST), {HTTPS: {ENABLED: false}}, {ALLOW_READ_REDIRECT: 0, READER:{REQUEST:{TIMEOUT: 2000}}}).then(function (data) {
                 data.stream().then(function (rstream) {
                   suiteConfig.profiles[profileName]({
                     headers: {}, query: {}
@@ -57,7 +57,7 @@ module.exports = function (suiteConfig) {
                     wstream.on('finish', function () {
                       deferred.resolve();
                     });
-                    suiteConfig.imageProcessors(profileData.process)(rstream).pipe(wstream);
+                    suiteConfig.imageProcessors(profileData.process, {})(rstream).pipe(wstream);
                   });
                 });
               });
