@@ -49,6 +49,15 @@ describe('hook', function () {
 
       assert.deepEqual(conf, {TEST_CONF: {ENABLED: false}});
     });
+    it('keeps buffer objects intact (https://github.com/lodash/lodash/issues/1453)', function(){
+      var conf = {FOO: {Bar: new Buffer('uname -a', 'utf8')}},
+        EXPECTED = new Buffer('uname -a', 'utf8');
+
+      addons.hook(addon.HOOKS.CONF)(conf);
+
+      assert.ok(conf.FOO.Bar instanceof Buffer);
+      assert.strictEqual(conf.FOO.Bar.toString(), EXPECTED.toString());
+    });
   });
 
   describe('ENV', function () {

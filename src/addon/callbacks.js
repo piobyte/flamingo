@@ -5,11 +5,17 @@ var envConfig = require('./../util/env-config'),
   merge = require('lodash/object/merge'),
   partial = require('lodash/function/partial');
 
+function mergeBufferAware(a, b) {
+  if (b instanceof Buffer) {
+    return b;
+  }
+}
+
 module.exports = function (addons/*: {callback: function} */)/*: {callback: function} */ {
   addons.callback(addon.HOOKS.CONF, function (conf) {
     return function (addonConf) {
       // overwrite addon config with config.js content and merge the result into config.js
-      merge(conf, merge(addonConf, conf));
+      merge(conf, merge(addonConf, conf, mergeBufferAware), mergeBufferAware);
     };
   });
   addons.callback(addon.HOOKS.ENV, function (config, environment) {
