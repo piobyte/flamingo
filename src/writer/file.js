@@ -36,13 +36,17 @@ module.exports = function (outputUrl/*: {path: string}*/, reply/*: function*/, o
           if (err) {
             reject(err);
           } else {
-            stream.pipe(fs.createWriteStream(outputPath), {
+            stream.on('error', reject);
+            var writeStream = stream.pipe(fs.createWriteStream(outputPath), {
               end: true
             });
-            resolve(reply({
-              statusCode: 200,
-              message: outputPath + ' created'
-            }).code(200));
+            writeStream.on('error', reject);
+            writeStream.on('finish', function(){
+              resolve(reply({
+                statusCode: 200,
+                message: outputPath + ' created'
+              }).code(200));
+            });
           }
         });
       });

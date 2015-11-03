@@ -202,7 +202,7 @@ describe('image converting server response', function () {
 
       return request(URL);
     }).then(function (response) {
-      assert.equal(response.statusCode, 500);
+      assert.equal(response.statusCode, 400);
       server.stop(done);
     }).catch(done);
   });

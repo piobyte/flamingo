@@ -39,14 +39,11 @@ RUN bash /tmp/install-graphicsmagick.sh; rm /tmp/install-graphicsmagick.sh
 COPY tools/install-flow.sh /tmp/
 RUN bash /tmp/install-flow.sh; rm /tmp/install-flow.sh
 
-# Install some global utility tools
-RUN npm config set production; npm install -g forever
-
 # Bundle app source
 COPY . /data
 
 # Install app dependencies
-RUN cd /data; npm install flamingo-sentry --save; npm install; npm dedupe
+RUN cd /data; npm install
 
 # Cleanup (after npm install because node-gyp)
 RUN apt-get remove -y curl automake build-essential && \
@@ -58,8 +55,5 @@ RUN apt-get remove -y curl automake build-essential && \
 # Define working directory.
 WORKDIR /data
 
-# Expose application port
-EXPOSE 3000
-
 # Define default command.
-CMD ["forever", "index.js"]
+CMD ["npm", "t"]

@@ -3,6 +3,9 @@
 # copied from node-fluent-ffmpeg install script
 # https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/blob/master/tools/test-travis.sh
 
+ARCHIVE="http://johnvansickle.com/ffmpeg/builds/ffmpeg-git-64bit-static.tar.xz"
+DIRNAME="ffmpeg-static"
+
 # Stop on error
 set -e
 
@@ -12,11 +15,16 @@ if [ "$(uname)" = "Linux" ]; then
 	apt-get update
 	apt-get -y install wget tar bzip2
 
-	wget http://johnvansickle.com/ffmpeg/builds/ffmpeg-git-64bit-static.tar.xz
-	tar xf ffmpeg-git-64bit-static.tar.xz
+  cd /tmp
+	wget ${ARCHIVE} -O ${DIRNAME}.tar.xz
+	mkdir ${DIRNAME}
+	tar xvf ${DIRNAME}.tar.xz -C ${DIRNAME} --strip-components=1
 
-	cp ffmpeg-git-*-static/{ffmpeg,ffprobe,ffserver} /usr/bin
-	cp ffmpeg-git-*-static/{ffmpeg,ffprobe} $(pwd)
+	cp ${DIRNAME}/ffmpeg /usr/bin
+	cp ${DIRNAME}/ffprobe /usr/bin
+	cp ${DIRNAME}/ffserver /usr/bin
+	cp ${DIRNAME}/ffmpeg $(pwd)
+	cp ${DIRNAME}/ffprobe $(pwd)
 
 	export ALT_FFMPEG_PATH=$(pwd)/ffmpeg
 	export ALT_FFPROBE_PATH=$(pwd)/ffprobe

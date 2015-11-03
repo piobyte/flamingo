@@ -6,6 +6,7 @@
 var crypto = require('crypto'),
   envParser = require('./src/util/env-parser'),
   envConfig = require('./src/util/env-config'),
+  errors = require('./src/util/errors'),
   pkg = require('./package'),
   RSVP = require('rsvp');
 
@@ -203,7 +204,11 @@ CONFIG.ENCODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
         var read,
           cipher = crypto.createCipheriv(CIPHER, KEY, IV);
 
+        cipher.on('error', function (err) {
+          reject(new errors.InvalidInputError('cipher failed', err));
+        });
         cipher.end(plaintext, 'utf8');
+
         read = cipher.read();
 
         if (read !== null) {
@@ -239,7 +244,11 @@ CONFIG.DECODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
         var read,
           decipher = crypto.createDecipheriv(CIPHER, KEY, IV);
 
+        decipher.on('error', function (err) {
+          reject(new errors.InvalidInputError('decipher failed', err));
+        });
         decipher.end(plaintext, 'base64');
+
         read = decipher.read();
 
         if (read !== null) {

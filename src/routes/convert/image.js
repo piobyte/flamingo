@@ -53,9 +53,7 @@ module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: 
           return reader(parsedUrl, conf.ACCESS, conf)
             .then(unfoldReaderResult)
             .then(imageProcessor(data.profile.process, conf))
-
             .then(responseWriter(null, reply, data.profile.response));
-
         }).catch(function (err) {
           logger.error({
             error: err,

@@ -17,16 +17,13 @@ addons:
     - ubuntu-toolchain-r-test
     packages:
     - g++-4.8
-    - graphicsmagick
-    - imagemagick
 before_install:
 - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
 - sudo bash tools/install-libvips.sh
 - sudo bash tools/install-ffmpeg.sh
+- sudo bash tools/install-imagemagick.sh
 - sudo bash tools/install-graphicsmagick.sh
-- wget http://flowtype.org/downloads/flow-linux64-latest.zip -O /tmp/flow.zip; unzip
-  /tmp/flow.zip -d /tmp; export PATH=$PATH:/tmp/flow/
-- gm convert -version
+- sudo bash tools/install-flow.sh
 install:
 - npm install
 after_success:

@@ -63,3 +63,5 @@ com_crashlytics_export_strings.xml
 *.swp
 
 tools/deploy-docker.sh
+
+supported-files.md

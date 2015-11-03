@@ -13,9 +13,9 @@ See the [documentation](https://piobyte.github.io/flamingo/) for detailed inform
 
 ## Requirements
 
-- node 0.12.x or io.js
+- node `0.12`, `4.0`, `4.1`, `4.2`(LTS), `5.0` or `iojs`(master)
 - [vips](http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS)
-- [graphicsmagick](http://www.graphicsmagick.org/) (if `NATIVE_AUTO_ORIENT` is true, version >= 1.3.18)
+- [graphicsmagick](http://www.graphicsmagick.org/) (if `NATIVE_AUTO_ORIENT` is true, version >= 1.3.18) (for webp support compile from source. See `tools/install-graphicsmagick.sh`)
 - [imagemagick](http://www.imagemagick.org/) if webp is used
 
 ## Architecture
@@ -164,3 +164,31 @@ Some route urls are going to be changed:
 
 - `/convert/video/{profile}/{url}` → `/video/{profile}/{url}`
 - `/convert/image/{profile}/{url}` → `/image/{profile}/{url}`
+
+## Docker
+
+There are two `Dockerfiles` that are useful for developing/deploying flamingo.
+
+### Testing
+
+Use the `test/Dockerfile` to build a docker instance that runs tests:
+
+```
+docker build -f test/Dockerfile -t flamingo-test .
+docker run flamingo-test:latest
+```
+
+### Deploying
+
+Use the `Dockerfile` to build a docker instance that starts flamingo with [forever](https://github.com/foreverjs/forever):
+
+```
+docker build flamingo .
+docker run flamingo:latest
+```
+
+In addition you can configure the flamingo instance using environment parameters:
+
+```
+docker run -e CRYPTO_IV=123456 -e ACCESS_HTTPS_ENABLED=true flamingo:latest
+```

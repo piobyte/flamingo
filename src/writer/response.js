@@ -3,7 +3,8 @@
  * Flamingo response writer
  * @module flamingo/src/writer/response
  */
-var through = require('through2');
+var through = require('through2'),
+  RSVP = require('rsvp');
 
 /**
  * Creates a function that calls the given reply function with a stream
@@ -14,15 +15,20 @@ var through = require('through2');
  */
 module.exports = function (path, reply/*: function */, options/*: {header: {[key: string]: string}} */) {
   return function (stream) {
-    // use through because hapi sometimes didn't trigger the read
-    var r = reply(stream.pipe(through()));
+    return new RSVP.Promise(function (resolve, reject) {
+      stream.on('error', reject);
 
-    /* istanbul ignore else */
-    if (options && options.header) {
-      Object.keys(options.header).forEach(function (property) {
-        r.header(property, options.header[property]);
-      });
-    }
-    return r;
+      // use through because hapi sometimes didn't trigger the read
+      var replyStream = reply(stream.pipe(through()));
+
+      /* istanbul ignore else */
+      if (options && options.header) {
+        Object.keys(options.header).forEach(function (property) {
+          replyStream.header(property, options.header[property]);
+        });
+      }
+
+      replyStream.on('finish', resolve);
+    });
   };
 };

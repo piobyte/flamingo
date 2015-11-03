@@ -13,7 +13,11 @@ module.exports = function (suiteConfig) {
           wstream.on('finish', function () {
             deferred.resolve();
           });
-          suiteConfig.imageProcessors(data.process, {})(rstream).pipe(wstream);
+          suiteConfig.imageProcessors(data.process, {})(rstream)
+            .on('error', function(err){
+              deferred.resolve(err);
+            })
+            .pipe(wstream);
         };
       },
       convertLocal = function (profileName) {
