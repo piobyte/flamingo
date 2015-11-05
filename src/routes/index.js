@@ -7,7 +7,7 @@ var pkg = require('../../package');
  */
 
 var BANNER = [
-  '<!doctype html><html lang=""><head><title>' + pkg.name + '@' + pkg.version + '</title></head><body>',
+  '<!doctype html><html lang=""><head><title>' + pkg.name + '@' + pkg.version + '</title><style>\n  html{\n    display: table;\n    width: 100%;\n    height: 100%;\n  }\n  body{\n    display: table-cell;\n    vertical-align: middle;\n    text-align: center;\n    color: #222;\n    font-family: "Fira Sans", sans-serif;\n  }\n  h1{\n    font-weight: normal;\n  }\n  a{\n    color: #666;\n  }\n  pre{\n    display: inline-block;\n    text-align: left;\n    font-size: 20px;\n  }\n</style></head><body>',
   '<pre>',
   ' .-.',
   '(-`))',
@@ -22,9 +22,9 @@ var BANNER = [
   '      |',
   '    =="-',
   '',
+  '</pre><h1>',
   pkg.name + '@' + pkg.version,
-  '<a href="' + pkg.repository.url + '">' + pkg.repository.url + '</a>',
-  '</pre>' +
+  '</h1><p><a href="' + pkg.repository.url + '">' + pkg.repository.url + '</a></p>',
   '</body></html>'].join('\n');
 
 /**

@@ -13,7 +13,7 @@ See the [documentation](https://piobyte.github.io/flamingo/) for detailed inform
 
 ## Requirements
 
-- node `0.12`, `4.0`, `4.1`, `4.2`(LTS), `5.0` or `iojs`(master)
+- node `0.12`, `4.2`(LTS), `5.0` or `iojs`(master)
 - [vips](http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS)
 - [graphicsmagick](http://www.graphicsmagick.org/) (if `NATIVE_AUTO_ORIENT` is true, version >= 1.3.18) (for webp support compile from source. See `tools/install-graphicsmagick.sh`)
 - [imagemagick](http://www.imagemagick.org/) if webp is used
