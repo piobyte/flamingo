@@ -13,19 +13,27 @@ var _callbacks = {},
 var _hooks = {},
   _loaded = false;
 
-exports.unload = function () {
+exports.load = load;
+exports.unload = unload;
+exports.finalize = finalize;
+exports.callback = callback;
+exports.hook = hook;
+exports.registerAddonHooks = registerAddonHooks;
+
+function unload() {
   _loaded = false;
   _hooks = {};
-};
+}
 
 /**
  * Function to load all addons starting from a given root using a given pkg
  * @param {string} root root path
  * @param {object} pkg package.json object
+ * @param {String} [nodeModulesDir=node_modules] node module dirname
  * @returns {void}
  */
-exports.load = function (root/*: string */, pkg) {
-  var addons = addonDiscovery.discover(root, pkg);
+function load(root/*: string */, pkg, nodeModulesDir/*: string */) {
+  var addons = addonDiscovery.discover(root, pkg, nodeModulesDir);
 
   /* istanbul ignore next */
   if (addons.length) {
@@ -33,9 +41,25 @@ exports.load = function (root/*: string */, pkg) {
       return addon.pkg.name + '@' + addon.pkg.version;
     }).join(', '));
   }
-  _loaded = true;
 
-  _hooks = reduce(addons, function (hooks, addon) {
+  finalize(exports,
+    registerAddonHooks(addons, _hooks));
+}
+
+/**
+ * Finalizes the addon loading process by setting the hooks and registering all callbacks for each one.
+ * This function has to be called before the `hook` method is available.
+ * @param {object} loader
+ * @param {object} hooks
+ */
+function finalize(loader/*: {callback: function} */, hooks/*: {} */) {
+  _hooks = hooks;
+  callbacks(loader);
+  _loaded = true;
+}
+
+function registerAddonHooks(addons/* {hooks: {}} */, loaderHooks/* {} */)/*: {} */ {
+  return reduce(addons, function (hooks, addon) {
     forOwn(addon.hooks, function (val, key) {
       if (!hooks[key]) {
         hooks[key] = [];
@@ -47,14 +71,17 @@ exports.load = function (root/*: string */, pkg) {
       });
     });
     return hooks;
-  }, _hooks);
+  }, loaderHooks);
+}
 
-  callbacks(exports);
-};
-
-exports.callback = function (hookName/*: string */, callback/*: function */) {
+/**
+ * Register a callback for a given hook name
+ * @param {string} hookName name of the hook
+ * @param {function} callback hook function
+ */
+function callback(hookName/*: string */, callback/*: function */) {
   _callbacks[hookName] = callback;
-};
+}
 
 /**
  * Creates a function that can be called with additional params that calls all addons for a given hook
@@ -62,7 +89,7 @@ exports.callback = function (hookName/*: string */, callback/*: function */) {
  * @param {object} hookConfig config object that is provided to each hook
  * @return {function} generated hook function
  */
-exports.hook = function (hookName/*: string */, hookConfig/*: any */)/*: function */ {
+function hook(hookName/*: string */, hookConfig/*: any */)/*: function */ {
   assert(_loaded, 'addons have to be loaded before calling any hooks');
   assert(_callbacks[hookName], 'no registered callback for ' + hookName);
 
@@ -85,4 +112,4 @@ exports.hook = function (hookName/*: string */, hookConfig/*: any */)/*: functio
   }
 
   return hookFunction;
-};
+}

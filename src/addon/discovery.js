@@ -54,14 +54,17 @@ function fromPackage(packagePath/*: string */)/*: ?{path: string, pkg: {name: st
  * Function to discover addons by checking each package dependency by looking in the rootDir/`node_modules` directory
  * @param {String} rootDir root directory string path
  * @param {object} pkg npm package.json object
+ * @param {String} [nodeModulesDir=node_modules] node module dirname
  * @return {Array.<T>} discovered addons
  */
-function discover(rootDir/*: string */, pkg/*: {dependencies: any; devDependencies: any} */) {
+function discover(rootDir/*: string */, pkg/*: {dependencies: any; devDependencies: any} */, nodeModulesDir/*: string */) {
   var deps = assign({}, pkg.dependencies, pkg.devDependencies);
+
+  nodeModulesDir = nodeModulesDir || 'node_modules';
 
   return Object.keys(deps)
     .map(function (dependency) {
-      return fromPackage(path.join(rootDir, 'node_modules/', dependency, '/'));
+      return fromPackage(path.join(rootDir, nodeModulesDir, dependency, '/'));
     })
     .filter(Boolean)
     .map(function (addon) {

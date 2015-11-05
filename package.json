@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "typecheck": "command -v flow >/dev/null 2>&1 && flow check || { echo \"flow command not available, skipping type checking\" >&2; }",
+    "typecheck": "if [[ $(command -v flow) ]] ; then { flow check >&2; } ; else { echo \"flow command not available, skipping type checking\" >&2; } ; fi",
     "lint": "node node_modules/eslint/bin/eslint.js index.js config.js test src targets",
     "predocs": "rm -r docs 2>/dev/null || true",
     "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r --template node_modules/jsdoc-baseline --package package.json -R README.md -d docs",
