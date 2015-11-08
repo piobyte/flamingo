@@ -1,4 +1,5 @@
 /* @flow weak */
+// weak because flow can't handle the array.filter.map see https://github.com/facebook/flow/issues/1026
 /**
  * @module flamingo/src/addon/discovery
  */
@@ -10,7 +11,7 @@ var logger = require('./../logger').build('addon-discovery');
 
 var ADDON_KEYWORD = 'flamingo-addon';
 
-function resolvePkg(addon/*: {path: string; hooks: {}; pkg: {name: string; main: string}}*/) {
+function resolvePkg(addon/*: Addon */)/*: ?Addon */{
   var main = addon.pkg.main || 'index.js',
     mainPath,
     loadedAddon;
@@ -33,7 +34,7 @@ function resolvePkg(addon/*: {path: string; hooks: {}; pkg: {name: string; main:
  * @param {string} packagePath path to a given node package
  * @return {{path: *, pkg: *}} Object if the package keywords math the `ADDON_KEYWORD` value
  */
-function fromPackage(packagePath/*: string */)/*: ?{path: string, pkg: {name: string}} */ {
+function fromPackage(packagePath/*: string */)/*: ?Addon */ {
   var pkg = path.join(packagePath, 'package.json');
   if (fs.existsSync(pkg)) {
     var content = require(pkg);
@@ -46,7 +47,7 @@ function fromPackage(packagePath/*: string */)/*: ?{path: string, pkg: {name: st
       };
     }
   } else {
-    logger.debug('no package.json found at ' + path);
+    logger.debug('no package.json found at ' + packagePath);
   }
 }
 
@@ -57,7 +58,7 @@ function fromPackage(packagePath/*: string */)/*: ?{path: string, pkg: {name: st
  * @param {String} [nodeModulesDir=node_modules] node module dirname
  * @return {Array.<T>} discovered addons
  */
-function discover(rootDir/*: string */, pkg/*: {dependencies: any; devDependencies: any} */, nodeModulesDir/*: string */) {
+function discover(rootDir/*: string */, pkg/*: {dependencies: any; devDependencies: any} */, nodeModulesDir/*: string */)/*: Array<Addon> */ {
   var deps = assign({}, pkg.dependencies, pkg.devDependencies);
 
   nodeModulesDir = nodeModulesDir || 'node_modules';

@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * GraphicsMagick/ImageMagick image processor module
  * @module flamingo/src/processor/image/gm
@@ -26,7 +26,7 @@ var gm = require('gm'),
  *      .then((resultStream) => {...})
  */
 
-module.exports = function (pipeline/*: function */, stream, config/*: {NATIVE_AUTO_ORIENT: boolean} */) {
+module.exports = function (pipeline/*: function */, stream/*: {pipe: function }*/, config/*: {NATIVE_AUTO_ORIENT: boolean} */)/*: any */ {
   if (!config) {
     deprecate(noop, 'Gm processor called without passing the flamingo config.', {id: 'no-global-config'});
   }

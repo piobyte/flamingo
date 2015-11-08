@@ -1,10 +1,8 @@
-/* @flow weak */
+/* @flow */
 /**
  * File access allowed module
  * @module flamingo/src/util/file-access-allowed
  */
-var forEach = require('lodash/collection/forEach');
-
 /**
  * Function to ensure that a given file path is whitelisted
  *
@@ -14,11 +12,9 @@ var forEach = require('lodash/collection/forEach');
  * @throws foo
  */
 module.exports = function (filePath/*: string*/, allowedPaths/*: Array<string>*/)/*: string */ {
-  var validLocation = false;
-  forEach(allowedPaths, function (validFile) {
+  var validLocation = allowedPaths.some(function (validFile) {
     if (filePath.indexOf(validFile) === 0) {
-      validLocation = true;
-      return false;
+      return true;
     }
   });
   if (!validLocation) {

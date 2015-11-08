@@ -1,3 +1,4 @@
+/* flow weak */
 /**
  * Flamingo config module
  * @module flamingo/config

@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * Accept header media type parsing module
  * @module flamingo/src/util/best-format

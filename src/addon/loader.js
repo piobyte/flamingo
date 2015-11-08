@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 var addonDiscovery = require('./discovery'),
   assert = require('assert'),
   noop = require('lodash/utility/noop'),
@@ -10,7 +10,7 @@ var _callbacks = {},
   logger = require('./../logger').build('addon-loader');
 
 /*eslint no-underscore-dangle: 0 */
-var _hooks = {},
+var _hooks/*: {[key: string]: []} */ = {},
   _loaded = false;
 
 exports.load = load;
@@ -32,7 +32,7 @@ function unload() {
  * @param {String} [nodeModulesDir=node_modules] node module dirname
  * @returns {void}
  */
-function load(root/*: string */, pkg, nodeModulesDir/*: string */) {
+function load(root/*: string */, pkg/*: Object */, nodeModulesDir/*: string */) {
   var addons = addonDiscovery.discover(root, pkg, nodeModulesDir);
 
   /* istanbul ignore next */
@@ -58,7 +58,7 @@ function finalize(loader/*: {callback: function} */, hooks/*: {} */) {
   _loaded = true;
 }
 
-function registerAddonHooks(addons/* {hooks: {}} */, loaderHooks/* {} */)/*: {} */ {
+function registerAddonHooks(addons/* {hooks: {}} */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
   return reduce(addons, function (hooks, addon) {
     forOwn(addon.hooks, function (val, key) {
       if (!hooks[key]) {

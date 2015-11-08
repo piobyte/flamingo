@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * Flamingo video convert route
  * @module flamingo/src/routes/convert/video
@@ -22,7 +22,7 @@ var logger = require('../../logger').build('route:convert/video');
  * @see http://hapijs.com/api#serverrouteoptions
  * @see GET /convert/video/{profile}/{url}
  */
-module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: string; path: string; config: {handler: function} }*/ {
+module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {method: string; path: string; config: {handler: function} }*/ {
   var conf = flamingo.conf,
     profiles = flamingo.profiles;
 

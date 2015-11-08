@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * Flamingo image convert route
  * @module flamingo/src/routes/convert/image
@@ -21,7 +21,7 @@ var logger = require('../../logger').build('route:convert/image');
  * @see http://hapijs.com/api#serverrouteoptions
  * @see GET /convert/image/{profile}/{url}
  */
-module.exports = function (flamingo/*: {conf: {}; profiles: {}} */)/*: {method: string; path: string; config: {handler: function} }*/ {
+module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {method: string; path: string; config: {handler: function} }*/ {
   var conf = flamingo.conf,
     profiles = flamingo.profiles;
 

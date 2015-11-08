@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * Supported features module
  * @module flamingo/src/util/supported
@@ -34,7 +34,7 @@ function hasFFmpeg(/*conf*/) {
  *   .then((supported) =>
  *     console.log(supported.FFMPEG ? 'ffmpeg is usable' : 'ffmpeg isn\'t usable'))
  */
-function hasGmWebp(conf) {
+function hasGmWebp(conf/*: Config */) {
   return new Promise(function (resolve) {
     var resultLength = 0,
       out = temp.createWriteStream(),
@@ -67,14 +67,14 @@ function hasGmWebp(conf) {
  *   .then((supported) =>
  *     console.log(supported.GM.WEBP ? 'webp is supported for gm processor' : 'webp not supported for gm processor'))
  */
-module.exports = function (conf)/*: function */ {
-  var supported = {GM: {}};
+module.exports = function (conf/*: Config */)/*: function */ {
+  var supported/*: SupportedConfig */ = {GM: {WEBP: false}};
   temp.track();
 
   return RSVP.all([
     hasGmWebp(conf),
     hasFFmpeg(conf)
-  ]).then(function (results) {
+  ]).then(function (results/*: Array<boolean> */) {
     /*eslint no-sync: 0*/
     temp.cleanupSync();
 

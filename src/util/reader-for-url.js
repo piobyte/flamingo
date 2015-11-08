@@ -17,11 +17,11 @@ var reader = {
  * @example
  * readerForUrl('data:text/plain;base64,ZGF0YQ==') // data reader
  */
-module.exports = function (parsedUrl/*: {protocol:string} */)/*: ?function */ {
+module.exports = function (parsedUrl/*: {protocol: ?string} */)/*: ?function */ {
   var foundReader;
 
   /* istanbul ignore else */
-  if (parsedUrl.protocol !== null) {
+  if (typeof parsedUrl.protocol === 'string') {
     foundReader = reader[parsedUrl.protocol.substring(0, parsedUrl.protocol.length - 1)];
   }
 

@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 var request = require('request'),
   pkg = require('../../package'),
   globalConfig = require('../../config'),
@@ -18,7 +18,7 @@ var Promise = RSVP.Promise;
  * @param {object} config flamingo config
  * @return {promise} resolves with an http(s) read configuration
  */
-module.exports = function (fileUrl/*: {href: string} */, access/*: {HTTPS: {ENABLED: boolean, READ: Array<{}>, WRITE: Array<{}>}}*/, config/*: {ALLOW_READ_REDIRECT: boolean, READER: {REQUEST: {TIMEOUT: number}}} */) {
+module.exports = function (fileUrl/*: UrlParse */, access/*: AccessConfig */, config/*: Config */) {
   if (!config) { deprecate(noop, 'Https reader called without passing the flamingo config.', {id: 'no-global-config'}); }
 
   var conf = config ? config : globalConfig;

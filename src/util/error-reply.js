@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * Error reply module
  * @module flamingo/src/util/error-reply

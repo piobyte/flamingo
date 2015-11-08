@@ -14,7 +14,7 @@ var some = require('lodash/collection/some'),
  * @param {Array} whitelist Array of protocol fields that are whitelisted
  * @return {boolean} true if the url is whitelisted
  */
-module.exports = function readAllowed(url/*: {[key: string]: string} */, whitelist/*: Array<{[key: string]: string}> */) {
+module.exports = function readAllowed(url/*: UrlParse */, whitelist/*: Array<UrlParse> */)/*: boolean */ {
   return some(whitelist, function (whitelistUrl) {
     return every(keys(whitelistUrl), function (whitelistKey) {
       // url needs to have the whitelisted key → if not early return

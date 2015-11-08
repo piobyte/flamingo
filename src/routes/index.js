@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 var pkg = require('../../package');
 
 /**

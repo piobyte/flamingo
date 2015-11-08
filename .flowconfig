@@ -7,6 +7,7 @@ index.js
 config.js
 
 [libs]
+flow/
 
 [options]
 module.system=node

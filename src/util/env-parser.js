@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * Environment value parser module
  * @module flamingo/src/util/env-parser
@@ -42,7 +42,7 @@ module.exports = {
    * parser.objectInt('width', 200)({height: 100}); //200
    * parser.objectInt('height', 200)({height: 100}); //100
    */
-  objectInt: function (field/*: string */, def/*: number*/) {
+  objectInt: function (field/*: string */, def/*: number*/)/*: function */ {
     return function (obj/*: {} */)/*: number*/ {
       return module.exports.int(def)(obj[field]);
     };
@@ -54,7 +54,7 @@ module.exports = {
    * @example
    * parser.buffer('_ag3WU77') // new Buffer('_ag3WU77')
    */
-  buffer: function (val/*: string */) {
+  buffer: function (val/*: string */)/*: Buffer */ {
     return new Buffer(val);
   },
   /**
@@ -64,7 +64,7 @@ module.exports = {
    * @example
    * parser.buffer64('DjiZ7AWTeNh38zoQiZ76gw==') // new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64')
    */
-  buffer64: function (val/*: string */) {
+  buffer64: function (val/*: string */)/*: Buffer */ {
     return new Buffer(val, 'base64');
   }
 };

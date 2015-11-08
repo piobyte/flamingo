@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * Function deprecation module
  * @module flamingo/src/util/deprecate
@@ -16,7 +16,7 @@ var logger = require('../logger').build('deprecate');
  * @example
  * deprecate(() => myOldFoo(), 'myOldFoo is deprecated, use myNewFoo instead.');
  */
-module.exports = function (deprecatedFunction/*: function */, warning/*: string */, options/*: {id: string}*/) {
+module.exports = function (deprecatedFunction/*: function */, warning/*: string */, options/*: {id: string}*/)/*: any */ {
   logger.warn(options, warning);
   return deprecatedFunction();
 };

@@ -1,4 +1,4 @@
-/* @flow weak */
+/* @flow */
 /**
  * Addon module
  * @module flamingo/src/util/unfold-reader-result
@@ -10,6 +10,6 @@
  * @param {Function} object.stream Function that returns a stream
  * @returns {Stream} stream
  */
-module.exports = function (object/*: {stream: function}*/) {
+module.exports = function (object/*: {stream: function}*/)/*: function */ {
   return object.stream();
 };

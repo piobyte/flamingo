@@ -1,12 +1,11 @@
-/* @flow weak */
+/* @flow */
 /**
  * Environment object mapping module
  * @module flamingo/src/util/env-config
  */
-var forEach = require('lodash/collection/forEach'),
-  isFunction = require('lodash/lang/isFunction');
+var forEach = require('lodash/collection/forEach');
 
-var pathSet = function (object, path, value) {
+var pathSet = function (object/*: Object */, path/*: string */, value/*: any */) {
   var obj = object;
 
   forEach(path.split('.'), function (segment, index, paths) {
@@ -36,7 +35,7 @@ var pathSet = function (object, path, value) {
  * @param {Array} mappings Environment to object mappings
  * @returns {Object} updated config
  */
-module.exports = function (config/*: {} */, environment/*: {} */, mappings)/*: {} */ {
+module.exports = function (config/*: Config */, environment/*: {[key: string]: string} */, mappings/*: Array<[string, string, ?function]>*/)/*: Config */ {
   forEach(mappings, function (mapping) {
     var envProp = mapping[0],
       objPath = mapping[1],
@@ -44,7 +43,7 @@ module.exports = function (config/*: {} */, environment/*: {} */, mappings)/*: {
 
     if (environment.hasOwnProperty(envProp)) {
       pathSet(config, objPath,
-        isFunction(setVal) ? setVal(environment[envProp]) : environment[envProp]);
+        typeof setVal === 'function' ? setVal(environment[envProp]) : environment[envProp]);
     }
   });
   return config;
