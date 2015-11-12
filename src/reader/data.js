@@ -1,16 +1,31 @@
-/* @flow weak */
+/* disabled flow because of deprecated signature type mismatch */
 var RSVP = require('rsvp'),
   stream = require('stream'),
+  noop = require('lodash/utility/noop'),
+  deprecate = require('../util/deprecate'),
   readerType = require('./reader-type');
 
 var B64_DELIMITER = 'base64,';
 
+function _isUrl(url/*: any */)/*: boolean */ {
+  return url && url.hasOwnProperty('protocol');
+}
+
 /**
  * Reader that creates a stream from a file that is located at a base64 encoded path
- * @param {object} url data url
  * @returns {Promise} promise that resolves thee stream object
+ * @param {Object} operation
  */
-module.exports = function (url/*: {host: string, href: string} */) {
+module.exports = function (operation/*: FlamingoOperation */) {
+  var url;
+
+  if (_isUrl(operation)) {
+    deprecate(noop, 'Data reader called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    url = operation;
+  } else {
+    url = operation.targetUrl;
+  }
+
   var type = url.host,
     encoded = url.href.substring(url.href.indexOf(B64_DELIMITER) + B64_DELIMITER.length, url.href.length),
     promise;

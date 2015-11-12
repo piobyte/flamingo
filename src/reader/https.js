@@ -1,4 +1,4 @@
-/* @flow */
+/* disabled flow because of deprecated signature type mismatch */
 var request = require('request'),
   pkg = require('../../package'),
   globalConfig = require('../../config'),
@@ -13,15 +13,30 @@ var Promise = RSVP.Promise;
 
 /**
  * Reader that creates a stream for a given http/https resource
- * @param {url} fileUrl url to read
- * @param {object} access access configuration object
- * @param {object} config flamingo config
- * @return {promise} resolves with an http(s) read configuration
+ * @param {object} operation flamingo process operation
  */
-module.exports = function (fileUrl/*: UrlParse */, access/*: AccessConfig */, config/*: Config */) {
-  if (!config) { deprecate(noop, 'Https reader called without passing the flamingo config.', {id: 'no-global-config'}); }
+module.exports = function (operation/*: FlamingoOperation */) {
+  var conf,
+    fileUrl,
+    access;
 
-  var conf = config ? config : globalConfig;
+  if (arguments.length === 3) {
+    // signature:  fileUrl/*: UrlParse */, access/*: AccessConfig */, config/*: Config */
+    deprecate(noop, 'Https reader called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    fileUrl = arguments[0];
+    access = arguments[1];
+    conf = arguments[2];
+  } else if(arguments.length === 2) {
+    // signature: fileUrl/*: UrlParse */, access/*: AccessConfig */
+    deprecate(noop, 'Https reader called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    fileUrl = arguments[0];
+    access = arguments[1];
+    conf = globalConfig;
+  } else {
+    conf = operation.config;
+    fileUrl = operation.targetUrl;
+    access = conf.ACCESS;
+  }
 
   return access.HTTPS.ENABLED && !readAllowed(fileUrl, access.HTTPS.READ) ?
     RSVP.reject('Read not allowed. See `ACCESS.HTTPS.READ` for more information.') :

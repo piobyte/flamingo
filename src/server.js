@@ -7,19 +7,21 @@ var Hapi = require('hapi-lts'),
   fs = require('fs'),
   path = require('path'),
   deprecate = require('./util/deprecate'),
+  FlamingoOperation = require('./util/flamingo-operation'),
   addon = require('./addon');
 
 var logger = require('./logger').build('server'),
   DEBUG_PROFILES_FILE = 'debug.js';
 
-module.exports = function (serverConfig, addons) {
-  var server = new Hapi.Server({debug: serverConfig.DEBUG ? /* istanbul ignore next */ {log: ['error'], request: ['error']} : false}),
+module.exports = function (conf, addons) {
+
+  var server = new Hapi.Server({debug: conf.DEBUG ? /* istanbul ignore next */ {log: ['error'], request: ['error']} : false}),
     serverPlugins = [],
     profilesPath = path.join(__dirname, 'profiles'),
-    flamingo = {conf: serverConfig, profiles: {}, addons: addons};
+    flamingo = {conf: conf, profiles: {}, addons: addons};
 
   server.connection({
-    port: serverConfig.PORT
+    port: conf.PORT
   });
 
   // pass server logging to custom logger
@@ -33,9 +35,10 @@ module.exports = function (serverConfig, addons) {
     }, 'Request error for ' + request.path);
   });
 
+  // load existing profiles, filter debug profiles if DEBUG isn't truthy
   /*eslint no-sync: 0*/
   fs.readdirSync(profilesPath).filter(function (file) {
-    return serverConfig.DEBUG ? /* istanbul ignore next */ file : file !== DEBUG_PROFILES_FILE;
+    return conf.DEBUG ? /* istanbul ignore next */ file : file !== DEBUG_PROFILES_FILE;
   }).forEach(function (file) {
     merge(flamingo.profiles, require(path.join(profilesPath, file)));
   });
@@ -46,7 +49,7 @@ module.exports = function (serverConfig, addons) {
 
   logger.info('available profiles: ' + Object.keys(flamingo.profiles).join(', '));
 
-  if (serverConfig.ROUTES.PROFILE_CONVERT_IMAGE) {
+  if (conf.ROUTES.PROFILE_CONVERT_IMAGE) {
     var imageRequestHandler = require('./routes/convert/image')(flamingo);
 
     // image convert route
@@ -61,7 +64,7 @@ module.exports = function (serverConfig, addons) {
     server.route([imageRequestHandler]);
   }
 
-  if (serverConfig.ROUTES.PROFILE_CONVERT_VIDEO) {
+  if (conf.ROUTES.PROFILE_CONVERT_VIDEO) {
     var videoRequestHandler = require('./routes/convert/video')(flamingo);
 
     // image convert route
@@ -78,9 +81,14 @@ module.exports = function (serverConfig, addons) {
 
   // apply routes
   server.route(compact([
-    serverConfig.DEBUG && /* istanbul ignore next */ require('./routes/debug')(flamingo),
-    serverConfig.ROUTES.INDEX && require('./routes/index')(flamingo)
+    conf.DEBUG && /* istanbul ignore next */ require('./routes/debug')(flamingo),
+    conf.ROUTES.INDEX && require('./routes/index')(flamingo)
   ]));
+
+  // static fields
+  FlamingoOperation.prototype.config = conf;
+  FlamingoOperation.prototype.addons = addons;
+  FlamingoOperation.prototype.profiles = conf.profiles;
 
   return RSVP.denodeify(server.register.bind(server))(serverPlugins).then(function () {
     return RSVP.denodeify(server.start.bind(server))().then(function(){return server;});

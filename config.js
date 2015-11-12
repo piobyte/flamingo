@@ -58,6 +58,15 @@ CONFIG.ALLOW_READ_REDIRECT = false;
 MAPPINGS.push(['ALLOW_READ_REDIRECT', 'ALLOW_READ_REDIRECT', envParser.boolean]);
 
 /**
+ * Enable to let the example profiles handle client hints for client aware resize scaling
+ * @see https://tools.ietf.org/html/draft-grigorik-http-client-hints-03
+ * @default false
+ * @type {boolean}
+ */
+CONFIG.CLIENT_HINTS = false;
+MAPPINGS.push(['CLIENT_HINTS', 'CLIENT_HINTS', envParser.boolean]);
+
+/**
  * enable/disable specific routes
  * @see Environment: 'ROUTE_INDEX', 'ROUTE_PROFILE_CONVERT_IMAGE', 'ROUTE_PROFILE_CONVERT_VIDEO'
  * @type {object}
@@ -156,7 +165,7 @@ CONFIG.ACCESS.HTTPS = {
 };
 MAPPINGS.push(['ACCESS_HTTPS_ENABLED', 'ACCESS.HTTPS.ENABLED', envParser.boolean]);
 MAPPINGS.push(['ACCESS_HTTPS_READ', 'ACCESS.HTTPS.READ', JSON.parse]);
-MAPPINGS.push(['ACCESS_HTTPS_WRITE', 'ACCESS.HTTPS.READ', JSON.parse]);
+MAPPINGS.push(['ACCESS_HTTPS_WRITE', 'ACCESS.HTTPS.WRITE', JSON.parse]);
 
 /**
  * crypto settings (IF YOU WANT TO USE CRYPTO, CHANGE THE DEFAULT VALUES)

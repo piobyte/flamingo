@@ -3,6 +3,8 @@ var fs = require('fs'),
   readerType = require('./reader-type'),
   accessAllowed = require('../util/file-access-allowed'),
   path = require('path'),
+  noop = require('lodash/utility/noop'),
+  deprecate = require('../util/deprecate'),
   RSVP = require('rsvp');
 
 var exists = function (filePath/*: string */) {
@@ -15,11 +17,22 @@ var exists = function (filePath/*: string */) {
 
 /**
  * Function that resolves a read configuration for a given file
- * @param {path} filePath path to the file to read
- * @param {object} access read/write access configuration
+ * @param {Object} operation
  * @return {Promise} resolves with the file read configuration
  */
-module.exports = function (filePath/*: {path: string} */, access/*: {FILE: {READ: Array<string>, WRITE: Array<string>}}*/) {
+module.exports = function (operation/*: FlamingoOperation */) {
+  var filePath,
+    access;
+
+  if (arguments.length === 2) {
+    deprecate(noop, 'File reader called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    filePath = arguments[0];
+    access = arguments[1];
+  } else {
+    filePath = operation.targetUrl;
+    access = operation.config.ACCESS;
+  }
+
   var readWhitelist = access.FILE.READ,
     normPath = path.normalize(filePath.path);
 

@@ -10,6 +10,7 @@ var url = require('url'),
   errorReply = require('../../util/error-reply'),
   unfoldReaderResult = require('../../util/unfold-reader-result'),
   responseWriter = require('../../writer/response'),
+  FlamingoOperation = require('../../util/flamingo-operation'),
   imageProcessor = require('../../processor/image');
 
 var logger = require('../../logger').build('route:convert/image');
@@ -30,8 +31,13 @@ module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {meth
     path: '/image/{profile}/{url}',
     config: {
       cors: true,
-      handler: function (req, reply) {
-        var profileParam = req.params.profile;
+      handler: function (request, reply) {
+        var profileParam = request.params.profile,
+          operation = new FlamingoOperation();
+
+        operation.request = request;
+        operation.reply = reply;
+        operation.writer = responseWriter;
 
         if (!profiles[profileParam]) {
           return reply(boom.badRequest('Unknown profile'));
@@ -39,8 +45,8 @@ module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {meth
 
         /*eslint new-cap: 0*/
         RSVP.hash({
-          url: conf.DECODE_PAYLOAD(decodeURIComponent(req.params.url)),
-          profile: profiles[profileParam](req, conf)
+          url: conf.DECODE_PAYLOAD(decodeURIComponent(request.params.url)),
+          profile: profiles[profileParam](request, conf)
         }).then(function (data) {
           var parsedUrl = url.parse(data.url),
             reader = readerForUrl(parsedUrl);
@@ -49,16 +55,20 @@ module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {meth
             return reply(boom.badRequest('No reader available for given url'));
           }
 
+          operation.targetUrl = parsedUrl;
+          operation.reader = reader;
+          operation.profile = data.profile;
+
           // build processing queue
-          return reader(parsedUrl, conf.ACCESS, conf)
+          return reader(operation)
             .then(unfoldReaderResult)
-            .then(imageProcessor(data.profile.process, conf))
-            .then(responseWriter(null, reply, data.profile.response));
+            .then(imageProcessor(operation))
+            .then(responseWriter(operation));
         }).catch(function (err) {
           logger.error({
             error: err,
-            request: req
-          }, 'Image convert error for ' + req.path);
+            request: request
+          }, 'Image convert error for ' + request.path);
           errorReply(reply, err);
         });
       }

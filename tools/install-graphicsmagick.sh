@@ -3,17 +3,14 @@
 # Stop on error
 set -e
 
-VERSION="1.3.22"
-MAJOR="1.3"
-
-# polish mirror because it's faster
-ARCHIVE="http://ftp.icm.edu.pl/pub/unix/graphics/GraphicsMagick/${MAJOR}/GraphicsMagick-${VERSION}.tar.gz"
-#ARCHIVE="ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/${MAJOR}/GraphicsMagick-${VERSION}.tar.gz"
+# polish mirror because it's faster (won't break travis builds with ~9min download)
+ARCHIVE="http://ftp.icm.edu.pl/pub/unix/graphics/GraphicsMagick/GraphicsMagick-LATEST.tar.gz"
+#ARCHIVE="ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/GraphicsMagick-LATEST.tar.gz"
 
 cd /tmp/
 wget ${ARCHIVE}
-tar zxf GraphicsMagick-${VERSION}.tar.gz
-cd GraphicsMagick-${VERSION}
+tar zxf GraphicsMagick-*.tar.gz
+cd GraphicsMagick-*
 
 # svg support
 apt-get install -y libxml2-dev libfreetype6-dev

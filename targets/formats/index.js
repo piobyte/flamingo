@@ -7,6 +7,7 @@ var fixtures = require('../../test/fixtures/images/sharp-bench-assets/index'),
   imageProcessor = require('../../src/processor/image'),
   RSVP = require('rsvp'),
   unfoldReaderResult = require('../../src/util/unfold-reader-result'),
+  FlamingoOperation = require('../../src/util/flamingo-operation'),
   fs = require('fs'),
   path = require('path'),
   SUPPORTED_FORMATS = 'supported-files.md';
@@ -61,11 +62,19 @@ processors.forEach(function (processor) {
 
   allFixtures.forEach(function (data) {
     queue = queue.then(function () {
-      return httpsReader({href: 'https://assets.flamingo.tld/' + data.desc}, {HTTPS: {ENABLED: false}}, {
+      var op = new FlamingoOperation();
+      op.config = {
+        ACCESS: {HTTPS: {ENABLED: false}},
         ALLOW_READ_REDIRECT: false,
         READER: {REQUEST: {TIMEOUT: 3000}}
-      }).then(unfoldReaderResult)
-        .then(imageProcessor(processor.process, {}))
+      };
+      op.profile = {
+        process: processor.process
+      };
+      op.targetUrl = {href: 'https://assets.flamingo.tld/' + data.desc};
+
+      return httpsReader(op).then(unfoldReaderResult)
+        .then(imageProcessor(op))
         .then(function (stream) {
           return new RSVP.Promise(function(resolve) {
             stream.on('error', function(){

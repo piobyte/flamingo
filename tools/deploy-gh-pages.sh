@@ -9,18 +9,25 @@ GH_USER_NAME="Travis-CI"
 GH_USER_MAIL="travis@piobyte.de"
 COMMIT_MSG="Deployed to Github Pages"
 
-rm -rf docs || exit 0;
-mkdir docs;
+BRANCH_NAME=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 
-npm run formats
-cat ${SUPPORTED_FORMATS} >> ${README}
-npm run docs
+if [ "$branch" == "master" ]
+  then
+  rm -rf docs || exit 0;
+  mkdir docs;
 
-( cd docs
- git init
- git config user.name ${GH_USER_NAME}
- git config user.email ${GH_USER_MAIL}
- git add .
- git commit -m "${COMMIT_MSG}"
- git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:gh-pages > /dev/null 2>&1
-)
+  npm run formats
+  cat ${SUPPORTED_FORMATS} >> ${README}
+  npm run docs
+
+  ( cd docs
+   git init
+   git config user.name ${GH_USER_NAME}
+   git config user.email ${GH_USER_MAIL}
+   git add .
+   git commit -m "${COMMIT_MSG}"
+   git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:gh-pages > /dev/null 2>&1
+  )
+else
+  echo "Will not publish from a branch other than master."
+fi

@@ -2,6 +2,7 @@
 
 var url = require('url'),
   temp = require('temp'),
+  FlamingoOperation = require('../../../src/util/flamingo-operation'),
   assert = require('assert');
 
 var dataReader = require('../../../src/reader/data');
@@ -11,7 +12,9 @@ var DATA_IMAGE_URI = 'data:image/png;base64,',
 
 describe('data reader', function () {
   it('resolves the expected result', function (done) {
-    dataReader(url.parse(DATA_IMAGE_URI + RED_DOT_DATA)).then(function (data) {
+    var op = new FlamingoOperation();
+    op.targetUrl = url.parse(DATA_IMAGE_URI + RED_DOT_DATA);
+    dataReader(op).then(function (data) {
       assert.ok(!!data.stream);
       var buf = [],
         out = temp.createWriteStream();
@@ -32,10 +35,43 @@ describe('data reader', function () {
     });
   });
   it('rejects for not image data uri', function (done) {
-    dataReader(url.parse(DATA_HTML_URI + RED_DOT_DATA)).then(function () {
+    var op = new FlamingoOperation();
+    op.targetUrl = url.parse(DATA_HTML_URI + RED_DOT_DATA);
+    dataReader(op).then(function () {
       done('shouldn\'t resolve');
     }, function () {
       done();
+    });
+  });
+
+  describe('deprecated no-flamingo-operation', function(){
+    it('resolves the expected result', function (done) {
+      dataReader(url.parse(DATA_IMAGE_URI + RED_DOT_DATA)).then(function (data) {
+        assert.ok(!!data.stream);
+        var buf = [],
+          out = temp.createWriteStream();
+
+        return data.stream().then(function (stream) {
+          stream.on('data', function (e) {
+            buf.push(e);
+          });
+          stream.on('end', function () {
+            assert.equal(Buffer.concat(buf).toString('base64'),
+              RED_DOT_DATA);
+            done();
+          });
+          stream.pipe(out);
+        });
+      }).catch(function (err) {
+        assert.fail(err);
+      });
+    });
+    it('rejects for not image data uri', function (done) {
+      dataReader(url.parse(DATA_HTML_URI + RED_DOT_DATA)).then(function () {
+        done('shouldn\'t resolve');
+      }, function () {
+        done();
+      });
     });
   });
 });

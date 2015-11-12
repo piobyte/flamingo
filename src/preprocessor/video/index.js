@@ -10,17 +10,33 @@ var ffmpeg = require('fluent-ffmpeg'),
   noop = require('lodash/utility/noop'),
   globalConfig = require('../../../config');
 
+function _isPreprocessorConfig(config) {
+  return config.hasOwnProperty('seekPercent');
+}
+
 var logger = require('../../logger').build('preprocessor:video'),
   defaultProcessConf = {
     seekPercent: 0
   };
 
-module.exports = function (givenProcessConf, config) {
-  var processConf = assign({}, defaultProcessConf, givenProcessConf);
-  /* istanbul ignore next */
-  if (!config) { deprecate(noop, 'Calling a video preprocessor without passing the flamingo config is deprecated. Pass the flamingo config as 3rd parameter.', {id: 'no-global-config'}); }
+module.exports = function (operation) {
+  var conf,
+    givenProcessConf;
 
-  var conf = config ? config : /* istanbul ignore next */globalConfig;
+  if (arguments.length === 2) {
+    deprecate(noop, 'Video preprocessor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    givenProcessConf = arguments[0];
+    conf = arguments[1];
+  } else if(_isPreprocessorConfig(operation)) {
+    deprecate(noop, 'Video preprocessor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    conf = globalConfig;
+    givenProcessConf = arguments[0];
+  } else {
+    conf = operation.config;
+    givenProcessConf = operation.preprocessorConfig;
+  }
+  //
+  var processConf = assign({}, defaultProcessConf, givenProcessConf);
 
   return function (readerResult) {
     var ffmpegOptions = {};
@@ -37,6 +53,7 @@ module.exports = function (givenProcessConf, config) {
             reject(new errors.InvalidInputError(err.message, err));
           }
           else {
+            /* istanbul ignore next */
             if (!meta.hasOwnProperty('format')) {
               throw new errors.InvalidInputError('Input format is undetectable by ffprobe');
             }

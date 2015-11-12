@@ -34,6 +34,24 @@ module.exports = {
       return parsed;
     };
   },
+
+  /**
+   * Create a function that calls `parseFloat()` and handles `NaN` by returning a given default value.
+   * @param {number} def default value in case of non number
+   * @returns {Function} function to convert a value to a number
+   * @example
+   * parser.float(200)('4.2') // 4.2
+   * parser.float(1.3)('wasd') // 1.3
+   */
+  float: function(def/*: number */)/*: function */{
+    return function (val/*: any */)/*: number */{
+      var parsed = parseFloat(val, 10);
+      if (isNaN(parsed)) {
+        parsed = def;
+      }
+      return parsed;
+    };
+  },
   /**
    * @param {String} field Object field to parse
    * @param {number} def Default value in case of NaN
@@ -44,7 +62,7 @@ module.exports = {
    */
   objectInt: function (field/*: string */, def/*: number*/)/*: function */ {
     return function (obj/*: {} */)/*: number*/ {
-      return module.exports.int(def)(obj[field]);
+      return module.exports.int(def)(obj && obj[field]);
     };
   },
   /**

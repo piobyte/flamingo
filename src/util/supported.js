@@ -9,6 +9,7 @@ var RSVP = require('rsvp'),
   fs = require('fs'),
   through2 = require('through2'),
   ffmpeg = require('fluent-ffmpeg'),
+  FlamingoOperation = require('./flamingo-operation'),
   gmProcessor = require('../processor/image/gm');
 
 var Promise = RSVP.Promise;
@@ -38,7 +39,8 @@ function hasGmWebp(conf/*: Config */) {
   return new Promise(function (resolve) {
     var resultLength = 0,
       out = temp.createWriteStream(),
-      input = fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/base64.png'));
+      input = fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/base64.png')),
+      op = new FlamingoOperation();
 
     out.on('finish', function () {
       resolve(resultLength > 0);
@@ -46,7 +48,7 @@ function hasGmWebp(conf/*: Config */) {
     });
 
     try {
-      gmProcessor(function (pipe) {
+      gmProcessor(op, function (pipe) {
         return pipe.options({imageMagick: true}).setFormat('webp');
       }, input, conf).pipe(through2(function (chunk, enc, callback) {
         resultLength += chunk.length;

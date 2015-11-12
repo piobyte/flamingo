@@ -9,6 +9,7 @@
 
 var gm = require('gm'),
   globalConfig = require('../../../config'),
+  isFunction = require('lodash/lang/isFunction'),
   noop = require('lodash/utility/noop'),
   deprecate = require('../../util/deprecate');
 
@@ -17,21 +18,35 @@ var gm = require('gm'),
  * The function will return a promise and resolve a stream.
  * This stream is converted by gm using the given processing operations.
  *
+ * @param {Object} operation TODO: docs
  * @param {function} pipeline Function to generate a transformer pipeline that is used with the incoming stream
  * @param {Stream} stream stream containing image
- * @param {Object} config flamingo config
  * @returns {Stream} transformed stream
  * @example
  * image([{ id: 'format', format: 'jpg'}])(fs.createReadStream('sample.png')
  *      .then((resultStream) => {...})
  */
 
-module.exports = function (pipeline/*: function */, stream/*: {pipe: function }*/, config/*: {NATIVE_AUTO_ORIENT: boolean} */)/*: any */ {
-  if (!config) {
-    deprecate(noop, 'Gm processor called without passing the flamingo config.', {id: 'no-global-config'});
+module.exports = function (operation/*: FlamingoOperation */, pipeline/*: function */, stream/*: {pipe: function }*/)/*: any */ {
+  var conf,
+    graphics;
+
+  if (arguments.length === 3 && isFunction(arguments[0])) {
+    deprecate(noop, 'gm processor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    stream = arguments[1];
+    conf = arguments[2];
+    pipeline = arguments[0];
+  } else if (arguments.length === 2) {
+    deprecate(noop, 'gm processor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    conf = globalConfig;
+    stream = arguments[1];
+    pipeline = arguments[0];
+  } else {
+    // TODO: operation → args
+    conf = operation.config;
+
   }
 
-  var conf = config ? config : globalConfig,
-    graphics = gm(stream).options({nativeAutoOrient: conf.NATIVE_AUTO_ORIENT});
+  graphics = gm(stream).options({nativeAutoOrient: conf.NATIVE_AUTO_ORIENT});
   return pipeline(graphics).stream();
 };

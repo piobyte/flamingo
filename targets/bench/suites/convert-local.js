@@ -1,5 +1,6 @@
 var fs = require('fs'),
   Benchmark = require('benchmark'),
+  FlamingoOperation = require('../../../src/util/flamingo-operation'),
   RSVP = require('rsvp');
 
 module.exports = function (suiteConfig) {
@@ -8,14 +9,25 @@ module.exports = function (suiteConfig) {
       streamFunction = function (deferred) {
         return function (data) {
           var wstream = suiteConfig.temp.createWriteStream(),
-            rstream = fs.createReadStream(filePath);
+            rstream = fs.createReadStream(filePath),
+            op = new FlamingoOperation(),
+            error;
+
+          op.profile = {
+            process: data.process
+          };
 
           wstream.on('finish', function () {
+            if (error) {
+              deferred.benchmark.abort();
+            }
             deferred.resolve();
           });
-          suiteConfig.imageProcessors(data.process, {})(rstream)
+          suiteConfig.imageProcessors(op)(rstream)
             .on('error', function(err){
-              deferred.resolve(err);
+              error = err;
+              wstream.end();
+              this.end();
             })
             .pipe(wstream);
         };

@@ -11,6 +11,11 @@ Internally it uses [sharp](https://github.com/lovell/sharp), [gm](https://github
 
 See the [documentation](https://piobyte.github.io/flamingo/) for detailed information on how flamingo modules work.
 
+## TODO
+
+- use flamingoperation or something related in addon hooks
+- check if deprecated api is full tested
+
 ## Requirements
 
 - node `0.12`, `4.2`(LTS), `5.0` or `iojs`(master)
@@ -165,6 +170,12 @@ Some route urls are going to be changed:
 - `/convert/video/{profile}/{url}` → `/video/{profile}/{url}`
 - `/convert/image/{profile}/{url}` → `/image/{profile}/{url}`
 
+#### `no-flamingo-operation`
+
+`no-global-config` was a hotfix to make it possible to run tests with a local config. 
+Problem is that by appending the config nothing is won because additional fields require to add another parameter.
+To avoid these unnecessary method signatures, there is now a object that holds request related properties and global config, addons and profiles. 
+
 ## Docker
 
 There are two `Dockerfiles` that are useful for developing/deploying flamingo.
@@ -192,3 +203,7 @@ In addition you can configure the flamingo instance using environment parameters
 ```
 docker run -e CRYPTO_IV=123456 -e ACCESS_HTTPS_ENABLED=true flamingo:latest
 ```
+
+## Useful bunyan filters
+
+- only log memwatch stats or leaks `bunyan -c 'this.msg === "stats" || this.msg === "leak"'`

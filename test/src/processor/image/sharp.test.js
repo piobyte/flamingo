@@ -10,13 +10,15 @@ describe('sharp processor', function () {
     temp.cleanup(done);
   });
 
-  var sharpProcessor = require('../../../../src/processor/image/sharp');
+  var sharpProcessor = require('../../../../src/processor/image/sharp'),
+    FlamingoOperation = require('../../../../src/util/flamingo-operation');
 
   it('should work without throwing an error', function () {
     var stream = fs.createReadStream('../../../fixtures/images/base64.png'),
-      processedStream;
+      processedStream,
+      op = new FlamingoOperation();
 
-    processedStream = sharpProcessor(function (pipe) {
+    processedStream = sharpProcessor(op, function (pipe) {
       return pipe.rotate();
     }, stream).pipe(temp.createWriteStream());
 
@@ -25,12 +27,37 @@ describe('sharp processor', function () {
 
   it('should convert to webp without throwing an error (this doesn\'t mean it can convert to webp)', function () {
     var stream = fs.createReadStream('../../../fixtures/images/base64.png'),
-      processedStream;
+      processedStream,
+      op = new FlamingoOperation();
 
-    processedStream = sharpProcessor(function (pipe) {
+    processedStream = sharpProcessor(op, function (pipe) {
       return pipe.toFormat('webp');
     }, stream).pipe(temp.createWriteStream());
 
     assert.ok(processedStream);
+  });
+
+  describe('deprecated no-flamingo-operation', function(){
+    it('should work without throwing an error', function () {
+      var stream = fs.createReadStream('../../../fixtures/images/base64.png'),
+        processedStream;
+
+      processedStream = sharpProcessor(function (pipe) {
+        return pipe.rotate();
+      }, stream, {}).pipe(temp.createWriteStream());
+
+      assert.ok(processedStream);
+    });
+
+    it('should convert to webp without throwing an error (this doesn\'t mean it can convert to webp)', function () {
+      var stream = fs.createReadStream('../../../fixtures/images/base64.png'),
+        processedStream;
+
+      processedStream = sharpProcessor(function (pipe) {
+        return pipe.toFormat('webp');
+      }, stream, {}).pipe(temp.createWriteStream());
+
+      assert.ok(processedStream);
+    });
   });
 });

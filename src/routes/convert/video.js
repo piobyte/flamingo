@@ -6,6 +6,7 @@
 var url = require('url'),
   boom = require('boom'),
   RSVP = require('rsvp'),
+  FlamingoOperation = require('../../util/flamingo-operation'),
   readerForUrl = require('../../util/reader-for-url'),
   errorReply = require('../../util/error-reply'),
   unfoldReaderResult = require('../../util/unfold-reader-result'),
@@ -32,7 +33,12 @@ module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {meth
     config: {
       cors: true,
       handler: function (req, reply) {
-        var profileParam = req.params.profile;
+        var profileParam = req.params.profile,
+          operation = new FlamingoOperation();
+
+        operation.request = req;
+        operation.reply = reply;
+        operation.writer = responseWriter;
 
         if (!profiles[profileParam]) {
           return reply(boom.badRequest('Unknown profile'));
@@ -50,13 +56,17 @@ module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {meth
             return reply(boom.badRequest('No reader available for given url'));
           }
 
-          // build processing queue
-          return reader(parsedUrl, conf.ACCESS, conf)
-            .then(videoPreprocessor({seekPercent: 0.1}, conf))
-            .then(unfoldReaderResult)
-            .then(imageProcessor(data.profile.process))
-            .then(responseWriter(null, reply, data.profile.response));
+          operation.targetUrl = parsedUrl;
+          operation.reader = reader;
+          operation.profile = data.profile;
+          operation.preprocessorConfig = {seekPercent: 0.1};
 
+          // build processing queue
+          return reader(operation)
+            .then(videoPreprocessor(operation))
+            .then(unfoldReaderResult)
+            .then(imageProcessor(operation))
+            .then(responseWriter(operation));
         }).catch(function (err) {
           logger.error({
             error: err,

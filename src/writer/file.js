@@ -16,15 +16,29 @@ var Promise = RSVP.Promise;
 
 /**
  * Creates a function that calls the given reply function with a stream
- * @param {{path: string}} outputUrl Output url
- * @param {function} reply Function that replies a given stream
- * @param {Object} [options] Additional response options
- * @param {Object} config flamingo config
+ * @param {Object} operation
  * @return {Function} function that writes a stream to a given file
  */
-module.exports = function (outputUrl/*: {path: string}*/, reply/*: function*/, options/*: {header: {[key: string]: string}} */, config/*: {ACCESS: {WRITE: any}} */) {
-  if (!config) { deprecate(noop, 'Calling a writer processor without passing the flamingo config is deprecated. Pass the flamingo config as 3rd parameter.', {id: 'no-global-config'}); }
-  var conf = config ? config : globalConfig;
+module.exports = function (operation/*: FlamingoOperation */) {
+  var outputUrl,
+    reply,
+    conf;
+
+  if (arguments.length === 3) {
+    deprecate(noop, 'File writer called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    outputUrl = arguments[0];
+    reply = arguments[1];
+    conf = arguments[3];
+  } else if(arguments.length === 2) {
+    deprecate(noop, 'File writer called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    conf = globalConfig;
+    outputUrl = arguments[0];
+    reply = arguments[1];
+  } else {
+    outputUrl = operation.targetUrl;
+    reply = operation.reply;
+    conf = operation.config;
+  }
 
   return function (stream) {
     var outputPath = path.normalize(outputUrl.path),

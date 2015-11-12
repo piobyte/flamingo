@@ -71,28 +71,6 @@ describe('image converting server response', function () {
     }).catch(done);
   });
 
-  it('allows usage of the deprecated image route', function (done) {
-    var URL = 'http://localhost:' + PORT + '/convert/image/avatar-image/' +
-        encode('https://old.example.com/image.png'),
-      server;
-
-    startServer({
-      ACCESS: {
-        HTTPS: {
-          ENABLED: true,
-          READ: [{'hostname': 'errs.example.com'}]
-        }
-      }
-    }).then(function (s) {
-      server = s;
-
-      return request(URL);
-    }).then(function (response) {
-      assert.equal(response.statusCode, 400);
-      server.stop(done);
-    });
-  });
-
   it('returns 400 for not whitelisted urls', function (done) {
     var URL = 'http://localhost:' + PORT + '/image/avatar-image/' +
         encode('https://old.example.com/image.png'),
@@ -220,5 +198,30 @@ describe('image converting server response', function () {
       assert.equal(response.statusCode, 200);
       server.stop(done);
     }).catch(done);
+  });
+
+
+  describe('deprecated convert-route-moved', function(){
+    it('returns 400 for not whitelisted urls', function (done) {
+      var URL = 'http://localhost:' + PORT + '/convert/image/avatar-image/' +
+          encode('https://old.example.com/image.png'),
+        server;
+
+      startServer({
+        ACCESS: {
+          HTTPS: {
+            ENABLED: true,
+            READ: [{'hostname': 'errs.example.com'}]
+          }
+        }
+      }).then(function (s) {
+        server = s;
+
+        return request(URL);
+      }).then(function (response) {
+        assert.equal(response.statusCode, 400);
+        server.stop(done);
+      });
+    });
   });
 });

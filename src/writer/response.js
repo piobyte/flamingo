@@ -4,16 +4,28 @@
  * @module flamingo/src/writer/response
  */
 var through = require('through2'),
+  deprecate = require('../util/deprecate'),
+  noop = require('lodash/utility/noop'),
   RSVP = require('rsvp');
 
 /**
  * Creates a function that calls the given reply function with a stream
- * @param {Object} path File path
- * @param {Function} reply Reply function that accepts the stream
- * @param {Object} [options] Additional response options
+ * @param {Object} operation flamingo operation
  * @return {Function} Function that replies a given stream
  */
-module.exports = function (path, reply/*: function */, options/*: {header: {[key: string]: string}} */) {
+module.exports = function (operation) {
+  var reply,
+    options;
+
+  if (arguments.length === 3) {
+    deprecate(noop, 'Response writer called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
+    reply = arguments[1];
+    options = arguments[2];
+  } else {
+    reply = operation.reply;
+    options = operation.profile.response;
+  }
+
   return function (stream) {
     return new RSVP.Promise(function (resolve, reject) {
       stream.on('error', reject);

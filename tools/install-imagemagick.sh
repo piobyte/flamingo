@@ -3,18 +3,17 @@
 # Stop on error
 set -e
 
-VERSION="6.9.2-5"
-ARCHIVE="http://www.imagemagick.org/download/ImageMagick-${VERSION}.tar.gz"
+ARCHIVE="http://www.imagemagick.org/download/ImageMagick.tar.gz"
 
 cd /tmp/
 wget ${ARCHIVE}
 wget ${ARCHIVE}.asc
 
 gpg --keyserver pgpkeys.mit.edu --recv-key 8277377A
-gpg ImageMagick-${VERSION}.tar.gz.asc
+gpg ImageMagick.tar.gz.asc
 
-tar zxf ImageMagick-${VERSION}.tar.gz
-cd ImageMagick-${VERSION}
+tar zxf ImageMagick.tar.gz
+cd ImageMagick-*
 
 ./configure --silent
 make --silent

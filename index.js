@@ -8,6 +8,20 @@ var server = require('./src/server'),
 
 var log = logger.build('index');
 
+try {
+  var memwatch = require('memwatch-next'),
+    memLogger = logger.build('memwatch');
+
+  memwatch.on('leak', function (info) {
+    memLogger.info(info, 'leak');
+  });
+  memwatch.on('stats', function (info) {
+    memLogger.info(info, 'stats');
+  });
+} catch (e) {
+  logger.debug('starting without memwatch');
+}
+
 process.on('uncaughtException', function (err) {
   log.error(err);
 });
