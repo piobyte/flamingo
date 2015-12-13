@@ -1,4 +1,7 @@
 /* @flow weak */
+/**
+ * @module flamingo/src/profiles/debug
+ */
 var RSVP = require('rsvp'),
   sharp = require('sharp'),
   bestFormat = require('../util/best-format'),

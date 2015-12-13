@@ -1,4 +1,7 @@
 /* @flow */
+/**
+ * @module flamingo/src/addon/loader
+ */
 var addonDiscovery = require('./discovery'),
   assert = require('assert'),
   noop = require('lodash/utility/noop'),
