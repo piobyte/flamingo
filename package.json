@@ -33,7 +33,7 @@
     "clamp": "^1.0.1",
     "fluent-ffmpeg": "fluent-ffmpeg/node-fluent-ffmpeg.git#a415251fc5008118046ae74a61f72b61cc29c38a",
     "gm": "^1.21.1",
-    "hapi-lts": "^9.5.0",
+    "hapi-lts": "hapijs/hapi.git#69eb13937875d09ce5560138fa18f6458ecf499b",
     "lodash": "^3.10.0",
     "mimeparse": "^0.1.4",
     "mkdirp": "^0.5.0",
