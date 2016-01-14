@@ -52,35 +52,38 @@ module.exports = function (flamingo) {
   return {
     method: 'GET',
     path: '/debug',
-    handler: function (req, reply) {
-      var profileNames = Object.keys(flamingo.profiles),
-        base = '/',
-        processors = ['vips', 'gm'];
+    config: {
+      state: { parse: false },
+      handler: function (req, reply) {
+        var profileNames = Object.keys(flamingo.profiles),
+          base = '/',
+          processors = ['vips', 'gm'];
 
-      profileNames = profileNames.filter(function (name) {
-        // only use debug routes
-        return name.indexOf('debug-') === 0;
-      });
+        profileNames = profileNames.filter(function (name) {
+          // only use debug routes
+          return name.indexOf('debug-') === 0;
+        });
 
-      if (req.query.profiles) {
-        profileNames = req.query.profiles.split(',');
+        if (req.query.profiles) {
+          profileNames = req.query.profiles.split(',');
+        }
+        if (req.query.processors) {
+          processors = req.query.processors.split(',');
+        }
+
+        reply(htmlTemplate({
+          _: require('lodash'),
+          pkg: pkg,
+          profileNames: profileNames,
+          urls: URLS,
+          plainUrls: PLAIN_URLS,
+          debugs: [],
+          sizes: _.range(50, 250, 100),
+          base: base,
+          processors: processors,
+          formats: [{}]
+        }));
       }
-      if (req.query.processors) {
-        processors = req.query.processors.split(',');
-      }
-
-      reply(htmlTemplate({
-        _: require('lodash'),
-        pkg: pkg,
-        profileNames: profileNames,
-        urls: URLS,
-        plainUrls: PLAIN_URLS,
-        debugs: [],
-        sizes: _.range(50, 250, 100),
-        base: base,
-        processors: processors,
-        formats: [{}]
-      }));
     }
   };
 };

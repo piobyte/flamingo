@@ -26,6 +26,7 @@ module.exports = function ()/*: {method: string; path: string; config: {handler:
     method: 'GET',
     path: '/',
     config: {
+      state: { parse: false },
       handler: function (req, reply) {
         reply(BANNER);
       }

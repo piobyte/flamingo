@@ -31,6 +31,7 @@ module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {meth
     method: 'GET',
     path: '/video/{profile}/{url}',
     config: {
+      state: { parse: false },
       cors: true,
       handler: function (req, reply) {
         var profileParam = req.params.profile,

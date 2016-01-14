@@ -30,6 +30,7 @@ module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {meth
     method: 'GET',
     path: '/image/{profile}/{url}',
     config: {
+      state: { parse: false },
       cors: true,
       handler: function (request, reply) {
         var profileParam = request.params.profile,

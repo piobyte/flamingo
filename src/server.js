@@ -54,10 +54,13 @@ module.exports = function (conf, addons) {
 
     // image convert route
     server.route({
-      method: 'GET', path: '/convert/image/{profile}/{url}', handler: function (req, reply) {
-        return deprecate(function () {
-          imageRequestHandler.config.handler(req, reply);
-        }, '/convert/image/{profile}/{url} will be removed before in 2.0.0. Use /image/{profile}/{url} instead.', {id: 'convert-route-moved'});
+      method: 'GET', path: '/convert/image/{profile}/{url}', config: {
+        state: { parse: false },
+        handler: function (req, reply) {
+          return deprecate(function () {
+            imageRequestHandler.config.handler(req, reply);
+          }, '/convert/image/{profile}/{url} will be removed before in 2.0.0. Use /image/{profile}/{url} instead.', {id: 'convert-route-moved'});
+        }
       }
     });
 
@@ -69,10 +72,13 @@ module.exports = function (conf, addons) {
 
     // image convert route
     server.route({
-      method: 'GET', path: '/convert/video/{profile}/{url}', handler: function (req, reply) {
-        return deprecate(function () {
-          videoRequestHandler.config.handler(req, reply);
-        }, '/convert/video/{profile}/{url} will be removed before in 2.0.0. Use /video/{profile}/{url} instead.', {id: 'convert-route-moved'});
+      method: 'GET', path: '/convert/video/{profile}/{url}', config: {
+        state: {parse: false},
+        handler: function (req, reply) {
+          return deprecate(function () {
+            videoRequestHandler.config.handler(req, reply);
+          }, '/convert/video/{profile}/{url} will be removed before in 2.0.0. Use /video/{profile}/{url} instead.', {id: 'convert-route-moved'});
+        }
       }
     });
 
