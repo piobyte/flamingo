@@ -87,7 +87,7 @@ function callback(hookName/*: string */, callback/*: function */) {
 }
 
 /**
- * Creates a function that can be called with additional params that calls all addons for a given hook
+ * Creates a function that can be called with additional params that calls all addons for a given hook.
  * @param {string} hookName name of the hook
  * @param {object} hookConfig config object that is provided to each hook
  * @return {function} generated hook function
@@ -108,9 +108,14 @@ function hook(hookName/*: string */, hookConfig/*: any */)/*: function */ {
         args[$_i] = arguments[$_i];
       }
 
+      var results = [],
+        callbackFn = _callbacks[hookName].apply(undefined, args);
+
       for (var i = 0; i < _hooks[hookName].length; i++) {
-        _callbacks[hookName].apply(undefined, args)(_hooks[hookName][i].hook(hookConfig));
+        results.push(callbackFn(_hooks[hookName][i].hook(hookConfig)));
       }
+
+      return results;
     };
   }
 
