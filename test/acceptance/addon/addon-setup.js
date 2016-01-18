@@ -11,14 +11,14 @@ describe('addon setup examples', function () {
       ],
       addons = [{
         pkg: {name: 'force-webp'}, hooks: {
-          'IMG_PIPE': function () {
+          'IMG_PIPE': function (supports) {
             return function (pipe) {
-              return pipe.map(function (p) {
+              return supports.webp ? pipe.map(function (p) {
                 if (p.id === 'format') {
                   return {id: 'format', format: 'webp'};
                 }
                 return p;
-              });
+              }) : pipe;
             };
           }
         }
@@ -57,7 +57,8 @@ describe('addon setup examples', function () {
 
     loader.finalize(loader, registeredHooks);
 
-    var addResults = loader.hook('IMG_PIPE')(pipe),
+    var supports = {webp: true},
+      addResults = loader.hook('IMG_PIPE', supports)(pipe),
       lastResult = addResults[addResults.length -1];
 
     assert.deepEqual(lastResult, [{id: 'format', format: 'webp'}]);

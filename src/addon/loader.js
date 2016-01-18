@@ -23,6 +23,9 @@ exports.callback = callback;
 exports.hook = hook;
 exports.registerAddonHooks = registerAddonHooks;
 
+/**
+ * Resets the addon loader state.
+ */
 function unload() {
   _loaded = false;
   _hooks = {};
@@ -50,8 +53,8 @@ function load(root/*: string */, pkg/*: Object */, nodeModulesDir/*: string */) 
 }
 
 /**
- * Finalizes the addon loading process by setting the hooks and registering all callbacks for each one.
- * This function has to be called before the `hook` method is available.
+ * Finalizes the addon loading process by setting the hooks and registering all callbacks.
+ * This function has to be called before calling the `hook` method.
  * @param {object} loader
  * @param {object} hooks
  */
@@ -61,7 +64,15 @@ function finalize(loader/*: {callback: function} */, hooks/*: {} */) {
   _loaded = true;
 }
 
-function registerAddonHooks(addons/* {hooks: {}} */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
+/**
+ * Reduces a list of addons to an object where each key represents the addon name and
+ * each value is a list of callbacks that are registered for the hookName.
+ * The second parameter represents the final mapping state (which should be an empty object at first).
+ * @param {array} addons
+ * @param {object} loaderHooks
+ * @returns {object} object with hookName: addonHooks mapping
+ */
+function registerAddonHooks(addons/* [hooks: {}] */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
   return reduce(addons, function (hooks, addon) {
     forOwn(addon.hooks, function (val, key) {
       if (!hooks[key]) {
@@ -78,9 +89,19 @@ function registerAddonHooks(addons/* {hooks: {}} */, loaderHooks/*: {[key: strin
 }
 
 /**
- * Register a callback for a given hook name
+ * Register a callback for a given hook name.
+ * The callback should return a function that will be invoked for each addons hook with the same name.
+ * Initially the callback function receives an argument from the flamingo code.
+ *
  * @param {string} hookName name of the hook
  * @param {function} callback hook function
+ * @example
+ * loader.callback('IMG_PIPE', pipe => {
+ *  return (transform) => {
+ *    pipe = transform(pipe);
+ *    return pipe;
+ *  }
+ * }
  */
 function callback(hookName/*: string */, callback/*: function */) {
   _callbacks[hookName] = callback;
@@ -88,9 +109,13 @@ function callback(hookName/*: string */, callback/*: function */) {
 
 /**
  * Creates a function that can be called with additional params that calls all addons for a given hook.
+ * The second param is passed to each addon hook.
+ * The returned function represents a call to the callback for the hookName.
  * @param {string} hookName name of the hook
- * @param {object} hookConfig config object that is provided to each hook
+ * @param {object} [hookConfig] config object that is provided to each hook
  * @return {function} generated hook function
+ * @example
+ * results = hook('IMG_PIPE')(pipe);
  */
 function hook(hookName/*: string */, hookConfig/*: any */)/*: function */ {
   assert(_loaded, 'addons have to be loaded before calling any hooks');

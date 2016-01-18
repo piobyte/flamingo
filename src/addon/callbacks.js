@@ -11,6 +11,11 @@ function mergeBufferAware(a, b) {
   }
 }
 
+/**
+ * Register default flamingo addon callbacks
+ * @param {object} addons
+ * @returns {*}
+ */
 module.exports = function (addons/*: {callback: function} */)/*: {callback: function} */ {
   addons.callback(addon.HOOKS.CONF, function (conf) {
     return function (addonConf) {
