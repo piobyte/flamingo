@@ -15,10 +15,20 @@ var logger = require('./logger').build('server'),
 
 module.exports = function (conf, addons) {
 
-  var server = new Hapi.Server({debug: conf.DEBUG ? /* istanbul ignore next */ {log: ['error'], request: ['error']} : false}),
+  var server = new Hapi.Server({
+      debug: conf.DEBUG ? /* istanbul ignore next */ {
+        log: ['error'],
+        request: ['error']
+      } : false
+    }),
     serverPlugins = [],
     profilesPath = path.join(__dirname, 'profiles'),
     flamingo = {conf: conf, profiles: {}, addons: addons};
+
+  // static fields
+  FlamingoOperation.prototype.config = conf;
+  FlamingoOperation.prototype.addons = addons;
+  FlamingoOperation.prototype.profiles = conf.profiles;
 
   server.connection({
     port: conf.PORT
@@ -55,7 +65,7 @@ module.exports = function (conf, addons) {
     // image convert route
     server.route({
       method: 'GET', path: '/convert/image/{profile}/{url}', config: {
-        state: { parse: false },
+        state: {parse: false},
         handler: function (req, reply) {
           return deprecate(function () {
             imageRequestHandler.config.handler(req, reply);
@@ -91,12 +101,34 @@ module.exports = function (conf, addons) {
     conf.ROUTES.INDEX && require('./routes/index')(flamingo)
   ]));
 
-  // static fields
-  FlamingoOperation.prototype.config = conf;
-  FlamingoOperation.prototype.addons = addons;
-  FlamingoOperation.prototype.profiles = conf.profiles;
+  return new RSVP.Promise(function (resolve) {
+    var plugin = {
+      register: function (server, options, next) {
 
-  return RSVP.denodeify(server.register.bind(server))(serverPlugins).then(function () {
-    return RSVP.denodeify(server.start.bind(server))().then(function(){return server;});
+        server.ext('onRequest', function (request, reply) {
+
+          if (request) {
+            request.flamingoOperation = new FlamingoOperation();
+          }
+
+          reply.continue();
+        });
+
+        next();
+      }
+    };
+    plugin.register.attributes = {
+      name: 'flamingoOp',
+      version: '1.0.0'
+    };
+
+    server.register(plugin, function () {
+      resolve(RSVP.denodeify(server.register.bind(server))(serverPlugins).then(function () {
+        return RSVP.denodeify(server.start.bind(server))().then(function () {
+          return server;
+        });
+      }));
+    });
   });
+
 };
