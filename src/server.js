@@ -25,11 +25,6 @@ module.exports = function (conf, addons) {
     profilesPath = path.join(__dirname, 'profiles'),
     flamingo = {conf: conf, profiles: {}, addons: addons};
 
-  // static fields
-  FlamingoOperation.prototype.config = conf;
-  FlamingoOperation.prototype.addons = addons;
-  FlamingoOperation.prototype.profiles = conf.profiles;
-
   server.connection({
     port: conf.PORT
   });
@@ -95,40 +90,20 @@ module.exports = function (conf, addons) {
     server.route([videoRequestHandler]);
   }
 
+  // static fields
+  FlamingoOperation.prototype.config = conf;
+  FlamingoOperation.prototype.addons = addons;
+  FlamingoOperation.prototype.profiles = conf.profiles;
+
   // apply routes
   server.route(compact([
     conf.DEBUG && /* istanbul ignore next */ require('./routes/debug')(flamingo),
     conf.ROUTES.INDEX && require('./routes/index')(flamingo)
   ]));
 
-  return new RSVP.Promise(function (resolve) {
-    var plugin = {
-      register: function (server, options, next) {
-
-        server.ext('onRequest', function (request, reply) {
-
-          if (request) {
-            request.flamingoOperation = new FlamingoOperation();
-          }
-
-          reply.continue();
-        });
-
-        next();
-      }
-    };
-    plugin.register.attributes = {
-      name: 'flamingoOp',
-      version: '1.0.0'
-    };
-
-    server.register(plugin, function () {
-      resolve(RSVP.denodeify(server.register.bind(server))(serverPlugins).then(function () {
-        return RSVP.denodeify(server.start.bind(server))().then(function () {
-          return server;
-        });
-      }));
+  return RSVP.denodeify(server.register.bind(server))(serverPlugins.concat(require('./plugins/request-flamingo-operation'))).then(function () {
+    return RSVP.denodeify(server.start.bind(server))().then(function () {
+      return server;
     });
   });
-
 };

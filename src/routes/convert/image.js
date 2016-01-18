@@ -36,7 +36,6 @@ module.exports = function (flamingo/*: {conf: Config; profiles: {}} */)/*: {meth
         var profileParam = request.params.profile,
           operation = new FlamingoOperation();
 
-        operation.request = request;
         operation.reply = reply;
         operation.writer = responseWriter;
 

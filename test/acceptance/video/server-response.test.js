@@ -37,6 +37,7 @@ function startServer(localConf) {
 
 describe('video converting server response', function () {
   afterEach(function () {
+    nock.enableNetConnect();
     nock.cleanAll();
   });
 

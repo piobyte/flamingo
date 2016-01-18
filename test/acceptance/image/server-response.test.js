@@ -34,6 +34,7 @@ function startServer(localConf) {
 
 describe('image converting server response', function () {
   afterEach(function () {
+    nock.enableNetConnect();
     nock.cleanAll();
   });
 

@@ -18,6 +18,11 @@ var EXAMPLE_ACCESS = {HTTPS: {ENABLED: true, READ: [{hostname: 'example.org'}]}}
   };
 
 describe('https? reader', function () {
+  afterEach(function(){
+    nock.enableNetConnect();
+    nock.cleanAll();
+  });
+
   it('resolves the expected result', function (done) {
     nock('http://example.org/')
       .get('/ok')
