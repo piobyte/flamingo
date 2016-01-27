@@ -1,7 +1,7 @@
 var assert = require('assert'),
   conf = require('../../config'),
-  merge = require('lodash/object/merge'),
-  noop = require('lodash/utility/noop'),
+  merge = require('lodash/merge'),
+  noop = require('lodash/noop'),
   RSVP = require('rsvp'),
   request = RSVP.denodeify(require('request')),
   server = require('../../src/server');

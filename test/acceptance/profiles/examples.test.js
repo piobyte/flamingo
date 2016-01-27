@@ -1,6 +1,6 @@
 var assert = require('assert'),
   sinon = require('sinon'),
-  noop = require('lodash/utility/noop'),
+  noop = require('lodash/noop'),
   sharp = require('sharp'),
   RSVP = require('rsvp'),
   exampleProfiles = require('../../../src/profiles/examples');

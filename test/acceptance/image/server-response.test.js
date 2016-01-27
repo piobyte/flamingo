@@ -1,12 +1,12 @@
 var assert = require('assert'),
   server = require('../../../src/server'),
   conf = require('../../../config'),
-  merge = require('lodash/object/merge'),
+  merge = require('lodash/merge'),
   nock = require('nock'),
   RSVP = require('rsvp'),
   request = RSVP.denodeify(require('request')),
-  noop = require('lodash/utility/noop'),
-  range = require('lodash/utility/range');
+  noop = require('lodash/noop'),
+  range = require('lodash/range');
 
 var PORT = 43723; // some random unused port
 var encode = function (plain) {

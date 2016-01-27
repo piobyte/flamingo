@@ -4,7 +4,7 @@
  * @module flamingo/src/addon/discovery
  */
 var fs = require('fs'),
-  assign = require('lodash/object/assign'),
+  assign = require('lodash/assign'),
   path = require('path');
 
 var logger = require('./../logger').build('addon-discovery');

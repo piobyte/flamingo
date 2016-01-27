@@ -7,8 +7,8 @@
  */
 
 var sharp = require('sharp'),
-  isFunction = require('lodash/lang/isFunction'),
-  noop = require('lodash/utility/noop'),
+  isFunction = require('lodash/isFunction'),
+  noop = require('lodash/noop'),
   deprecate = require('../../util/deprecate');
 
 /**

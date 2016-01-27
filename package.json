@@ -28,13 +28,13 @@
     "url": "https://github.com/piobyte/flamingo"
   },
   "dependencies": {
-    "boom": "^2.8.0",
+    "boom": "^2.10.1",
     "bunyan": "^1.4.0",
     "clamp": "^1.0.1",
     "fluent-ffmpeg": "fluent-ffmpeg/node-fluent-ffmpeg.git#a415251fc5008118046ae74a61f72b61cc29c38a",
     "gm": "^1.21.1",
     "hapi-lts": "hapijs/hapi.git#69eb13937875d09ce5560138fa18f6458ecf499b",
-    "lodash": "^3.10.0",
+    "lodash": "^4.0.1",
     "mimeparse": "^0.1.4",
     "mkdirp": "^0.5.0",
     "request": "^2.67.0",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "aws-sdk": "^2.1.39",
-    "benchmark": "^1.0.0",
+    "benchmark": "^2.0.0",
     "eslint": "^1.10.3",
     "istanbul": "^0.4.1",
     "jsdoc": "^3.4.0",

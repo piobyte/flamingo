@@ -1,10 +1,17 @@
 /* @flow weak */
 var envConfig = require('./../util/env-config'),
   addon = require('./index'),
-  assign = require('lodash/object/assign'),
-  merge = require('lodash/object/merge'),
-  partial = require('lodash/function/partial');
+  assign = require('lodash/assign'),
+  mergeWith = require('lodash/mergeWith'),
+  partial = require('lodash/partial');
 
+/**
+ * Function to be used as merge callback. It's required because by default, lodash isn't keeping a Buffer as a Buffer
+ * @see https://github.com/lodash/lodash/issues/1453#issuecomment-139311305
+ * @param {*} a
+ * @param {*} b
+ * @returns {Buffer|undefined} b if b is Buffer
+ */
 function mergeBufferAware(a, b) {
   if (b instanceof Buffer) {
     return b;
@@ -20,7 +27,7 @@ module.exports = function (addons/*: {callback: function} */)/*: {callback: func
   addons.callback(addon.HOOKS.CONF, function (conf) {
     return function (addonConf) {
       // overwrite addon config with config.js content and merge the result into config.js
-      merge(conf, merge(addonConf, conf, mergeBufferAware), mergeBufferAware);
+      mergeWith(conf, mergeWith(addonConf, conf, mergeBufferAware), mergeBufferAware);
     };
   });
   addons.callback(addon.HOOKS.ENV, function (config, environment) {

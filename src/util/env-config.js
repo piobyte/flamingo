@@ -3,7 +3,7 @@
  * Environment object mapping module
  * @module flamingo/src/util/env-config
  */
-var forEach = require('lodash/collection/forEach');
+var forEach = require('lodash/forEach');
 
 var pathSet = function (object/*: Object */, path/*: string */, value/*: any */) {
   var obj = object;

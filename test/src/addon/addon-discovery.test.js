@@ -1,5 +1,5 @@
 var assert = require('assert'),
-  isPlainObject = require('lodash/lang/isPlainObject'),
+  isPlainObject = require('lodash/isPlainObject'),
   path = require('path');
 
 describe('addon-loader', function () {

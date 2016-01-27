@@ -1,7 +1,7 @@
 var temp = require('temp'),
   fs = require('fs'),
   assert = require('assert'),
-  assign = require('lodash/object/assign');
+  assign = require('lodash/assign');
 
 describe('logger', function () {
   var logger = require('../../src/logger');

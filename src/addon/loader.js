@@ -4,10 +4,10 @@
  */
 var addonDiscovery = require('./discovery'),
   assert = require('assert'),
-  noop = require('lodash/utility/noop'),
-  forOwn = require('lodash/object/forOwn'),
+  noop = require('lodash/noop'),
+  forOwn = require('lodash/forOwn'),
   callbacks = require('./callbacks'),
-  reduce = require('lodash/collection/reduce');
+  reduce = require('lodash/reduce');
 
 var _callbacks = {},
   logger = require('./../logger').build('addon-loader');

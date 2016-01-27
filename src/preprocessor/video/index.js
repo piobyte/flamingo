@@ -1,13 +1,13 @@
 /* @flow weak */
 var ffmpeg = require('fluent-ffmpeg'),
   RSVP = require('rsvp'),
-  assign = require('lodash/object/assign'),
-  isFinite = require('lodash/lang/isFinite'),
+  assign = require('lodash/assign'),
+  isFinite = require('lodash/isFinite'),
   request = require('request'),
   errors = require('../../util/errors'),
   pkg = require('../../../package'),
   deprecate = require('../../util/deprecate'),
-  noop = require('lodash/utility/noop'),
+  noop = require('lodash/noop'),
   globalConfig = require('../../../config');
 
 function _isPreprocessorConfig(config) {

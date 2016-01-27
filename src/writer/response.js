@@ -5,7 +5,7 @@
  */
 var through = require('through2'),
   deprecate = require('../util/deprecate'),
-  noop = require('lodash/utility/noop'),
+  noop = require('lodash/noop'),
   RSVP = require('rsvp');
 
 /**

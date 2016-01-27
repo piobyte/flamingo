@@ -27,8 +27,8 @@ var BENCH_RESULT_TO_S3 = process.env.BENCH_RESULT_TO_S3 === 'true',
     console.error(err);
   },
   storeResults = function storeResults(suite, suiteName, profileName) {
-    var fastest = suite.filter('fastest').pluck('id'),
-      slowest = suite.filter('slowest').pluck('id');
+    var fastest = suite.filter('fastest').map('id'),
+      slowest = suite.filter('slowest').map('id');
 
     suiteObj[suiteName] = suiteObj[suiteName] ? suiteObj[suiteName] : {name: suiteName, topics: {}};
     suiteObj[suiteName].topics[profileName] = suiteObj[suiteName].topics[profileName] ? suiteObj[suiteName].topics[profileName] : {
@@ -60,7 +60,7 @@ var BENCH_RESULT_TO_S3 = process.env.BENCH_RESULT_TO_S3 === 'true',
   completeFn = function completeFn(suiteName, profileName, resolve) {
     return function () {
       storeResults(this, suiteName, profileName);
-      console.log(profileName, this.name, 'Fastest is ' + this.filter('fastest').pluck('name'), '\n');
+      console.log(profileName, this.name, 'Fastest is ' + this.filter('fastest').map('name'), '\n');
       resolve();
     };
   },

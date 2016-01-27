@@ -1,7 +1,7 @@
 /* disabled flow because of deprecated signature type mismatch */
 var RSVP = require('rsvp'),
   stream = require('stream'),
-  noop = require('lodash/utility/noop'),
+  noop = require('lodash/noop'),
   deprecate = require('../util/deprecate'),
   readerType = require('./reader-type');
 

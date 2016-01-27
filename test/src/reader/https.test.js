@@ -3,7 +3,7 @@
 var url = require('url'),
   temp = require('temp'),
   nock = require('nock'),
-  merge = require('lodash/object/merge'),
+  merge = require('lodash/merge'),
   assert = require('assert');
 
 var httpReader = require('../../../src/reader/https'),

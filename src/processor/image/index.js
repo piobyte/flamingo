@@ -4,7 +4,7 @@
  * @module flamingo/src/processor/image
  */
 var deprecate = require('../../util/deprecate'),
-  noop = require('lodash/utility/noop');
+  noop = require('lodash/noop');
 
 var processors = {
   sharp: require('./sharp'),

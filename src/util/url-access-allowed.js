@@ -3,9 +3,9 @@
  * Url whitelist module
  * @module flamingo/src/util/read-allowed
  */
-var some = require('lodash/collection/some'),
-  keys = require('lodash/object/keys'),
-  every = require('lodash/collection/every');
+var some = require('lodash/some'),
+  keys = require('lodash/keys'),
+  every = require('lodash/every');
 
 /**
  * Check if a given url is on a given whitelist.

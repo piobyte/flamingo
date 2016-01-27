@@ -3,7 +3,7 @@ var fs = require('fs'),
   readerType = require('./reader-type'),
   accessAllowed = require('../util/file-access-allowed'),
   path = require('path'),
-  noop = require('lodash/utility/noop'),
+  noop = require('lodash/noop'),
   deprecate = require('../util/deprecate'),
   RSVP = require('rsvp');
 

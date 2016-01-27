@@ -1,4 +1,4 @@
-var noop = require('lodash/utility/noop');
+var noop = require('lodash/noop');
 
 function FlamingoOperation() {
   this.request = {};

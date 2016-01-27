@@ -1,11 +1,11 @@
 var assert = require('assert'),
   server = require('../../../src/server'),
   conf = require('../../../config'),
-  merge = require('lodash/object/merge'),
+  merge = require('lodash/merge'),
   simpleHttpServer = require('../../test-util/simple-http-server'),
   RSVP = require('rsvp'),
   request = RSVP.denodeify(require('request')),
-  noop = require('lodash/utility/noop'),
+  noop = require('lodash/noop'),
   path = require('path'),
   fs = require('fs');
 

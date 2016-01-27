@@ -1,8 +1,8 @@
 /* @flow weak */
 var Hapi = require('hapi-lts'),
-  isArray = require('lodash/lang/isArray'),
-  merge = require('lodash/object/merge'),
-  compact = require('lodash/array/compact'),
+  isArray = require('lodash/isArray'),
+  merge = require('lodash/merge'),
+  compact = require('lodash/compact'),
   RSVP = require('rsvp'),
   fs = require('fs'),
   path = require('path'),
