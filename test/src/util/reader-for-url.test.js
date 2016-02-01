@@ -1,29 +1,29 @@
-var assert = require('assert'),
-  httpReader = require('../../../src/reader/https'),
-  dataReader = require('../../../src/reader/data'),
-  fileReader = require('../../../src/reader/file'),
-  url = require('url');
+const assert = require('assert');
+const httpReader = require('../../../src/reader/https');
+const dataReader = require('../../../src/reader/data');
+const fileReader = require('../../../src/reader/file');
+const url = require('url');
 
-var IPV6_URL_0 = url.parse('http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/'),
-  HTTP_URL_0 = url.parse('http://example.org'),
-  HTTP_URL_1 = url.parse('http://example.org:8080/'),
-  HTTPS_URL_0 = url.parse('https://example.org'),
+const IPV6_URL_0 = url.parse('http://[2001:db8:85a3:8d3:1319:8a2e:370:7348]/');
+const HTTP_URL_0 = url.parse('http://example.org');
+const HTTP_URL_1 = url.parse('http://example.org:8080/');
+const HTTPS_URL_0 = url.parse('https://example.org');
 
-  DATA_URL_0 = url.parse('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=='),
+const DATA_URL_0 = url.parse('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==');
 
-  FILE_URL_0 = url.parse('file://localhost/etc/fstab'),
+const FILE_URL_0 = url.parse('file://localhost/etc/fstab');
 
 // some php related urls https://php.net/manual/en/wrappers.php
-  GLOB_URL_0 = url.parse('glob://ext/spl/examples/*.php'),
-  SSH2_URL_0 = url.parse('ssh2.exec://user:pass@example.com:22/usr/local/bin/somecmd'),
-  SSH2_URL_1 = url.parse('ssh2.shell://user:pass@example.com:22/xterm'),
-  OGG_URL_0 = url.parse('ogg://http://www.example.com/path/to/soundstream.ogg'),
+const GLOB_URL_0 = url.parse('glob://ext/spl/examples/*.php');
+const SSH2_URL_0 = url.parse('ssh2.exec://user:pass@example.com:22/usr/local/bin/somecmd');
+const SSH2_URL_1 = url.parse('ssh2.shell://user:pass@example.com:22/xterm');
+const OGG_URL_0 = url.parse('ogg://http://www.example.com/path/to/soundstream.ogg');
 
-  DICT_URL_0 = url.parse('dict://locahost:11211/stats'),
-  LDAP_URL_0 = url.parse('ldap://localhost:11211/%0astats%0aquit'),
-  GOPHER_URL_0 = url.parse('gopher://localhost:11211/1stats%0aquit'),
-  GOPHER_URL_1 = url.parse('gopher://localhost:10050/1vfs.file.regexp[/etc/hosts,7]'),
-  GOPHER_URL_2 = url.parse('gopher://localhost:8001/1POST%20%2fHTTP%2f1.1%0d%0aHost:localhost%0d%0aContent-Length:5%0d%0a%0d%0a');
+const DICT_URL_0 = url.parse('dict://locahost:11211/stats');
+const LDAP_URL_0 = url.parse('ldap://localhost:11211/%0astats%0aquit');
+const GOPHER_URL_0 = url.parse('gopher://localhost:11211/1stats%0aquit');
+const GOPHER_URL_1 = url.parse('gopher://localhost:10050/1vfs.file.regexp[/etc/hosts,7]');
+const GOPHER_URL_2 = url.parse('gopher://localhost:8001/1POST%20%2fHTTP%2f1.1%0d%0aHost:localhost%0d%0aContent-Length:5%0d%0a%0d%0a');
 
 describe('reader-for-url', function () {
   var readerForUrl = require('../../../src/util/reader-for-url');

@@ -8,21 +8,8 @@
  *
  * @param {string} filePath path to check
  * @param {array<string>} allowedPaths path whitelist
- * @return {string} input file path
- * @throws foo
+ * @return {boolean} true if access allowed, false otherwise
  */
-module.exports = function (filePath/*: string*/, allowedPaths/*: Array<string>*/)/*: string */ {
-  var validLocation = allowedPaths.some(function (validFile) {
-    if (filePath.indexOf(validFile) === 0) {
-      return true;
-    }
-  });
-  if (!validLocation) {
-    throw {
-      statusCode: 403,
-      error: 'File access forbidden',
-      message: 'File location not allowed. Allowed: ' + JSON.stringify(allowedPaths)
-    };
-  }
-  return filePath;
+module.exports = function (filePath/*: string*/, allowedPaths/*: Array<string>*/)/*: boolean */ {
+  return allowedPaths.some((allowedPath) => filePath.indexOf(allowedPath) === 0);
 };

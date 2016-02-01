@@ -1,55 +1,56 @@
 /* eslint no-console: 0 */
 
-var fixtures = require('../../test/fixtures/images/sharp-bench-assets/index'),
-  temp = require('temp'),
-  nock = require('nock'),
-  httpsReader = require('../../src/reader/https'),
-  imageProcessor = require('../../src/processor/image'),
-  RSVP = require('rsvp'),
-  unfoldReaderResult = require('../../src/util/unfold-reader-result'),
-  FlamingoOperation = require('../../src/util/flamingo-operation'),
-  fs = require('fs'),
-  path = require('path'),
-  SUPPORTED_FORMATS = 'supported-files.md';
+const fixtures = require('../../test/fixtures/images/sharp-bench-assets/index');
+const temp = require('temp');
+const nock = require('nock');
+const httpsReader = require('../../src/reader/https');
+const imageProcessor = require('../../src/processor/image');
+const Promise = require('bluebird');
+const unfoldReaderResult = require('../../src/util/unfold-reader-result');
+const FlamingoOperation = require('../../src/model/flamingo-operation');
+const fs = require('fs');
+const path = require('path');
+const SUPPORTED_FORMATS = 'supported-files.md';
 
 temp.track();
 
-var results = {},
-  allFixtures = fixtures.all(),
-  symbols = {
-    ok: '✓',
-    err: '✖'
-  },
-  processors = [{
-    name: 'sharp',
-    process: [{
-      processor: 'sharp',
-      pipe: function (sharp) {
-        return sharp
-          .rotate().resize(200, 200).min().toFormat('png');
-      }
-    }]
-  }, {
-    name: 'gm (graphicsmagick)',
-    process: [{
-      processor: 'gm',
-      pipe: function (gm) {
-        return gm
-          .autoOrient().resize('200', '200^').setFormat('png');
-      }
-    }]
-  }, {
-    name: 'gm (imagemagick)',
-    process: [{
-      processor: 'gm',
-      pipe: function (gm) {
-        return gm
-          .autoOrient().options({imageMagick: true}).resize('200', '200^').setFormat('png');
-      }
-    }]
-  }],
-  queue = RSVP.resolve(),
-  endpoint = nock('https://assets.flamingo.tld').persist();
+const results = {};
+const allFixtures = fixtures.all();
+const symbols = {
+  ok: '✓',
+  err: '✖'
+};
+const processors = [{
+  name: 'sharp',
+  process: [{
+    processor: 'sharp',
+    pipe: function (sharp) {
+      return sharp
+        .rotate().resize(200, 200).min().toFormat('png');
+    }
+  }]
+}, {
+  name: 'gm (graphicsmagick)',
+  process: [{
+    processor: 'gm',
+    pipe: function (gm) {
+      return gm
+        .autoOrient().resize('200', '200^').setFormat('png');
+    }
+  }]
+}, {
+  name: 'gm (imagemagick)',
+  process: [{
+    processor: 'gm',
+    pipe: function (gm) {
+      return gm
+        .autoOrient().options({imageMagick: true}).resize('200', '200^').setFormat('png');
+    }
+  }]
+}];
+
+let promise = Promise.resolve();
+let endpoint = nock('https://assets.flamingo.tld').persist();
 
 allFixtures.forEach(function (data) {
   endpoint = endpoint.get('/' + data.desc).replyWithFile(200, data.path);
@@ -59,9 +60,8 @@ processors.forEach(function (processor) {
   results[processor.name] = {};
   var result = results[processor.name];
 
-
   allFixtures.forEach(function (data) {
-    queue = queue.then(function () {
+    promise = promise.then(function () {
       var op = new FlamingoOperation();
       op.config = {
         ACCESS: {HTTPS: {ENABLED: false}},
@@ -76,12 +76,12 @@ processors.forEach(function (processor) {
       return httpsReader(op).then(unfoldReaderResult)
         .then(imageProcessor(op))
         .then(function (stream) {
-          return new RSVP.Promise(function(resolve) {
-            stream.on('error', function(){
+          return new Promise(function (resolve) {
+            stream.on('error', function () {
               result[data.desc] = false;
               resolve();
             });
-            stream.on('finish', function(){
+            stream.on('finish', function () {
               result[data.desc] = true;
               resolve();
             });
@@ -92,11 +92,11 @@ processors.forEach(function (processor) {
   });
 });
 
-queue.catch(function (e) {
+promise.catch(function (e) {
   console.warn('caught', e);
 }).finally(function () {
-  var out = ['# Supported formats', ''],
-    firstRow = ['input'].concat(Object.keys(results));
+  const out = ['# Supported formats', ''];
+  const firstRow = ['input'].concat(Object.keys(results));
 
   out.push(firstRow.join('|'));
   out.push(firstRow.reduce(function (all, title, i) {
@@ -122,6 +122,6 @@ queue.catch(function (e) {
   });
 
   temp.cleanupSync();
-}).catch(function(err){
+}).catch(function (err) {
   console.error(err);
 });

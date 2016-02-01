@@ -4,10 +4,8 @@ cache:
   directories:
   - node_modules
 node_js:
-- '5'
-- '4'
-- '0.12'
-- 'iojs'
+- '6'
+- 'node'
 sudo: 9000
 addons:
   apt:
@@ -17,20 +15,10 @@ addons:
     - g++-4.8
 before_install:
 - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
-- sudo bash tools/install-libvips.sh
 - sudo bash tools/install-ffmpeg.sh
 - sudo bash tools/install-imagemagick.sh
 - sudo bash tools/install-graphicsmagick.sh
-- sudo bash tools/install-flow.sh
 install:
 - npm install
 after_success:
 - npm run bench
-- bash ./tools/deploy-gh-pages.sh
-env:
-  global:
-  - GH_REF: github.com/piobyte/flamingo.git
-  - secure: JMdtUr8MWYN0mhWiwivcWGhGXUOJnOv5UGSfsurYsGVKyqK0qRJMVmf+bezMkIhxktcq6RJNAmYq/1wsh1mqU/iHoWaAHeOtZoMYItYgIco6GJgfYJ2Dhb46WiRbDzi5qcEjCV3fDb3K8OXePWVcBoGAvp5e+pH3vvvw0SgAjBY=
-notifications:
-  slack:
-    secure: gSLT//7zFcT1AVj99og8Bq320pgKyHPqIU84uaSytdM5Tolwrbpf4uAXRv3pXGXWkg8B2wuKhazp9dFodzgEUOJL6YIpNa+n7gVuef5I28SPicx56HrCdcIkXM6INHmhldrfjm0NnZrvoZkvGOwQd4Gz3y6cRLYchEdqYXLi3Yc=

@@ -62,6 +62,6 @@ com_crashlytics_export_strings.xml
 .vagrant/
 *.swp
 
-docker-deploy.sh
+tools/deploy-docker.sh
 
-test
+supported-files.md

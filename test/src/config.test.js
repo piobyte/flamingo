@@ -1,82 +1,54 @@
-var assert = require('assert'),
-  conf = require('../../config'),
-  merge = require('lodash/merge'),
-  noop = require('lodash/noop'),
-  RSVP = require('rsvp'),
-  request = RSVP.denodeify(require('request')),
-  server = require('../../src/server');
+const assert = require('assert');
+const merge = require('lodash/merge');
+const noop = require('lodash/noop');
+const got = require('got');
+const exampleProfiles = require('../../src/profiles/examples');
+
+const Server = require('../../src/model/server');
+const Config = require('../../config');
 
 var PORT = 43726; // some random unused port
 
 function startServer(localConf) {
-  var serverConf = merge({}, conf, {
-    CRYPTO: {ENABLED: false},
-    PORT: PORT
-  }, localConf);
+  return new Config().fromEnv().then(config => {
+    config = merge({}, config, {CRYPTO: {ENABLED: false}, PORT: PORT}, localConf);
 
-  if (serverConf.CRYPTO.ENABLED) {
-    // manually copy cipher, key, iv because they're buffers
-    serverConf.CRYPTO.KEY = Buffer.isBuffer(localConf.CRYPTO.KEY) ? localConf.CRYPTO.KEY : conf.CRYPTO.KEY;
-    serverConf.CRYPTO.IV = Buffer.isBuffer(localConf.CRYPTO.IV) ? localConf.CRYPTO.IV : conf.CRYPTO.IV;
-  }
-
-  return server(serverConf, {
-    hook: function () {
-      return noop;
+    if (config.CRYPTO.ENABLED) {
+      // manually copy cipher, key, iv because they're buffers
+      config.CRYPTO.KEY = Buffer.isBuffer(localConf.CRYPTO.KEY) ? localConf.CRYPTO.KEY : config.CRYPTO.KEY;
+      config.CRYPTO.IV = Buffer.isBuffer(localConf.CRYPTO.IV) ? localConf.CRYPTO.IV : config.CRYPTO.IV;
     }
+
+    return new Server(config, {hook: () => noop})
+      .withProfiles([exampleProfiles])
+      .withRoutes([])
+      .start();
   });
 }
 
 
 describe('config', function () {
-  it('decrypts encrypted messages', function (done) {
+  it('decrypts encrypted messages', function () {
     var PAYLOAD = 'test';
 
-    conf.ENCODE_PAYLOAD(PAYLOAD).then(function (cipher) {
-      return conf.DECODE_PAYLOAD(cipher);
-    }).then(function (plain) {
-      assert.strictEqual(plain, PAYLOAD);
-      done();
-    }).catch(done);
+    return new Config().fromEnv().then(conf => {
+      return conf.ENCODE_PAYLOAD(PAYLOAD).then(function (cipher) {
+        return conf.DECODE_PAYLOAD(cipher);
+      }).then(function (plain) {
+        assert.strictEqual(plain, PAYLOAD);
+      });
+    });
   });
 
-  it('disables the index (fingerprinting) route', function (done) {
+  it('has no index (fingerprinting) route by default', function () {
     var server;
-    startServer({
+    return startServer({
       ROUTES: {INDEX: false}
     }).then(function (s) {
       server = s;
-      return request('http://localhost:' + PORT + '/');
+      return got('http://localhost:' + PORT + '/').catch(e => e);
     }).then(function (response) {
       assert.equal(response.statusCode, 404);
-      server.stop(done);
-    }).catch(done);
+    }).finally(() => server.stop());
   });
-
-  it('disables the image convert route', function (done) {
-    var server;
-    startServer({
-      ROUTES: {PROFILE_CONVERT_IMAGE: false}
-    }).then(function (s) {
-      server = s;
-      return request('http://localhost:' + PORT + '/image/avatar-image/foo.png');
-    }).then(function (response) {
-      assert.equal(response.statusCode, 404);
-      server.stop(done);
-    }).catch(done);
-  });
-
-  it('disables the video convert route', function (done) {
-    var server;
-    startServer({
-      ROUTES: {PROFILE_CONVERT_VIDEO: false}
-    }).then(function (s) {
-      server = s;
-      return request('http://localhost:' + PORT + '/video/avatar-image/foo.png');
-    }).then(function (response) {
-      assert.equal(response.statusCode, 404);
-      server.stop(done);
-    }).catch(done);
-  });
-
 });

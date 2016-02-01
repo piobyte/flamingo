@@ -3,27 +3,23 @@
  * Supported features module
  * @module flamingo/src/util/supported
  */
-var RSVP = require('rsvp'),
-  temp = require('temp'),
-  path = require('path'),
-  fs = require('fs'),
-  through2 = require('through2'),
-  ffmpeg = require('fluent-ffmpeg'),
-  FlamingoOperation = require('./flamingo-operation'),
-  gmProcessor = require('../processor/image/gm');
-
-var Promise = RSVP.Promise;
+const Promise = require('bluebird');
+const temp = require('temp');
+const path = require('path');
+const fs = require('fs');
+const through2 = require('through2');
+const ffmpeg = require('fluent-ffmpeg');
+const FlamingoOperation = require('./../model/flamingo-operation');
+const gmProcessor = require('../processor/image/gm');
 
 /**
  * Function to check if ffmpeg/ffprobe is installed and usable
  * @returns {RSVP.Promise} resolves true or false depending on the ffmpeg/ffprobe support
  */
 function hasFFmpeg(/*conf*/) {
-  return new Promise(function(resolve){
-    ffmpeg.ffprobe(path.join(__dirname, '../../test/fixtures/videos/trailer_1080p.ogg'), function (err) {
-      resolve(err ? false : true);
-    });
-  });
+  return new Promise((resolve) =>
+    ffmpeg.ffprobe(path.join(__dirname, '../../test/fixtures/videos/trailer_1080p.ogg'),
+      (err) => resolve(err ? false : true)));
 }
 
 /**
@@ -37,10 +33,10 @@ function hasFFmpeg(/*conf*/) {
  */
 function hasGmWebp(conf/*: Config */) {
   return new Promise(function (resolve) {
-    var resultLength = 0,
-      out = temp.createWriteStream(),
-      input = fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/base64.png')),
-      op = new FlamingoOperation();
+    let resultLength = 0;
+    const out = temp.createWriteStream();
+    const input = fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/base64.png'));
+    const op = new FlamingoOperation();
 
     out.on('finish', function () {
       resolve(resultLength > 0);
@@ -70,10 +66,10 @@ function hasGmWebp(conf/*: Config */) {
  *     console.log(supported.GM.WEBP ? 'webp is supported for gm processor' : 'webp not supported for gm processor'))
  */
 module.exports = function (conf/*: Config */)/*: function */ {
-  var supported/*: SupportedConfig */ = {GM: {WEBP: false}};
+  const supported/*: SupportedConfig */ = {GM: {WEBP: false}};
   temp.track();
 
-  return RSVP.all([
+  return Promise.all([
     hasGmWebp(conf),
     hasFFmpeg(conf)
   ]).then(function (results/*: Array<boolean> */) {

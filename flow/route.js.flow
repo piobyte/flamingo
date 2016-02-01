@@ -1,0 +1,6 @@
+
+ declare class Route {
+   handle(operation: FlamingoOperation): void;
+   hapiConfig(defaults: Object): Object;
+   buildRequestOperation(request: Request, reply: function):FlamingoOperation;
+ }

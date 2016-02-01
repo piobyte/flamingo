@@ -8,8 +8,6 @@ describe('file access allowed', function () {
   });
 
   it('disallows not whitelisted directories', function () {
-    assert.throws(function () {
-      fileAccessAllowed('/my/not-allowed/path.png', ['/my/allowed']);
-    });
+    assert.ok(!fileAccessAllowed('/my/not-allowed/path.png', ['/my/allowed']));
   });
 });

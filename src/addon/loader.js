@@ -1,148 +1,145 @@
-/* @flow */
-/**
- * @module flamingo/src/addon/loader
- */
-var addonDiscovery = require('./discovery'),
-  assert = require('assert'),
-  noop = require('lodash/noop'),
-  forOwn = require('lodash/forOwn'),
-  callbacks = require('./callbacks'),
-  reduce = require('lodash/reduce');
+const path = require('path');
+const fs = require('fs');
+const assign = require('lodash/assign');
+const noop = require('lodash/noop');
+const forOwn = require('lodash/forOwn');
+const reduce = require('lodash/reduce');
+const assert = require('assert');
+const logger = require('../logger').build('addon-loader');
 
-var _callbacks = {},
-  logger = require('./../logger').build('addon-loader');
+class AddonLoader {
+  constructor(rootPath, pkg, modulesDir = 'node_modules', callbacks = require('./callbacks')) {
+    this.ADDON_KEYWORD = 'flamingo-addon';
 
-/*eslint no-underscore-dangle: 0 */
-var _hooks/*: {[key: string]: []} */ = {},
-  _loaded = false;
+    this._hooks = {};
+    this._callbacks = {};
+    this._loaded = false;
 
-exports.load = load;
-exports.unload = unload;
-exports.finalize = finalize;
-exports.callback = callback;
-exports.hook = hook;
-exports.registerAddonHooks = registerAddonHooks;
-
-/**
- * Resets the addon loader state.
- */
-function unload() {
-  _loaded = false;
-  _hooks = {};
-}
-
-/**
- * Function to load all addons starting from a given root using a given pkg
- * @param {string} root root path
- * @param {object} pkg package.json object
- * @param {String} [nodeModulesDir=node_modules] node module dirname
- * @returns {void}
- */
-function load(root/*: string */, pkg/*: Object */, nodeModulesDir/*: string */) {
-  var addons = addonDiscovery.discover(root, pkg, nodeModulesDir);
-
-  /* istanbul ignore next */
-  if (addons.length) {
-    logger.info('using addons: ' + addons.map(function (addon) {
-      return addon.pkg.name + '@' + addon.pkg.version;
-    }).join(', '));
+    this.callbacks = callbacks;
+    this.rootPath = rootPath;
+    this.package = pkg;
+    this.modulesDir = modulesDir;
+    this.addons = [];
   }
 
-  finalize(exports,
-    registerAddonHooks(addons, _hooks));
-}
+  load() {
+    const addons = this.discover(this.rootPath, this.package, this.modulesDir);
 
-/**
- * Finalizes the addon loading process by setting the hooks and registering all callbacks.
- * This function has to be called before calling the `hook` method.
- * @param {object} loader
- * @param {object} hooks
- */
-function finalize(loader/*: {callback: function} */, hooks/*: {} */) {
-  _hooks = hooks;
-  callbacks(loader);
-  _loaded = true;
-}
+    /* istanbul ignore next */
+    if (addons.length) {
+      this.addons = addons;
+      logger.info('using addons: ' +
+        addons.map(addon => `${addon.pkg.name}@${addon.pkg.version}`).join(', '));
+    }
 
-/**
- * Reduces a list of addons to an object where each key represents the addon name and
- * each value is a list of callbacks that are registered for the hookName.
- * The second parameter represents the final mapping state (which should be an empty object at first).
- * @param {array} addons
- * @param {object} loaderHooks
- * @returns {object} object with hookName: addonHooks mapping
- */
-function registerAddonHooks(addons/* [hooks: {}] */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
-  return reduce(addons, function (hooks, addon) {
-    forOwn(addon.hooks, function (val, key) {
-      if (!hooks[key]) {
-        hooks[key] = [];
+    this.finalize(this.reduceAddonsToHooks(addons, this._hooks));
+
+    return this;
+  }
+
+  unload() {
+    this._loaded = false;
+    this._hooks = {};
+
+    return this;
+  }
+
+  discover(rootPath, pkg, modulesDir = 'node_modules') {
+    const deps = assign({}, pkg.dependencies, pkg.devDependencies);
+
+    return Object.keys(deps)
+      .map(dependency => this.fromPackage(path.join(rootPath, modulesDir, dependency, '/')))
+      .filter(Boolean)
+      .map(this.resolvePkg)
+      .filter(Boolean);
+  }
+
+  resolvePkg(addon/*: Addon */)/*: ?Addon */ {
+    const main = addon.pkg.main || 'index.js';
+    const mainPath = path.join(addon.path, main);
+    let loadedAddon;
+
+    /*eslint no-sync: 0*/
+    if (fs.existsSync(mainPath)) {
+      addon.hooks = require(mainPath);
+      loadedAddon = addon;
+    } else {
+      logger.warn('can\'t find entrypoint for addon: ' + addon.pkg.name);
+    }
+    return loadedAddon;
+  }
+
+  fromPackage(packagePath) {
+    // load packagejson if exists
+    const pkg = path.join(packagePath, 'package.json');
+    if (fs.existsSync(pkg)) {
+      const packageJson = require(pkg);
+      const keywords = packageJson.keywords || [];
+
+      if (keywords.indexOf(this.ADDON_KEYWORD) > -1) {
+        return {
+          path: packagePath,
+          pkg: packageJson
+        };
       }
+    } else {
+      logger.debug('no package.json found at ' + packagePath);
+    }
+  }
 
-      hooks[key].push({
-        hook: addon.hooks[key],
-        addon: addon
+  reduceAddonsToHooks(addons/* [hooks: {}] */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
+    // map addons to object where key equals the addons hooks name
+    return reduce(addons, function (hooks, addon) {
+      forOwn(addon.hooks, function (val, key) {
+        // provide empty array for hook key
+        hooks[key] = hooks[key] || [];
+
+        hooks[key].push({
+          hook: addon.hooks[key],
+          addon: addon
+        });
       });
-    });
-    return hooks;
-  }, loaderHooks);
-}
-
-/**
- * Register a callback for a given hook name.
- * The callback should return a function that will be invoked for each addons hook with the same name.
- * Initially the callback function receives an argument from the flamingo code.
- *
- * @param {string} hookName name of the hook
- * @param {function} callback hook function
- * @example
- * loader.callback('IMG_PIPE', pipe => {
- *  return (transform) => {
- *    pipe = transform(pipe);
- *    return pipe;
- *  }
- * }
- */
-function callback(hookName/*: string */, callback/*: function */) {
-  _callbacks[hookName] = callback;
-}
-
-/**
- * Creates a function that can be called with additional params that calls all addons for a given hook.
- * The second param is passed to each addon hook.
- * The returned function represents a call to the callback for the hookName.
- * @param {string} hookName name of the hook
- * @param {object} [hookConfig] config object that is provided to each hook
- * @return {function} generated hook function
- * @example
- * results = hook('IMG_PIPE')(pipe);
- */
-function hook(hookName/*: string */, hookConfig/*: any */)/*: function */ {
-  assert(_loaded, 'addons have to be loaded before calling any hooks');
-  assert(_callbacks[hookName], 'no registered callback for ' + hookName);
-
-  var hookFunction = noop;
-
-  if (_hooks[hookName]) {
-    hookFunction = function () {
-      /*eslint camelcase:0*/
-      // @via https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
-      var $_len = arguments.length;
-      var args = new Array($_len);
-      for (var $_i = 0; $_i < $_len; ++$_i) {
-        args[$_i] = arguments[$_i];
-      }
-
-      var results = [],
-        callbackFn = _callbacks[hookName].apply(undefined, args);
-
-      for (var i = 0; i < _hooks[hookName].length; i++) {
-        results.push(callbackFn(_hooks[hookName][i].hook(hookConfig)));
-      }
-
-      return results;
-    };
+      return hooks;
+    }, loaderHooks);
   }
 
-  return hookFunction;
+  callback(hookName/*: string */, callback/*: function */) {
+    this._callbacks[hookName] = callback;
+  }
+
+  finalize(hooks/*: {} */) {
+    this._hooks = hooks;
+    this.callbacks(this);
+    this._loaded = true;
+  }
+
+
+  /**
+   * Creates a function that can be called with additional params that calls all addons for a given hook.
+   * The second param is passed to each addon hook.
+   * The returned function represents a call to the callback for the hookName.
+   * @param {string} hookName name of the hook
+   * @param {object} [hookConfig] config object that is provided to each hook
+   * @return {function} generated hook function
+   * @example
+   * results = hook('IMG_PIPE')(pipe);
+   */
+  hook(hookName/*: string */, hookConfig/*: any */)/*: function */ {
+    assert(this._loaded, 'addons have to be loaded before calling any hooks');
+    assert(this._callbacks[hookName], 'no registered callback for ' + hookName);
+
+    var hookFunction = noop;
+
+    if (this._hooks[hookName]) {
+      hookFunction = (...args) => {
+        const callbackFn = this._callbacks[hookName](...args);
+        return this._hooks[hookName]
+          .map(hook => callbackFn(hook.hook(hookConfig)));
+      };
+    }
+
+    return hookFunction;
+  }
 }
+
+module.exports = AddonLoader;

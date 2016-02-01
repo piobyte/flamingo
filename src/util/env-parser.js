@@ -14,9 +14,7 @@ module.exports = {
    * parser.boolean('false') // false
    * parser.boolean('123') // false
    */
-  boolean: function (val/*: string*/)/*: boolean */ {
-    return val === 'true';
-  },
+  boolean: (val/*: string*/)/*: boolean */ => val === 'true',
   /**
    * Create a function that calls `parseInt(_, 10)` and handles `NaN` by returning a given default value.
    * @param {number} def default value in case of non number
@@ -61,9 +59,7 @@ module.exports = {
    * parser.objectInt('height', 200)({height: 100}); //100
    */
   objectInt: function (field/*: string */, def/*: number*/)/*: function */ {
-    return function (obj/*: {} */)/*: number*/ {
-      return module.exports.int(def)(obj && obj[field]);
-    };
+    return (obj/*: {} */)/*: number*/ => module.exports.int(def)(obj && obj[field]);
   },
   /**
    * Convert a value to a Buffer
@@ -72,9 +68,8 @@ module.exports = {
    * @example
    * parser.buffer('_ag3WU77') // new Buffer('_ag3WU77')
    */
-  buffer: function (val/*: string */)/*: Buffer */ {
-    return new Buffer(val);
-  },
+  buffer: (val/*: string */)/*: Buffer */ =>
+    new Buffer(val),
   /**
    * Convert a value to a base64 Buffer
    * @param {*} val value to convert
@@ -82,7 +77,6 @@ module.exports = {
    * @example
    * parser.buffer64('DjiZ7AWTeNh38zoQiZ76gw==') // new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64')
    */
-  buffer64: function (val/*: string */)/*: Buffer */ {
-    return new Buffer(val, 'base64');
-  }
+  buffer64: (val/*: string */)/*: Buffer */ =>
+    new Buffer(val, 'base64')
 };

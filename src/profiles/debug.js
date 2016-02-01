@@ -2,20 +2,20 @@
 /**
  * @module flamingo/src/profiles/debug
  */
-var RSVP = require('rsvp'),
-  sharp = require('sharp'),
-  bestFormat = require('../util/best-format'),
-  clamp = require('clamp'),
-  envParser = require('../util/env-parser');
+const Promise = require('bluebird');
+const sharp = require('sharp');
+const bestFormat = require('../util/best-format');
+const clamp = require('clamp');
+const envParser = require('../util/env-parser');
 
 /**
  * Debug profiles that choose a processor based on the `processor` query param
  */
 var profiles = {
   'debug-rotate': function (request, config) {
-    var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
-      format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
-      process = [];
+    const dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024);
+    const process = [];
+    let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
       if (!config.SUPPORTED.GM.WEBP) {
@@ -47,12 +47,12 @@ var profiles = {
       });
     }
 
-    return RSVP.resolve({response: {header: {'Content-Type': format.mime}}, process: process});
+    return Promise.resolve({response: {header: {'Content-Type': format.mime}}, process: process});
   },
   'debug-resize': function (request, config) {
-    var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
-      format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
-      process = [];
+    const dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024);
+    const process = [];
+    let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
       if (!config.SUPPORTED.GM.WEBP) {
@@ -75,12 +75,12 @@ var profiles = {
     }
 
     // override dimension with query.width
-    return RSVP.resolve({process: process});
+    return Promise.resolve({process: process});
   },
   'debug-flip': function (request, config) {
-    var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
-      format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
-      process = [];
+    const dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024);
+    const process = [];
+    let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
       if (!config.SUPPORTED.GM.WEBP) {
@@ -104,12 +104,12 @@ var profiles = {
       });
     }
 
-    return RSVP.resolve({process: process});
+    return Promise.resolve({process: process});
   },
   'debug-preview-image': function (request, config) {
-    var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
-      format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
-      process = [];
+    const dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024);
+    const process = [];
+    let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
       if (!config.SUPPORTED.GM.WEBP) {
@@ -117,9 +117,9 @@ var profiles = {
       }
       process.push({
         processor: 'gm', pipe: function (pipe) {
-          if (format.type === 'webp') {
-            pipe = pipe.options({imageMagick: true});
-          }
+          // if (format.type === 'webp') {
+          pipe = pipe.options({imageMagick: true});
+          // }
 
           return pipe.autoOrient()
             .setFormat(format.type)
@@ -145,12 +145,12 @@ var profiles = {
       });
     }
 
-    return RSVP.resolve({process: process});
+    return Promise.resolve({process: process});
   },
   'debug-avatar-image': function (request, config) {
-    var dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024),
-      format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
-      process = [];
+    const dim = clamp(envParser.objectInt('width', 200)(request.query), 10, 1024);
+    const process = [];
+    let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
       if (!config.SUPPORTED.GM.WEBP) {
@@ -183,7 +183,7 @@ var profiles = {
       });
     }
 
-    return RSVP.resolve({process: process});
+    return Promise.resolve({process: process});
   }
 };
 

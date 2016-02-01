@@ -1,13 +1,13 @@
 /* @flow weak */
-var RSVP = require('rsvp'),
-  sharp = require('sharp'),
-  envParser = require('../util/env-parser'),
-  bestFormat = require('../util/best-format'),
-  clamp = require('clamp');
+const Promise = require('bluebird');
+const sharp = require('sharp');
+const envParser = require('../util/env-parser');
+const bestFormat = require('../util/best-format');
+const clamp = require('clamp');
 
-var MIN_IMAGE_SIZE = 10,
-  MAX_IMAGE_SIZE = 1024,
-  GM_UNSUPPORTED_WEBP_FORMAT = { type: 'png', mime: 'image/png' };
+const MIN_IMAGE_SIZE = 10;
+const MAX_IMAGE_SIZE = 1024;
+const GM_UNSUPPORTED_WEBP_FORMAT = {type: 'png', mime: 'image/png'};
 
 function clientHintedDimension(requestHeaders, responseHeaders, width) {
   var dpr = clamp(envParser.float(1)(requestHeaders.dpr), 1, 10);
@@ -22,9 +22,9 @@ function clientHintedDimension(requestHeaders, responseHeaders, width) {
 module.exports = {
   'avatar-image': function (request, config) {
     // override dimension with query.width
-    var dim = clamp(envParser.objectInt('width', 170)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE),
-      format = !config.SUPPORTED.GM.WEBP ? GM_UNSUPPORTED_WEBP_FORMAT : bestFormat(request.headers.accept, config.DEFAULT_MIME),
-      responseHeader/*: Object */ = config.CLIENT_HINTS ? {'Accept-CH': 'DPR, Width'} : {};
+    let dim = clamp(envParser.objectInt('width', 170)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+    const format = !config.SUPPORTED.GM.WEBP ? GM_UNSUPPORTED_WEBP_FORMAT : bestFormat(request.headers.accept, config.DEFAULT_MIME);
+    const responseHeader/*: Object */ = config.CLIENT_HINTS ? {'Accept-CH': 'DPR, Width'} : {};
 
     responseHeader['Content-Type'] = format.mime;
 
@@ -32,20 +32,17 @@ module.exports = {
       dim = clientHintedDimension(request.headers, responseHeader, dim);
     }
 
-    return RSVP.resolve({
+    return Promise.resolve({
+      name: 'avatar-image',
       response: {header: responseHeader},
       process: [{
-        processor: 'gm', pipe: function (pipe) {
-          if (format.type === 'webp') {
-            pipe = pipe.options({imageMagick: true});
-          }
+        processor: 'sharp', pipe: function (pipe) {
           return pipe
-            .autoOrient()
-            .setFormat(format.type)
-            .resize(dim, dim + '^')
-            .background('transparent')
-            .gravity('Center')
-            .extent(dim, dim);
+            .rotate()
+            .toFormat(format.type)
+            .resize(dim, dim)
+            .min()
+            .crop(sharp.gravity.center);
         }
       }]
     });
@@ -53,9 +50,9 @@ module.exports = {
 
   'preview-image': function (request, config) {
     // override dimension with query.width
-    var dim = clamp(envParser.objectInt('width', 200)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE),
-      format = bestFormat(request.headers.accept, config.DEFAULT_MIME),
-      responseHeader/*: Object */ = config.CLIENT_HINTS ? { 'Accept-CH': 'DPR, Width' } : {};
+    let dim = clamp(envParser.objectInt('width', 200)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+    const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
+    const responseHeader/*: Object */ = config.CLIENT_HINTS ? {'Accept-CH': 'DPR, Width'} : {};
 
     responseHeader['Content-Type'] = format.mime;
 
@@ -63,7 +60,8 @@ module.exports = {
       dim = clientHintedDimension(request.headers, responseHeader, dim);
     }
 
-    return RSVP.resolve({
+    return Promise.resolve({
+      name: 'preview-image',
       response: {header: responseHeader},
       process: [{
         processor: 'sharp', pipe: function (instance) {

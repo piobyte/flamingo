@@ -3,13 +3,18 @@
  * Image processor module
  * @module flamingo/src/processor/image
  */
-var deprecate = require('../../util/deprecate'),
-  noop = require('lodash/noop');
+const forEach = require('lodash/forEach');
+const logger = require('../../logger').build('processor/image');
 
-var processors = {
-  sharp: require('./sharp'),
-  gm: require('./gm')
+const processors = {
+  sharp: require('./sharp')
 };
+
+if (require('optional')('gm') !== null) {
+  processors.gm = require('./gm');
+} else {
+  logger.info('`gm` processor disabled, because `gm` isn\'t installed.');
+}
 
 /**
  * Function that takes an array with processing operations and returns a function that can be called with an stream.
@@ -22,27 +27,18 @@ var processors = {
  * // converted image stream
  */
 module.exports = function (operation/*: FlamingoOperation */)/*: function */ {
-  var transformations;
+  var transformations = operation.profile.process;
 
-  if (arguments.length === 2) {
-    deprecate(noop, 'image processor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
-    var config = arguments[1];
-    transformations = arguments[0];
+  return function (stream) {
 
-    return function (stream) {
-      for (var i = 0; i < transformations.length; i++) {
-        stream = processors[transformations[i].processor](transformations[i].pipe, stream, config);
+    forEach(transformations, transformation => {
+      if (processors.hasOwnProperty(transformation.processor)) {
+        stream = processors[transformation.processor](operation, transformation.pipe, stream);
+      } else {
+        logger.info('Skipping transformation, unknown processor: ' + transformation.processor);
       }
-      return stream;
-    };
-  } else {
-    transformations = operation.profile.process;
+    });
 
-    return function (stream) {
-      for (var i = 0; i < transformations.length; i++) {
-        stream = processors[transformations[i].processor](operation, transformations[i].pipe, stream);
-      }
-      return stream;
-    };
-  }
+    return stream;
+  };
 };

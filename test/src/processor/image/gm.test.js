@@ -1,7 +1,7 @@
-var assert = require('assert'),
-  temp = require('temp'),
-  FlamingoOperation = require('../../../../src/util/flamingo-operation'),
-  fs = require('fs');
+const assert = require('assert');
+const temp = require('temp');
+const FlamingoOperation = require('../../../../src/model/flamingo-operation');
+const fs = require('fs');
 
 describe('gm processor', function () {
   before(function () {
@@ -14,9 +14,9 @@ describe('gm processor', function () {
   var gmProcessor = require('../../../../src/processor/image/gm');
 
   it('should work without throwing an error', function () {
-    var stream = fs.createReadStream('../../../fixtures/images/base64.png'),
-      op = new FlamingoOperation(),
-      processedStream;
+    const stream = fs.createReadStream('../../../fixtures/images/base64.png');
+    const op = new FlamingoOperation();
+    let processedStream;
 
     op.config = {
       NATIVE_AUTO_ORIENT: true
@@ -30,9 +30,9 @@ describe('gm processor', function () {
   });
 
   it('should convert to webp without throwing an error (this doesn\'t mean it can convert to webp)', function () {
-    var stream = fs.createReadStream('../../../fixtures/images/base64.png'),
-      op = new FlamingoOperation(),
-      processedStream;
+    const stream = fs.createReadStream('../../../fixtures/images/base64.png');
+    const op = new FlamingoOperation();
+    let processedStream;
 
     op.config = {
       NATIVE_AUTO_ORIENT: true
@@ -43,29 +43,5 @@ describe('gm processor', function () {
     }, stream).pipe(temp.createWriteStream());
 
     assert.ok(processedStream);
-  });
-
-  describe('deprecated no-flamingo-operation', function () {
-    it('should work without throwing an error', function () {
-      var stream = fs.createReadStream('../../../fixtures/images/base64.png'),
-        processedStream;
-
-      processedStream = gmProcessor(function (pipe) {
-        return pipe.gravity('Center');
-      }, stream).pipe(temp.createWriteStream());
-
-      assert.ok(processedStream);
-    });
-
-    it('should convert to webp without throwing an error (this doesn\'t mean it can convert to webp)', function () {
-      var stream = fs.createReadStream('../../../fixtures/images/base64.png'),
-        processedStream;
-
-      processedStream = gmProcessor(function (pipe) {
-        return pipe.options({imageMagick: true}).setFormat('webp');
-      }, stream).pipe(temp.createWriteStream());
-
-      assert.ok(processedStream);
-    });
   });
 });

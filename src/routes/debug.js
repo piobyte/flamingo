@@ -1,89 +1,81 @@
+'use strict';
+
 /**
  * Flamingo debug route
  * @module flamingo/src/routes/debug
  */
 
-var pkg = require('../../package'),
-  RSVP = require('rsvp'),
-  conf = require('../../config'),
-  _ = require('lodash'),
-  template = require('lodash/template'),
-  fs = require('fs'),
-  images = require('../../test/fixtures/images/sharp-bench-assets/index'),
-  simpleHttpServer = require('../../test/test-util/simple-http-server'),
-  path = require('path');
+const pkg = require('../../package');
+const Promise = require('bluebird');
+const fs = require('fs');
+const images = require('../../test/fixtures/images/sharp-bench-assets/index');
+const simpleHttpServer = require('../../test/test-util/simple-http-server');
+const path = require('path');
+const url = require('url');
+const Route = require('../model/route');
 
-var DEBUG_PORT = 43723,
-  DEBUG_HOST = 'localhost';
+const DEBUG_PORT = 43723;
+const DEBUG_HOST = 'localhost';
 
-simpleHttpServer(DEBUG_HOST, DEBUG_PORT, function(req, res){
+simpleHttpServer(DEBUG_HOST, DEBUG_PORT, function (req, res) {
   res.writeHead(200, {'Content-Type': 'image/jpeg'});
-  fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/sharp-bench-assets', req.url))
+  fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/sharp-bench-assets', url.parse(req.url).pathname))
     .pipe(res, {end: true});
 });
 
 /*eslint no-sync:0 */
-var URLS,
-  HOST = 'http://' + DEBUG_HOST + ':' + DEBUG_PORT + '/',
-  htmlTemplate = template(require('fs').readFileSync(__dirname + '/debug-template.html')),
-  PLAIN_URLS = images.all().map(function (file) {
-    return HOST + file.filename;
-  });
+const HOST = 'http://' + DEBUG_HOST + ':' + DEBUG_PORT + '/';
 
-RSVP.all(
-  /*eslint new-cap: 0*/
-  PLAIN_URLS.map(function (url) {
-    return conf.ENCODE_PAYLOAD(url);
-  })
-).then(function (urls) {
-  URLS = urls.map(function (url) {
-    return encodeURIComponent(url);
-  });
+let IMAGES = images.all().map(function (image) {
+  image.url = `${HOST}${image.filename}`;
+  return image;
 });
 
-/**
- * Function to generate the debug route hapi configuration
- * @param {{conf: object, profiles: object}} flamingo configuration
- * @return {{method: string, path: string, handler: Function}} hapi route configuration
- * @see http://hapijs.com/api#serverrouteoptions
- * @see GET /debug
- */
-module.exports = function (flamingo) {
-  return {
-    method: 'GET',
-    path: '/debug',
-    config: {
-      state: { parse: false },
-      handler: function (req, reply) {
-        var profileNames = Object.keys(flamingo.profiles),
-          base = '/',
-          processors = ['vips', 'gm'];
+/*eslint new-cap: 0*/
 
-        profileNames = profileNames.filter(function (name) {
-          // only use debug routes
-          return name.indexOf('debug-') === 0;
+class Debug extends Route {
+  constructor(config = {}) {
+    super(config, 'GET', '/_debug', 'Debug');
+
+    Promise.all(IMAGES.map((image) => config.ENCODE_PAYLOAD(image.url)))
+      .then((encodedUrls) => {
+        IMAGES = encodedUrls.map((encoded, i) => {
+          IMAGES[i].enc = encoded;
+          return IMAGES[i];
         });
+      });
+  }
 
-        if (req.query.profiles) {
-          profileNames = req.query.profiles.split(',');
-        }
-        if (req.query.processors) {
-          processors = req.query.processors.split(',');
-        }
+  handle(operation) {
+    const base = '/';
+    let profileNames = Object.keys(operation.profiles);
+    let processors = ['vips', 'gm'];
 
-        reply(htmlTemplate({
-          _: require('lodash'),
-          pkg: pkg,
-          profileNames: profileNames,
-          urls: URLS,
-          plainUrls: PLAIN_URLS,
-          debugs: [],
-          sizes: _.range(50, 250, 100),
-          base: base,
-          processors: processors,
-          formats: [{}]
-        }));
-      }
+    // only use debug routes
+    profileNames = profileNames
+      .filter((name) => name.indexOf('debug-') === 0);
+
+    if (operation.request.query.profiles) {
+      profileNames = operation.request.query.profiles.split(',');
     }
-  };
-};
+    if (operation.request.query.processors) {
+      processors = operation.request.query.processors.split(',');
+    }
+
+    return operation.reply({
+      routes: this.server.hapi.connections[0].table().map(t => ({
+        method: t.method,
+        path: t.path,
+        description: t.settings.description
+      })),
+      addons: this.server.addonsLoader.addons,
+      processors: processors,
+      base,
+      pkg: pkg,
+      profiles: profileNames,
+      urls: IMAGES
+    });
+  }
+}
+
+module.exports = Debug;

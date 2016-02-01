@@ -1,12 +1,15 @@
-var assert = require('assert'),
-  server = require('../../../src/server'),
-  conf = require('../../../config'),
-  merge = require('lodash/merge'),
-  nock = require('nock'),
-  RSVP = require('rsvp'),
-  request = RSVP.denodeify(require('request')),
-  noop = require('lodash/noop'),
-  range = require('lodash/range');
+const assert = require('assert');
+const merge = require('lodash/merge');
+const nock = require('nock');
+const noop = require('lodash/noop');
+const range = require('lodash/range');
+const got = require('got');
+const Promise = require('bluebird');
+
+const Server = require('../../../src/model/server');
+const Config = require('../../../config');
+
+const exampleProfiles = require('../../../src/profiles/examples');
 
 var PORT = 43723; // some random unused port
 var encode = function (plain) {
@@ -14,21 +17,17 @@ var encode = function (plain) {
 };
 
 function startServer(localConf) {
-  var serverConf = merge({}, conf, {
-    CRYPTO: {ENABLED: false},
-    PORT: PORT
-  }, localConf);
+  return new Config().fromEnv().then(config => {
+    config = merge({}, config, {CRYPTO: {ENABLED: false}, PORT: PORT}, localConf);
 
-  if (serverConf.CRYPTO.ENABLED) {
-    // manually copy cipher, key, iv because they're buffers
-    serverConf.CRYPTO.KEY = Buffer.isBuffer(localConf.CRYPTO.KEY) ? localConf.CRYPTO.KEY : conf.CRYPTO.KEY;
-    serverConf.CRYPTO.IV = Buffer.isBuffer(localConf.CRYPTO.IV) ? localConf.CRYPTO.IV : conf.CRYPTO.IV;
-  }
-
-  return server(serverConf, {
-    hook: function () {
-      return noop;
-    }
+    return new Server(config, {hook: () => noop})
+      .withProfiles([exampleProfiles])
+      .withRoutes([
+        new (require('../../../src/routes/index'))(config),
+        new (require('../../../src/routes/image'))(config),
+        new (require('../../../src/routes/video'))(config)
+      ])
+      .start();
   });
 }
 
@@ -38,16 +37,15 @@ describe('image converting server response', function () {
     nock.cleanAll();
   });
 
-  it('returns 400 for all target error codes', function (done) {
-    var server;
-    var codes = range(400, 600),
-      endpoint = nock('https://errs.example.com');
+  it('returns 400 for all target error codes', function () {
+    let server;
+    const codes = range(400, 600);
+    let endpoint = nock('https://errs.example.com');
 
-    codes.forEach(function (code) {
-      endpoint = endpoint.get('/' + code).reply(code, {});
-    });
+    codes.forEach(code =>
+      endpoint = endpoint.get('/' + code).reply(code, {}));
 
-    startServer({
+    return startServer({
       ACCESS: {
         HTTPS: {
           ENABLED: true,
@@ -57,27 +55,23 @@ describe('image converting server response', function () {
     }).then(function (s) {
       server = s;
 
-      return RSVP.all(codes.map(function (code) {
-        return request('http://localhost:' + PORT + '/image/avatar-image/' +
-          encode('https://errs.example.com/' + code));
-      }));
-
+      return Promise.all(
+        codes.map((code) =>
+          got(`http://localhost:${PORT}/image/avatar-image/${encode(`https://errs.example.com/${code}`)}`, {
+            retries: 0,
+            followRedirect: false
+          }).catch(data => data)));
     }).then(function (data) {
-
-      data.forEach(function (response) {
-        assert.equal(response.statusCode, 400);
-      });
-
-      server.stop(done);
-    }).catch(done);
+      data.forEach((response) =>
+        assert.equal(response.statusCode, 400));
+    }).finally(() => server.stop());
   });
 
-  it('returns 400 for not whitelisted urls', function (done) {
-    var URL = 'http://localhost:' + PORT + '/image/avatar-image/' +
-        encode('https://old.example.com/image.png'),
-      server;
+  it('returns 400 for not whitelisted urls', function () {
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('https://old.example.com/image.png')}`;
+    let server;
 
-    startServer({
+    return startServer({
       ACCESS: {
         HTTPS: {
           ENABLED: true,
@@ -87,142 +81,106 @@ describe('image converting server response', function () {
     }).then(function (s) {
       server = s;
 
-      return request(URL);
+      return got(URL).catch(e => e);
     }).then(function (response) {
       assert.equal(response.statusCode, 400);
-      server.stop(done);
-    });
+    }).finally(() => server.stop());
   });
 
-  it('rejects redirects by default', function (done) {
+  it('rejects redirects by default', function () {
     nock('https://redir.example.com')
-      .get('/moved.jpg').reply(301, {status: 'moved'}, {
-        'Location': 'https://redir.example.com/url.jpg'
+      .get('/moved.jpg')
+      .reply(301, {status: 'moved'}, {
+        Location: 'https://redir.example.com/url.jpg'
       });
 
-    var URL = 'http://localhost:' + PORT + '/image/avatar-image/' +
-        encode('https://redir.example.com/moved.jpg'),
-      server;
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('https://redir.example.com/moved.jpg')}`;
+    let server;
 
-    startServer({}).then(function (s) {
+    return startServer({}).then(function (s) {
       server = s;
 
-      return request(URL);
+      return got(URL).catch(e => e);
     }).then(function (response) {
       assert.equal(response.statusCode, 400);
-      server.stop(done);
-    }).catch(done);
+    }).finally(() => server.stop());
   });
 
-  it('allows redirect if enabled', function (done) {
+  it('allows redirect if enabled', function () {
     nock('https://redir.example.com')
       .get('/moved.png')
       .reply(301, {status: 'moved'}, {
-        'Location': 'https://redir.example.com/url.png'
+        Location: 'https://redir.example.com/url.png'
       })
       .get('/url.png')
       .replyWithFile(200, __dirname + '/../../fixtures/images/base64.png');
 
-    var URL = 'http://localhost:' + PORT + '/image/avatar-image/' +
-        encode('https://redir.example.com/moved.png'),
-      server;
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('https://redir.example.com/moved.png')}`;
+    let server;
 
-    startServer({
+    return startServer({
       ALLOW_READ_REDIRECT: true
     }).then(function (s) {
       server = s;
 
-      return request(URL);
+      return got(URL);
     }).then(function (response) {
       assert.equal(response.statusCode, 200);
-      server.stop(done);
-    }).catch(done);
+    }).finally(() => server.stop());
   });
 
-  it('rejects unknown protocols (no reader available)', function (done) {
-    var URL = 'http://localhost:' + PORT + '/image/avatar-image/' +
-        encode('ftp://ftp.example.com/moved.jpg'),
-      server;
+  it('rejects unknown protocols (no reader available)', function () {
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('ftp://ftp.example.com/moved.jpg')}`;
+    let server;
 
-    startServer({}).then(function (s) {
+    return startServer({}).then(function (s) {
       server = s;
 
-      return request(URL);
+      return got(URL).catch(e => e);
     }).then(function (response) {
       assert.equal(response.statusCode, 400);
-      server.stop(done);
-    }).catch(done);
+    }).finally(() => server.stop());
   });
 
-  it('rejects unknown profile', function (done) {
-    var URL = 'http://localhost:' + PORT + '/image/foo/' +
-        encode('http://ftp.example.com/moved.jpg'),
-      server;
+  it('rejects unknown profile', function () {
+    const URL = `http://localhost:${PORT}/image/foo/${encode('http://ftp.example.com/moved.jpg')}`;
+    let server;
 
-    startServer({}).then(function (s) {
+    return startServer({}).then(function (s) {
       server = s;
 
-      return request(URL);
+      return got(URL).catch(e => e);
     }).then(function (response) {
       assert.equal(response.statusCode, 400);
-      server.stop(done);
-    }).catch(done);
+    }).finally(() => server.stop());
   });
 
-  it('fails for decryption errors', function (done) {
-    var URL = 'http://localhost:' + PORT + '/image/avatar-image/' +
-        encode('http://ftp.example.com/moved.jpg'),
-      server;
+  it('fails for decryption errors', function () {
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('http://ftp.example.com/moved.jpg')}`;
+    let server;
 
-    startServer({
+    return startServer({
       CRYPTO: {ENABLED: true}
     }).then(function (s) {
       server = s;
 
-      return request(URL);
+      return got(URL).catch(e => e);
     }).then(function (response) {
       assert.equal(response.statusCode, 400);
-      server.stop(done);
-    }).catch(done);
+    }).finally(() => server.stop());
   });
+  
+  it('returns a banner for /', function () {
+    let server;
 
-  it('returns a banner for /', function (done) {
-    var server;
-
-    startServer({
+    return startServer({
       CRYPTO: {ENABLED: true}
     }).then(function (s) {
       server = s;
 
-      return request('http://localhost:' + PORT);
+      return got('http://localhost:' + PORT);
     }).then(function (response) {
       assert.equal(response.statusCode, 200);
-      server.stop(done);
-    }).catch(done);
-  });
-
-
-  describe('deprecated convert-route-moved', function(){
-    it('returns 400 for not whitelisted urls', function (done) {
-      var URL = 'http://localhost:' + PORT + '/convert/image/avatar-image/' +
-          encode('https://old.example.com/image.png'),
-        server;
-
-      startServer({
-        ACCESS: {
-          HTTPS: {
-            ENABLED: true,
-            READ: [{'hostname': 'errs.example.com'}]
-          }
-        }
-      }).then(function (s) {
-        server = s;
-
-        return request(URL);
-      }).then(function (response) {
-        assert.equal(response.statusCode, 400);
-        server.stop(done);
-      });
-    });
+    }).finally(() => server.stop());
   });
 });

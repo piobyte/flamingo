@@ -1,42 +1,21 @@
 /* @flow weak */
-var ffmpeg = require('fluent-ffmpeg'),
-  RSVP = require('rsvp'),
-  assign = require('lodash/assign'),
-  isFinite = require('lodash/isFinite'),
-  request = require('request'),
-  errors = require('../../util/errors'),
-  pkg = require('../../../package'),
-  deprecate = require('../../util/deprecate'),
-  noop = require('lodash/noop'),
-  globalConfig = require('../../../config');
+const ffmpeg = require('fluent-ffmpeg');
+const Promise = require('bluebird');
+const assign = require('lodash/assign');
+const isFinite = require('lodash/isFinite');
+const request = require('request');
+const errors = require('../../util/errors');
+const pkg = require('../../../package');
 
-function _isPreprocessorConfig(config) {
-  return config.hasOwnProperty('seekPercent');
-}
-
-var logger = require('../../logger').build('preprocessor:video'),
-  defaultProcessConf = {
-    seekPercent: 0
-  };
+const logger = require('../../logger').build('preprocessor:video');
+const defaultProcessConf = {
+  seekPercent: 0
+};
 
 module.exports = function (operation) {
-  var conf,
-    givenProcessConf;
-
-  if (arguments.length === 2) {
-    deprecate(noop, 'Video preprocessor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
-    givenProcessConf = arguments[0];
-    conf = arguments[1];
-  } else if(_isPreprocessorConfig(operation)) {
-    deprecate(noop, 'Video preprocessor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
-    conf = globalConfig;
-    givenProcessConf = arguments[0];
-  } else {
-    conf = operation.config;
-    givenProcessConf = operation.preprocessorConfig;
-  }
-  //
-  var processConf = assign({}, defaultProcessConf, givenProcessConf);
+  const conf = operation.config;
+  const givenProcessConf = operation.preprocessorConfig;
+  const processConf = assign({}, defaultProcessConf, givenProcessConf);
 
   return function (readerResult) {
     var ffmpegOptions = {};
@@ -47,7 +26,7 @@ module.exports = function (operation) {
     }
 
     function videoProcessor(input) {
-      return new RSVP.Promise(function (resolve, reject) {
+      return new Promise(function (resolve, reject) {
         ffmpeg.ffprobe(input, function (err, meta) {
           if (err) {
             reject(new errors.InvalidInputError(err.message, err));
@@ -84,34 +63,34 @@ module.exports = function (operation) {
     }
 
     switch (readerResult.type) {
-    case 'file':
-      return videoProcessor(readerResult.path);
-    case 'remote':
-      var promise;
-      if (conf.ALLOW_READ_REDIRECT) {
-        promise = videoProcessor(readerResult.url.href);
-      } else {
-        // do HEAD to check if redirect response code because ffprobe/ffmpeg always follow redirects
-        promise = new RSVP.Promise(function (res, rej) {
-          request.head(readerResult.url.href, {
-            timeout: conf.READER.REQUEST.TIMEOUT,
-            headers: {'User-Agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'},
-            followRedirect: false,
-            maxRedirects: 0
-          }, function (err) {
-            if (err) {
-              rej(new errors.InvalidInputError('Error while doing a HEAD request to check for redirects', err));
-            } else {
-              res(videoProcessor(readerResult.url.href));
-            }
+      case 'file':
+        return videoProcessor(readerResult.path);
+      case 'remote':
+        var promise;
+        if (conf.ALLOW_READ_REDIRECT) {
+          promise = videoProcessor(readerResult.url.href);
+        } else {
+          // do HEAD to check if redirect response code because ffprobe/ffmpeg always follow redirects
+          promise = new Promise(function (res, rej) {
+            request.head(readerResult.url.href, {
+              timeout: conf.READER.REQUEST.TIMEOUT,
+              headers: {'User-Agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'},
+              followRedirect: false,
+              maxRedirects: 0
+            }, function (err) {
+              if (err) {
+                rej(new errors.InvalidInputError('Error while doing a HEAD request to check for redirects', err));
+              } else {
+                res(videoProcessor(readerResult.url.href));
+              }
+            });
           });
+        }
+        return promise;
+      default:
+        return readerResult.stream().then(function (stream) {
+          return videoProcessor(stream);
         });
-      }
-      return promise;
-    default:
-      return readerResult.stream().then(function (stream) {
-        return videoProcessor(stream);
-      });
     }
   };
 };

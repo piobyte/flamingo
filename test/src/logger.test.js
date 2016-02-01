@@ -1,16 +1,16 @@
-var temp = require('temp'),
-  fs = require('fs'),
-  assert = require('assert'),
-  assign = require('lodash/assign');
+const temp = require('temp');
+const fs = require('fs');
+const assert = require('assert');
+const assign = require('lodash/assign');
 
 describe('logger', function () {
   var logger = require('../../src/logger');
 
   it('checks that the method calls the stream function', function (done) {
-    var tempPath = temp.path({suffix: '.log'}),
-      loggerName = 'test:logger.addStreams',
-      LOG_MESSAGE = 'Time is an illusion. Lunchtime doubly so.',
-      log;
+    const tempPath = temp.path({suffix: '.log'});
+    const loggerName = 'test:logger.addStreams';
+    const LOG_MESSAGE = 'Time is an illusion. Lunchtime doubly so.';
+    let log;
 
     logger.addStreams([{
       level: 'fatal',
@@ -32,18 +32,18 @@ describe('logger', function () {
   });
 
   it('serializes request log objects', function () {
-    var REQUEST = {
-        headers: 'headers',
+    const REQUEST = {
+      headers: 'headers',
+      path: '/foo',
+      route: {
         path: '/foo',
-        route: {
-          path: '/foo',
-          method: 'get'
-        },
         method: 'get'
       },
-      serialized = logger.serializers.request(assign({}, REQUEST, {
-        SOME_WEIRD_EXTRA_FIELD: 'bar'
-      }));
+      method: 'get'
+    };
+    const serialized = logger.serializers.request(assign({}, REQUEST, {
+      SOME_WEIRD_EXTRA_FIELD: 'bar'
+    }));
 
     assert.deepEqual(serialized, REQUEST);
     assert.ok(logger.serializers.request('foo'), 'it doesn\'t break on invalid input');

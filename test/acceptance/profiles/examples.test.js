@@ -1,29 +1,26 @@
-var assert = require('assert'),
-  sinon = require('sinon'),
-  noop = require('lodash/noop'),
-  sharp = require('sharp'),
-  RSVP = require('rsvp'),
-  exampleProfiles = require('../../../src/profiles/examples');
+const assert = require('assert');
+const sinon = require('sinon');
+const noop = require('lodash/noop');
+const sharp = require('sharp');
+const Promise = require('bluebird');
+const exampleProfiles = require('../../../src/profiles/examples');
 
 describe('example profiles', function () {
 
   describe('avatar-image', function () {
-    it('uses gm with defaults', function (done) {
+    it('uses sharp with defaults', function (done) {
       var pipe = {
-        options: noop,
-        autoOrient: noop,
-        setFormat: noop,
+        rotate: noop,
+        toFormat: noop,
         resize: noop,
-        background: noop,
-        gravity: noop,
-        extent: noop
+        min: noop,
+        crop: noop
       };
-      sinon.stub(pipe, 'autoOrient').returns(pipe);
-      sinon.stub(pipe, 'setFormat').withArgs('png').returns(pipe);
-      sinon.stub(pipe, 'resize').withArgs(170).returns(pipe);
-      sinon.stub(pipe, 'background').withArgs('transparent').returns(pipe);
-      sinon.stub(pipe, 'gravity').withArgs('Center').returns(pipe);
-      sinon.stub(pipe, 'extent').withArgs(170, 170).returns(pipe);
+      sinon.stub(pipe, 'rotate').returns(pipe);
+      sinon.stub(pipe, 'toFormat').withArgs('png').returns(pipe);
+      sinon.stub(pipe, 'resize').withArgs(170, 170).returns(pipe);
+      sinon.stub(pipe, 'min').withArgs().returns(pipe);
+      sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
 
       exampleProfiles['avatar-image']({
         headers: {accept: ''},
@@ -41,57 +38,19 @@ describe('example profiles', function () {
       }).catch(done);
     });
 
-    it('uses imagemagick for webp images if supported', function (done) {
-      var pipe = {
-        options: noop,
-        autoOrient: noop,
-        setFormat: noop,
-        resize: noop,
-        background: noop,
-        gravity: noop,
-        extent: noop
-      };
-      sinon.stub(pipe, 'options').withArgs({imageMagick: true}).returns(pipe);
-      sinon.stub(pipe, 'autoOrient').returns(pipe);
-      sinon.stub(pipe, 'setFormat').withArgs('webp').returns(pipe);
-      sinon.stub(pipe, 'resize').withArgs(170).returns(pipe);
-      sinon.stub(pipe, 'background').withArgs('transparent').returns(pipe);
-      sinon.stub(pipe, 'gravity').withArgs('Center').returns(pipe);
-      sinon.stub(pipe, 'extent').withArgs(170, 170).returns(pipe);
-
-      exampleProfiles['avatar-image']({
-        headers: {accept: 'image/webp,image/*,*/*;q=0.8'},
-        query: {}
-      }, {
-        DEFAULT_MIME: 'image/png',
-        SUPPORTED: {GM: {WEBP: true}}
-      }).then(function (data) {
-
-        assert.equal(data.process.length, 1, 'avatar-image has one processor operation');
-
-        data.process[0].pipe(pipe);
-
-        done();
-      }).catch(done);
-    });
-
     it('allows to set the image size via query param', function (done) {
       var pipe = {
-        options: noop,
-        autoOrient: noop,
-        setFormat: noop,
+        rotate: noop,
+        toFormat: noop,
         resize: noop,
-        background: noop,
-        gravity: noop,
-        extent: noop
+        min: noop,
+        crop: noop
       };
-      sinon.stub(pipe, 'options').withArgs({imageMagick: true}).returns(pipe);
-      sinon.stub(pipe, 'autoOrient').returns(pipe);
-      sinon.stub(pipe, 'setFormat').withArgs('png').returns(pipe);
-      sinon.stub(pipe, 'resize').withArgs(200).returns(pipe);
-      sinon.stub(pipe, 'background').withArgs('transparent').returns(pipe);
-      sinon.stub(pipe, 'gravity').withArgs('Center').returns(pipe);
-      sinon.stub(pipe, 'extent').withArgs(200, 200).returns(pipe);
+      sinon.stub(pipe, 'rotate').withArgs().returns(pipe);
+      sinon.stub(pipe, 'toFormat').withArgs('png').returns(pipe);
+      sinon.stub(pipe, 'resize').withArgs(200, 200).returns(pipe);
+      sinon.stub(pipe, 'min').withArgs().returns(pipe);
+      sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
 
       exampleProfiles['avatar-image']({
         query: {width: '200'},
@@ -110,21 +69,17 @@ describe('example profiles', function () {
 
     it('uses client hints dpr to scale images', function (done) {
       var pipe = {
-        options: noop,
-        autoOrient: noop,
-        setFormat: noop,
+        rotate: noop,
+        toFormat: noop,
         resize: noop,
-        background: noop,
-        gravity: noop,
-        extent: noop
+        min: noop,
+        crop: noop
       };
-      sinon.stub(pipe, 'options').withArgs({imageMagick: true}).returns(pipe);
-      sinon.stub(pipe, 'autoOrient').returns(pipe);
-      sinon.stub(pipe, 'setFormat').withArgs('png').returns(pipe);
-      sinon.stub(pipe, 'resize').withArgs(400).returns(pipe);
-      sinon.stub(pipe, 'background').withArgs('transparent').returns(pipe);
-      sinon.stub(pipe, 'gravity').withArgs('Center').returns(pipe);
-      sinon.stub(pipe, 'extent').withArgs(400, 400).returns(pipe);
+      sinon.stub(pipe, 'rotate').withArgs().returns(pipe);
+      sinon.stub(pipe, 'toFormat').withArgs('png').returns(pipe);
+      sinon.stub(pipe, 'resize').withArgs(400, 400).returns(pipe);
+      sinon.stub(pipe, 'min').withArgs().returns(pipe);
+      sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
 
       exampleProfiles['avatar-image']({
         query: {width: '200'},
@@ -149,21 +104,17 @@ describe('example profiles', function () {
 
     it('uses client hints width to resize images', function (done) {
       var pipe = {
-        options: noop,
-        autoOrient: noop,
-        setFormat: noop,
+        rotate: noop,
+        toFormat: noop,
         resize: noop,
-        background: noop,
-        gravity: noop,
-        extent: noop
+        min: noop,
+        crop: noop
       };
-      sinon.stub(pipe, 'options').withArgs({imageMagick: true}).returns(pipe);
-      sinon.stub(pipe, 'autoOrient').returns(pipe);
-      sinon.stub(pipe, 'setFormat').withArgs('png').returns(pipe);
-      sinon.stub(pipe, 'resize').withArgs(600).returns(pipe);
-      sinon.stub(pipe, 'background').withArgs('transparent').returns(pipe);
-      sinon.stub(pipe, 'gravity').withArgs('Center').returns(pipe);
-      sinon.stub(pipe, 'extent').withArgs(600, 600).returns(pipe);
+      sinon.stub(pipe, 'rotate').withArgs().returns(pipe);
+      sinon.stub(pipe, 'toFormat').withArgs('png').returns(pipe);
+      sinon.stub(pipe, 'resize').withArgs(600, 600).returns(pipe);
+      sinon.stub(pipe, 'min').withArgs().returns(pipe);
+      sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
 
       exampleProfiles['avatar-image']({
         query: {width: '200'},
@@ -241,7 +192,7 @@ describe('example profiles', function () {
       sinon.stub(pipe, 'min').returns(pipe);
       sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
 
-      RSVP.hash({
+      Promise.props({
         lower: exampleProfiles['preview-image']({
           headers: {accept: ''},
           query: {width: '0'}
@@ -256,7 +207,7 @@ describe('example profiles', function () {
           DEFAULT_MIME: 'image/png',
           SUPPORTED: {GM: {}}
         })
-      }).then(function(data){
+      }).then(function (data) {
         data.lower.process[0].pipe(pipe);
         data.upper.process[0].pipe(pipe);
 

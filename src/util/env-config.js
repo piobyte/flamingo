@@ -36,11 +36,7 @@ var pathSet = function (object/*: Object */, path/*: string */, value/*: any */)
  * @returns {Object} updated config
  */
 module.exports = function (config/*: Config */, environment/*: {[key: string]: string} */, mappings/*: Array<[string, string, ?function]>*/)/*: Config */ {
-  forEach(mappings, function (mapping) {
-    var envProp = mapping[0],
-      objPath = mapping[1],
-      setVal = mapping[2];
-
+  forEach(mappings, function ([envProp, objPath, setVal]) {
     if (environment.hasOwnProperty(envProp)) {
       pathSet(config, objPath,
         typeof setVal === 'function' ? setVal(environment[envProp]) : environment[envProp]);

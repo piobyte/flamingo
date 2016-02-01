@@ -1,5 +1,5 @@
-var assert = require('assert'),
-  url = require('url');
+const assert = require('assert');
+const url = require('url');
 
 describe('read access allowed', function () {
   var readAllowed = require('../../../src/util/url-access-allowed');
