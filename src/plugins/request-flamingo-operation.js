@@ -3,6 +3,7 @@ var pkg = require('../../package'),
 
 exports.register = function (server, options, next) {
   server.ext('onPreHandler', function (request, reply) {
+    /* istanbul ignore else */
     if (request) {
       var flamingoOperation = new FlamingoOperation();
       flamingoOperation.request = request;

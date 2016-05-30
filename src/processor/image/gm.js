@@ -7,10 +7,11 @@
  * @see http://www.graphicsmagick.org/
  */
 
-var gm = require('gm'),
+var gm = require('optional')('gm'),
   globalConfig = require('../../../config'),
   isFunction = require('lodash/isFunction'),
   noop = require('lodash/noop'),
+  logger = require('../../logger').build('processor/image/gm'),
   deprecate = require('../../util/deprecate');
 
 /**
@@ -47,6 +48,11 @@ module.exports = function (operation/*: FlamingoOperation */, pipeline/*: functi
 
   }
 
-  graphics = gm(stream).options({nativeAutoOrient: conf.NATIVE_AUTO_ORIENT});
-  return pipeline(graphics).stream();
+  if (gm !== null) {
+    graphics = gm(stream).options({nativeAutoOrient: conf.NATIVE_AUTO_ORIENT});
+    return pipeline(graphics).stream();
+  } else {
+    logger.info('`gm` processor disabled, because `gm` isn\'t installed.');
+    return stream;
+  }
 };

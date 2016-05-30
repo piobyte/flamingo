@@ -7,14 +7,11 @@ var temp = require('temp'),
   fingerprint = require('./fingerprint'),
   debugProfiles = require('../../src/profiles/debug'),
   imageProcessors = require('../../src/processor/image'),
-  sharpAssets = require('../../test/fixtures/images/sharp-bench-assets'),
-  gzip = require('./gzip-object');
+  sharpAssets = require('../../test/fixtures/images/sharp-bench-assets');
 
-var BENCH_RESULT_TO_S3 = process.env.BENCH_RESULT_TO_S3 === 'true',
-  TAGS = process.env.BENCH_TAG ? [process.env.BENCH_TAG] : [],
+var TAGS = process.env.BENCH_TAG ? [process.env.BENCH_TAG] : [],
   id = uuid.v4(),
   BENCH_FILE = 'benchmark-' + id + '.json',
-  BENCH_FILE_GZ = BENCH_FILE + '.gz',
   RUN_CONFIG = {'async': true},
   CONVERT_PROFILES = ['debug-preview-image', 'debug-avatar-image'],
   FILES = sharpAssets.all(),
@@ -120,11 +117,7 @@ benchPromise.then(function () {
     }
   };
 
-  return BENCH_RESULT_TO_S3 ?
-    gzip(benchmarkResult).then(function (gzipped) {
-      require('./upload-s3')(BENCH_FILE_GZ, gzipped);
-    }) :
-    console.log('result:\n', BENCH_FILE, '\n', JSON.stringify(benchmarkResult));
+  console.log('result:\n', BENCH_FILE, '\n', JSON.stringify(benchmarkResult));
 }).finally(function () {
   /*eslint no-sync: 0 */
   temp.cleanupSync();

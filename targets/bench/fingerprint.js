@@ -1,9 +1,5 @@
 var os = require('os'),
-  cp = require('child_process');
-
-function firstBufferLine(buf) {
-  return buf.toString('utf8').split('\n')[0];
-}
+  sharp = require('sharp');
 
 function fingerprint() {
   /* eslint no-sync: 0 */
@@ -19,10 +15,7 @@ function fingerprint() {
     },
     libs: {
       node: process.versions,
-      vips: firstBufferLine(cp.execSync('vips --version')),
-      imagemagick: firstBufferLine(cp.execSync('convert -version')),
-      gm: firstBufferLine(cp.execSync('gm -version')),
-      ffmpeg: firstBufferLine(cp.execSync('ffmpeg -version'))
+      vips: sharp.versions.vips
     }
   };
 }

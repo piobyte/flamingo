@@ -20,6 +20,7 @@ function resolvePkg(addon/*: Addon */)/*: ?Addon */{
 
   /*eslint no-sync: 0*/
   if (fs.existsSync(mainPath)) {
+    // $DisableFlow: flow wants string require :(
     addon.hooks = require(mainPath);
     loadedAddon = addon;
   } else {
@@ -37,6 +38,7 @@ function resolvePkg(addon/*: Addon */)/*: ?Addon */{
 function fromPackage(packagePath/*: string */)/*: ?Addon */ {
   var pkg = path.join(packagePath, 'package.json');
   if (fs.existsSync(pkg)) {
+    // $DisableFlow: flow wants string require :(
     var content = require(pkg);
     var keywords = content.keywords || [];
 

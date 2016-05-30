@@ -11,3 +11,4 @@ flow/
 
 [options]
 module.system=node
+suppress_comment= \\(.\\|\n\\)*\\$DisableFlow

@@ -17,31 +17,31 @@ declare class Config extends Object{
   DECODE_PAYLOAD: (ciphertext: string) => Promise<string>;
 }
 
-declare class RouteConfig {
+declare type RouteConfig = {
   INDEX: boolean;
   PROFILE_CONVERT_IMAGE: boolean;
   PROFILE_CONVERT_VIDEO: boolean;
 }
 
-declare class SupportedConfig {
+declare type SupportedConfig = {
   FFMPEG?: boolean;
   GM: { WEBP: boolean };
 }
 
-declare class ReaderConfig {
+declare type ReaderConfig = {
   REQUEST: { TIMEOUT: number }
 }
 
-declare class PreprocessorConfig {
+declare type PreprocessorConfig = {
   VIDEO: { KILL_TIMEOUT: number };
 }
 
-declare class AccessConfig {
+declare type AccessConfig = {
   FILE: { READ: Array<string>, WRITE: Array<string> };
   HTTPS: { ENABLED: boolean, READ: Array<UrlParse>, WRITE: Array<UrlParse>};
 }
 
-declare class CryptoConfig {
+declare type CryptoConfig = {
   ENABLED: boolean;
   KEY: Buffer;
   IV: Buffer;

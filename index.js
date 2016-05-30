@@ -19,7 +19,7 @@ try {
     memLogger.info(info, 'stats');
   });
 } catch (e) {
-  logger.debug('starting without memwatch');
+  log.debug('starting without memwatch');
 }
 
 process.on('uncaughtException', function (err) {

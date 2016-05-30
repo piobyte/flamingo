@@ -35,17 +35,13 @@ module.exports = {
     return RSVP.resolve({
       response: {header: responseHeader},
       process: [{
-        processor: 'gm', pipe: function (pipe) {
-          if (format.type === 'webp') {
-            pipe = pipe.options({imageMagick: true});
-          }
+        processor: 'sharp', pipe: function (pipe) {
           return pipe
-            .autoOrient()
-            .setFormat(format.type)
-            .resize(dim, dim + '^')
-            .background('transparent')
-            .gravity('Center')
-            .extent(dim, dim);
+            .rotate()
+            .toFormat(format.type)
+            .resize(dim, dim)
+            .min()
+            .crop(sharp.gravity.center);
         }
       }]
     });

@@ -45,6 +45,7 @@ module.exports = function (conf, addons) {
   fs.readdirSync(profilesPath).filter(function (file) {
     return conf.DEBUG ? /* istanbul ignore next */ file : file !== DEBUG_PROFILES_FILE;
   }).forEach(function (file) {
+    // $DisableFlow: flow wants string require :(
     merge(flamingo.profiles, require(path.join(profilesPath, file)));
   });
 

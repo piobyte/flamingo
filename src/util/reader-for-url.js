@@ -17,7 +17,7 @@ var reader = {
  * @example
  * readerForUrl('data:text/plain;base64,ZGF0YQ==') // data reader
  */
-module.exports = function (parsedUrl/*: {protocol: ?string} */)/*: ?function */ {
+module.exports = function (parsedUrl/*: {protocol?: string} */)/*: ?function */ {
   var foundReader;
 
   /* istanbul ignore else */

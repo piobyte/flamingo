@@ -72,7 +72,7 @@ function finalize(loader/*: {callback: function} */, hooks/*: {} */) {
  * @param {object} loaderHooks
  * @returns {object} object with hookName: addonHooks mapping
  */
-function registerAddonHooks(addons/* [hooks: {}] */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
+function registerAddonHooks(addons/*: Array<Addon> */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
   return reduce(addons, function (hooks, addon) {
     forOwn(addon.hooks, function (val, key) {
       if (!hooks[key]) {

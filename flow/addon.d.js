@@ -1,6 +1,6 @@
 /*::
 
- declare class Addon {
+ declare type Addon = {
   path: string;
   pkg: Object;
   hooks?: Object;

@@ -4,12 +4,16 @@
  * @module flamingo/src/processor/image
  */
 var deprecate = require('../../util/deprecate'),
-  noop = require('lodash/noop');
+  noop = require('lodash/noop'),
+  logger = require('../../logger').build('processor/image');
 
-var processors = {
-  sharp: require('./sharp'),
-  gm: require('./gm')
-};
+var processors = {sharp: require('./sharp')};
+
+if (require('optional')('gm') !== null) {
+  processors.gm = require('./gm');
+} else {
+  logger.info('`gm` processor disabled, because `gm` isn\'t installed.');
+}
 
 /**
  * Function that takes an array with processing operations and returns a function that can be called with an stream.
@@ -31,7 +35,11 @@ module.exports = function (operation/*: FlamingoOperation */)/*: function */ {
 
     return function (stream) {
       for (var i = 0; i < transformations.length; i++) {
-        stream = processors[transformations[i].processor](transformations[i].pipe, stream, config);
+        if (processors.hasOwnProperty(transformations[i].processor)) {
+          stream = processors[transformations[i].processor](transformations[i].pipe, stream, config);
+        } else {
+          logger.info('Skipping transformation, unknown processor: ' + transformations[i].processor);
+        }
       }
       return stream;
     };
@@ -40,7 +48,11 @@ module.exports = function (operation/*: FlamingoOperation */)/*: function */ {
 
     return function (stream) {
       for (var i = 0; i < transformations.length; i++) {
-        stream = processors[transformations[i].processor](operation, transformations[i].pipe, stream);
+        if (processors.hasOwnProperty(transformations[i].processor)) {
+          stream = processors[transformations[i].processor](operation, transformations[i].pipe, stream);
+        } else {
+          logger.info('Skipping transformation, unknown processor: ' + transformations[i].processor);
+        }
       }
       return stream;
     };
