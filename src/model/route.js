@@ -8,16 +8,9 @@
 
 var FlamingoOperation = require('./flamingo-operation');
 
-/*::
-
-declare class Route {
-  handle(operation: FlamingoOperation): void;
-  hapiConfig(defaults: Object): Object;
-  buildRequestOperation(request: Request, reply:function):FlamingoOperation;
-}
-
+/**
+ * Route class is the basic class every route should extend.
  */
-
 class Route {
   constructor(config, method, path, description = '') {
     this.path = path;
@@ -60,7 +53,7 @@ class Route {
    * Function to build the flamingo operation based on the incoming request + reply function
    * @param {Request} request
    * @param {function} reply
-   * @returns {FlamingoOperation|exports|module.exports}
+   * @returns {FlamingoOperation}
    * @see {@link http://hapijs.com/api#request-properties}
      */
   buildRequestOperation(request, reply) {

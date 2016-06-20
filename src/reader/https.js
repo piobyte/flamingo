@@ -3,7 +3,7 @@ const pkg = require('../../package');
 const readerType = require('./reader-type');
 const readAllowed = require('../util/url-access-allowed');
 const got = require('got');
-const errors = require('../util/errors');
+const {InvalidInputError} = require('../util/errors');
 const Promise = require('bluebird');
 
 /**
@@ -12,28 +12,28 @@ const Promise = require('bluebird');
  */
 module.exports = function (operation/*: FlamingoOperation */) {
   const conf = operation.config;
-  const fileUrl = operation.targetUrl;
+  const input = operation.input;
   const access = conf.ACCESS;
 
-  return access.HTTPS.ENABLED && !readAllowed(fileUrl, access.HTTPS.READ) ?
+  return access.HTTPS.ENABLED && !readAllowed(input, access.HTTPS.READ) ?
     Promise.reject('Read not allowed. See `ACCESS.HTTPS.READ` for more information.') :
     Promise.resolve({
       stream: function () {
         return new Promise(function (resolve, reject) {
-          const stream = got.stream(fileUrl.href, {
+          const stream = got.stream(input.href, {
             timeout: conf.READER.REQUEST.TIMEOUT,
             followRedirect: conf.ALLOW_READ_REDIRECT,
             headers: {'user-agent': `${pkg.name}/${pkg.version} (${pkg.bugs.url})`}
           });
           stream.on('error', function (err) {
-            reject(new errors.InvalidInputError('http response status ' + err.statusCode, fileUrl.href));
+            reject(new InvalidInputError('http response status ' + err.statusCode, input.href));
           });
           stream.on('response', function () {
             resolve(stream);
           });
         });
       },
-      url: fileUrl,
+      url: input,
       type: readerType.REMOTE
     });
 };

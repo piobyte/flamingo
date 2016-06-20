@@ -1,6 +1,6 @@
 const url = require('url');
 const Benchmark = require('benchmark');
-const RSVP = require('rsvp');
+const Promise = require('bluebird');
 const httpReader = require('../../../src/reader/https');
 const fs = require('fs');
 const FlamingoOperation = require('../../../src/model/flamingo-operation');
@@ -17,19 +17,19 @@ function error(err) {
 
 module.exports = function (suiteConfig) {
   return function (suiteName, description, filePath) {
-    let prom = RSVP.Promise.resolve();
+    let prom = Promise.resolve();
     const server = simpleServer(IMAGE_HOST, IMAGE_HOST_PORT, function (req, res) {
       res.writeHead(200, {'Content-Type': 'image/jpeg'});
       fs.createReadStream(filePath).pipe(res, {end: true});
     });
 
     var convertRemote = function (profileName) {
-      return new RSVP.Promise(function (resolve) {
+      return new Promise(function (resolve) {
         new Benchmark.Suite(description).add('GM', {
           defer: true,
           fn: function (deferred) {
             var op = new FlamingoOperation();
-            op.targetUrl = url.parse(HOST);
+            op.input = url.parse(HOST);
             op.config = {
               ACCESS: {HTTPS: {ENABLED: false}},
               ALLOW_READ_REDIRECT: 0,
@@ -41,7 +41,6 @@ module.exports = function (suiteConfig) {
                   headers: {},
                   query: {processor: 'gm'}
                 }, {
-                  SUPPORTED: {GM: {WEBP: true}},
                   DEFAULT_MIME: 'image/png'
                 }).then(function (profileData) {
                   const wstream = suiteConfig.temp.createWriteStream();
@@ -77,7 +76,7 @@ module.exports = function (suiteConfig) {
           defer: true,
           fn: function (deferred) {
             var op = new FlamingoOperation();
-            op.targetUrl = url.parse(HOST);
+            op.input = url.parse(HOST);
             op.config = {
               ACCESS: {HTTPS: {ENABLED: false}},
               ALLOW_READ_REDIRECT: 0,

@@ -4,7 +4,7 @@ const readerType = require('./reader-type');
 const accessAllowed = require('../util/file-access-allowed');
 const path = require('path');
 const Promise = require('bluebird');
-const errors = require('../util/errors');
+const {InvalidInputError} = require('../util/errors');
 
 function fileExists(filePath/*: string */) {
   return new Promise(function (resolve, reject) {
@@ -13,7 +13,7 @@ function fileExists(filePath/*: string */) {
         reject(err);
       } else {
         if (!stat.isFile()) {
-          reject(new errors.InvalidInputError('Unknown input file', filePath));
+          reject(new InvalidInputError('Unknown input file', filePath));
         } else {
           resolve();
         }
@@ -28,14 +28,14 @@ function fileExists(filePath/*: string */) {
  * @return {Promise} resolves with the file read configuration
  */
 module.exports = function (operation/*: FlamingoOperation */) {
-  const filePath = operation.targetUrl;
+  const filePath = operation.input;
   const access = operation.config.ACCESS;
 
   const readWhitelist = access.FILE.READ;
   const normalizedPath = path.normalize(filePath.path);
 
   if (!accessAllowed(normalizedPath, readWhitelist)) {
-    return Promise.reject(new errors.InvalidInputError('File access not allowed', filePath));
+    return Promise.reject(new InvalidInputError('File access not allowed', filePath));
   }
 
   return fileExists(normalizedPath).then(() => ({

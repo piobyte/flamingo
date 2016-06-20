@@ -23,7 +23,6 @@ declare type RouteConfig = {
 
 declare type SupportedConfig = {
   FFMPEG?: boolean;
-  GM: { WEBP: boolean };
 }
 
 declare type ReaderConfig = {

@@ -26,8 +26,7 @@ describe('example profiles', function () {
         headers: {accept: ''},
         query: {}
       }, {
-        DEFAULT_MIME: 'image/png',
-        SUPPORTED: {GM: {}}
+        DEFAULT_MIME: 'image/png'
       }).then(function (data) {
 
         assert.equal(data.process.length, 1, 'avatar-image has one processor operation');
@@ -56,8 +55,7 @@ describe('example profiles', function () {
         query: {width: '200'},
         headers: {accept: ''}
       }, {
-        DEFAULT_MIME: 'image/png',
-        SUPPORTED: {GM: {}}
+        DEFAULT_MIME: 'image/png'
       }).then(function (data) {
         assert.equal(data.process.length, 1, 'avatar-image has one processor operation');
 
@@ -86,8 +84,7 @@ describe('example profiles', function () {
         headers: {accept: '', dpr: '2'}
       }, {
         CLIENT_HINTS: true,
-        DEFAULT_MIME: 'image/png',
-        SUPPORTED: {GM: {}}
+        DEFAULT_MIME: 'image/png'
       }).then(function (data) {
         assert.deepEqual(data.response.header, {
           'Accept-CH': 'DPR, Width',
@@ -121,8 +118,7 @@ describe('example profiles', function () {
         headers: {accept: '', dpr: '1', width: '600'}
       }, {
         CLIENT_HINTS: true,
-        DEFAULT_MIME: 'image/png',
-        SUPPORTED: {GM: {}}
+        DEFAULT_MIME: 'image/png'
       }).then(function (data) {
         assert.deepEqual(data.response.header, {
           'Accept-CH': 'DPR, Width',
@@ -162,8 +158,7 @@ describe('example profiles', function () {
         headers: {accept: ''},
         query: {}
       }, {
-        DEFAULT_MIME: 'image/png',
-        SUPPORTED: {GM: {}}
+        DEFAULT_MIME: 'image/png'
       }).then(function (data) {
 
         assert.equal(data.process.length, 1, 'avatar-image has one processor operation');
@@ -197,15 +192,13 @@ describe('example profiles', function () {
           headers: {accept: ''},
           query: {width: '0'}
         }, {
-          DEFAULT_MIME: 'image/png',
-          SUPPORTED: {GM: {}}
+          DEFAULT_MIME: 'image/png'
         }),
         upper: exampleProfiles['preview-image']({
           headers: {accept: ''},
           query: {width: '2000'}
         }, {
-          DEFAULT_MIME: 'image/png',
-          SUPPORTED: {GM: {}}
+          DEFAULT_MIME: 'image/png'
         })
       }).then(function (data) {
         data.lower.process[0].pipe(pipe);
@@ -239,8 +232,7 @@ describe('example profiles', function () {
         headers: {accept: '', dpr: '2'}
       }, {
         CLIENT_HINTS: true,
-        DEFAULT_MIME: 'image/png',
-        SUPPORTED: {GM: {}}
+        DEFAULT_MIME: 'image/png'
       }).then(function (data) {
         assert.deepEqual(data.response.header, {
           'Accept-CH': 'DPR, Width',
@@ -279,8 +271,7 @@ describe('example profiles', function () {
         headers: {accept: '', dpr: '1', width: '600'}
       }, {
         CLIENT_HINTS: true,
-        DEFAULT_MIME: 'image/png',
-        SUPPORTED: {GM: {}}
+        DEFAULT_MIME: 'image/png'
       }).then(function (data) {
         assert.deepEqual(data.response.header, {
           'Accept-CH': 'DPR, Width',

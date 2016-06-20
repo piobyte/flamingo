@@ -5,7 +5,7 @@
  */
 const fs = require('fs');
 const fileAccessAllowed = require('../util/file-access-allowed');
-const errors = require('../util/errors');
+const {InvalidInputError} = require('../util/errors');
 const mkdirp = require('mkdirp');
 const path = require('path');
 const Promise = require('bluebird');
@@ -14,14 +14,14 @@ const Promise = require('bluebird');
  * Creates a function that calls the given reply function with a stream
  * @return {Function} function that writes a stream to a given file
  */
-module.exports = function ({targetUrl, reply, config}/*: FlamingoOperation */) {
+module.exports = function ({input, reply, config}/*: FlamingoOperation */) {
   return function (stream) {
-    const outputPath = path.normalize(targetUrl.path);
+    const outputPath = path.normalize(input.path);
     const outputDir = path.dirname(outputPath);
     const allowed = fileAccessAllowed(path.normalize(outputPath), config.ACCESS.FILE.WRITE);
 
     if (!allowed) {
-      return Promise.reject(new errors.InvalidInputError('File access not allowed', outputPath));
+      return Promise.reject(new InvalidInputError('File access not allowed', outputPath));
     }
 
     return new Promise(function (resolve, reject) {

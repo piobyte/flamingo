@@ -14,6 +14,12 @@ const Promise = require('bluebird');
 const FlamingoOperation = require('./flamingo-operation');
 
 class Server {
+  /**
+   * Takes a config and an addon loader to build the server.
+   * @constructor
+   * @param {Config} conf
+   * @param {AddonLoader} addonsLoader
+     */
   constructor(conf, addonsLoader) {
     this.conf = conf;
     FlamingoOperation.prototype.config = conf;
@@ -36,6 +42,11 @@ class Server {
     });
   }
 
+  /**
+   * Add the given routes to the server instance
+   * @param routes
+   * @returns {Server}
+     */
   withRoutes(routes) {
     routes.map((route) => {
       route.server = this;
@@ -44,6 +55,11 @@ class Server {
     return this;
   }
 
+  /**
+   * Add the given profiles to the server instance
+   * @param profiles
+   * @returns {Server}
+     */
   withProfiles(profiles) {
     profiles.forEach(profile => {
       merge(this._profiles, profile);
@@ -52,6 +68,9 @@ class Server {
     return this;
   }
 
+  /**
+   * Stop the server instance
+   */
   stop() {
     return new Promise((resolve, reject) => {
       this.hapi.stop((err) => {
@@ -61,6 +80,9 @@ class Server {
     });
   }
 
+  /**
+   * Starts the server instance
+   */
   start() {
     return new Promise((resolve, reject) => {
       this.hapi.start((err, data) => {

@@ -10,7 +10,7 @@ const Config = require('../../config');
 var PORT = 43726; // some random unused port
 
 function startServer(localConf) {
-  return new Config().fromEnv().then(config => {
+  return Config.fromEnv().then(config => {
     config = merge({}, config, {CRYPTO: {ENABLED: false}, PORT: PORT}, localConf);
 
     if (config.CRYPTO.ENABLED) {
@@ -31,7 +31,7 @@ describe('config', function () {
   it('decrypts encrypted messages', function () {
     var PAYLOAD = 'test';
 
-    return new Config().fromEnv().then(conf => {
+    return Config.fromEnv().then(conf => {
       return conf.ENCODE_PAYLOAD(PAYLOAD).then(function (cipher) {
         return conf.DECODE_PAYLOAD(cipher);
       }).then(function (plain) {
@@ -50,5 +50,17 @@ describe('config', function () {
     }).then(function (response) {
       assert.equal(response.statusCode, 404);
     }).finally(() => server.stop());
+  });
+
+  it('#fromEnv', function(){
+    const env = {
+      TEST: 'true'
+    };
+    const mappings = [
+      ['TEST', 'TEST', (val) => val === 'true']
+    ];
+    return Config.fromEnv(env, mappings).then(config => {
+      assert.equal(config.TEST, true);
+    });
   });
 });

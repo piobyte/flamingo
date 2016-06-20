@@ -16,18 +16,10 @@ Internally it uses [sharp](https://github.com/lovell/sharp), [gm](https://github
 
 See the [documentation](https://piobyte.github.io/flamingo/) for detailed information on how flamingo modules work.
 
-## use cases
-
-- [ ] add url signing
-- [x] add md to image 
-
 ## TODO
-
-data:text/markdown;
 
 - multiple instances
 - use flamingoperation or something related in addon hooks
-- check if deprecated api is full tested
 
 ## Requirements
 

@@ -11,7 +11,7 @@ const RED_DOT_DATA = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12
 describe('data reader', function () {
   it('resolves the expected result', function (done) {
     var op = new FlamingoOperation();
-    op.targetUrl = url.parse(DATA_IMAGE_URI + RED_DOT_DATA);
+    op.input = url.parse(DATA_IMAGE_URI + RED_DOT_DATA);
     dataReader(op).then(function (data) {
       assert.ok(!!data.stream);
       const buf = [];
@@ -34,7 +34,7 @@ describe('data reader', function () {
   });
   it('rejects for not image data uri', function (done) {
     var op = new FlamingoOperation();
-    op.targetUrl = url.parse(DATA_HTML_URI + RED_DOT_DATA);
+    op.input = url.parse(DATA_HTML_URI + RED_DOT_DATA);
     dataReader(op).then(function () {
       done('shouldn\'t resolve');
     }, function () {

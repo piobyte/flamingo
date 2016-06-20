@@ -9,9 +9,7 @@ declare class FlamingoOperation extends Object{
   reader: function;
   writer: function;
 
-  targetUrl: {
-    path: string
-  };
+  input: any;
 
   config: Config;
   addons: Object;

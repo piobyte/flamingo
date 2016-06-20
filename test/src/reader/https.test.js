@@ -30,7 +30,7 @@ describe('https? reader', function () {
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: EXAMPLE_ACCESS
     });
-    op.targetUrl = url.parse('http://example.org/ok');
+    op.input = url.parse('http://example.org/ok');
 
     httpReader(op).then(function (data) {
       assert.ok(!!data.stream);
@@ -60,7 +60,7 @@ describe('https? reader', function () {
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: EXAMPLE_ACCESS
     });
-    op.targetUrl = url.parse('http://example.org/bad');
+    op.input = url.parse('http://example.org/bad');
 
     httpReader(op).then(function (data) {
       assert.ok(!!data.stream);
@@ -82,7 +82,7 @@ describe('https? reader', function () {
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: {HTTPS: {ENABLED: false}}
     });
-    op.targetUrl = url.parse('http://example.org/bad');
+    op.input = url.parse('http://example.org/bad');
 
     httpReader(op).then(function (data) {
       assert.ok(!!data.stream);
@@ -102,7 +102,7 @@ describe('https? reader', function () {
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: {HTTPS: {ENABLED: true, READ: []}}
     });
-    op.targetUrl = url.parse('http://example.org/bad');
+    op.input = url.parse('http://example.org/bad');
 
     httpReader(op).then(function () {
       done('shouldn\'t resolve this request.');
@@ -117,7 +117,7 @@ describe('https? reader', function () {
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: {HTTPS: {ENABLED: false, READ: []}}
     });
-    op.targetUrl = url.parse('http://example.org/');
+    op.input = url.parse('http://example.org/');
 
     httpReader(op).then(function () {
       done();

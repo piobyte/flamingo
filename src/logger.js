@@ -18,9 +18,18 @@ function _serializerError(type, input) {
 }
 
 const serializers = {
-  operation: function(operation) {
+  input(input){
+    if (typeof input === 'string') {
+      return input;
+    } else if (input instanceof url.Url) {
+      return url.format(input);
+    } else {
+      return util.inspect(input);
+    }
+  },
+  operation: function (operation) {
     return {
-      targetUrl: url.format(operation.targetUrl),
+      input: this.input(operation.input),
       profile: operation.profile.name,
       request: this.request(operation.request)
     };

@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const assign = require('lodash/assign');
 const isFinite = require('lodash/isFinite');
 const request = require('request');
-const errors = require('../../util/errors');
+const {ProcessingError, InvalidInputError} = require('../../util/errors');
 const pkg = require('../../../package');
 
 const logger = require('../../logger').build('preprocessor:video');
@@ -29,12 +29,12 @@ module.exports = function (operation) {
       return new Promise(function (resolve, reject) {
         ffmpeg.ffprobe(input, function (err, meta) {
           if (err) {
-            reject(new errors.InvalidInputError(err.message, err));
+            reject(new InvalidInputError(err.message, err));
           }
           else {
             /* istanbul ignore next */
             if (!meta.hasOwnProperty('format')) {
-              throw new errors.InvalidInputError('Input format is undetectable by ffprobe');
+              throw new InvalidInputError('Input format is undetectable by ffprobe');
             }
 
             var duration = isFinite(meta.format.duration) ? meta.format.duration : 0;
@@ -52,7 +52,7 @@ module.exports = function (operation) {
                 logger.info('Spawned ffmpeg with command: ' + commandLine);
               })
               .on('error', function (e) {
-                throw new errors.ProcessingError(e.message, e);
+                throw new ProcessingError(e.message, e);
               })
               .on('end', function () {
                 logger.debug('ffmpeg end');
@@ -79,7 +79,7 @@ module.exports = function (operation) {
               maxRedirects: 0
             }, function (err) {
               if (err) {
-                rej(new errors.InvalidInputError('Error while doing a HEAD request to check for redirects', err));
+                rej(new InvalidInputError('Error while doing a HEAD request to check for redirects', err));
               } else {
                 res(videoProcessor(readerResult.url.href));
               }

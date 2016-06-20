@@ -23,7 +23,7 @@ exports.profiles = buildProfiles;
 exports.routes = buildRoutes;
 
 module.exports = function boot() {
-  return (new Config()).fromEnv().then(config => {
+  return Config.fromEnv().then(config => {
     const addonLoader = new AddonLoader(__dirname, pkg).load();
     const routes = buildRoutes(config);
     const profiles = buildProfiles(config);

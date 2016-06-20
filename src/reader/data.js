@@ -11,7 +11,7 @@ const B64_DELIMITER = 'base64,';
  * @param {Object} operation
  */
 module.exports = function (operation/*: FlamingoOperation */) {
-  const url = operation.targetUrl;
+  const url = operation.input;
   const type = url.host;
   const encoded = url.href.substring(url.href.indexOf(B64_DELIMITER) + B64_DELIMITER.length, url.href.length);
   let promise;

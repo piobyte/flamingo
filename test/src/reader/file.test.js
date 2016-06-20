@@ -14,7 +14,7 @@ var compareFileFixtures = function (fixturePath) {
     var TEST_WHITELIST = {FILE: {READ: ['/tmp', path.resolve(__dirname, '../../')]}};
 
     var op = new FlamingoOperation();
-    op.targetUrl = url.parse('file://' + fixture.fullFixturePath(fixturePath));
+    op.input = url.parse('file://' + fixture.fullFixturePath(fixturePath));
     op.config = {
       ACCESS: TEST_WHITELIST
     };
@@ -81,7 +81,7 @@ describe('file reader', function () {
   it('tests if the reader rejects if file doesn\'t exist', function (done) {
     var op = new FlamingoOperation();
 
-    op.targetUrl = url.parse('file://' + fixture.fullFixturePath('NON-EXISTANT-FILE'));
+    op.input = url.parse('file://' + fixture.fullFixturePath('NON-EXISTANT-FILE'));
     op.config = {
       ACCESS: {FILE: {READ: [path.resolve(__dirname, '../../')]}}
     };

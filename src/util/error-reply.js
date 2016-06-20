@@ -4,18 +4,19 @@
  * @module flamingo/src/util/error-reply
  */
 const boom = require('boom');
-const errors = require('../util/errors');
+const {InvalidInputError, ProcessingError} = require('../util/errors');
 
 /**
  * Function that calls the reply function with a given error by extracting useful error fields
  * and set the response status code accordingly.
  *
- * TODO: jsdoc
+ * @param {FlamingoOperation} operation
+ * @param {Error} error
  */
 module.exports = function (operation/*: function */, error/*: Error */) {
   var isClientError =
-    error instanceof errors.InvalidInputError ||
-    error instanceof errors.ProcessingError ||
+    error instanceof InvalidInputError ||
+    error instanceof ProcessingError ||
     typeof error === 'string';
 
   const message = operation.config.DEBUG ? error.message : undefined;

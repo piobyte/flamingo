@@ -17,7 +17,7 @@ var encode = function (plain) {
 
 
 function startServer(localConf) {
-  return new Config().fromEnv().then(config => {
+  return Config.fromEnv().then(config => {
     config = merge({}, config, {CRYPTO: {ENABLED: false}, PORT: PORT}, localConf);
 
     if (config.CRYPTO.ENABLED) {

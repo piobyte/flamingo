@@ -4,7 +4,8 @@ const VideoPreprocess = require('./../mixins/video-preprocess');
 const Image = require('./image');
 
 /**
- * Video is a image route that runs a video image extraction preprocessor.
+ * Route that converts a video url, passed inside the request param, to an image
+ * @class
  */
 class Video extends VideoPreprocess(Image) {
   constructor(conf, method = 'GET', path = '/video/{profile}/{url}', description = 'Profile video conversion') {

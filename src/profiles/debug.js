@@ -18,9 +18,6 @@ var profiles = {
     let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
-      if (!config.SUPPORTED.GM.WEBP) {
-        format = {type: 'png', mime: 'image/png'};
-      }
       process.push({
         processor: 'gm', pipe: function (pipe) {
           if (format.type === 'webp') {
@@ -55,9 +52,6 @@ var profiles = {
     let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
-      if (!config.SUPPORTED.GM.WEBP) {
-        format = {type: 'png', mime: 'image/png'};
-      }
       process.push({
         processor: 'gm', pipe: function (pipe) {
           if (format.type === 'webp') {
@@ -83,9 +77,6 @@ var profiles = {
     let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
-      if (!config.SUPPORTED.GM.WEBP) {
-        format = {type: 'png', mime: 'image/png'};
-      }
       process.push({
         processor: 'gm', pipe: function (pipe) {
           if (format.type === 'webp') {
@@ -112,9 +103,6 @@ var profiles = {
     let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
-      if (!config.SUPPORTED.GM.WEBP) {
-        format = {type: 'png', mime: 'image/png'};
-      }
       process.push({
         processor: 'gm', pipe: function (pipe) {
           // if (format.type === 'webp') {
@@ -153,9 +141,6 @@ var profiles = {
     let format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
-      if (!config.SUPPORTED.GM.WEBP) {
-        format = {type: 'png', mime: 'image/png'};
-      }
       process.push({
         processor: 'gm', pipe: function (pipe) {
           if (format.type === 'webp') {

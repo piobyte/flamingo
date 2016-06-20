@@ -1,11 +1,11 @@
 const fs = require('fs');
 const Benchmark = require('benchmark');
 const FlamingoOperation = require('../../../src/model/flamingo-operation');
-const RSVP = require('rsvp');
+const Promise = require('bluebird');
 
 module.exports = function (suiteConfig) {
   return function (suiteName, description, filePath) {
-    let prom = RSVP.Promise.resolve();
+    let prom = Promise.resolve();
 
     function streamFunction(deferred) {
       return function (data) {
@@ -35,8 +35,8 @@ module.exports = function (suiteConfig) {
     }
 
     function convertLocal(profileName) {
-      return new RSVP.Promise(function (resolve) {
-        const gmOptions = {SUPPORTED: {GM: {WEBP: true}}, DEFAULT_MIME: 'image/png'};
+      return new Promise(function (resolve) {
+        const gmOptions = {DEFAULT_MIME: 'image/png'};
         const gmRequest = {headers: {}, query: {processor: 'gm'}};
         const vipsOptions = {DEFAULT_MIME: 'image/png'};
         const vipsRequest = {headers: {}, query: {}};

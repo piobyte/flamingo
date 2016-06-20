@@ -2,6 +2,8 @@ const temp = require('temp');
 const fs = require('fs');
 const assert = require('assert');
 const assign = require('lodash/assign');
+const url = require('url');
+const FlamingoOperation = require('../../src/model/flamingo-operation');
 
 describe('logger', function () {
   var logger = require('../../src/logger');
@@ -68,5 +70,29 @@ describe('logger', function () {
     /* eslint no-underscore-dangle: 0 */
 
     assert.deepEqual(logger.serializers.error('pls halp'), {message: 'pls halp'});
+  });
+
+  it('serializes operation object', function () {
+    const operation = new FlamingoOperation();
+    operation.input = url.parse('https://travis-ci.org/piobyte/flamingo.svg?branch=master');
+    operation.profile = {name: 'example-profile'};
+    operation.request = {
+      headers: {'user-agent': 'flamingo/2.0.0'},
+      path: '/video/example-profile/12345',
+      method: 'get',
+      route: {path: '/video/{profile}/{url}', method: 'get'}
+    };
+
+    assert.deepEqual(logger.serializers.operation(operation),
+      {
+        input: 'https://travis-ci.org/piobyte/flamingo.svg?branch=master',
+        profile: 'example-profile',
+        request: {
+          headers: {'user-agent': 'flamingo/2.0.0'},
+          path: '/video/example-profile/12345',
+          route: {path: '/video/{profile}/{url}', method: 'get'},
+          method: 'get'
+        }
+      });
   });
 });

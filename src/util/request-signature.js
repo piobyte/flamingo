@@ -1,4 +1,4 @@
-const errors = require('../util/errors');
+const {InvalidInputError} = require('../util/errors');
 const crypto = require('crypto');
 const Promise = require('bluebird');
 
@@ -12,6 +12,6 @@ module.exports = function(op, givenDigest, enc) {
   if (digest === givenDigest) {
     return Promise.resolve(op);
   } else {
-    throw new errors.InvalidInputError(`given hash (${givenDigest}) doesn't match expected hash (${digest})`);
+    throw new InvalidInputError(`given hash (${givenDigest}) doesn't match expected hash (${digest})`);
   }
 };

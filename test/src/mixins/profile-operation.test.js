@@ -4,7 +4,7 @@ const FlamingoOperation = require('../../../src/model/flamingo-operation');
 const Config = require('../../../config');
 const Promise = require('bluebird');
 const sinon = require('sinon');
-const errors = require('../../../src/util/errors');
+const {InvalidInputError} = require('../../../src/util/errors');
 const httpReader = require('../../../src/reader/https');
 const responseWriter = require('../../../src/writer/response');
 const url = require('url');
@@ -16,15 +16,15 @@ describe('profile-operation', function () {
     const conf = new Config();
     const profile = new ProfileOperationClass();
     const operation = new FlamingoOperation();
-    const url = 'http://example.com/image.png';
-    const encodedUrl = encodeURIComponent(url);
+    const testUrl = 'http://example.com/image.png';
+    const encodedUrl = encodeURIComponent(testUrl);
 
     conf.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
     operation.config = conf;
     operation.request = {params: {url: encodedUrl}};
 
-    return profile.inputUrl(operation).then(inputUrl => {
-      assert.equal(inputUrl, url);
+    return profile.extractInput(operation).then(input => {
+      assert.deepEqual(input, url.parse(testUrl));
     });
   });
 
@@ -65,7 +65,7 @@ describe('profile-operation', function () {
     operation.request = {params: {profile: 'someUnknownProfile'}};
 
     return profileOp.extractProfile(operation).catch(e => {
-      assert.ok(e instanceof errors.InvalidInputError);
+      assert.ok(e instanceof InvalidInputError);
     });
   });
 
@@ -90,7 +90,7 @@ describe('profile-operation', function () {
     return profileOp.buildOperation(operation).then((operation) => {
       assert.equal(operation.profile, profileSpy);
       assert.equal(operation.reader, httpReader);
-      assert.deepEqual(operation.targetUrl, url.parse(givenUrl));
+      assert.deepEqual(operation.input, url.parse(givenUrl));
       assert.equal(operation.writer, responseWriter);
     });
   });
@@ -114,6 +114,6 @@ describe('profile-operation', function () {
     };
 
     return profileOp.buildOperation(operation)
-      .catch(e => assert.ok(e instanceof errors.InvalidInputError));
+      .catch(e => assert.ok(e instanceof InvalidInputError));
   });
 });

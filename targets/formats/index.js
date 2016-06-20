@@ -71,7 +71,7 @@ processors.forEach(function (processor) {
       op.profile = {
         process: processor.process
       };
-      op.targetUrl = {href: 'https://assets.flamingo.tld/' + data.desc};
+      op.input = {href: 'https://assets.flamingo.tld/' + data.desc};
 
       return httpsReader(op).then(unfoldReaderResult)
         .then(imageProcessor(op))

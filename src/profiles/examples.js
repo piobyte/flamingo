@@ -7,7 +7,6 @@ const clamp = require('clamp');
 
 const MIN_IMAGE_SIZE = 10;
 const MAX_IMAGE_SIZE = 1024;
-const GM_UNSUPPORTED_WEBP_FORMAT = {type: 'png', mime: 'image/png'};
 
 function clientHintedDimension(requestHeaders, responseHeaders, width) {
   var dpr = clamp(envParser.float(1)(requestHeaders.dpr), 1, 10);
@@ -23,7 +22,7 @@ module.exports = {
   'avatar-image': function (request, config) {
     // override dimension with query.width
     let dim = clamp(envParser.objectInt('width', 170)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
-    const format = !config.SUPPORTED.GM.WEBP ? GM_UNSUPPORTED_WEBP_FORMAT : bestFormat(request.headers.accept, config.DEFAULT_MIME);
+    const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
     const responseHeader/*: Object */ = config.CLIENT_HINTS ? {'Accept-CH': 'DPR, Width'} : {};
 
     responseHeader['Content-Type'] = format.mime;

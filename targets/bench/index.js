@@ -1,7 +1,7 @@
 /*eslint no-console: 0*/
 
 const temp = require('temp');
-const RSVP = require('rsvp');
+const Promise = require('bluebird');
 const uuid = require('node-uuid');
 const pkg = require('../../package');
 const fingerprint = require('./fingerprint');
@@ -9,7 +9,7 @@ const debugProfiles = require('../../src/profiles/debug');
 const imageProcessors = require('../../src/processor/image');
 const sharpAssets = require('../../test/fixtures/images/sharp-bench-assets');
 
-let benchPromise = RSVP.Promise.resolve();
+let benchPromise = Promise.resolve();
 
 const TAGS = process.env.BENCH_TAG ? [process.env.BENCH_TAG] : [];
 const id = uuid.v4();

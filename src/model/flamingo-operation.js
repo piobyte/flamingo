@@ -23,7 +23,7 @@ class FlamingoOperation {
     this.reader = noop;
     this.writer = noop;
 
-    this.targetUrl = {};
+    this.input = undefined;
   }
 }
 
