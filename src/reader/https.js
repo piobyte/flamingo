@@ -1,6 +1,6 @@
 /* disabled flow because of deprecated signature type mismatch */
 const pkg = require('../../package');
-const readerType = require('./reader-type');
+const {REMOTE} = require('../model/reader-type');
 const readAllowed = require('../util/url-access-allowed');
 const got = require('got');
 const {InvalidInputError} = require('../util/errors');
@@ -34,6 +34,6 @@ module.exports = function (operation/*: FlamingoOperation */) {
         });
       },
       url: input,
-      type: readerType.REMOTE
+      type: REMOTE
     });
 };

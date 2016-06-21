@@ -6,6 +6,7 @@ const isFinite = require('lodash/isFinite');
 const request = require('request');
 const {ProcessingError, InvalidInputError} = require('../../util/errors');
 const pkg = require('../../../package');
+const {FILE, REMOTE} = require('../../model/reader-type');
 
 const logger = require('../../logger').build('preprocessor:video');
 const defaultProcessConf = {
@@ -63,9 +64,9 @@ module.exports = function (operation) {
     }
 
     switch (readerResult.type) {
-      case 'file':
+      case FILE:
         return videoProcessor(readerResult.path);
-      case 'remote':
+      case REMOTE:
         var promise;
         if (conf.ALLOW_READ_REDIRECT) {
           promise = videoProcessor(readerResult.url.href);

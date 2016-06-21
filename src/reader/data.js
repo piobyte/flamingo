@@ -1,7 +1,7 @@
 /* disabled flow because of deprecated signature type mismatch */
 const Promise = require('bluebird');
 const stream = require('stream');
-const readerType = require('./reader-type');
+const {DATA} = require('../model/reader-type');
 
 const B64_DELIMITER = 'base64,';
 
@@ -33,7 +33,7 @@ module.exports = function (operation/*: FlamingoOperation */) {
         return Promise.resolve(rs);
       },
       path: null,
-      type: readerType.DATA
+      type: DATA
     });
   } else {
     promise = Promise.reject({

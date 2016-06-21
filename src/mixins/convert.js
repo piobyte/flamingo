@@ -29,7 +29,7 @@ module.exports = (SuperClass/*:Route*/) => {
 
     /**
      * Resolves if the given operation is valid
-     * @param operation
+     * @param {FlamingoOperation} operation
      * @returns {Promise.<FlamingoOperation>}
      * @example
      * validOperation(operation) => operation.input.protocol ?
@@ -65,7 +65,7 @@ module.exports = (SuperClass/*:Route*/) => {
 
     /**
      * Builds a validation function that resolves if the given stream is valid
-     * @param operation
+     * @param {FlamingoOperation} operation
      * @returns {function(): Promise.<Stream>}
      */
     validStream(operation) {
@@ -74,7 +74,7 @@ module.exports = (SuperClass/*:Route*/) => {
 
     /**
      * Builds a function that takes a stream and transforms it
-     * @param operation
+     * @param {FlamingoOperation} operation
      * @returns {function(Stream):Stream}
      */
     process(operation) {
@@ -84,7 +84,7 @@ module.exports = (SuperClass/*:Route*/) => {
 
     /**
      * Builds a function that takes a stream and writes it somewhere.
-     * @param operation
+     * @param {FlamingoOperation} operation
      * @returns {function(Stream):Promise}
      */
     write(operation) {
@@ -95,7 +95,7 @@ module.exports = (SuperClass/*:Route*/) => {
     /**
      * Builds a function that handles a passed error.
      * Defaults to logging and returning a request reply
-     * @param operation
+     * @param {FlamingoOperation} operation
      * @returns {function(Error):void}
        */
     handleError(operation) {
@@ -110,7 +110,7 @@ module.exports = (SuperClass/*:Route*/) => {
 
     /**
      * Overwrites the Routes handle function to start the conversation process
-     * @param operation
+     * @param {FlamingoOperation} operation
      * @returns Promise
      * @see flamingo/src/model/Route
      */

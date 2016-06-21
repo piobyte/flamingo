@@ -1,6 +1,6 @@
 /* @flow weak */
 const fs = require('fs');
-const readerType = require('./reader-type');
+const {FILE} = require('../model/reader-type');
 const accessAllowed = require('../util/file-access-allowed');
 const path = require('path');
 const Promise = require('bluebird');
@@ -40,7 +40,7 @@ module.exports = function (operation/*: FlamingoOperation */) {
 
   return fileExists(normalizedPath).then(() => ({
     stream: () => fs.createReadStream(normalizedPath),
-    type: readerType.FILE,
+    type: FILE,
     path: normalizedPath
   }));
 };

@@ -11,8 +11,8 @@ module.exports = (SuperClass) => {
     /**
      * Extract a profile for a given operation.
      *
-     * @param operation
-     * @returns Promise
+     * @param {FlamingoOperation} operation
+     * @returns {Promise<{name: string, response: {}, process: Array<{processor: string, pipe: function}>}>}
      */
     extractProfile(operation) {
       const profiles = operation.profiles;
@@ -27,8 +27,8 @@ module.exports = (SuperClass) => {
 
     /**
      * Resolves a input from a given operation.
-     * @param operation
-     * @return {Promise.<{}>} resolves `url.parse(decoded)` result
+     * @param {FlamingoOperation} operation
+     * @return {Promise.<Url>} resolves `url.parse(decodedUrlParam)`
        */
     extractInput(operation) {
       return operation.config.DECODE_PAYLOAD(decodeURIComponent(operation.request.params.url))
@@ -39,6 +39,9 @@ module.exports = (SuperClass) => {
      * Resolves a reader function for a given input. Rejects with InvalidInputError if no reader is found.
      * @param input
      * @return {Promise.<function>} reader
+     * @example
+     * (input) =>
+     *   Promise.resolve((operation) => ({stream: fs.createReadStream('path/to/image.png'), type: 'file'}))
        */
     extractReader(input) {
       const reader = readerForUrl(input);
@@ -50,6 +53,11 @@ module.exports = (SuperClass) => {
       return Promise.resolve(reader);
     }
 
+    /**
+     * Builds a flamingo operation by extracting input, profile and reader from the given operation
+     * @param {FlamingoOperation} operation
+     * @return {Promise.<FlamingoOperation>}
+       */
     buildOperation(operation) {
       return Promise.all([
         this.extractInput(operation),

@@ -1,6 +1,7 @@
 const assert = require('assert');
 const temp = require('temp');
 const path = require('path');
+const {FILE} = require('../../../../src/model/reader-type');
 
 describe('video preprocessor', function () {
   before(function () {
@@ -21,7 +22,7 @@ describe('video preprocessor', function () {
         throw 'shouldn\'t call the stream function on a file';
       },
       path: VIDEO_FILE,
-      type: 'file'
+      type: FILE
     };
 
     op.preprocessorConfig = {

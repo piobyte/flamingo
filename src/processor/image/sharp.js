@@ -13,7 +13,7 @@ const sharp = require('sharp');
  * The function will return a promise and resolve a stream.
  * This stream is converted by gm using the given processing operations.
  *
- * @param {Object} operation TODO
+ * @param {FlamingoOperation} operation
  * @param {function} pipeline Function to generate a transformer pipeline that is used with the incoming stream
  * @param {Stream} stream stream containing image
  * @returns {Stream} transformed stream
