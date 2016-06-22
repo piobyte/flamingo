@@ -12,7 +12,8 @@
 
 ## Implementation
 
-- input extraction resolves `md` request param (url: `/md/{profile}/{md}`)
+- route url `/md/{profile}/{md}`
+- input extraction resolves `md` request param
 - reader returns `{markdown: <MardownString>}` object
 - use [markdown-it](https://github.com/markdown-it/markdown-it) to generate html from markdown
 - use [node-webshot](https://github.com/brenden/node-webshot) to generate image stream from html 
