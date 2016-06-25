@@ -169,7 +169,7 @@ describe('image converting server response', function () {
       assert.equal(response.statusCode, 400);
     }).finally(() => server.stop());
   });
-  
+
   it('returns a banner for /', function () {
     let server;
 

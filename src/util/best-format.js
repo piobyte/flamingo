@@ -39,7 +39,7 @@ module.exports = function (acceptHeader/*:string*/, defaultMime/*:string*/)/*: {
 
   if (acceptHeader) {
     const parsedHeader = parseRanges(acceptHeader);
-    const joinedParsedHeader = parsedHeader.map((h) => h[0] + '/' + h[1]);
+    const joinedParsedHeader = parsedHeader.map(([type, subtype]) => `${type}/${subtype}`);
 
     let highestFitness = 0;
     let highestSupported;
@@ -52,7 +52,7 @@ module.exports = function (acceptHeader/*:string*/, defaultMime/*:string*/)/*: {
         fitness: fitnessQuality[0]
       };
     }).filter((parsed) => parsed.fitness === highestFitness)
-      .map((parsed) => parsed.mime)
+      .map(({mime}) => mime)
       .sort((a, b) => {
         /* eslint no-else-return: 0 */
         const aIndex = joinedParsedHeader.indexOf(a);

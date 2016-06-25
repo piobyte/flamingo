@@ -10,6 +10,8 @@ var FlamingoOperation = require('./flamingo-operation');
 
 /**
  * Route class is the basic class every route should extend.
+ * The idea is that an incoming request generates a FlamingoOperation
+ * which is passed through the route and used to store metadata.
  */
 class Route {
   constructor(config, method, path, description = '') {

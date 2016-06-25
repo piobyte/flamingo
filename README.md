@@ -23,7 +23,7 @@ See the [documentation](https://piobyte.github.io/flamingo/) for detailed inform
 
 ## Requirements
 
-- node `0.12`, `4.2`(LTS), `5.0` or `iojs`(master)
+- minimum node `6`
 - [vips](http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS)
 - [graphicsmagick](http://www.graphicsmagick.org/) (if `NATIVE_AUTO_ORIENT` is true, version >= 1.3.18) (for webp support compile from source. See `tools/install-graphicsmagick.sh`)
 - [imagemagick](http://www.imagemagick.org/) if webp is used
@@ -145,41 +145,7 @@ Using the specified entry point it'll load the addon and use its hooks.
 
 ## Deprecations
 
-All deprecated behavior will be logged by the `deprecate` logger. 
-Using [bunyan](https://github.com/trentm/node-bunyan) filters it's really easy to only log deprecations with:
-
-- `node index.js | bunyan -c 'this.name === "deprecate"'`
-
-If you want to ignore all deprecation log messages:
-
-- `node index.js | bunyan -c 'this.name !== "deprecate"'`
-
-To filter specific deprecations:
-
-- `node index.js | bunyan -c 'this.name === "deprecate" && this.id === "no-global-config"'`
-
-For more information on bunyan filters visit the [official docs](https://github.com/trentm/node-bunyan#cli-usage)
-
-### Deprecations
-
-#### `no-global-config`
-
-Previously the global flamingo configuration was globally imported (`require('../config')`). 
-This makes it hard to change the config in testing. 
-To help this all functions that require configuration access get the configuration object as a function parameter.
-
-#### `convert-route-moved`
-
-Some route urls are going to be changed:
-
-- `/convert/video/{profile}/{url}` → `/video/{profile}/{url}`
-- `/convert/image/{profile}/{url}` → `/image/{profile}/{url}`
-
-#### `no-flamingo-operation`
-
-`no-global-config` was a hotfix to make it possible to run tests with a local config. 
-Problem is that by appending the config nothing is won because additional fields require to add another parameter.
-To avoid these unnecessary method signatures, there is now a object that holds request related properties and global config, addons and profiles. 
+none yet
 
 ## Docker
 

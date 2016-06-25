@@ -7,6 +7,7 @@
 var noop = require('lodash/noop');
 
 /**
+ * Base operation class that is intented to be created for each request and holds request metadata.
  * @class
  */
 class FlamingoOperation {

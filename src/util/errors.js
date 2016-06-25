@@ -23,6 +23,6 @@ util.inherits(InvalidInputError, Error);
 util.inherits(ProcessingError, Error);
 
 module.exports = {
-  InvalidInputError: InvalidInputError,
-  ProcessingError: ProcessingError
+  InvalidInputError,
+  ProcessingError
 };

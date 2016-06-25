@@ -14,4 +14,3 @@ class Video extends VideoPreprocess(Image) {
 }
 
 module.exports = Video;
-

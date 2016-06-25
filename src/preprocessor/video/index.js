@@ -3,7 +3,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const Promise = require('bluebird');
 const assign = require('lodash/assign');
 const isFinite = require('lodash/isFinite');
-const request = require('request');
+const got = require('got');
 const {ProcessingError, InvalidInputError} = require('../../util/errors');
 const pkg = require('../../../package');
 const {FILE, REMOTE} = require('../../model/reader-type');
@@ -72,20 +72,14 @@ module.exports = function (operation) {
           promise = videoProcessor(readerResult.url.href);
         } else {
           // do HEAD to check if redirect response code because ffprobe/ffmpeg always follow redirects
-          promise = new Promise(function (res, rej) {
-            request.head(readerResult.url.href, {
-              timeout: conf.READER.REQUEST.TIMEOUT,
-              headers: {'User-Agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'},
-              followRedirect: false,
-              maxRedirects: 0
-            }, function (err) {
-              if (err) {
-                rej(new InvalidInputError('Error while doing a HEAD request to check for redirects', err));
-              } else {
-                res(videoProcessor(readerResult.url.href));
-              }
-            });
-          });
+          promise = got.head(readerResult.url.href, {
+            timeout: conf.READER.REQUEST.TIMEOUT,
+            headers: {'user-agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'},
+            followRedirect: false,
+            retries: 0
+          }).then(() => {
+            return videoProcessor(readerResult.url.href);
+          }).catch(err => new InvalidInputError('Error while doing a HEAD request to check for redirects', err));
         }
         return promise;
       default:

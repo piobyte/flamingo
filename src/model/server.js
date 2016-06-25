@@ -48,7 +48,7 @@ class Server {
    * @returns {Server}
      */
   withRoutes(routes) {
-    routes.map((route) => {
+    routes.forEach((route) => {
       route.server = this;
       this.hapi.route(route.hapiConfig());
     });

@@ -19,7 +19,7 @@ module.exports = (SuperClass) => {
       const profileParam = operation.request.params.profile;
 
       if (!operation.profiles[profileParam]) {
-        return Promise.reject(new InvalidInputError('Unknown profile'));
+        return Promise.reject(new InvalidInputError(`Requested unknown profile (${profileParam})`));
       }
 
       return profiles[profileParam](operation.request, operation.config);
@@ -47,7 +47,7 @@ module.exports = (SuperClass) => {
       const reader = readerForUrl(input);
 
       if (!reader) {
-        return Promise.reject(new InvalidInputError(`No reader available for given url (${input})`));
+        return Promise.reject(new InvalidInputError(`No reader available for given input (${input})`));
       }
 
       return Promise.resolve(reader);

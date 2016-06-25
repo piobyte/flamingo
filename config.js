@@ -82,7 +82,7 @@ const DEFAULTS = {
           const cipher = crypto.createCipheriv(CIPHER, KEY, IV);
 
           cipher.on('error', function (err) {
-            reject(new InvalidInputError('cipher failed', err));
+            reject(new InvalidInputError('ENCODE_PAYLOAD failed', err));
           });
           cipher.end(plaintext, 'utf8');
 
@@ -115,7 +115,7 @@ const DEFAULTS = {
           const decipher = crypto.createDecipheriv(CIPHER, KEY, IV);
 
           decipher.on('error', function (err) {
-            reject(new InvalidInputError('decipher failed', err));
+            reject(new InvalidInputError('DECODE_PAYLOAD failed', err));
           });
           decipher.end(plaintext, 'base64');
 
@@ -164,6 +164,10 @@ function addSupported(config) {
     .then(() => config);
 }
 
+/**
+ * Configuration class that holds various configuration fields
+ * @class
+ */
 class Config {
   constructor() {
     // setup default values
@@ -175,7 +179,7 @@ class Config {
    * Initializes config with process environment variables
    * @static
    * @param {object} env given process environment
-   * @param {} mappings TODO:
+   * @param {Array.<[string, string, function]>} environment mappings s{@link flamingo/src/util/env-config}
    * @returns {Promise.<Config>} initialized config instance
    */
   static fromEnv(env = process.env, mappings = ENV_MAPPINGS) {
