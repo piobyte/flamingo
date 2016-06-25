@@ -5,16 +5,18 @@ const validImageStream = require('../util/valid-image-stream');
 module.exports = (SuperClass) => {
   /**
    * Mixin that adds a validStream method to check that the incoming process stream is an image.
-   * @class
+   * @mixin
    */
-  return class ImageStream extends SuperClass {
+  class ImageStream extends SuperClass {
     /**
      * Validates read stream to be a valid image
      * @param {FlamingoOperation} op
      * @returns {Promise}
-       */
+     */
     validStream(op) {
       return validImageStream(op);
     }
-  };
+  }
+
+  return ImageStream;
 };

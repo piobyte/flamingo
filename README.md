@@ -7,7 +7,7 @@
 [![Build Status](https://travis-ci.org/piobyte/flamingo.png?branch=master)](https://travis-ci.org/piobyte/flamingo)
 [![Dependency Status](https://david-dm.org/piobyte/flamingo.svg)](https://david-dm.org/piobyte/flamingo)
 [![Code Climate](https://codeclimate.com/github/piobyte/flamingo.png)](https://codeclimate.com/github/piobyte/flamingo)
-[![documentation](http://inch-ci.org/github/piobyte/flamingo.svg?branch=master)](http://inch-ci.org/github/piobyte/flamingo)
+[![documentation](https://inch-ci.org/github/piobyte/flamingo.svg?branch=master)](https://inch-ci.org/github/piobyte/flamingo)
 [![npm version](https://badge.fury.io/js/flamingo.svg)](https://www.npmjs.com/package/flamingo)
 ![MIT licensed](https://img.shields.io/github/license/piobyte/flamingo.svg)
 
@@ -26,12 +26,12 @@ See the [documentation](https://piobyte.github.io/flamingo/) for detailed inform
 - minimum node `6`
 - [vips](http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS)
 - [graphicsmagick](http://www.graphicsmagick.org/) (if `NATIVE_AUTO_ORIENT` is true, version >= 1.3.18) (for webp support compile from source. See `tools/install-graphicsmagick.sh`)
-- [imagemagick](http://www.imagemagick.org/) if webp is used
+- [imagemagick](https://www.imagemagick.org/) if webp is used
 
 ## Architecture
 
 The whole application includes different readers, preprocessors, processors and writers.
-The data is mostly transferred through Node.js [streams](http://nodejs.org/api/stream.html).
+The data is mostly transferred through Node.js [streams](https://nodejs.org/api/stream.html).
 Reader modules don't resolve streams directly, because a given preprocessor could optimize reading of the input (i.e. pass filepath to ffmpeg instead of streaming the whole file first).
 
 ## API
@@ -69,7 +69,7 @@ __Change these values if you want to use this server in a production environment
 
 ## Encoding payload
 
-Modify the `DECODE_PAYLOAD` method in `config.js` to roll your own decryption (using [crypto](http://nodejs.org/api/crypto.html), see `openssl list-cipher-algorithms` for available ciphers).
+Modify the `DECODE_PAYLOAD` method in `config.js` to roll your own decryption (using [crypto](https://nodejs.org/api/crypto.html), see `openssl list-cipher-algorithms` for available ciphers).
 The default implementation uses blowfish (`BF-CBC`) to decrypt a given base64 plaintext and converts it to utf8 (`decrypt(debase64(plain))`).
 To generate an expected request you have to encrypt your initial request using `base64(blowfish(plain))`.
 

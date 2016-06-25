@@ -9,6 +9,7 @@ const Promise = require('bluebird');
 /**
  * Creates a function that calls the given reply function with a stream
  * @return {Function} Function that replies a given stream
+ * @param {FlamingoOperation} operation
  */
 module.exports = function ({reply, profile:{response}}) {
   return function (stream) {

@@ -8,7 +8,7 @@
     "typecheck": "node_modules/.bin/flow check",
     "lint": "node node_modules/eslint/bin/eslint.js index.js config.js test src targets",
     "predocs": "rm -r docs 2>/dev/null || true",
-    "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r -u tutorials -t ./node_modules/docdash -P package.json -R README.md -d docs",
+    "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r -u tutorials -t ./node_modules/minami -P package.json -R README.md -d docs",
     "pretest": "npm run lint && npm run typecheck",
     "test": "TEST=true npm run cover",
     "preversion": "npm test",
@@ -48,11 +48,11 @@
   },
   "devDependencies": {
     "benchmark": "^2.1.0",
-    "docdash": "^0.4.0",
     "eslint": "^2.13.0",
     "flow-bin": "^0.27.0",
     "istanbul": "^0.4.4",
     "jsdoc": "^3.4.0",
+    "minami": "^1.1.1",
     "mocha": "^2.4.5",
     "nock": "^8.0.0",
     "node-uuid": "^1.4.7",
@@ -60,6 +60,6 @@
   },
   "optionalDependencies": {
     "gm": "^1.22.0",
-    "memwatch-next": "github:marcominetti/node-memwatch"
+    "memwatch-next": "^0.3.0"
   }
 }

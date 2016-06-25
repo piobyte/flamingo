@@ -2,7 +2,6 @@
 
 /**
  * Flamingo route
- * @module flamingo/src/model/route
  * @class
  */
 

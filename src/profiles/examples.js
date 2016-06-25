@@ -1,4 +1,10 @@
 /* @flow weak */
+
+/**
+ * Example profiles
+ * @module flamingo/src/profiles/examples
+ */
+
 const Promise = require('bluebird');
 const sharp = require('sharp');
 const envParser = require('../util/env-parser');
@@ -19,6 +25,12 @@ function clientHintedDimension(requestHeaders, responseHeaders, width) {
 }
 
 module.exports = {
+  /**
+   * Avatar image profile
+   * @param {Request} request
+   * @param {Object} config
+   * @return {Promise.<{process: Array}>}
+     */
   'avatar-image': function (request, config) {
     // override dimension with query.width
     let dim = clamp(envParser.objectInt('width', 170)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
@@ -47,6 +59,12 @@ module.exports = {
     });
   },
 
+  /**
+   * Preview image profile
+   * @param {Request} request
+   * @param {Object} config
+   * @return {Promise.<{process: Array}>}
+     */
   'preview-image': function (request, config) {
     // override dimension with query.width
     let dim = clamp(envParser.objectInt('width', 200)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);

@@ -1,10 +1,5 @@
 'use strict';
 
-/**
- * Flamingo index route
- * @module flamingo/src/routes/index
- */
-
 const pkg = require('../../package');
 const Route = require('../model/route');
 const util = require('util');
@@ -108,6 +103,11 @@ pre{
   return `${html}</body></html>`;
 }
 
+/**
+ * Index route that exposes some metadata
+ * @class
+ * @extends Route
+ */
 class Index extends Route {
   constructor(config = {}) {
     super(config, 'GET', '/', 'Index');

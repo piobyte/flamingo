@@ -8,6 +8,10 @@ const Convert = require('./../mixins/convert');
 /**
  * Route that converts an image url, passed inside the request param, to an image
  * @class
+ * @mixes Convert
+ * @mixes ProfileOperation
+ * @mixes ImageStream
+ * @extends Route
  */
 class Image extends ImageStream(ProfileOperation(Convert(Route))) {
   constructor(conf, method = 'GET', path = '/image/{profile}/{url}', description = 'Profile image conversion') {

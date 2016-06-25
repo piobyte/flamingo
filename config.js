@@ -1,10 +1,5 @@
 'use strict';
 
-/**
- * Flamingo config module
- * @module flamingo/config
- */
-
 const supported = require('./src/util/supported');
 const {InvalidInputError} = require('./src/util/errors');
 const crypto = require('crypto');
@@ -176,10 +171,10 @@ class Config {
   }
 
   /**
-   * Initializes config with process environment variables
+   * Create and initialize a config instance process environment variables
    * @static
    * @param {object} env given process environment
-   * @param {Array.<[string, string, function]>} environment mappings s{@link flamingo/src/util/env-config}
+   * @param {Array} mappings environment mappings{@link flamingo/src/util/env-config}
    * @returns {Promise.<Config>} initialized config instance
    */
   static fromEnv(env = process.env, mappings = ENV_MAPPINGS) {

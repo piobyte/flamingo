@@ -9,7 +9,7 @@ const unfoldReaderResult = require('../util/unfold-reader-result');
 module.exports = (SuperClass/*:Route*/) => {
   /**
    * Basic mixin that represents the flamingo conversation process.
-   * @class
+   * @mixin
    */
   class Convert extends SuperClass {
     /**

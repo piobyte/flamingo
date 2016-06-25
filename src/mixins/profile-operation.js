@@ -7,6 +7,10 @@ const responseWriter = require('../writer/response');
 const {InvalidInputError} = require('../util/errors');
 
 module.exports = (SuperClass) => {
+  /**
+   * Profile operation mixin
+   * @mixin
+   */
   class ProfileOperation extends SuperClass {
     /**
      * Extract a profile for a given operation.

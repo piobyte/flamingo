@@ -1,4 +1,10 @@
 /* @flow weak */
+
+/**
+ * Video preprocessor module
+ * @module flamingo/src/preprocessor/video
+ */
+
 const ffmpeg = require('fluent-ffmpeg');
 const Promise = require('bluebird');
 const assign = require('lodash/assign');
@@ -13,6 +19,11 @@ const defaultProcessConf = {
   seekPercent: 0
 };
 
+/**
+ * Builds a function that takes a reader result and transforms it into an image stream.
+ * @param {FlamingoOperation} operation
+ * @return {Function}
+ */
 module.exports = function (operation) {
   const conf = operation.config;
   const givenProcessConf = operation.preprocessorConfig;

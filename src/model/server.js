@@ -2,7 +2,6 @@
 
 /**
  * Flamingo server
- * @module flamingo/src/model/server
  * @class
  */
 
@@ -44,7 +43,7 @@ class Server {
 
   /**
    * Add the given routes to the server instance
-   * @param routes
+   * @param {Array.<Route>} routes routes to add to the server instance
    * @returns {Server}
      */
   withRoutes(routes) {
@@ -57,7 +56,7 @@ class Server {
 
   /**
    * Add the given profiles to the server instance
-   * @param profiles
+   * @param {Array.<{}>} profiles profiles to add to the server instance
    * @returns {Server}
      */
   withProfiles(profiles) {
@@ -70,6 +69,7 @@ class Server {
 
   /**
    * Stop the server instance
+   * @return {Promise.<Server>}
    */
   stop() {
     return new Promise((resolve, reject) => {
@@ -82,6 +82,7 @@ class Server {
 
   /**
    * Starts the server instance
+   * @return {Promise.<Server>}
    */
   start() {
     return new Promise((resolve, reject) => {

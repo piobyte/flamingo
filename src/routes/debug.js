@@ -1,10 +1,5 @@
 'use strict';
 
-/**
- * Flamingo debug route
- * @module flamingo/src/routes/debug
- */
-
 const pkg = require('../../package');
 const Promise = require('bluebird');
 const fs = require('fs');
@@ -33,6 +28,11 @@ let IMAGES = images.all().map(function (image) {
 
 /*eslint new-cap: 0*/
 
+/**
+ * Debug route that exposes many internal values, should not be used in production
+ * @class
+ * @extends Route
+ */
 class Debug extends Route {
   constructor(config = {}) {
     super(config, 'GET', '/_debug', 'Debug');

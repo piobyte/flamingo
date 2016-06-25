@@ -10,7 +10,7 @@ const unfoldReaderResult = require('../../src/util/unfold-reader-result');
 const FlamingoOperation = require('../../src/model/flamingo-operation');
 const fs = require('fs');
 const path = require('path');
-const SUPPORTED_FORMATS = 'supported-files.md';
+const SUPPORTED_FORMATS = 'tutorials/supported-files.md';
 
 temp.track();
 
