@@ -17,7 +17,7 @@ module.exports = function ({reply, profile:{response}}) {
       stream.on('error', reject);
 
       // use through because hapi sometimes didn't trigger the read
-      var replyStream = reply(stream.pipe(through()));
+      const replyStream = reply(stream.pipe(through()));
 
       /* istanbul ignore else */
       if (response && response.header) {

@@ -7,7 +7,7 @@ const exampleProfiles = require('../../src/profiles/examples');
 const Server = require('../../src/model/server');
 const Config = require('../../config');
 
-var PORT = 43726; // some random unused port
+const PORT = 43726; // some random unused port
 
 function startServer(localConf) {
   return Config.fromEnv().then(config => {
@@ -29,7 +29,7 @@ function startServer(localConf) {
 
 describe('config', function () {
   it('decrypts encrypted messages', function () {
-    var PAYLOAD = 'test';
+    const PAYLOAD = 'test';
 
     return Config.fromEnv().then(conf => {
       return conf.ENCODE_PAYLOAD(PAYLOAD).then(function (cipher) {
@@ -41,7 +41,7 @@ describe('config', function () {
   });
 
   it('has no index (fingerprinting) route by default', function () {
-    var server;
+    let server;
     return startServer({
       ROUTES: {INDEX: false}
     }).then(function (s) {

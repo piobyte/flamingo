@@ -27,7 +27,7 @@ if (require('optional')('gm') !== null) {
  * // converted image stream
  */
 module.exports = function (operation/*: FlamingoOperation */)/*: function */ {
-  var transformations = operation.profile.process;
+  const transformations = operation.profile.process;
 
   return function (stream) {
 

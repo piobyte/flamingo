@@ -30,7 +30,7 @@ module.exports = function (operation) {
   const processConf = assign({}, defaultProcessConf, givenProcessConf);
 
   return function (readerResult) {
-    var ffmpegOptions = {};
+    const ffmpegOptions = {};
 
     /* istanbul ignore else */
     if (conf.PREPROCESSOR.VIDEO.KILL_TIMEOUT) {
@@ -49,7 +49,7 @@ module.exports = function (operation) {
               throw new InvalidInputError('Input format is undetectable by ffprobe');
             }
 
-            var duration = isFinite(meta.format.duration) ? meta.format.duration : 0;
+            const duration = isFinite(meta.format.duration) ? meta.format.duration : 0;
 
             // seek to time and save 1 frame
             resolve(ffmpeg(input, ffmpegOptions)
@@ -75,10 +75,11 @@ module.exports = function (operation) {
     }
 
     switch (readerResult.type) {
-      case FILE:
+      case FILE: {
         return videoProcessor(readerResult.path);
-      case REMOTE:
-        var promise;
+      }
+      case REMOTE: {
+        let promise;
         if (conf.ALLOW_READ_REDIRECT) {
           promise = videoProcessor(readerResult.url.href);
         } else {
@@ -93,10 +94,11 @@ module.exports = function (operation) {
           }).catch(err => new InvalidInputError('Error while doing a HEAD request to check for redirects', err));
         }
         return promise;
-      default:
-        return readerResult.stream().then(function (stream) {
-          return videoProcessor(stream);
-        });
+      }
+      default: {
+        return readerResult.stream()
+          .then((stream) => videoProcessor(stream));
+      }
     }
   };
 };

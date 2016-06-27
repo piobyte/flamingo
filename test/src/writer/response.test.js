@@ -6,7 +6,7 @@ const responseWriter = require('../../../src/writer/response');
 const FlamingoOperation = require('../../../src/model/flamingo-operation');
 
 describe('response writer', function () {
-  it('passes the stream to the reply function', function (done) {
+  it('passes the stream to the reply function', function () {
 
     const op = new FlamingoOperation();
     const stream = fs.createReadStream(path.join(__dirname, '../../fixtures/images/base64.png'));
@@ -16,8 +16,6 @@ describe('response writer', function () {
       return stream.pipe(replyStream);
     };
 
-    responseWriter(op)(stream).then(function () {
-      done();
-    }).catch(done);
+    return responseWriter(op)(stream);
   });
 });

@@ -40,9 +40,10 @@ targets
 tutorials
 tools
 docs
-flow
 .dockerignore
 .eslintrc.js
 .flowconfig
 .travis.yml
+.istanbul.yml
+.editorconfig
 Dockerfile

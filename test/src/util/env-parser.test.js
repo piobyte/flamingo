@@ -1,7 +1,7 @@
-var assert = require('assert');
+const assert = require('assert');
 
 // @via https://github.com/substack/node-buffer-equal#
-var compareFunction = function (bufA, bufB) {
+const compareFunction = function (bufA, bufB) {
   /*eslint curly:0,no-else-return:0 */
   if (!bufA.compare) {
     if (!Buffer.isBuffer(bufA)) return undefined;
@@ -9,7 +9,7 @@ var compareFunction = function (bufA, bufB) {
     if (typeof bufA.equals === 'function') return bufA.equals(bufB);
     if (bufA.length !== bufB.length) return false;
 
-    for (var i = 0; i < bufA.length; i++) {
+    for (let i = 0; i < bufA.length; i++) {
       if (bufA[i] !== bufB[i]) return false;
     }
 
@@ -20,10 +20,10 @@ var compareFunction = function (bufA, bufB) {
 };
 
 describe('env-parser', function () {
-  var envParser = require('../../../src/util/env-parser');
+  const envParser = require('../../../src/util/env-parser');
 
   describe('#objectInt()', function(){
-    var objectInt = envParser.objectInt;
+    const objectInt = envParser.objectInt;
     it('converts an object field to an integer number', function(){
       assert.equal(objectInt('width', 200)({width: 100}), 100);
     });
@@ -36,7 +36,7 @@ describe('env-parser', function () {
   });
 
   describe('#buffer64()', function(){
-    var buffer = envParser.buffer64;
+    const buffer = envParser.buffer64;
     it('wraps the input in a base64 buffer', function(){
       assert.ok(compareFunction(new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64'),
         buffer('DjiZ7AWTeNh38zoQiZ76gw==')));
@@ -44,7 +44,7 @@ describe('env-parser', function () {
   });
 
   describe('#buffer()', function(){
-    var buffer = envParser.buffer;
+    const buffer = envParser.buffer;
     it('wraps the input in a buffer', function(){
       assert.ok(compareFunction(new Buffer('wasd'),
         buffer('wasd')));
@@ -52,7 +52,7 @@ describe('env-parser', function () {
   });
 
   describe('#int()', function(){
-    var int = envParser.int;
+    const int = envParser.int;
     it('converts a boolean string to an integer number', function(){
       assert.equal(int(42)('9000'), 9000);
       assert.equal(int(42)('0'), 0);
@@ -67,7 +67,7 @@ describe('env-parser', function () {
   });
 
   describe('#boolean()', function(){
-    var boolean = envParser.boolean;
+    const boolean = envParser.boolean;
     it('converts a boolean string to a boolean', function(){
       assert.equal(boolean('true'), true);
       assert.equal(boolean('false'), false);
@@ -82,7 +82,7 @@ describe('env-parser', function () {
   });
 
   describe('#float()', function(){
-    var float = envParser.float;
+    const float = envParser.float;
     it('converts a float string to a float number', function(){
       assert.equal(float(0)('3.14'), 3.14);
       assert.equal(float(0)('0.33'), 0.33);

@@ -2,7 +2,7 @@ const assert = require('assert');
 const url = require('url');
 
 describe('read access allowed', function () {
-  var readAllowed = require('../../../src/util/url-access-allowed');
+  const readAllowed = require('../../../src/util/url-access-allowed');
 
   it('disallows all urls for an empty whitelist', function () {
     assert.ok(!readAllowed(url.parse('gopher://foobar:11211/1stats%0aquit'), []));
@@ -20,7 +20,7 @@ describe('read access allowed', function () {
   });
 
   it('supports complex whitelists', function () {
-    var COMPLEX_WHITELIST = [{
+    const COMPLEX_WHITELIST = [{
       protocol: 'ssh2.exec:',
       auth: 'user:pass',
       port: '22',

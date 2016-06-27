@@ -4,14 +4,10 @@ const FlamingoOperation = require('../../../../src/model/flamingo-operation');
 const fs = require('fs');
 
 describe('gm processor', function () {
-  before(function () {
-    temp.track();
-  });
-  after(function (done) {
-    temp.cleanup(done);
-  });
+  before(() => temp.track());
+  after((done) => temp.cleanup(done));
 
-  var gmProcessor = require('../../../../src/processor/image/gm');
+  const gmProcessor = require('../../../../src/processor/image/gm');
 
   it('should work without throwing an error', function () {
     const stream = fs.createReadStream('../../../fixtures/images/base64.png');

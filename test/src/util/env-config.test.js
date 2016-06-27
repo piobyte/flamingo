@@ -1,4 +1,4 @@
-var assert = require('assert');
+const assert = require('assert');
 
 describe('env-parser', function () {
   const envConfig = require('../../../src/util/env-config');

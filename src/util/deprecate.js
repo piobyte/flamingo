@@ -4,7 +4,7 @@
  * @module flamingo/src/util/deprecate
  */
 
-var logger = require('../logger').build('deprecate');
+const logger = require('../logger').build('deprecate');
 
 /**
  * Function to deprecate usage of a given function. It follows the same method signature as io.js/node.js util.deprecate.

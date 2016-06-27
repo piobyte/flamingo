@@ -58,11 +58,11 @@ allFixtures.forEach(function (data) {
 
 processors.forEach(function (processor) {
   results[processor.name] = {};
-  var result = results[processor.name];
+  const result = results[processor.name];
 
   allFixtures.forEach(function (data) {
     promise = promise.then(function () {
-      var op = new FlamingoOperation();
+      const op = new FlamingoOperation();
       op.config = {
         ACCESS: {HTTPS: {ENABLED: false}},
         ALLOW_READ_REDIRECT: false,
@@ -100,7 +100,7 @@ promise.catch(function (e) {
 
   out.push(firstRow.join('|'));
   out.push(firstRow.reduce(function (all, title, i) {
-    var line = title.replace(/./g, '-');
+    let line = title.replace(/./g, '-');
     if (i > 0) {
       line = ':' + line + ':';
     }
@@ -108,7 +108,7 @@ promise.catch(function (e) {
   }, []).join('|'));
 
   Object.keys(results[processors[0].name]).forEach(function (inputName) {
-    var data = [inputName];
+    const data = [inputName];
     Object.keys(results).forEach(function (resultName) {
       data.push(results[resultName][inputName] ? symbols.ok : symbols.err);
     });

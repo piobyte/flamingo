@@ -128,7 +128,7 @@ class AddonLoader {
     assert(this._loaded, 'addons have to be loaded before calling any hooks');
     assert(this._callbacks[hookName], 'no registered callback for ' + hookName);
 
-    var hookFunction = noop;
+    let hookFunction = noop;
 
     if (this._hooks[hookName]) {
       hookFunction = (...args) => {

@@ -30,7 +30,7 @@ module.exports = function ({input, reply, config}/*: FlamingoOperation */) {
           reject(err);
         } else {
           stream.on('error', reject);
-          var writeStream = stream.pipe(fs.createWriteStream(outputPath), {
+          const writeStream = stream.pipe(fs.createWriteStream(outputPath), {
             end: true
           });
           writeStream.on('error', reject);

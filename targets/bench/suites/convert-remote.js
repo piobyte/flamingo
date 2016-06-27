@@ -23,12 +23,12 @@ module.exports = function (suiteConfig) {
       fs.createReadStream(filePath).pipe(res, {end: true});
     });
 
-    var convertRemote = function (profileName) {
+    const convertRemote = function (profileName) {
       return new Promise(function (resolve) {
         new Benchmark.Suite(description).add('GM', {
           defer: true,
           fn: function (deferred) {
-            var op = new FlamingoOperation();
+            const op = new FlamingoOperation();
             op.input = url.parse(HOST);
             op.config = {
               ACCESS: {HTTPS: {ENABLED: false}},
@@ -61,7 +61,7 @@ module.exports = function (suiteConfig) {
                     error = err;
                     wstream.end();
                   });
-                  var processorStream = suiteConfig.imageProcessors(op)(rstream);
+                  const processorStream = suiteConfig.imageProcessors(op)(rstream);
                   processorStream.on('error', function (err) {
                     error = err;
                     wstream.end();
@@ -75,7 +75,7 @@ module.exports = function (suiteConfig) {
         }).add('VIPS', {
           defer: true,
           fn: function (deferred) {
-            var op = new FlamingoOperation();
+            const op = new FlamingoOperation();
             op.input = url.parse(HOST);
             op.config = {
               ACCESS: {HTTPS: {ENABLED: false}},
@@ -107,7 +107,7 @@ module.exports = function (suiteConfig) {
                     error = err;
                     wstream.end();
                   });
-                  var processorStream = suiteConfig.imageProcessors(op)(rstream);
+                  const processorStream = suiteConfig.imageProcessors(op)(rstream);
                   processorStream.on('error', function (err) {
                     error = err;
                     wstream.end();

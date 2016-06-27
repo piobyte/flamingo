@@ -26,7 +26,7 @@ describe('https? reader', function () {
       .get('/ok')
       .reply(200, {status: 'OK'});
 
-    var op = new FlamingoOperation();
+    const op = new FlamingoOperation();
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: EXAMPLE_ACCESS
     });
@@ -51,76 +51,66 @@ describe('https? reader', function () {
     });
   });
 
-  it('rejects for statusCode >= 400', function (done) {
+  it('rejects for statusCode >= 400', function () {
     nock('http://example.org/')
       .get('/bad')
       .reply(400, {status: 'Bad Request'});
 
-    var op = new FlamingoOperation();
+    const op = new FlamingoOperation();
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: EXAMPLE_ACCESS
     });
     op.input = url.parse('http://example.org/bad');
 
-    httpReader(op).then(function (data) {
+    return httpReader(op).then(function (data) {
       assert.ok(!!data.stream);
-      data.stream().then(function () {
-        done('shouldn\'t resolve this request.');
-      }, function () {
-        assert.ok(true);
-        done();
-      });
+      return data.stream().then(
+        () => assert.ok(false, 'shouldn\'t resolve this request.'),
+        () => assert.ok(true));
     });
   });
 
-  it('sets the url for error requests', function (done) {
+  it('sets the url for error requests', function () {
     nock('http://example.org/')
       .get('/bad')
       .reply(400, {status: 'Bad Request'});
 
-    var op = new FlamingoOperation();
+    const op = new FlamingoOperation();
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: {HTTPS: {ENABLED: false}}
     });
     op.input = url.parse('http://example.org/bad');
 
-    httpReader(op).then(function (data) {
+    return httpReader(op).then(function (data) {
       assert.ok(!!data.stream);
-      data.stream().then(function () {
-        done('shouldn\'t resolve this request.');
-      }, function (reason) {
-        assert.equal(reason.extra, 'http://example.org/bad');
-        done();
-      });
+      return data.stream().then(
+        () => assert.ok(false, 'shouldn\'t resolve this request.'),
+        (reason) => assert.equal(reason.extra, 'http://example.org/bad'));
     });
   });
 
-  it('rejects not whitelisted url if access filter is enabled', function (done) {
+  it('rejects not whitelisted url if access filter is enabled', function () {
     nock.disableNetConnect();
 
-    var op = new FlamingoOperation();
+    const op = new FlamingoOperation();
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: {HTTPS: {ENABLED: true, READ: []}}
     });
     op.input = url.parse('http://example.org/bad');
 
-    httpReader(op).then(function () {
-      done('shouldn\'t resolve this request.');
-    }, function () {
-      done();
-    });
+    return httpReader(op).then(
+      () => assert.ok(false, 'shouldn\'t resolve this request.'),
+      () => assert.ok(true));
   });
-  it('resolves not whitelisted url if access filter is disabled', function (done) {
+  it('resolves not whitelisted url if access filter is disabled', function () {
     nock.disableNetConnect();
 
-    var op = new FlamingoOperation();
+    const op = new FlamingoOperation();
     op.config = merge({}, DEFAULT_CONF, {
       ACCESS: {HTTPS: {ENABLED: false, READ: []}}
     });
     op.input = url.parse('http://example.org/');
 
-    httpReader(op).then(function () {
-      done();
-    });
+    return httpReader(op);
   });
 });

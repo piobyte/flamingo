@@ -10,8 +10,8 @@ const exampleProfiles = require('../../../src/profiles/examples');
 const Server = require('../../../src/model/server');
 const Config = require('../../../config');
 
-var PORT = 43723; // some random unused port
-var encode = function (plain) {
+const PORT = 43723; // some random unused port
+const encode = function (plain) {
   return encodeURIComponent(new Buffer(plain).toString('base64'));
 };
 

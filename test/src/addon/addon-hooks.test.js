@@ -21,7 +21,7 @@ describe('hook', function () {
     });
   });
   it('should do nothing if an registered hook is called without addons using it', function () {
-    var spy = sinon.spy();
+    const spy = sinon.spy();
     const l = loader();
 
     l.callback('WASD', spy);
@@ -32,7 +32,7 @@ describe('hook', function () {
 
   describe('CONF', function () {
     it('should merge all addon configs into the initial config', function () {
-      var conf = {FOO: 'bar'};
+      const conf = {FOO: 'bar'};
 
       loader().hook(addon.HOOKS.CONF)(conf);
 
@@ -42,7 +42,7 @@ describe('hook', function () {
       });
     });
     it('shouldn\'t overwrite initial config fields', function () {
-      var conf = {TEST_CONF: {ENABLED: false}};
+      const conf = {TEST_CONF: {ENABLED: false}};
 
       loader().hook(addon.HOOKS.CONF)(conf);
 
@@ -72,7 +72,7 @@ describe('hook', function () {
 
   describe('ROUTES', function () {
     it('should call the server.route method', function () {
-      var server = {route: sinon.spy()};
+      const server = {route: sinon.spy()};
 
       loader().hook(addon.HOOKS.ROUTES)(server);
 
@@ -83,7 +83,7 @@ describe('hook', function () {
 
   describe('HAPI_PLUGINS', function () {
     it('should push plugins in the given plugins array', function () {
-      var plugins = [];
+      const plugins = [];
 
       loader().hook(addon.HOOKS.HAPI_PLUGINS)(plugins);
 
@@ -93,7 +93,7 @@ describe('hook', function () {
 
   describe('PROFILES', function () {
     it('should merge addon profiles in existing profile object', function () {
-      var profiles = {
+      const profiles = {
         addonProfile: true
       };
 
@@ -105,7 +105,7 @@ describe('hook', function () {
 
   describe('LOG_STREAM', function () {
     it('call the addStreams method of the logger', function () {
-      var logger = {addStreams: sinon.spy()};
+      const logger = {addStreams: sinon.spy()};
 
       loader().hook(addon.HOOKS.LOG_STREAM)(logger);
 

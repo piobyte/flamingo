@@ -1,14 +1,15 @@
 const temp = require('temp');
-const fs = require('fs');
+const Promise = require('bluebird');
+const readFile = Promise.promisify(require('fs').readFile);
 const assert = require('assert');
 const assign = require('lodash/assign');
 const url = require('url');
 const FlamingoOperation = require('../../src/model/flamingo-operation');
 
 describe('logger', function () {
-  var logger = require('../../src/logger');
+  const logger = require('../../src/logger');
 
-  it('checks that the method calls the stream function', function (done) {
+  it('checks that the method calls the stream function', function () {
     const tempPath = temp.path({suffix: '.log'});
     const loggerName = 'test:logger.addStreams';
     const LOG_MESSAGE = 'Time is an illusion. Lunchtime doubly so.';
@@ -22,15 +23,8 @@ describe('logger', function () {
     log = logger.build(loggerName);
     log.fatal(LOG_MESSAGE);
 
-    fs.readFile(tempPath, function (err, data) {
-      if (err) {
-        done(err);
-      }
-
-      var logData = JSON.parse(data.toString('utf8'));
-      assert.equal(logData.msg, LOG_MESSAGE);
-      done();
-    });
+    return readFile(tempPath)
+      .then((data) => assert.equal(JSON.parse(data.toString('utf8')).msg, LOG_MESSAGE));
   });
 
   it('serializes request log objects', function () {
@@ -53,7 +47,7 @@ describe('logger', function () {
 
   it('serializes request error objects', function () {
     /* eslint no-underscore-dangle: 0 */
-    var err;
+    let err;
     try {
       JSON.parse('foo');
     } catch (e) {

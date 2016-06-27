@@ -1,8 +1,8 @@
-var http = require('http');
+const http = require('http');
 const Promise = require('bluebird');
 
 module.exports = function simpleHttpServer(host, port, callback) {
-  var httpServer = http.createServer(function (req, res) {
+  const httpServer = http.createServer(function (req, res) {
     callback(req, res);
   });
   httpServer.timeout = 4 * 1000;

@@ -10,7 +10,7 @@ function parseRanges(ranges/*:string*/) {
   const parsedRanges = [];
   const rangeParts = ranges.split(',');
 
-  for (var i = 0; i < rangeParts.length; i++) {
+  for (let i = 0; i < rangeParts.length; i++) {
     parsedRanges.push(mimeparse.parseMediaRange(rangeParts[i]));
   }
 

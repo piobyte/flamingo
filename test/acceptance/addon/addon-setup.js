@@ -1,4 +1,4 @@
-var assert = require('assert');
+const assert = require('assert');
 const Loader = require('../../../src/addon/loader');
 const path = require('path');
 

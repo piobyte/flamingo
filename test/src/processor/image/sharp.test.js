@@ -3,12 +3,8 @@ const temp = require('temp');
 const fs = require('fs');
 
 describe('sharp processor', function () {
-  before(function () {
-    temp.track();
-  });
-  after(function (done) {
-    temp.cleanup(done);
-  });
+  before(() => temp.track());
+  after((done) => temp.cleanup(done));
 
   const sharpProcessor = require('../../../../src/processor/image/sharp');
   const FlamingoOperation = require('../../../../src/model/flamingo-operation');

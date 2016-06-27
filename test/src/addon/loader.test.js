@@ -10,7 +10,7 @@ function loader() {
 describe('loader', function () {
 
   it('returns undefined for package without main field or index.js', function () {
-    var testAddon = {
+    const testAddon = {
       path: path.join(__dirname, '../../fixtures/test-addon'),
       pkg: {}
     };
@@ -19,7 +19,7 @@ describe('loader', function () {
   });
 
   it('loads the file that is defined in the main field', function () {
-    var testAddon = {
+    const testAddon = {
       path: path.join(__dirname, '../../fixtures/test-addon'),
       pkg: {main: 'not-index.js'}
     };
@@ -43,13 +43,13 @@ describe('loader', function () {
   });
 
   it('should load the addon package.json', function () {
-    var addon = loader().fromPackage(path.join(__dirname, '../../fixtures/node_modules/test-addon-0/'));
+    const addon = loader().fromPackage(path.join(__dirname, '../../fixtures/node_modules/test-addon-0/'));
 
     assert.equal(addon.pkg.name, 'test-addon-0');
   });
 
   it('should ignore non flamingo addons', function () {
-    var addon = loader().fromPackage(path.join(__dirname, '../../fixtures/node_modules/other-module/'));
+    const addon = loader().fromPackage(path.join(__dirname, '../../fixtures/node_modules/other-module/'));
 
     assert.deepEqual(addon, undefined);
   });

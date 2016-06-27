@@ -4,17 +4,13 @@ const path = require('path');
 const {FILE} = require('../../../../src/model/reader-type');
 
 describe('video preprocessor', function () {
-  before(function () {
-    temp.track();
-  });
-  after(function (done) {
-    temp.cleanup(done);
-  });
+  before(() => temp.track());
+  after((done) => temp.cleanup(done));
 
   const videoProcessor = require('../../../../src/preprocessor/video/index');
   const FlamingoOperation = require('../../../../src/model/flamingo-operation');
 
-  it('should work without throwing an error', function (done) {
+  it('should work without throwing an error', function () {
     const op = new FlamingoOperation();
     const VIDEO_FILE = path.join(__dirname, '../../../fixtures/videos/trailer_1080p.ogg');
     const readResult = {
@@ -36,10 +32,8 @@ describe('video preprocessor', function () {
       }
     };
 
-    var process = videoProcessor(op);
-    process(readResult).then(function (stream) {
+    return videoProcessor(op)(readResult).then(function (stream) {
       assert.equal(typeof stream.pipe, 'function');
-      done();
-    }).catch(done);
+    });
   });
 });

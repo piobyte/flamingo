@@ -1,4 +1,4 @@
-var util = require('util');
+const util = require('util');
 
 function InvalidInputError(message, extra) {
   Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);

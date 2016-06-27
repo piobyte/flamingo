@@ -1,7 +1,7 @@
-var assert = require('assert');
+const assert = require('assert');
 
 describe('file access allowed', function () {
-  var fileAccessAllowed = require('../../../src/util/file-access-allowed');
+  const fileAccessAllowed = require('../../../src/util/file-access-allowed');
 
   it('allows whitelisted directories', function () {
     assert.ok(fileAccessAllowed('/my/allowed/path.png', ['/my/allowed']));

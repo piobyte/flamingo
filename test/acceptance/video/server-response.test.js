@@ -14,8 +14,8 @@ const Config = require('../../../config');
 
 const exampleProfiles = require('../../../src/profiles/examples');
 
-var PORT = 43723; // some random unused port
-var encode = function (plain) {
+const PORT = 43723; // some random unused port
+const encode = function (plain) {
   return encodeURIComponent(new Buffer(plain).toString('base64'));
 };
 
@@ -50,7 +50,7 @@ describe('video converting server response', function () {
     const HOST = 'localhost';
     const SERVER_PORT = PORT + 1;
     const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
-      var code = parseInt(req.url.replace(/\//g, ''), 10);
+      const code = parseInt(req.url.replace(/\//g, ''), 10);
       res.writeHead(code, {});
       res.end();
     });
@@ -124,7 +124,7 @@ describe('video converting server response', function () {
     const FILE_PATH = path.join(__dirname, '../../fixtures/videos/trailer_1080p.ogg');
 
     const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
-      var urlPath = req.url.replace(/\//g, '');
+      const urlPath = req.url.replace(/\//g, '');
       if (urlPath === 'moved.png') {
         res.writeHead(301, {
           'Location': 'http://' + HOST + ':' + SERVER_PORT + '/movie.ogg'

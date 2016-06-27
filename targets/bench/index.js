@@ -98,9 +98,9 @@ FILES.forEach(function (file) {
   benchPromise = runSuite(benchPromise, file.desc, file.path);
 });
 benchPromise.then(function () {
-  var benchmarkResult = {
+  const benchmarkResult = {
     benchmark: {
-      id: id,
+      id,
       v: pkg.version,
       t: new Date().toISOString(),
       deps: pkg.dependencies,

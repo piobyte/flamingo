@@ -15,7 +15,7 @@ const MIN_IMAGE_SIZE = 10;
 const MAX_IMAGE_SIZE = 1024;
 
 function clientHintedDimension(requestHeaders, responseHeaders, width) {
-  var dpr = clamp(envParser.float(1)(requestHeaders.dpr), 1, 10);
+  const dpr = clamp(envParser.float(1)(requestHeaders.dpr), 1, 10);
 
   responseHeaders['Content-DPR'] = dpr;
   responseHeaders['Vary'] = requestHeaders.hasOwnProperty('width') ? 'Width' : 'DPR';

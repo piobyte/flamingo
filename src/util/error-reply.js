@@ -14,7 +14,7 @@ const {InvalidInputError, ProcessingError} = require('../util/errors');
  * @param {Error} error
  */
 module.exports = function (operation/*: function */, error/*: Error */) {
-  var isClientError =
+  const isClientError =
     error instanceof InvalidInputError ||
     error instanceof ProcessingError ||
     typeof error === 'string';

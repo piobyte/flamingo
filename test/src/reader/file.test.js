@@ -9,11 +9,11 @@ const fileReader = require('../../../src/reader/file');
 const FlamingoOperation = require('../../../src/model/flamingo-operation');
 const assert = require('assert');
 
-var compareFileFixtures = function (fixturePath) {
+const compareFileFixtures = function (fixturePath) {
   return new Promise(function (resolve, reject) {
-    var TEST_WHITELIST = {FILE: {READ: ['/tmp', path.resolve(__dirname, '../../')]}};
+    const TEST_WHITELIST = {FILE: {READ: ['/tmp', path.resolve(__dirname, '../../')]}};
 
-    var op = new FlamingoOperation();
+    const op = new FlamingoOperation();
     op.input = url.parse('file://' + fixture.fullFixturePath(fixturePath));
     op.config = {
       ACCESS: TEST_WHITELIST
@@ -49,47 +49,27 @@ var compareFileFixtures = function (fixturePath) {
 };
 
 describe('file reader', function () {
-  it('tests if streamed png file equals expected output', function (done) {
-    compareFileFixtures('images/base64.png').then(function (equal) {
-      if (equal) {
-        done();
-      } else {
-        done('Not equal');
-      }
-    }).catch(function (err) {
-      done(new Error(JSON.stringify(err)));
-    });
+  it('tests if streamed png file equals expected output', function () {
+    return compareFileFixtures('images/base64.png');
   });
-  it('tests if streamed gif file equals expected output', function (done) {
-    compareFileFixtures('images/base64.gif').then(function (equal) {
-      if (equal) {
-        done();
-      } else {
-        done('Not equal');
-      }
-    }).catch(function (err) {
-      done(new Error(JSON.stringify(err)));
-    });
+  it('tests if streamed gif file equals expected output', function () {
+    return compareFileFixtures('images/base64.gif');
   });
-  it('tests if streamed markdown file is rejected', function (done) {
-    compareFileFixtures('docs/some-file.md').then(function () {
-      assert.fail('shouldn\'t reached this code');
-    }).catch(function () {
-      done();
-    });
+  it('tests if streamed markdown file is rejected', function () {
+    compareFileFixtures('docs/some-file.md')
+      .then(() => assert.fail('shouldn\'t reached this code'))
+      .catch(() => assert.ok(true));
   });
-  it('tests if the reader rejects if file doesn\'t exist', function (done) {
-    var op = new FlamingoOperation();
+  it('tests if the reader rejects if file doesn\'t exist', function () {
+    const op = new FlamingoOperation();
 
     op.input = url.parse('file://' + fixture.fullFixturePath('NON-EXISTANT-FILE'));
     op.config = {
       ACCESS: {FILE: {READ: [path.resolve(__dirname, '../../')]}}
     };
 
-    fileReader(op).then(function () {
-      assert.fail('shouldn\'t reached this code');
-    }).catch(function () {
-      done();
-    });
+    return fileReader(op)
+      .then(() => assert.fail('shouldn\'t reached this code'))
+      .catch(() => assert.ok(true));
   });
 });

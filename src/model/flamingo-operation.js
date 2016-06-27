@@ -1,6 +1,6 @@
 'use strict';
 
-var noop = require('lodash/noop');
+const noop = require('lodash/noop');
 
 /**
  * Base operation class that is intented to be created for each request and holds request metadata.

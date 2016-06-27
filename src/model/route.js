@@ -5,7 +5,7 @@
  * @class
  */
 
-var FlamingoOperation = require('./flamingo-operation');
+const FlamingoOperation = require('./flamingo-operation');
 
 /**
  * Route class is the basic class every route should extend.

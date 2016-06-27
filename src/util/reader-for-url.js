@@ -3,7 +3,7 @@
  * @module flamingo/src/util/reader-for-url
  */
 
-var reader = {
+const reader = {
   file: require('../reader/file'),
   data: require('../reader/data'),
   http: require('../reader/https'),
@@ -18,7 +18,7 @@ var reader = {
  * readerForUrl('data:text/plain;base64,ZGF0YQ==') // data reader
  */
 module.exports = function (parsedUrl/*: {protocol: ?string} */)/*: ?function */ {
-  var foundReader;
+  let foundReader;
 
   /* istanbul ignore else */
   if (typeof parsedUrl.protocol === 'string') {

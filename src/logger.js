@@ -47,7 +47,7 @@ const serializers = {
       _serializerError('request', request);
   },
   error: function (error) {
-    var type = typeof error;
+    const type = typeof error;
 
     switch (type) {
       case 'object':

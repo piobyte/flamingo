@@ -25,7 +25,7 @@ module.exports = {
    */
   int: function (def/*: number*/)/*: function */ {
     return function (val/*: any*/)/*: number*/ {
-      var parsed = parseInt(val, 10);
+      let parsed = parseInt(val, 10);
       if (isNaN(parsed)) {
         parsed = def;
       }
@@ -43,7 +43,7 @@ module.exports = {
    */
   float: function(def/*: number */)/*: function */{
     return function (val/*: any */)/*: number */{
-      var parsed = parseFloat(val, 10);
+      let parsed = parseFloat(val, 10);
       if (isNaN(parsed)) {
         parsed = def;
       }

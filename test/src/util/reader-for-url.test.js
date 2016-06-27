@@ -26,7 +26,7 @@ const GOPHER_URL_1 = url.parse('gopher://localhost:10050/1vfs.file.regexp[/etc/h
 const GOPHER_URL_2 = url.parse('gopher://localhost:8001/1POST%20%2fHTTP%2f1.1%0d%0aHost:localhost%0d%0aContent-Length:5%0d%0a%0d%0a');
 
 describe('reader-for-url', function () {
-  var readerForUrl = require('../../../src/util/reader-for-url');
+  const readerForUrl = require('../../../src/util/reader-for-url');
 
   it('checks for unknown readers', function () {
     assert.strictEqual(readerForUrl(url.parse(DICT_URL_0)), undefined);
