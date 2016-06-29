@@ -10,7 +10,9 @@ fi
 
 COMMIT_MSG="Deployed to Github Pages"
 DOCS_DIR="docs"
+GH_REPO="piobyte/flamingo.git"
 
+NAME=$(jq -r .name package.json)
 VERSION=$(jq -r .version package.json)
 BRANCH_NAME=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 
@@ -21,14 +23,14 @@ BRANCH_NAME=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 
   npm run formats
   npm run docs
-  mv ${DOCS_DIR}/flamingo/${VERSION}/* ${DOCS_DIR}
-  rm -rf "docs/flamingo"
+  mv ${DOCS_DIR}/${NAME}/${VERSION}/* ${DOCS_DIR}
+  rm -rf "docs/${NAME}"
 
   ( cd ${DOCS_DIR}
    git init
    git add .
    git commit -m "${COMMIT_MSG}"
-   git push --force "git@github.com:piobyte/flamingo.git" master:gh-pages
+   git push --force "git@github.com:${GH_REPO}" master:gh-pages
   )
 
   rm -rf ${DOCS_DIR}
