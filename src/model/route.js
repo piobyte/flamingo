@@ -13,6 +13,13 @@ const FlamingoOperation = require('./flamingo-operation');
  * which is passed through the route and used to store metadata.
  */
 class Route {
+  /**
+   *
+   * @param {Config} config
+   * @param {string} method the routes http method
+   * @param {string} path the routes url path
+   * @param {string} [description=''] route description
+     */
   constructor(config, method, path, description = '') {
     this.path = path;
     this.method = method;

@@ -8,125 +8,209 @@ const envParser = require('./src/util/env-parser');
 const envConfig = require('./src/util/env-config');
 const pkg = require('./package');
 
-const DEFAULTS = {
-  PORT: 3000,
-  DEBUG: false,
-  DEFAULT_MIME: 'image/png',
-  NATIVE_AUTO_ORIENT: true,
-  ALLOW_READ_REDIRECT: false,
-  CLIENT_HINTS: false,
-  VERSION: pkg.version,
-  CRYPTO: {
-    ENABLED: true,
-    KEY: new Buffer('DjiZ7AWTeNh38zoQiZ76gw::', 'base64'),
-    IV: new Buffer('_ag3WU77'),
-    HMAC_KEY: 'NLoTxj5d2ts2z5xPREtGUJZC9tCCQFAX',
-    CIPHER: 'BF-CBC' /* Blowfish */
-    // pbkdf2 values to generate the above KEY, IV, CIPHER
-    //SECRET: 'XwckHV-3cySkr96QbqhHb2GvianU3ggU',
-    //SALT: 'URAdgv-D',
-    //ITERATIONS: 2048,
-    //KEYLEN: 16,
-  },
-  PREPROCESSOR: {
-    VIDEO: {
-      KILL_TIMEOUT: 2 * 60 * 1000
-    }
-  },
-  ACCESS: {
-    FILE: {
-      READ: [],
-      WRITE: []
-    },
-    HTTPS: {
-      ENABLED: false,
-      READ: [],
-      WRITE: []
-    }
-  },
-  ROUTES: {
-    INDEX: true,
-    PROFILE_CONVERT_IMAGE: true,
-    PROFILE_CONVERT_VIDEO: true
-  },
-  SUPPORTED: {
-    FFMPEG: true,
-    GM: {
-      WEBP: false
-    }
-  },
-  READER: {
-    REQUEST: {
-      // http/https request timeout
-      TIMEOUT: 10 * 1000
-    }
-  },
-  ENCODE_PAYLOAD: /* istanbul ignore next */ function (plaintext) {
-    const ENABLED = this.CRYPTO.ENABLED;
-    const CIPHER = this.CRYPTO.CIPHER;
-    const KEY = this.CRYPTO.KEY;
-    const IV = this.CRYPTO.IV;
+/**
+ * Default {@link Config} values
+ */
+const DEFAULTS = {};
 
-    return !ENABLED ?
-      Promise.resolve(new Buffer(plaintext).toString('base64')) :
-      new Promise(function (resolve, reject) {
-        //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
-        //    if (err) { reject(err); return; }
-        try {
-          let read;
-          const cipher = crypto.createCipheriv(CIPHER, KEY, IV);
+/**
+ *
+ * @type {number}
+ * @default 3000
+ */
+DEFAULTS.PORT = 3000;
 
-          cipher.on('error', function (err) {
-            reject(new InvalidInputError('ENCODE_PAYLOAD failed', err));
-          });
-          cipher.end(plaintext, 'utf8');
+/**
+ * @type {boolean}
+ * @default false
+ */
+DEFAULTS.DEBUG = false;
 
-          read = cipher.read();
+/**
+ * @default 'image/png'
+ * @type {string}
+ */
+DEFAULTS.DEFAULT_MIME = 'image/png';
 
-          if (read !== null) {
-            resolve(read.toString('base64'));
-          } else {
-            reject('Cant\'t encode given plaintext');
-          }
-        } catch (err) {
-          reject(err);
-        }
-        //});
-      });
-  },
-  DECODE_PAYLOAD: /* istanbul ignore next */ function (plaintext) {
-    const ENABLED = this.CRYPTO.ENABLED;
-    const CIPHER = this.CRYPTO.CIPHER;
-    const KEY = this.CRYPTO.KEY;
-    const IV = this.CRYPTO.IV;
+/**
+ * @default true
+ * @type {boolean}
+ */
+DEFAULTS.NATIVE_AUTO_ORIENT = true;
 
-    return !ENABLED ?
-      Promise.resolve(new Buffer(plaintext, 'base64').toString('utf8')) :
-      new Promise(function (resolve, reject) {
-        //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
-        //    if (err) { reject(err); return; }
-        try {
-          let read;
-          const decipher = crypto.createDecipheriv(CIPHER, KEY, IV);
+/**
+ * @default false
+ * @type {boolean}
+ */
+DEFAULTS.ALLOW_READ_REDIRECT = false;
 
-          decipher.on('error', function (err) {
-            reject(new InvalidInputError('DECODE_PAYLOAD failed', err));
-          });
-          decipher.end(plaintext, 'base64');
+/**
+ * @default false
+ * @type {boolean}
+ */
+DEFAULTS.CLIENT_HINTS = false;
 
-          read = decipher.read();
+/**
+ * @readonly
+ * @type {string}
+ */
+DEFAULTS.VERSION = pkg.version;
 
-          if (read !== null) {
-            resolve(read.toString('utf8'));
-          } else {
-            reject('Cant\'t decode given plaintext');
-          }
-        } catch (err) {
-          reject(err);
-        }
-        //})
-      });
+/**
+ * crypto settings (IF YOU WANT TO USE CRYPTO, CHANGE THE DEFAULT VALUES)
+ * @type {object}
+ * @property {boolean} [ENABLED=true] whether the url should be decrypted
+ * @property {buffer} [KEY=new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64')] key buffer
+ * @property {buffer} [IV=new Buffer('_ag3WU77')] iv buffer
+ * @property {string} [CIPHER=BF-CBC] crypto cipher
+ */
+DEFAULTS.CRYPTO = {
+  ENABLED: true,
+  KEY: new Buffer('DjiZ7AWTeNh38zoQiZ76gw::', 'base64'),
+  IV: new Buffer('_ag3WU77'),
+  HMAC_KEY: 'NLoTxj5d2ts2z5xPREtGUJZC9tCCQFAX',
+  CIPHER: 'BF-CBC' /* Blowfish */
+  // pbkdf2 values to generate the above KEY, IV, CIPHER
+  //SECRET: 'XwckHV-3cySkr96QbqhHb2GvianU3ggU',
+  //SALT: 'URAdgv-D',
+  //ITERATIONS: 2048,
+  //KEYLEN: 16,
+};
+
+/**
+ * preprocessor options
+ * @type {object}
+ * @property {number} [VIDEO.KILL_TIMEOUT=120000] kill ffmpeg after given amount of milliseconds. Use `-1` to disable
+ */
+DEFAULTS.PREPROCESSOR = {
+  VIDEO: {
+    KILL_TIMEOUT: 2 * 60 * 1000
   }
+};
+DEFAULTS.ACCESS = {
+  FILE: {
+    READ: [],
+    WRITE: []
+  },
+  HTTPS: {
+    ENABLED: false,
+    READ: [],
+    WRITE: []
+  }
+};
+
+/**
+ * enable/disable specific routes
+ * @type {object}
+ * @property {boolean} [INDEX=true] if enabled, register [index route]{@link module:flamingo/src/routes/index}
+ * @property {boolean} [PROFILE_CONVERT_IMAGE=true] if enabled, register [image convert route]{@link module:flamingo/src/routes/convert/image}
+ * @property {boolean} [PROFILE_CONVERT_VIDEO=true] if enabled, register [video convert route]{@link module:flamingo/src/routes/convert/video}
+ */
+DEFAULTS.ROUTES = {
+  INDEX: true,
+  PROFILE_CONVERT_IMAGE: true,
+  PROFILE_CONVERT_VIDEO: true
+};
+/**
+ * Object containing flags for supported features. These fields will be overwritting after starting flamingo.
+ * @type {object}
+ * @property {boolean} [GM.FFMPEG=false] if true, ffmpeg is available
+ */
+DEFAULTS.SUPPORTED = {
+  FFMPEG: true
+};
+
+/**
+ * reader options
+ * @type {object}
+ * @property {number} [REQUEST.TIMEOUT=10000] default request timeout
+ */
+DEFAULTS.READER = {
+  REQUEST: {
+    // http/https request timeout
+    TIMEOUT: 10 * 1000
+  }
+};
+
+/**
+ * Function to encode a given plaintext string
+ * @private
+ * @property {String} plaintext string to encode
+ * @return {Promise.<String>} promise that resolves with the encoded payload
+ */
+DEFAULTS.ENCODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
+  const ENABLED = this.CRYPTO.ENABLED;
+  const CIPHER = this.CRYPTO.CIPHER;
+  const KEY = this.CRYPTO.KEY;
+  const IV = this.CRYPTO.IV;
+
+  return !ENABLED ?
+    Promise.resolve(new Buffer(plaintext).toString('base64')) :
+    new Promise(function (resolve, reject) {
+      //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
+      //    if (err) { reject(err); return; }
+      try {
+        let read;
+        const cipher = crypto.createCipheriv(CIPHER, KEY, IV);
+
+        cipher.on('error', function (err) {
+          reject(new InvalidInputError('ENCODE_PAYLOAD failed', err));
+        });
+        cipher.end(plaintext, 'utf8');
+
+        read = cipher.read();
+
+        if (read !== null) {
+          resolve(read.toString('base64'));
+        } else {
+          reject('Cant\'t encode given plaintext');
+        }
+      } catch (err) {
+        reject(err);
+      }
+      //});
+    });
+};
+
+/**
+ * Function to decode a given base64 encoded string
+ * @property {String} plaintext base64 encoded cipher text
+ * @return {Promise.<String>} promise that resolves with plaintext
+ * @example
+ * DECODE_PAYLOAD('foo').then((cipherText) => ...)
+ */
+DEFAULTS.DECODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
+  const ENABLED = this.CRYPTO.ENABLED;
+  const CIPHER = this.CRYPTO.CIPHER;
+  const KEY = this.CRYPTO.KEY;
+  const IV = this.CRYPTO.IV;
+
+  return !ENABLED ?
+    Promise.resolve(new Buffer(plaintext, 'base64').toString('utf8')) :
+    new Promise(function (resolve, reject) {
+      //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
+      //    if (err) { reject(err); return; }
+      try {
+        let read;
+        const decipher = crypto.createDecipheriv(CIPHER, KEY, IV);
+
+        decipher.on('error', function (err) {
+          reject(new InvalidInputError('DECODE_PAYLOAD failed', err));
+        });
+        decipher.end(plaintext, 'base64');
+
+        read = decipher.read();
+
+        if (read !== null) {
+          resolve(read.toString('utf8'));
+        } else {
+          reject('Cant\'t decode given plaintext');
+        }
+      } catch (err) {
+        reject(err);
+      }
+      //})
+    });
 };
 
 const ENV_MAPPINGS = [

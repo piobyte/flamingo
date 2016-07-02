@@ -5,35 +5,41 @@ const noop = require('lodash/noop');
 /**
  * Base operation class that is intented to be created for each request and holds request metadata.
  * @class
- *
+ * @property {Request} request
+ * @property {function} profile
+ * @property {function} reply
+ * @property {function} reader
+ * @property {function} writer
+ * @property {*} input
  */
 class FlamingoOperation {
   constructor() {
-    /** @member {Request} */
     this.request = {};
-    /** @member {function} */
     this.profile = noop;
-    /** @member {function} */
     this.reply = noop;
 
     this.preprocessorConfig = {
       seekPercent: 0.1
     };
-    this.processorConfig = {};
 
-    /** @member {function} */
     this.reader = noop;
-    /** @member {function} */
     this.writer = noop;
-
-    /** @member */
     this.input = undefined;
   }
 }
 
-/** @member object */
+/**
+ * global flamingo config
+ * @static
+ * @property {Config} config
+ */
 FlamingoOperation.prototype.config = {};
-/** @member object */
+
+/**
+ * global profiles object
+ * @static
+ * @property {{}} profiles
+ */
 FlamingoOperation.prototype.profiles = {};
 
 module.exports = FlamingoOperation;

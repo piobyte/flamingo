@@ -1,4 +1,9 @@
 /**
+ * ReaderType module
+ * @module flamingo/src/model/reader-type
+ */
+
+/**
  * Reader type enum
  * @readonly
  * @enum {string}

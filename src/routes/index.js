@@ -6,7 +6,7 @@ const util = require('util');
 
 const BASE64_ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAuElEQVQ4jbWRMQqDQBBFnyGVSJpUkj72e4/UphUP4FlyAEkteIecIPZeQAlYiW67qTagzKIo+eWy78+fP/Av9Ulm+iQzS/88F9zqAYDQDzg9H+I/gIP0+O4+REXuNXrEGm1SHaeLK+yGxRXqODWNHoHlMsVy6jg1oR8ATDqQChUTWHAOt3pgnkY0iIp8MsXCm1QqZUqltl/Dwi6Towt83e4/oARzvlyhqtZPtga74s+TSHKecQ0M8AXIOlSRGTKPKQAAAABJRU5ErkJggg==';
 
-function banner(operation) {
+function banner(route, operation) {
   let html = `
     <!doctype html><html lang=""><head><link rel="icon" href="${BASE64_ICON}">
     <title>${pkg.name}@${pkg.version}</title>
@@ -96,7 +96,7 @@ pre{
 <pre>${util.inspect(operation.profiles)}</pre>
 <a name="addons"></a>
 <h3><a href="#addons">Addons</a></h3>
-<pre>${util.inspect(operation.addons)}</pre>
+<pre>${util.inspect(route.server.addonsLoader.addons.map(addon => `${addon.pkg.name}@${addon.pkg.version}`))}</pre>
 </div>
   `;
   }
@@ -109,12 +109,19 @@ pre{
  * @extends Route
  */
 class Index extends Route {
-  constructor(config = {}) {
-    super(config, 'GET', '/', 'Index');
+  /**
+   *
+   * @param {Config} config
+   * @param {string} [method='GET']
+   * @param {string} [path='/']
+   * @param {string} [description='Index route']
+     */
+  constructor(config, method = 'GET', path = '/', description = 'Index route') {
+    super(config, method, path, description);
   }
 
   handle(operation) {
-    return operation.reply(banner(operation));
+    return operation.reply(banner(this, operation));
   }
 }
 

@@ -20,16 +20,18 @@ process.on('uncaughtException', (err) => indexLogger.error(err));
 
 function buildRoutes(config) {
   return [
-    new (require('./src/routes/index'))(config),
-    new (require('./src/routes/image'))(config),
-    new (require('./src/routes/video'))(config)
-  ].concat(config.DEBUG ? [new (require('./src/routes/debug'))(config)] : []);
+    config.ROUTES.INDEX && new (require('./src/routes/index'))(config),
+    config.ROUTES.PROFILE_CONVERT_IMAGE && new (require('./src/routes/image'))(config),
+    config.ROUTES.PROFILE_CONVERT_VIDEO && new (require('./src/routes/video'))(config),
+    config.DEBUG && new (require('./src/routes/debug'))(config)
+  ].filter(Boolean);
 }
 
 function buildProfiles(config) {
   return [
-    require('./src/profiles/examples')
-  ].concat(config.DEBUG ? [require('./src/profiles/debug')] : []);
+    require('./src/profiles/examples'),
+    config.DEBUG && require('./src/profiles/debug')
+  ].filter(Boolean);
 }
 
 Config.fromEnv().then(config =>

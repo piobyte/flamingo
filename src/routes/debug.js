@@ -34,8 +34,15 @@ let IMAGES = images.all().map(function (image) {
  * @extends Route
  */
 class Debug extends Route {
-  constructor(config = {}) {
-    super(config, 'GET', '/_debug', 'Debug');
+  /**
+   *
+   * @param {Config} config
+   * @param {string} [method='GET']
+   * @param {string} [path='/_debug']
+   * @param {string} [description='Debug']
+     */
+  constructor(config = {}, method = 'GET', path = '/_debug', description = 'Debug') {
+    super(config, method, path, description);
 
     Promise.all(IMAGES.map((image) => config.ENCODE_PAYLOAD(image.url)))
       .then((encodedUrls) => {
