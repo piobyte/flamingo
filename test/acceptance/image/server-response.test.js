@@ -20,7 +20,7 @@ function startServer(localConf) {
   return Config.fromEnv().then(config => {
     config = merge({}, config, {CRYPTO: {ENABLED: false}, PORT: PORT}, localConf);
 
-    return new Server(config, {hook: () => noop})
+    return new Server(config, {addons: [], hook: () => noop})
       .withProfiles([exampleProfiles])
       .withRoutes([
         new (require('../../../src/routes/index'))(config),
