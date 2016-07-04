@@ -3,6 +3,7 @@ const FlamingoOperation = require('../../../src/model/flamingo-operation');
 const Promise = require('bluebird');
 const sinon = require('sinon');
 const Convert = require('../../../src/mixins/convert');
+const Route = require('../../../src/model/route');
 const fs = require('fs');
 const path = require('path');
 
@@ -13,42 +14,10 @@ function failOnHandleError(operation) {
 }
 
 describe('convert', function () {
-  it('#buildOperation', function () {
-    function testMixin(superClass) {
-      return class TestMixin extends superClass {
-
-        handleError(operation) {
-          return failOnHandleError(operation);
-        }
-
-        read(operation) {
-          const fixture = fs.createReadStream(path.join(__dirname, '../../fixtures/images/base64.png'));
-          return (operation) => ({
-            type: 'remote',
-            stream: () => Promise.resolve(fixture)
-          });
-        }
-
-        buildOperation(operation) {
-          operation.foo = 'bar';
-          return Promise.resolve(operation);
-        }
-      };
-    }
-
-    const ConvertClass = testMixin(Convert(class {
-    }));
-    const convert = new ConvertClass();
-    const operation = new FlamingoOperation();
-    return convert.handle(operation).then(() => {
-      assert.equal(operation.foo, 'bar');
-    });
-  });
-
   it('#validOperation rejects', function () {
     function testMixin(superClass) {
       return class TestMixin extends superClass {
-        handleError(operation) {
+        handleError(request, reply, error, operation = {}) {
           return failOnHandleError(operation);
         }
 
@@ -58,8 +27,7 @@ describe('convert', function () {
       };
     }
 
-    const convert = new (testMixin(Convert(class {
-    })));
+    const convert = new (testMixin(Convert(Route)));
     const operation = new FlamingoOperation();
     operation.shouldFail = true;
     return convert.handle(operation)
@@ -68,7 +36,7 @@ describe('convert', function () {
 
   it('#write', function () {
     const convert = new (Convert(class {
-      handleError(operation) {
+      handleError(request, reply, error, operation = {}) {
         return failOnHandleError(operation);
       }
     }));
@@ -81,7 +49,6 @@ describe('convert', function () {
 
   it('#handle', function () {
     const fixture = fs.createReadStream(path.join(__dirname, '../../fixtures/images/base64.png'));
-    const buildOperationSpy = sinon.stub().returns(Promise.resolve());
     const readSpy = sinon.stub().returns(() => Promise.resolve({
       stream: () => Promise.resolve(fixture),
       type: 'remote'
@@ -94,10 +61,6 @@ describe('convert', function () {
     const operation = new FlamingoOperation();
     const convert = new (class extends Convert(class {
     }) {
-      buildOperation() {
-        return buildOperationSpy(...arguments);
-      }
-
       read() {
         return readSpy(...arguments);
       }
@@ -120,38 +83,11 @@ describe('convert', function () {
     });
 
     return convert.handle(operation).then(() => {
-      assert.ok(buildOperationSpy.called);
       assert.ok(readSpy.called);
       assert.ok(preprocessSpy.called);
       assert.ok(validStreamSpy.called);
       assert.ok(processSpy.called);
       assert.ok(writeSpy.called);
     });
-  });
-
-  it('#handleError', function () {
-    const errorSpy = sinon.spy();
-    const operation = new FlamingoOperation();
-    const writeReject = 'write-reject';
-
-    const convert = new (class extends Convert(class {
-    }) {
-      handleError(operation) {
-        return errorSpy;
-      }
-
-      write(operation) {
-        return () => Promise.reject(writeReject);
-      }
-    });
-
-    sinon.spy(convert, 'buildOperation');
-    sinon.spy(convert, 'read');
-    sinon.spy(convert, 'preprocess');
-    sinon.spy(convert, 'validStream');
-    sinon.spy(convert, 'process');
-
-    return convert.handle(operation).finally(() =>
-      assert.ok(errorSpy.called));
   });
 });

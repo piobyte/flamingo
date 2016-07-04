@@ -28,11 +28,11 @@ const serializers = {
     }
   },
   operation: function (operation) {
-    return {
+    return Object.keys(operation).length ? {
       input: this.input(operation.input),
       profile: operation.profile.name,
       request: this.request(operation.request)
-    };
+    } : {};
   },
   request: function (request) {
     return typeof request === 'object' && request.hasOwnProperty('route') ? {

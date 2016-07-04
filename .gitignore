@@ -46,4 +46,5 @@ jspm_packages
 .idea_modules/
 
 docs
+tutorials/supported-files.md
 tools/deploy-docker.sh

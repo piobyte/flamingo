@@ -6,6 +6,9 @@
  */
 
 const FlamingoOperation = require('./flamingo-operation');
+const logger = require('../logger').build('model.route');
+const errorReply = require('../util/error-reply');
+const Promise = require('bluebird');
 
 /**
  * Route class is the basic class every route should extend.
@@ -19,13 +22,15 @@ class Route {
    * @param {string} method the routes http method
    * @param {string} path the routes url path
    * @param {string} [description=''] route description
-     */
+   */
   constructor(config, method, path, description = '') {
     this.path = path;
     this.method = method;
     this.cors = true;
     this.config = config || {};
-    this.description = config.description || description;
+    if (this.config.descriptiom || description.length) {
+      this.description = this.config.description || description;
+    }
     this.parseState = false;
   }
 
@@ -35,40 +40,59 @@ class Route {
    *
    * @see {@link http://hapijs.com/api#replyerr-result}
    * @param {FlamingoOperation} operation
-     */
+   */
   handle(operation) {
-    throw 'not implemented';
+    return Promise.reject(new Error('not implemented'));
   }
 
   /**
    * Function to build the hapi route config object
    * @see {@link http://hapijs.com/api#new-serveroptions}
    * @param {Object} defaults
-     */
-  hapiConfig(defaults){
+   */
+  hapiConfig(defaults) {
     defaults = defaults || {};
     defaults.method = this.method;
     defaults.path = this.path;
-    defaults.config = defaults.config || {cors: this.cors, state: { parse: this.parseState }};
+    defaults.config = defaults.config || {cors: this.cors, state: {parse: this.parseState}};
     defaults.config.description = this.description;
-    defaults.config.handler = (request, reply) => {
-      return this.handle(this.buildRequestOperation(request, reply));
-    };
+    defaults.config.handler = (request, reply) =>
+      this.buildOperation(request, reply).then(operation =>
+        this.handle(operation)
+          .catch(error => this.handleError(request, reply, error, operation)))
+        .catch(error => this.handleError(request, reply, error));
     return defaults;
   }
 
   /**
-   * Function to build the flamingo operation based on the incoming request + reply function
+   * Function to build the flamingo operation based on the incoming request + reply function.
+   * Each extending class should call super.buildOperation to get a minimal working flamingo operation.
    * @param {Request} request
    * @param {function} reply
-   * @returns {FlamingoOperation}
+   * @returns {Promise.<FlamingoOperation>}
    * @see {@link http://hapijs.com/api#request-properties}
-     */
-  buildRequestOperation(request, reply) {
+   */
+  buildOperation(request, reply) {
     const op = new FlamingoOperation();
     op.request = request;
     op.reply = reply;
-    return op;
+    return Promise.resolve(op);
+  }
+
+  /**
+   * Function to log and reply errors
+   * @param {Request} request
+   * @param {function} reply function that replies to the request
+   * @param {Error} error
+   * @param {FlamingoOperation} [operation]
+     * @return {*} reply return value
+     */
+  handleError(request, reply, error, operation = {}) {
+    logger.error({
+      error: error,
+      operation: operation
+    }, 'Convert error for ' + request.path);
+    return reply(errorReply(error, operation));
   }
 }
 

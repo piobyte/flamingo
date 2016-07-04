@@ -1,5 +1,6 @@
 const assert = require('assert');
 const ProfileOperation = require('../../../src/mixins/profile-operation');
+const Route = require('../../../src/model/route');
 const FlamingoOperation = require('../../../src/model/flamingo-operation');
 const Config = require('../../../config');
 const Promise = require('bluebird');
@@ -11,8 +12,7 @@ const url = require('url');
 
 describe('profile-operation', function () {
   it('extracts the input url by decoding the url param', function () {
-    const ProfileOperationClass = ProfileOperation(class {
-    });
+    const ProfileOperationClass = ProfileOperation(Route);
     const conf = new Config();
     const profile = new ProfileOperationClass();
     const operation = new FlamingoOperation();
@@ -29,8 +29,7 @@ describe('profile-operation', function () {
   });
 
   it('extracts the operations profile based on the profile param', function () {
-    const ProfileOperationClass = ProfileOperation(class {
-    });
+    const ProfileOperationClass = ProfileOperation(Route);
     const conf = new Config();
     const profileOp = new ProfileOperationClass();
     const operation = new FlamingoOperation();
@@ -47,14 +46,12 @@ describe('profile-operation', function () {
       }
     };
 
-    return profileOp.extractProfile(operation).then(extractedProfile => {
-      assert.equal(extractedProfile, profileSpy);
-    });
+    return profileOp.extractProfile(operation).then(extractedProfile =>
+      assert.equal(extractedProfile, profileSpy));
   });
 
   it('rejects extraction for unknown profiles', function () {
-    const ProfileOperationClass = ProfileOperation(class {
-    });
+    const ProfileOperationClass = ProfileOperation(Route);
     const conf = new Config();
     const profileOp = new ProfileOperationClass();
     const operation = new FlamingoOperation();
@@ -64,47 +61,55 @@ describe('profile-operation', function () {
     operation.config = conf;
     operation.request = {params: {profile: 'someUnknownProfile'}};
 
-    return profileOp.extractProfile(operation).catch(e => {
-      assert.ok(e instanceof InvalidInputError);
-    });
+    return profileOp.extractProfile(operation)
+      .catch(e => assert.ok(e instanceof InvalidInputError));
   });
 
   it('builds an operation', function () {
-    const ProfileOperationClass = ProfileOperation(class {
-    });
-    const conf = new Config();
-    const profileOp = new ProfileOperationClass();
-    const operation = new FlamingoOperation();
-    const profile = 'someProfile';
-    const givenUrl = 'http://example.com/image.png';
-    const encodedUrl = encodeURIComponent(givenUrl);
-    const profileSpy = sinon.spy();
-    conf.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
+    return Config.fromEnv().then(config => {
+      const conf = config;
+      const operation = new FlamingoOperation();
+      const profile = 'someProfile';
+      const givenUrl = 'http://example.com/image.png';
+      const encodedUrl = encodeURIComponent(givenUrl);
+      const profileSpy = sinon.spy();
+      conf.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
 
-    operation.request = {params: {profile, url: encodedUrl}};
-    operation.config = conf;
-    operation.profiles = {
-      someProfile: (request, config) => Promise.resolve(profileSpy)
-    };
+      const request = {params: {profile, url: encodedUrl}};
+      const reply = sinon.spy();
 
-    return profileOp.buildOperation(operation).then((operation) => {
-      assert.equal(operation.profile, profileSpy);
-      assert.equal(operation.reader, httpReader);
-      assert.deepEqual(operation.input, url.parse(givenUrl));
-      assert.equal(operation.writer, responseWriter);
+      operation.config = conf;
+      operation.request = request;
+      operation.config = conf;
+      operation.profiles = {
+        someProfile: (request, config) => Promise.resolve(profileSpy)
+      };
+      const ProfileOperationClass = ProfileOperation(class extends Route {
+        buildOperation(request, reply) {
+          return Promise.resolve(operation);
+        }
+      });
+      const profileOp = new ProfileOperationClass();
+
+      return profileOp.buildOperation(request, reply).then((operation) => {
+        assert.equal(operation.profile, profileSpy);
+        assert.equal(operation.reader, httpReader);
+        assert.deepEqual(operation.input, url.parse(givenUrl));
+        assert.equal(operation.writer, responseWriter);
+      });
     });
   });
 
   it('rejects for unknown readers', function () {
-    const ProfileOperationClass = ProfileOperation(class {
-    });
     const conf = new Config();
-    const profileOp = new ProfileOperationClass();
     const operation = new FlamingoOperation();
     const profile = 'someProfile';
     const givenUrl = 'ftp://example.com/image.png';
     const encodedUrl = encodeURIComponent(givenUrl);
     const profileSpy = sinon.spy();
+    const request = {params: {profile, url: encodedUrl}};
+    const reply = sinon.spy();
+
     conf.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
 
     operation.request = {params: {profile, url: encodedUrl}};
@@ -113,7 +118,14 @@ describe('profile-operation', function () {
       someProfile: (request, config) => Promise.resolve(profileSpy)
     };
 
-    return profileOp.buildOperation(operation)
+    const ProfileOperationClass = ProfileOperation(class extends Route {
+      buildOperation(request, reply) {
+        return Promise.resolve(operation);
+      }
+    });
+    const profileOp = new ProfileOperationClass();
+
+    return profileOp.buildOperation(request, reply)
       .catch(e => assert.ok(e instanceof InvalidInputError));
   });
 });

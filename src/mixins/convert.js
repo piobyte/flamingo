@@ -1,8 +1,6 @@
 'use strict';
 
 const Promise = require('bluebird');
-const logger = require('../logger').build('route.convert');
-const errorReply = require('../util/error-reply');
 const imageProcessor = require('../processor/image');
 const unfoldReaderResult = require('../util/unfold-reader-result');
 
@@ -12,21 +10,6 @@ module.exports = (SuperClass/*:Route*/) => {
    * @mixin
    */
   class Convert extends SuperClass {
-    /**
-     * Resolves with the configured FlamingoOperation
-     * @param {FlamingoOperation} operation
-     * @returns {Promise.<FlamingoOperation>} resolves with the configured FlamingoOperation
-     * @example
-     * // do nothing to the operation, simply pass it on
-     * buildOperation(operation) => {
-     *  operation.reply = customReply(operation);
-     *  return Promise.resolve(operation);
-     * }
-     */
-    buildOperation(operation) {
-      return Promise.resolve(operation);
-    }
-
     /**
      * Resolves if the given operation is valid
      * @param {FlamingoOperation} operation
@@ -93,36 +76,18 @@ module.exports = (SuperClass/*:Route*/) => {
     }
 
     /**
-     * Builds a function that handles a passed error.
-     * Defaults to logging and returning a request reply
-     * @param {FlamingoOperation} operation
-     * @returns {function(Error):void}
-       */
-    handleError(operation) {
-      return (err) => {
-        logger.error({
-          error: err,
-          operation: operation
-        }, 'Convert error for ' + operation.request.path);
-        return errorReply(operation, err);
-      };
-    }
-
-    /**
      * Overwrites the Routes handle function to start the conversation process
      * @param {FlamingoOperation} operation
      * @returns Promise
      * @see flamingo/src/model/Route
      */
     handle(operation) {
-      return this.buildOperation(operation).then(buildOperation =>
-        this.validOperation(buildOperation)
-          .then(this.read(buildOperation))
-          .then(this.preprocess(buildOperation))
-          .then(this.validStream(buildOperation))
-          .then(this.process(buildOperation))
-          .then(this.write(buildOperation)))
-        .catch(this.handleError(operation));
+      return this.validOperation(operation)
+        .then(this.read(operation))
+        .then(this.preprocess(operation))
+        .then(this.validStream(operation))
+        .then(this.process(operation))
+        .then(this.write(operation));
     }
   }
 

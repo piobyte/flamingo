@@ -2,7 +2,6 @@
 .git
 coverage
 docs
-flow
 node_modules
 targets
 tutorials

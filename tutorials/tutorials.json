@@ -19,5 +19,8 @@
   },
   "using-docker": {
     "title": "Using with docker"
+  },
+  "image-meta": {
+    "title": "Serving image metadata"
   }
 }

@@ -1,12 +1,12 @@
 {
   "name": "flamingo",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.6",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "typecheck": "node_modules/.bin/flow check",
-    "lint": "node node_modules/eslint/bin/eslint.js index.js config.js test src targets",
+    "lint": "node node_modules/eslint/bin/eslint.js index.js config.js test src targets tutorials",
     "predocs": "rm -r docs 2>/dev/null || true",
     "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r -u tutorials -t ./node_modules/minami -P package.json -R README.md -d docs",
     "pretest": "npm run lint && npm run typecheck",
@@ -39,7 +39,7 @@
     "file-type": "^3.8.0",
     "fluent-ffmpeg": "^2.1.0",
     "got": "^6.3.0",
-    "hapi": "^13.3.0",
+    "hapi": "^13.4.2",
     "is-stream": "^1.1.0",
     "lodash": "^4.12.0",
     "mimeparse": "^0.1.4",

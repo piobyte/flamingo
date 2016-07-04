@@ -33,7 +33,7 @@ module.exports = (SuperClass) => {
      * Resolves a input from a given operation.
      * @param {FlamingoOperation} operation
      * @return {Promise.<Url>} resolves `url.parse(decodedUrlParam)`
-       */
+     */
     extractInput(operation) {
       return operation.config.DECODE_PAYLOAD(decodeURIComponent(operation.request.params.url))
         .then(decoded => url.parse(decoded));
@@ -46,12 +46,12 @@ module.exports = (SuperClass) => {
      * @example
      * (input) =>
      *   Promise.resolve((operation) => ({stream: fs.createReadStream('path/to/image.png'), type: 'file'}))
-       */
+     */
     extractReader(input) {
       const reader = readerForUrl(input);
 
       if (!reader) {
-        return Promise.reject(new InvalidInputError(`No reader available for given input (${input})`));
+        return Promise.reject(new InvalidInputError('No reader available for given input', input));
       }
 
       return Promise.resolve(reader);
@@ -59,22 +59,24 @@ module.exports = (SuperClass) => {
 
     /**
      * Builds a flamingo operation by extracting input, profile and reader from the given operation
-     * @param {FlamingoOperation} operation
      * @return {Promise.<FlamingoOperation>}
-       */
-    buildOperation(operation) {
-      return Promise.all([
-        this.extractInput(operation),
-        this.extractProfile(operation)
-      ]).then(([input, profile]) =>
-        this.extractReader(input).then(reader => {
-          operation.input = input;
-          operation.profile = profile;
-          operation.reader = reader;
-          operation.writer = responseWriter;
+     * @param {Request} request
+     * @param {function} reply
+     */
+    buildOperation(request, reply) {
+      return super.buildOperation(request, reply).then(operation =>
+        Promise.all([
+          this.extractInput(operation),
+          this.extractProfile(operation)
+        ]).then(([input, profile]) =>
+          this.extractReader(input).then(reader => {
+            operation.input = input;
+            operation.profile = profile;
+            operation.reader = reader;
+            operation.writer = responseWriter;
 
-          return operation;
-        }));
+            return operation;
+          })));
     }
   }
 

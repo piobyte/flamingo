@@ -13,13 +13,13 @@ const {InvalidInputError, ProcessingError} = require('../util/errors');
  * @param {FlamingoOperation} operation
  * @param {Error} error
  */
-module.exports = function (operation/*: function */, error/*: Error */) {
+module.exports = function (error/*: Error */, operation/*: function */) {
   const isClientError =
     error instanceof InvalidInputError ||
     error instanceof ProcessingError ||
     typeof error === 'string';
 
-  const message = operation.config.DEBUG ? error.message : undefined;
+  const message = (operation.config && operation.config.DEBUG) ? error.message : undefined;
 
-  operation.reply(isClientError ? boom.badRequest(message) : /* istanbul ignore next: can't produce an flamingo src error */ boom.internal(message));
+  return isClientError ? boom.badRequest(message) : /* istanbul ignore next: can't produce an flamingo src error */ boom.internal(message);
 };
