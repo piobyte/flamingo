@@ -28,18 +28,6 @@ function startServer(localConf) {
 
 
 describe('config', function () {
-  it('decrypts encrypted messages', function () {
-    const PAYLOAD = 'test';
-
-    return Config.fromEnv().then(conf => {
-      return conf.ENCODE_PAYLOAD(PAYLOAD).then(function (cipher) {
-        return conf.DECODE_PAYLOAD(cipher);
-      }).then(function (plain) {
-        assert.strictEqual(plain, PAYLOAD);
-      });
-    });
-  });
-
   it('has no index (fingerprinting) route by default', function () {
     let server;
     return startServer({

@@ -1,9 +1,6 @@
 'use strict';
 
 const supported = require('./src/util/supported');
-const {InvalidInputError} = require('./src/util/errors');
-const crypto = require('crypto');
-const Promise = require('bluebird');
 const envParser = require('./src/util/env-parser');
 const envConfig = require('./src/util/env-config');
 const pkg = require('./package');
@@ -130,87 +127,6 @@ DEFAULTS.READER = {
     // http/https request timeout
     TIMEOUT: 10 * 1000
   }
-};
-
-/**
- * Function to encode a given plaintext string
- * @private
- * @property {String} plaintext string to encode
- * @return {Promise.<String>} promise that resolves with the encoded payload
- */
-DEFAULTS.ENCODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
-  const ENABLED = this.CRYPTO.ENABLED;
-  const CIPHER = this.CRYPTO.CIPHER;
-  const KEY = this.CRYPTO.KEY;
-  const IV = this.CRYPTO.IV;
-
-  return !ENABLED ?
-    Promise.resolve(new Buffer(plaintext).toString('base64')) :
-    new Promise(function (resolve, reject) {
-      //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
-      //    if (err) { reject(err); return; }
-      try {
-        let read;
-        const cipher = crypto.createCipheriv(CIPHER, KEY, IV);
-
-        cipher.on('error', function (err) {
-          reject(new InvalidInputError('ENCODE_PAYLOAD failed', err));
-        });
-        cipher.end(plaintext, 'utf8');
-
-        read = cipher.read();
-
-        if (read !== null) {
-          resolve(read.toString('base64'));
-        } else {
-          reject('Cant\'t encode given plaintext');
-        }
-      } catch (err) {
-        reject(err);
-      }
-      //});
-    });
-};
-
-/**
- * Function to decode a given base64 encoded string
- * @property {String} plaintext base64 encoded cipher text
- * @return {Promise.<String>} promise that resolves with plaintext
- * @example
- * DECODE_PAYLOAD('foo').then((cipherText) => ...)
- */
-DEFAULTS.DECODE_PAYLOAD = /* istanbul ignore next */ function (plaintext) {
-  const ENABLED = this.CRYPTO.ENABLED;
-  const CIPHER = this.CRYPTO.CIPHER;
-  const KEY = this.CRYPTO.KEY;
-  const IV = this.CRYPTO.IV;
-
-  return !ENABLED ?
-    Promise.resolve(new Buffer(plaintext, 'base64').toString('utf8')) :
-    new Promise(function (resolve, reject) {
-      //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.KEYLEN, function (err, key) {
-      //    if (err) { reject(err); return; }
-      try {
-        let read;
-        const decipher = crypto.createDecipheriv(CIPHER, KEY, IV);
-
-        decipher.on('error', function (err) {
-          reject(new InvalidInputError('DECODE_PAYLOAD failed', err));
-        });
-        decipher.end(plaintext, 'base64');
-
-        read = decipher.read();
-
-        if (read !== null) {
-          resolve(read.toString('utf8'));
-        } else {
-          reject('Cant\'t decode given plaintext');
-        }
-      } catch (err) {
-        reject(err);
-      }
-      //})
-    });
 };
 
 const ENV_MAPPINGS = [

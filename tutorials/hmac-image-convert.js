@@ -7,6 +7,7 @@ const Config = require('../config');
 const AddonLoader = require('../src/addon/loader');
 const qs = require('querystring');
 const pickBy = require('lodash/pickBy');
+const url = require('url');
 
 function hmacValidateOperation(operation, givenDigest, enc) {
   const hmac = crypto.createHmac('sha256', operation.config.CRYPTO.HMAC_KEY);
@@ -38,6 +39,10 @@ function HmacImageConvert(superClass) {
     validOperation(op) {
       return hmacValidateOperation(op, this.extractDigest(op), this.buildMessage(op));
     }
+
+    extractInput(operation) {
+      return Promise.resolve(url.parse(decodeURIComponent(operation.request.params.url)));
+    }
   };
 }
 
@@ -48,8 +53,6 @@ class HmacImageConvertRoute extends HmacImageConvert(Image) {
 }
 
 Config.fromEnv().then(config => {
-  config.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
-
   return new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new HmacImageConvertRoute(config)])

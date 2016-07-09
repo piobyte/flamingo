@@ -29,7 +29,8 @@ Flamingo uses jsdoc [docs and tutorials](https://piobyte.github.io/flamingo/) fo
 
 The whole application includes different readers, preprocessors, processors and writers.
 The data is mostly transferred through Node.js [streams](https://nodejs.org/api/stream.html).
-Reader modules don't resolve streams directly, because a given preprocessor could optimize reading of the input (i.e. pass filepath to ffmpeg instead of streaming the whole file first).
+Reader modules don't resolve streams directly, because a given preprocessor could optimize reading of the input 
+(i.e. pass filepath or url to ffmpeg instead of streaming the whole file first).
 
 ## Config
 

@@ -35,6 +35,10 @@ function HmacImageConvert(superClass) {
     validOperation(op) {
       return hmacValidateOperation(op, this.extractDigest(op), this.buildMessage(op));
     }
+
+    extractInput(operation) {
+      return Promise.resolve(url.parse(decodeURIComponent(operation.request.params.url)));
+    }
   };
 }
 ```
@@ -71,8 +75,6 @@ class HmacImageConvertRoute extends HmacImageConvert(Image) {
 
 ```js
 Config.fromEnv().then(config => {
-  config.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
-
   return new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new HmacImageConvertRoute(config)])

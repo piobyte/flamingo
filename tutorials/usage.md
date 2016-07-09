@@ -32,9 +32,13 @@ __Change these values if you want to use this server in a production environment
 
 ## Encoding payload
 
-Modify the `DECODE_PAYLOAD` method in `config.js` to roll your own decryption (using [crypto](https://nodejs.org/api/crypto.html), see `openssl list-cipher-algorithms` for available ciphers).
+By default, the profile-operation mixin extracts the processing input by decoding the url param using `crypto.createDecipheriv` (from the [node crypto module](https://nodejs.org/api/crypto.html)).
 The default implementation uses blowfish (`BF-CBC`) to decrypt a given base64 plaintext and converts it to utf8 (`decrypt(debase64(plain))`).
 To generate an expected request you have to encrypt your initial request using `base64(blowfish(plain))`.
+
+If you want to implement your own input extraction, overwrite the `extractInput` method.
+If you want to use an encrypted url, you can change the used cipher, key and iv using config parameters (`CRYPTO.CIPHER`, `CRYPTO.KEY` and `CRYPTO.IV`).
+To disable the default decryption, set `CRYPTO.ENABLED` to `false`.
 
 ### As a library
 

@@ -3,7 +3,6 @@ const Route = require('../src/model/route');
 const Config = require('../config');
 const AddonLoader = require('../src/addon/loader');
 const url = require('url');
-const Promise = require('bluebird');
 const probe = require('probe-image-size');
 
 class ImageMetaRoute extends Route {
@@ -12,8 +11,7 @@ class ImageMetaRoute extends Route {
   }
 
   extractInput(operation) {
-    return operation.config.DECODE_PAYLOAD(decodeURIComponent(operation.request.params.url))
-      .then(decoded => url.parse(decoded));
+    return Promise.resolve(url.parse(operation.request.params.url));
   }
 
   handle(operation) {
@@ -24,8 +22,6 @@ class ImageMetaRoute extends Route {
 }
 
 Config.fromEnv().then(config => {
-  config.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
-
   return new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new ImageMetaRoute(config)])

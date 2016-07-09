@@ -11,6 +11,8 @@ const logger = require('../logger');
 const addon = require('../addon/index');
 const Promise = require('bluebird');
 const FlamingoOperation = require('./flamingo-operation');
+const Route = require('./route');
+const assert = require('assert');
 
 class Server {
   /**
@@ -48,6 +50,7 @@ class Server {
      */
   withRoutes(routes) {
     routes.forEach((route) => {
+      assert.ok(route instanceof Route);
       route.server = this;
       this.hapi.route(route.hapiConfig());
     });

@@ -6,15 +6,12 @@ const range = require('lodash/range');
 const got = require('got');
 const Promise = require('bluebird');
 
-const Server = require('../../../src/model/server');
-const Config = require('../../../config');
+const Server = require('../../../../src/model/server');
+const Config = require('../../../../config');
 
-const exampleProfiles = require('../../../src/profiles/examples');
+const exampleProfiles = require('../../../../src/profiles/examples');
 
 const PORT = 43723; // some random unused port
-const encode = function (plain) {
-  return encodeURIComponent(new Buffer(plain).toString('base64'));
-};
 
 function startServer(localConf) {
   return Config.fromEnv().then(config => {
@@ -22,11 +19,7 @@ function startServer(localConf) {
 
     return new Server(config, {addons: [], hook: () => noop})
       .withProfiles([exampleProfiles])
-      .withRoutes([
-        new (require('../../../src/routes/index'))(config),
-        new (require('../../../src/routes/image'))(config),
-        new (require('../../../src/routes/video'))(config)
-      ])
+      .withRoutes([new (require('../../../../src/routes/image'))(config)])
       .start();
   });
 }
@@ -57,7 +50,7 @@ describe('image converting server response', function () {
 
       return Promise.all(
         codes.map((code) =>
-          got(`http://localhost:${PORT}/image/avatar-image/${encode(`https://errs.example.com/${code}`)}`, {
+          got(`http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(`https://errs.example.com/${code}`)}`, {
             retries: 0,
             followRedirect: false
           }).catch(data => data)));
@@ -68,7 +61,7 @@ describe('image converting server response', function () {
   });
 
   it('returns 400 for not whitelisted urls', function () {
-    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('https://old.example.com/image.png')}`;
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent('https://old.example.com/image.png')}`;
     let server;
 
     return startServer({
@@ -94,7 +87,7 @@ describe('image converting server response', function () {
         Location: 'https://redir.example.com/url.jpg'
       });
 
-    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('https://redir.example.com/moved.jpg')}`;
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent('https://redir.example.com/moved.jpg')}`;
     let server;
 
     return startServer({}).then(function (s) {
@@ -113,9 +106,9 @@ describe('image converting server response', function () {
         Location: 'https://redir.example.com/url.png'
       })
       .get('/url.png')
-      .replyWithFile(200, __dirname + '/../../fixtures/images/base64.png');
+      .replyWithFile(200, __dirname + '/../../../fixtures/images/base64.png');
 
-    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('https://redir.example.com/moved.png')}`;
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent('https://redir.example.com/moved.png')}`;
     let server;
 
     return startServer({
@@ -130,7 +123,7 @@ describe('image converting server response', function () {
   });
 
   it('rejects unknown protocols (no reader available)', function () {
-    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('ftp://ftp.example.com/moved.jpg')}`;
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent('ftp://ftp.example.com/moved.jpg')}`;
     let server;
 
     return startServer({}).then(function (s) {
@@ -143,7 +136,7 @@ describe('image converting server response', function () {
   });
 
   it('rejects unknown profile', function () {
-    const URL = `http://localhost:${PORT}/image/foo/${encode('http://ftp.example.com/moved.jpg')}`;
+    const URL = `http://localhost:${PORT}/image/foo/${encodeURIComponent('http://ftp.example.com/moved.jpg')}`;
     let server;
 
     return startServer({}).then(function (s) {
@@ -156,7 +149,7 @@ describe('image converting server response', function () {
   });
 
   it('fails for decryption errors', function () {
-    const URL = `http://localhost:${PORT}/image/avatar-image/${encode('http://ftp.example.com/moved.jpg')}`;
+    const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent('http://ftp.example.com/moved.jpg')}`;
     let server;
 
     return startServer({
@@ -167,20 +160,6 @@ describe('image converting server response', function () {
       return got(URL).catch(e => e);
     }).then(function (response) {
       assert.equal(response.statusCode, 400);
-    }).finally(() => server.stop());
-  });
-
-  it('returns a banner for /', function () {
-    let server;
-
-    return startServer({
-      CRYPTO: {ENABLED: true}
-    }).then(function (s) {
-      server = s;
-
-      return got('http://localhost:' + PORT);
-    }).then(function (response) {
-      assert.equal(response.statusCode, 200);
     }).finally(() => server.stop());
   });
 });

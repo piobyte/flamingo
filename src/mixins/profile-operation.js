@@ -5,6 +5,7 @@ const Promise = require('bluebird');
 const url = require('url');
 const responseWriter = require('../writer/response');
 const {InvalidInputError} = require('../util/errors');
+const {decode} = require('../util/cipher');
 
 module.exports = (SuperClass) => {
   /**
@@ -35,8 +36,12 @@ module.exports = (SuperClass) => {
      * @return {Promise.<Url>} resolves `url.parse(decodedUrlParam)`
      */
     extractInput(operation) {
-      return operation.config.DECODE_PAYLOAD(decodeURIComponent(operation.request.params.url))
-        .then(decoded => url.parse(decoded));
+      const payload = decodeURIComponent(operation.request.params.url);
+      const decodePromise = operation.config.CRYPTO.ENABLED ?
+        decode(payload, operation.config.CRYPTO.CIPHER, operation.config.CRYPTO.KEY, operation.config.CRYPTO.IV) :
+        Promise.resolve(payload);
+
+      return decodePromise.then(decoded => url.parse(decoded));
     }
 
     /**

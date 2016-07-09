@@ -1,6 +1,6 @@
 const assert = require('assert');
 const merge = require('lodash/merge');
-const simpleHttpServer = require('../../test-util/simple-http-server');
+const simpleHttpServer = require('../../../test-util/simple-http-server');
 const nock = require('nock');
 const path = require('path');
 const fs = require('fs');
@@ -9,15 +9,12 @@ const range = require('lodash/range');
 const got = require('got');
 const Promise = require('bluebird');
 
-const Server = require('../../../src/model/server');
-const Config = require('../../../config');
+const Server = require('../../../../src/model/server');
+const Config = require('../../../../config');
 
-const exampleProfiles = require('../../../src/profiles/examples');
+const exampleProfiles = require('../../../../src/profiles/examples');
 
 const PORT = 43723; // some random unused port
-const encode = function (plain) {
-  return encodeURIComponent(new Buffer(plain).toString('base64'));
-};
 
 function startServer(localConf) {
   return Config.fromEnv().then(config => {
@@ -31,11 +28,7 @@ function startServer(localConf) {
 
     return new Server(config, {hook: () => noop})
       .withProfiles([exampleProfiles])
-      .withRoutes([
-        new (require('../../../src/routes/index'))(config),
-        new (require('../../../src/routes/image'))(config),
-        new (require('../../../src/routes/video'))(config)
-      ])
+      .withRoutes([new (require('../../../../src/routes/video'))(config)])
       .start().catch(e => console.error(e));
   });
 }
@@ -68,7 +61,7 @@ describe('video converting server response', function () {
       server = s;
 
       return Promise.all(codes.map(code =>
-        got(`http://localhost:${PORT}/video/avatar-image/${encode(`http://${HOST}:${SERVER_PORT}/${code}`)}`)
+        got(`http://localhost:${PORT}/video/avatar-image/${encodeURIComponent(`http://${HOST}:${SERVER_PORT}/${code}`)}`)
           .catch(d => d)
       ));
     }).then(function (data) {
@@ -77,7 +70,7 @@ describe('video converting server response', function () {
   });
 
   it('returns 400 for not whitelisted urls', function () {
-    const URL = `http://localhost:${PORT}/video/avatar-image/${encode('https://old.example.com/test.ogv')}`;
+    const URL = `http://localhost:${PORT}/video/avatar-image/${encodeURIComponent('https://old.example.com/test.ogv')}`;
     let server;
 
     return startServer({
@@ -106,7 +99,7 @@ describe('video converting server response', function () {
       res.end();
     });
 
-    const URL = `http://localhost:${PORT}/video/avatar-image/${encode(`https://${HOST}:${SERVER_PORT}/moved.jpg`)}`;
+    const URL = `http://localhost:${PORT}/video/avatar-image/${encodeURIComponent(`https://${HOST}:${SERVER_PORT}/moved.jpg`)}`;
     let server;
 
     return startServer({}).then(function (s) {
@@ -121,7 +114,7 @@ describe('video converting server response', function () {
   it('allows redirect if enabled', function () {
     const HOST = 'localhost';
     const SERVER_PORT = PORT + 1;
-    const FILE_PATH = path.join(__dirname, '../../fixtures/videos/trailer_1080p.ogg');
+    const FILE_PATH = path.join(__dirname, '../../../fixtures/videos/trailer_1080p.ogg');
 
     const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
       const urlPath = req.url.replace(/\//g, '');
@@ -136,7 +129,7 @@ describe('video converting server response', function () {
       }
     });
 
-    const URL = `http://localhost:${PORT}/video/avatar-image/${encode(`http://localhost:${SERVER_PORT}/moved.png`)}`;
+    const URL = `http://localhost:${PORT}/video/avatar-image/${encodeURIComponent(`http://localhost:${SERVER_PORT}/moved.png`)}`;
     let server;
 
     return startServer({
@@ -151,7 +144,7 @@ describe('video converting server response', function () {
   });
 
   it('rejects unknown protocols (no reader available)', function () {
-    const URL = `http://localhost:${PORT}/video/avatar-image/${encode('ftp://ftp.example.com/moved.jpg')}`;
+    const URL = `http://localhost:${PORT}/video/avatar-image/${encodeURIComponent('ftp://ftp.example.com/moved.jpg')}`;
     let server;
 
     return startServer({}).then(function (s) {
@@ -164,7 +157,7 @@ describe('video converting server response', function () {
   });
 
   it('rejects unknown profile', function () {
-    const URL = `http://localhost:${PORT}/video/foo/${encode('http://ftp.example.com/moved.jpg')}`;
+    const URL = `http://localhost:${PORT}/video/foo/${encodeURIComponent('http://ftp.example.com/moved.jpg')}`;
     let server;
 
     return startServer({}).then(function (s) {
@@ -177,7 +170,7 @@ describe('video converting server response', function () {
   });
 
   it('fails for decryption errors', function () {
-    const URL = `http://localhost:${PORT}/video/avatar-image/${encode('http://ftp.example.com/moved.jpg')}`;
+    const URL = `http://localhost:${PORT}/video/avatar-image/${encodeURIComponent('http://ftp.example.com/moved.jpg')}`;
     let server;
 
     return startServer({
@@ -192,12 +185,12 @@ describe('video converting server response', function () {
   });
 
   it('uses the file reader for file uris', function () {
-    const URL = `http://localhost:${PORT}/video/avatar-image/${encode(`file://${path.join(__dirname, '../../fixtures/videos/trailer_1080p.ogg')}`)}`;
+    const URL = `http://localhost:${PORT}/video/avatar-image/${encodeURIComponent(`file://${path.join(__dirname, '../../../fixtures/videos/trailer_1080p.ogg')}`)}`;
     let server;
 
     return startServer({
       CRYPTO: {ENABLED: false},
-      ACCESS: {FILE: {READ: [path.join(__dirname, '../../fixtures/videos')]}}
+      ACCESS: {FILE: {READ: [path.join(__dirname, '../../../fixtures/videos')]}}
     }).then(function (s) {
       server = s;
 

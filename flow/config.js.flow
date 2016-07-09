@@ -11,8 +11,6 @@ declare class Config extends Object{
   PREPROCESSOR: PreprocessorConfig;
   ACCESS: AccessConfig;
   CRYPTO: CryptoConfig;
-  ENCODE_PAYLOAD: (plaintext: string) => Promise<string>;
-  DECODE_PAYLOAD: (ciphertext: string) => Promise<string>;
 }
 
 declare type RouteConfig = {

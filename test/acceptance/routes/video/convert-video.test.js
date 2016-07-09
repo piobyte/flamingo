@@ -1,20 +1,16 @@
 const assert = require('assert');
 const merge = require('lodash/merge');
-const simpleHttpServer = require('../../test-util/simple-http-server');
+const simpleHttpServer = require('../../../test-util/simple-http-server');
 const noop = require('lodash/noop');
 const path = require('path');
 const fs = require('fs');
 const got = require('got');
-const exampleProfiles = require('../../../src/profiles/examples');
+const exampleProfiles = require('../../../../src/profiles/examples');
 
-const Server = require('../../../src/model/server');
-const Config = require('../../../config');
+const Server = require('../../../../src/model/server');
+const Config = require('../../../../config');
 
 const PORT = 43723; // some random unused port
-const encode = function (plain) {
-  return encodeURIComponent(new Buffer(plain).toString('base64'));
-};
-
 
 function startServer(localConf) {
   return Config.fromEnv().then(config => {
@@ -29,9 +25,9 @@ function startServer(localConf) {
     return new Server(config, {hook: () => noop})
       .withProfiles([exampleProfiles])
       .withRoutes([
-        new (require('../../../src/routes/index'))(config),
-        new (require('../../../src/routes/image'))(config),
-        new (require('../../../src/routes/video'))(config)
+        new (require('../../../../src/routes/index'))(config),
+        new (require('../../../../src/routes/image'))(config),
+        new (require('../../../../src/routes/video'))(config)
       ])
       .start();
   });
@@ -42,7 +38,7 @@ describe('convert video', function () {
     const SRC_FILE = 'trailer_1080p.ogg';
     const HOST = '127.0.0.1';
     const SERVER_PORT = PORT + 1;
-    const FILE_PATH = path.join(__dirname, '../../fixtures/videos', SRC_FILE);
+    const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
     const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
@@ -53,7 +49,7 @@ describe('convert video', function () {
     return startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
       flamingoServer = s;
 
-      return got(`http://${HOST}:${PORT}/video/avatar-image/${encode(`http://${HOST}:${SERVER_PORT}`)}`);
+      return got(`http://${HOST}:${PORT}/video/avatar-image/${encodeURIComponent(`http://${HOST}:${SERVER_PORT}`)}`);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 200);
@@ -65,7 +61,7 @@ describe('convert video', function () {
     const SRC_FILE = 'trailer_1080p.mp4';
     const HOST = '127.0.0.1';
     const SERVER_PORT = PORT + 1;
-    const FILE_PATH = path.join(__dirname, '../../fixtures/videos', SRC_FILE);
+    const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
     const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
@@ -76,7 +72,7 @@ describe('convert video', function () {
     return startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
       flamingoServer = s;
 
-      return got(`http://${HOST}:${PORT}/video/avatar-image/${encode(`http://${HOST}:${SERVER_PORT}`)}`);
+      return got(`http://${HOST}:${PORT}/video/avatar-image/${encodeURIComponent(`http://${HOST}:${SERVER_PORT}`)}`);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 200);
@@ -87,7 +83,7 @@ describe('convert video', function () {
     const SRC_FILE = 'trailer_1080p.avi';
     const HOST = '127.0.0.1';
     const SERVER_PORT = PORT + 1;
-    const FILE_PATH = path.join(__dirname, '../../fixtures/videos', SRC_FILE);
+    const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
     const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
@@ -98,7 +94,7 @@ describe('convert video', function () {
     return startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
       flamingoServer = s;
 
-      return got(`http://${HOST}:${PORT}/video/avatar-image/${encode(`http://${HOST}:${SERVER_PORT}`)}`);
+      return got(`http://${HOST}:${PORT}/video/avatar-image/${encodeURIComponent(`http://${HOST}:${SERVER_PORT}`)}`);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 200);
@@ -109,7 +105,7 @@ describe('convert video', function () {
     const SRC_FILE = 'trailer_1080p.mov';
     const HOST = '127.0.0.1';
     const SERVER_PORT = PORT + 1;
-    const FILE_PATH = path.join(__dirname, '../../fixtures/videos', SRC_FILE);
+    const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
     const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
@@ -121,7 +117,7 @@ describe('convert video', function () {
       flamingoServer = s;
 
       return got('http://' + HOST + ':' + PORT + '/video/avatar-image/' +
-        encode('http://' + HOST + ':' + SERVER_PORT));
+        encodeURIComponent('http://' + HOST + ':' + SERVER_PORT));
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 200);
@@ -144,7 +140,7 @@ describe('convert video', function () {
       flamingoServer = s;
 
       return got('http://' + HOST + ':' + PORT + '/video/avatar-image/' +
-        encode('http://' + HOST + ':' + SERVER_PORT)).catch(e => e);
+        encodeURIComponent('http://' + HOST + ':' + SERVER_PORT)).catch(e => e);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 400);

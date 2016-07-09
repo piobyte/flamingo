@@ -9,23 +9,24 @@ const {InvalidInputError} = require('../../../src/util/errors');
 const httpReader = require('../../../src/reader/https');
 const responseWriter = require('../../../src/writer/response');
 const url = require('url');
+const {encode} = require('../../../src/util/cipher');
 
 describe('profile-operation', function () {
   it('extracts the input url by decoding the url param', function () {
     const ProfileOperationClass = ProfileOperation(Route);
-    const conf = new Config();
     const profile = new ProfileOperationClass();
     const operation = new FlamingoOperation();
     const testUrl = 'http://example.com/image.png';
-    const encodedUrl = encodeURIComponent(testUrl);
 
-    conf.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
-    operation.config = conf;
-    operation.request = {params: {url: encodedUrl}};
-
-    return profile.extractInput(operation).then(input => {
-      assert.deepEqual(input, url.parse(testUrl));
-    });
+    return Config.fromEnv().then(config =>
+      encode(testUrl, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV)
+        .then(cipherUrl => {
+          operation.config = config;
+          operation.request = {params: {url: cipherUrl}};
+          return profile.extractInput(operation);
+        }).then((input) => {
+          assert.deepEqual(input, url.parse(testUrl));
+        }));
   });
 
   it('extracts the operations profile based on the profile param', function () {
@@ -67,23 +68,10 @@ describe('profile-operation', function () {
 
   it('builds an operation', function () {
     return Config.fromEnv().then(config => {
-      const conf = config;
       const operation = new FlamingoOperation();
       const profile = 'someProfile';
       const givenUrl = 'http://example.com/image.png';
-      const encodedUrl = encodeURIComponent(givenUrl);
-      const profileSpy = sinon.spy();
-      conf.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
 
-      const request = {params: {profile, url: encodedUrl}};
-      const reply = sinon.spy();
-
-      operation.config = conf;
-      operation.request = request;
-      operation.config = conf;
-      operation.profiles = {
-        someProfile: (request, config) => Promise.resolve(profileSpy)
-      };
       const ProfileOperationClass = ProfileOperation(class extends Route {
         buildOperation(request, reply) {
           return Promise.resolve(operation);
@@ -91,11 +79,24 @@ describe('profile-operation', function () {
       });
       const profileOp = new ProfileOperationClass();
 
-      return profileOp.buildOperation(request, reply).then((operation) => {
-        assert.equal(operation.profile, profileSpy);
-        assert.equal(operation.reader, httpReader);
-        assert.deepEqual(operation.input, url.parse(givenUrl));
-        assert.equal(operation.writer, responseWriter);
+      return encode(givenUrl, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV).then((encoded) => {
+        const profileSpy = sinon.spy();
+        const request = {params: {profile, url: encoded}};
+        const reply = sinon.spy();
+
+        operation.config = config;
+        operation.request = request;
+        operation.profiles = {
+          someProfile: (request, config) => Promise.resolve(profileSpy)
+        };
+
+        return profileOp.buildOperation(request, reply).then((operation) => {
+          assert.equal(operation.profile, profileSpy);
+          assert.equal(operation.reader, httpReader);
+
+          assert.deepEqual(operation.input, url.parse(givenUrl));
+          assert.equal(operation.writer, responseWriter);
+        });
       });
     });
   });
@@ -110,8 +111,6 @@ describe('profile-operation', function () {
     const request = {params: {profile, url: encodedUrl}};
     const reply = sinon.spy();
 
-    conf.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
-
     operation.request = {params: {profile, url: encodedUrl}};
     operation.config = conf;
     operation.profiles = {
@@ -119,6 +118,10 @@ describe('profile-operation', function () {
     };
 
     const ProfileOperationClass = ProfileOperation(class extends Route {
+      extractInput(operation) {
+        return Promise.resolve(decodeURIComponent(operation.request.params.url));
+      }
+
       buildOperation(request, reply) {
         return Promise.resolve(operation);
       }

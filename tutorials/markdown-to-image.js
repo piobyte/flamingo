@@ -37,8 +37,6 @@ class MarkdownRoute extends MarkdownPreprocess(Image) {
 }
 
 Config.fromEnv().then(config => {
-  config.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
-
   return new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new MarkdownRoute(config)])
