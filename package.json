@@ -55,11 +55,14 @@
     "flow-bin": "^0.27.0",
     "istanbul": "^0.4.4",
     "jsdoc": "^3.4.0",
+    "markdown-it": "^7.0.0",
     "minami": "^1.1.1",
     "mocha": "^2.4.5",
     "nock": "^8.0.0",
     "node-uuid": "^1.4.7",
-    "sinon": "^1.17.3"
+    "probe-image-size": "^2.0.1",
+    "sinon": "^1.17.3",
+    "webshot": "github:brenden/node-webshot#pull/150/head"
   },
   "optionalDependencies": {
     "gm": "^1.22.0",

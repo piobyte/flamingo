@@ -21,10 +21,9 @@ class ImageMetaRoute extends Route {
   }
 }
 
-Config.fromEnv().then(config => {
-  return new Server(config, new AddonLoader(__dirname, {}).load())
+module.exports = Config.fromEnv()
+  .then(config => new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new ImageMetaRoute(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`));
-});
+    .then(server => console.log(`server running at ${server.hapi.info.uri}`) || server));

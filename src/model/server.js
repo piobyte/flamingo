@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * Flamingo server
- * @class
- */
 
 const Hapi = require('hapi');
 const merge = require('lodash/merge');
@@ -14,6 +10,10 @@ const FlamingoOperation = require('./flamingo-operation');
 const Route = require('./route');
 const assert = require('assert');
 
+/**
+ * Flamingo server
+ * @class
+ */
 class Server {
   /**
    * Takes a config and an addon loader to build the server.

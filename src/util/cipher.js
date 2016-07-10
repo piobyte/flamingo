@@ -1,3 +1,8 @@
+/**
+ * Plaintext encipher/decipher module
+ * @module flamingo/src/util/cipher
+ */
+
 const Promise = require('bluebird');
 const {InvalidInputError} = require('./errors');
 const crypto = require('crypto');

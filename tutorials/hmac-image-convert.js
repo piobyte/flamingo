@@ -24,15 +24,15 @@ function hmacValidateOperation(operation, givenDigest, enc) {
 }
 
 function HmacImageConvert(superClass) {
-  return class HmacImageConverter extends superClass{
-    buildMessage(op){
+  return class HmacImageConverter extends superClass {
+    buildMessage(op) {
       const query = qs.stringify(op.request.query);
       const params = qs.stringify(pickBy(op.request.params, (val, key) => key !== 'signature'));
 
       return `${params}|${query}`;
     }
 
-    extractDigest(op){
+    extractDigest(op) {
       return op.request.params.signature;
     }
 
@@ -52,10 +52,9 @@ class HmacImageConvertRoute extends HmacImageConvert(Image) {
   }
 }
 
-Config.fromEnv().then(config => {
-  return new Server(config, new AddonLoader(__dirname, {}).load())
+module.exports = Config.fromEnv()
+  .then(config => new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new HmacImageConvertRoute(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`));
-});
+    .then(server => console.log(`server running at ${server.hapi.info.uri}`) || server));

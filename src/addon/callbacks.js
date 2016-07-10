@@ -4,7 +4,6 @@
  * @module flamingo/src/addon/callbacks
  */
 
-
 const envConfig = require('./../util/env-config');
 const addon = require('./index');
 const assign = require('lodash/assign');
