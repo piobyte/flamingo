@@ -32,16 +32,6 @@ The data is mostly transferred through Node.js [streams](https://nodejs.org/api/
 Reader modules don't resolve streams directly, because a given preprocessor could optimize reading of the input 
 (i.e. pass filepath or url to ffmpeg instead of streaming the whole file first).
 
-## Config
-
-Modify `config.js` or set environment variables. See [CONFIG](https://piobyte.github.io/flamingo/module-flamingo_config-CONFIG.html) for fields and their description.
-
-__Note:__ if you're using the `Dockerfile`, don't change the port to anything other than 3000 (port 3000 is exposed from the container).
-
-To allow configuration without modifying the config file, there are some environment variable mappings.
-If they're set, the default config will be overwritten.
-If an environment mapping exists, it's documented under the `Environment` keyword. (i.e. `Environment: 'DEBUG'`)
-
 ## Useful bunyan filters
 
 - only log memwatch stats or leaks `bunyan -c 'this.msg === "stats" || this.msg === "leak"'`

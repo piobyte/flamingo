@@ -24,12 +24,26 @@ describe('index server response', function () {
   it('returns a banner for /', function () {
     let server;
 
-    return startServer().then(function (s) {
+    return startServer({DEBUG: false}).then(function (s) {
       server = s;
 
       return got('http://localhost:' + PORT);
     }).then(function (response) {
       assert.equal(response.statusCode, 200);
+      assert.ok(response.body.indexOf('debug') === -1, 'isn\'t showing debug information if disabled');
+    }).finally(() => server.stop());
+  });
+
+  it('displays debug information if DEBUG is enabled', function () {
+    let server;
+
+    return startServer({DEBUG: true}).then(function (s) {
+      server = s;
+
+      return got('http://localhost:' + PORT);
+    }).then(function (response) {
+      // TODO: maybe query DOM for debug div
+      assert.ok(response.body.indexOf('debug') !== -1);
     }).finally(() => server.stop());
   });
 });
