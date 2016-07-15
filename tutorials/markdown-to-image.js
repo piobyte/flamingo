@@ -36,8 +36,8 @@ class MarkdownRoute extends MarkdownPreprocess(Image) {
   }
 }
 
-module.exports = Config.fromEnv()
-  .then(config => new Server(config, new AddonLoader(__dirname, {}).load())
+module.exports = () =>
+  Config.fromEnv().then(config => new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new MarkdownRoute(config)])
     .start()

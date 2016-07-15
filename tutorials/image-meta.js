@@ -21,8 +21,8 @@ class ImageMetaRoute extends Route {
   }
 }
 
-module.exports = Config.fromEnv()
-  .then(config => new Server(config, new AddonLoader(__dirname, {}).load())
+module.exports = () =>
+  Config.fromEnv().then(config => new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new ImageMetaRoute(config)])
     .start()

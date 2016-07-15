@@ -37,6 +37,12 @@ const expected = [{
     assert.deepEqual(response.statusCode, 200);
   }
 }, {
+  file: 'hmac-image-convert.js',
+  url: `http://localhost:3000/image/preview-image/eeeb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`,
+  error: (response) => {
+    assert.equal(response.statusCode, 400);
+  }
+}, {
   file: 'markdown-to-image.js',
   url: 'http://localhost:3000/md/preview-image/%23%20headline%0A%0Awasd?size=500',
   ok: (response) => {
@@ -49,15 +55,15 @@ describe('tutorials work as expected', function () {
     return assetsServer.stop();
   });
 
-  expected.forEach(({file, url, ok}) => {
+  expected.forEach(({file, url, ok, error}) => {
     it(`${file}`, function () {
       let server;
-      return require(path.join('../../tutorials', file))
+      return require(path.join('../../tutorials', file))()
         .then((createdServer) => {
           server = createdServer;
-          return got(url);
+          const request = got(url);
+          return error ? request.catch(error) : request.then(ok);
         })
-        .then((response) => ok(response))
         .finally(() => server.stop());
     });
   });

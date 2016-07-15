@@ -77,6 +77,7 @@ class Server {
   stop() {
     return new Promise((resolve, reject) => {
       this.hapi.stop((err) => {
+        /* istanbul ignore next */
         if (err) reject(err);
         else resolve(this);
       });
@@ -90,6 +91,7 @@ class Server {
   start() {
     return new Promise((resolve, reject) => {
       this.hapi.start((err, data) => {
+        /* istanbul ignore next */
         if (err) reject(err);
         else resolve(this);
       });

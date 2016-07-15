@@ -66,6 +66,12 @@ describe('logger', function () {
     assert.deepEqual(logger.serializers.error('pls halp'), {message: 'pls halp'});
   });
 
+  it('serializes input', function(){
+    assert.deepEqual(logger.serializers.input('# Headline\nsome markdown'), '# Headline\nsome markdown');
+    assert.deepEqual(logger.serializers.input(url.parse('http://zombo.com/')), 'http://zombo.com/');
+    assert.deepEqual(logger.serializers.input({some: 'object'}), '{ some: \'object\' }');
+  });
+
   it('serializes operation object', function () {
     const operation = new FlamingoOperation();
     operation.input = url.parse('https://travis-ci.org/piobyte/flamingo.svg?branch=master');

@@ -10,10 +10,10 @@ function fileExists(filePath/*: string */) {
   return new Promise(function (resolve, reject) {
     fs.stat(filePath, (err, stat) => {
       if (err) {
-        reject(err);
+        reject(new InvalidInputError('Input stat error.', err));
       } else {
         if (!stat.isFile()) {
-          reject(new InvalidInputError('Unknown input file', filePath));
+          reject(new InvalidInputError('Input isn\'t a file.', filePath));
         } else {
           resolve();
         }
@@ -35,7 +35,7 @@ module.exports = function (operation/*: FlamingoOperation */) {
   const normalizedPath = path.normalize(filePath.path);
 
   if (!accessAllowed(normalizedPath, readWhitelist)) {
-    return Promise.reject(new InvalidInputError('File access not allowed', filePath));
+    return Promise.reject(new InvalidInputError('File access not allowed.', filePath));
   }
 
   return fileExists(normalizedPath).then(() => ({
