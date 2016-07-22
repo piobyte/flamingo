@@ -23,7 +23,7 @@ COPY . /data
 
 # Install app dependencies
 RUN cd /data && \
-    npm install flamingo-sentry --save && \
+    npm install flamingo-sentry@1.0.0 --save && \
     npm install --no-optional && \
     npm dedupe
 
