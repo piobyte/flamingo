@@ -7,7 +7,6 @@ node_js:
 - '6'
 - '4'
 - '0.12'
-- 'iojs'
 sudo: 9000
 addons:
   apt:
