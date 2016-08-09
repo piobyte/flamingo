@@ -11,7 +11,7 @@ const Promise = require('bluebird');
  * @return {Function} Function that replies a given stream
  * @param {FlamingoOperation} operation
  */
-module.exports = function ({reply, profile:{response}}) {
+module.exports = function ({reply, response}) {
   return function (stream) {
     return new Promise(function (resolve, reject) {
       stream.on('error', reject);

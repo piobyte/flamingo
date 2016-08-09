@@ -61,7 +61,7 @@ module.exports = function (operation) {
                 logger.debug(data);
               })
               .on('start', function (commandLine) {
-                logger.info('Spawned ffmpeg with command: ' + commandLine);
+                logger.info(`Spawned ffmpeg with command: ${commandLine}`);
               })
               .on('error', function (e) {
                 throw new ProcessingError(e.message, e);

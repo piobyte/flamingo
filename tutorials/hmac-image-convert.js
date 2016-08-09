@@ -8,6 +8,7 @@ const AddonLoader = require('../src/addon/loader');
 const qs = require('querystring');
 const pickBy = require('lodash/pickBy');
 const url = require('url');
+const logger = require('../src/logger').build('tutorials/hmac-image-convert');
 
 function hmacValidateOperation(operation, givenDigest, enc) {
   const hmac = crypto.createHmac('sha256', operation.config.CRYPTO.HMAC_KEY);
@@ -57,4 +58,4 @@ module.exports = () =>
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new HmacImageConvertRoute(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`) || server));
+    .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server));

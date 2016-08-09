@@ -4,6 +4,7 @@ const Config = require('../config');
 const AddonLoader = require('../src/addon/loader');
 const url = require('url');
 const probe = require('probe-image-size');
+const logger = require('../src/logger').build('tutorials/image-meta');
 
 class ImageMetaRoute extends Route {
   constructor(conf, method = 'GET', path = '/image/{url}', description = 'Image metadata conversion') {
@@ -26,4 +27,4 @@ module.exports = () =>
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new ImageMetaRoute(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`) || server));
+    .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server));

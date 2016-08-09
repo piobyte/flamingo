@@ -76,7 +76,8 @@ module.exports = (SuperClass) => {
         ]).then(([input, profile]) =>
           this.extractReader(input).then(reader => {
             operation.input = input;
-            operation.profile = profile;
+            operation.process = profile.process;
+            operation.response = profile.response;
             operation.reader = reader;
             operation.writer = responseWriter;
 

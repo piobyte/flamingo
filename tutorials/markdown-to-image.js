@@ -3,6 +3,7 @@ const Server = require('../src/model/server');
 const Config = require('../config');
 const AddonLoader = require('../src/addon/loader');
 const Promise = require('bluebird');
+const logger = require('../src/logger').build('tutorials/markdown-to-image');
 
 const webshot = require('webshot');
 const MarkdownIt = require('markdown-it');
@@ -41,4 +42,4 @@ module.exports = () =>
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new MarkdownRoute(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`) || server));
+    .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server));

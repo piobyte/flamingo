@@ -27,15 +27,14 @@ if (require('optional')('gm') !== null) {
  * // converted image stream
  */
 module.exports = function (operation/*: FlamingoOperation */)/*: function */ {
-  const transformations = operation.profile.process;
+  const transformations = operation.process;
 
   return function (stream) {
-
     forEach(transformations, transformation => {
       if (processors.hasOwnProperty(transformation.processor)) {
         stream = processors[transformation.processor](operation, transformation.pipe, stream);
       } else {
-        logger.info('Skipping transformation, unknown processor: ' + transformation.processor);
+        logger.info(`Skipping transformation, unknown processor: ${transformation.processor}`);
       }
     });
 

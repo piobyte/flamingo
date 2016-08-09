@@ -48,6 +48,12 @@ const expected = [{
   ok: (response) => {
     assert.deepEqual(response.statusCode, 200);
   }
+}, {
+  file: 'custom-urls.js',
+  url: `http://localhost:3000/convert/image/preview-image/${IMAGE_URL}`,
+  ok: (response) => {
+    assert.deepEqual(response.statusCode, 200);
+  }
 }];
 
 describe('tutorials work as expected', function () {

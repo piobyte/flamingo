@@ -80,7 +80,7 @@ describe('profile-operation', function () {
       const profileOp = new ProfileOperationClass();
 
       return encode(givenUrl, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV).then((encoded) => {
-        const profileSpy = sinon.spy();
+        const profileSpy = {process: [{processor: 'foo'}], response: {header: {foo: 'bar'}}};
         const request = {params: {profile, url: encoded}};
         const reply = sinon.spy();
 
@@ -91,7 +91,8 @@ describe('profile-operation', function () {
         };
 
         return profileOp.buildOperation(request, reply).then((operation) => {
-          assert.equal(operation.profile, profileSpy);
+          assert.deepEqual(operation.process, profileSpy.process);
+          assert.deepEqual(operation.response, profileSpy.response);
           assert.equal(operation.reader, httpReader);
 
           assert.deepEqual(operation.input, url.parse(givenUrl));

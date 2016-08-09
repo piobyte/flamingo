@@ -20,7 +20,7 @@ class Server {
    * @constructor
    * @param {Config} conf
    * @param {AddonLoader} addonsLoader
-     */
+   */
   constructor(conf, addonsLoader) {
     this.conf = conf;
     FlamingoOperation.prototype.config = conf;
@@ -33,10 +33,7 @@ class Server {
     this._profiles = {};
 
     this.hapi = new Hapi.Server({
-      debug: {
-        log: ['error'],
-        request: ['error']
-      }
+      debug: conf.DEBUG ? {log: ['error'], request: ['error']} : false
     });
     this.hapi.connection({
       port: this.conf.PORT
@@ -47,7 +44,7 @@ class Server {
    * Add the given routes to the server instance
    * @param {Array.<Route>} routes routes to add to the server instance
    * @returns {Server}
-     */
+   */
   withRoutes(routes) {
     routes.forEach((route) => {
       assert.ok(route instanceof Route);
@@ -61,7 +58,7 @@ class Server {
    * Add the given profiles to the server instance
    * @param {Array.<{}>} profiles profiles to add to the server instance
    * @returns {Server}
-     */
+   */
   withProfiles(profiles) {
     profiles.forEach(profile => {
       merge(this._profiles, profile);

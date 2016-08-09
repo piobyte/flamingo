@@ -88,10 +88,11 @@ class Route {
      * @return {*} reply return value
      */
   handleError(request, reply, error, operation = {}) {
+    const message = `${error.name}: ${error.message} at '${request.path}'`;
     logger.error({
       error: error,
       operation: operation
-    }, 'Convert error for ' + request.path);
+    }, message);
     return reply(errorReply(error, operation));
   }
 }
