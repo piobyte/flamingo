@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * Function deprecation module
- * @module flamingo/src/util/deprecate
+ * @module
  */
 
 const logger = require('../logger').build('deprecate');

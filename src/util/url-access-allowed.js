@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * Url whitelist module
- * @module flamingo/src/util/read-allowed
+ * @module
  */
 const some = require('lodash/some');
 const keys = require('lodash/keys');

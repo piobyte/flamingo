@@ -1,7 +1,7 @@
 /* @flow weak */
 /**
  * Logger module
- * @module flamingo/src/logger
+ * @module
  */
 
 const pkg = require('../package');

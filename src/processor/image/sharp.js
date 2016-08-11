@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * vips image processor module
- * @module flamingo/src/processor/image/sharp
+ * @module
  * @see https://github.com/lovell/sharp
  * @see http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS
  */

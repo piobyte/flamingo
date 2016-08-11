@@ -1,7 +1,7 @@
 /* @flow weak */
 /**
  * Addon callbacks module
- * @module flamingo/src/addon/callbacks
+ * @module
  */
 
 const envConfig = require('./../util/env-config');
@@ -15,6 +15,7 @@ const partial = require('lodash/partial');
  * @see https://github.com/lodash/lodash/issues/1453#issuecomment-139311305
  * @param {*} a
  * @param {*} b
+ * @private
  * @returns {Buffer|undefined} b if b is Buffer
  */
 function mergeBufferAware(a, b) {

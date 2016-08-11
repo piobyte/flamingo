@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * Accept header media type parsing module
- * @module flamingo/src/util/best-format
+ * @module
  */
 
 const mimeparse = require('mimeparse');

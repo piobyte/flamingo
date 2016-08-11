@@ -1,7 +1,7 @@
 /* disabled flow because of deprecated signature type mismatch */
 /**
  * Image processor module
- * @module flamingo/src/processor/image
+ * @module
  */
 const forEach = require('lodash/forEach');
 const logger = require('../../logger').build('processor/image');

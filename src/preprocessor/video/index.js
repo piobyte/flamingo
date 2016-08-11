@@ -2,7 +2,7 @@
 
 /**
  * Video preprocessor module
- * @module flamingo/src/preprocessor/video
+ * @module
  */
 
 const ffmpeg = require('fluent-ffmpeg');

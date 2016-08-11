@@ -20,7 +20,7 @@ const assetsServer = startAssetsServer();
 const expected = [{
   file: 'image-meta.js',
   url: `http://localhost:3000/image/${IMAGE_URL}`,
-  ok: (response) => {
+  ok(response) {
     assert.deepEqual(JSON.parse(response.body), {
       width: 450,
       height: 600,
@@ -33,31 +33,37 @@ const expected = [{
 }, {
   file: 'hmac-image-convert.js',
   url: `http://localhost:3000/image/preview-image/a3fb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`,
-  ok: (response) => {
+  ok(response) {
     assert.deepEqual(response.statusCode, 200);
   }
 }, {
   file: 'hmac-image-convert.js',
   url: `http://localhost:3000/image/preview-image/eeeb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`,
-  error: (response) => {
+  error(response) {
     assert.equal(response.statusCode, 400);
   }
 }, {
   file: 'markdown-to-image.js',
   url: 'http://localhost:3000/md/preview-image/%23%20headline%0A%0Awasd?size=500',
-  ok: (response) => {
+  ok(response) {
     assert.deepEqual(response.statusCode, 200);
   }
 }, {
   file: 'custom-urls.js',
   url: `http://localhost:3000/convert/image/preview-image/${IMAGE_URL}`,
-  ok: (response) => {
+  ok(response) {
+    assert.deepEqual(response.statusCode, 200);
+  }
+}, {
+  file: 'url-transformation-instructions.js',
+  url: `http://localhost:3000/inline/image/resize=300:100,toFormat=webp,rotate=90,min/${IMAGE_URL}`,
+  ok(response) {
     assert.deepEqual(response.statusCode, 200);
   }
 }];
 
 describe('tutorials work as expected', function () {
-  after(function(){
+  after(function () {
     return assetsServer.stop();
   });
 

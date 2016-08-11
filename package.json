@@ -1,6 +1,6 @@
 {
   "name": "flamingo",
-  "version": "2.0.0-alpha.9",
+  "version": "2.0.0-alpha.10",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "typecheck": "node_modules/.bin/flow check",
     "lint": "node node_modules/eslint/bin/eslint.js index.js config.js test src targets tutorials",
     "predocs": "rm -r docs 2>/dev/null || true",
-    "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r -u tutorials -t ./node_modules/minami -P package.json -R README.md -d docs",
+    "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r -u tutorials -t ./node_modules/postman-jsdoc-theme -P package.json -R README.md -d docs",
     "pretest": "npm run lint && npm run typecheck",
     "test": "TEST=true npm run cover",
     "preversion": "npm test",
@@ -56,10 +56,10 @@
     "istanbul": "^0.4.4",
     "jsdoc": "^3.4.0",
     "markdown-it": "^7.0.0",
-    "minami": "^1.1.1",
     "mocha": "^3.0.2",
     "nock": "^8.0.0",
     "node-uuid": "^1.4.7",
+    "postman-jsdoc-theme": "0.0.2",
     "probe-image-size": "^2.1.0",
     "sinon": "^1.17.5",
     "webshot": "github:brenden/node-webshot#pull/150/head"

@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * Supported features module
- * @module flamingo/src/util/supported
+ * @module
  */
 const Promise = require('bluebird');
 const temp = require('temp');

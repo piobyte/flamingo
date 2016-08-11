@@ -1,7 +1,7 @@
 /* @flow weak */
 /**
  * Flamingo file writer
- * @module flamingo/src/writer/file
+ * @module
  */
 const fs = require('fs');
 const fileAccessAllowed = require('../util/file-access-allowed');

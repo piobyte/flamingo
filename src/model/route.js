@@ -76,6 +76,7 @@ class Route {
     const op = new FlamingoOperation();
     op.request = request;
     op.reply = reply;
+    op.config = this.config;
     return Promise.resolve(op);
   }
 

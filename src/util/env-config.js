@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * Environment object mapping module
- * @module flamingo/src/util/env-config
+ * @module
  */
 const forEach = require('lodash/forEach');
 const set = require('lodash/set');

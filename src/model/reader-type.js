@@ -1,6 +1,6 @@
 /**
  * ReaderType module
- * @module flamingo/src/model/reader-type
+ * @module
  */
 
 /**

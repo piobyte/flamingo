@@ -1,6 +1,6 @@
 /* @flow weak */
 /**
- * @module flamingo/src/util/reader-for-url
+ * @module
  */
 
 const reader = {

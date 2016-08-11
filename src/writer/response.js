@@ -1,7 +1,7 @@
 /* @flow weak */
 /**
  * Flamingo response writer
- * @module flamingo/src/writer/response
+ * @module
  */
 const through = require('through2');
 const Promise = require('bluebird');

@@ -1,5 +1,16 @@
+/**
+ * Errors module
+ * @module
+ */
+
 const util = require('util');
 
+/**
+ * @extends Error
+ * @param {String} message
+ * @param {*} [extra]
+ * @constructor
+ */
 function InvalidInputError(message, extra) {
   Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;
@@ -9,6 +20,13 @@ function InvalidInputError(message, extra) {
     this.extra = extra;
   }
 }
+
+/**
+ * @extends Error
+ * @param {String} message
+ * @param {*} [extra]
+ * @constructor
+ */
 function ProcessingError(message, extra) {
   Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
   this.name = this.constructor.name;

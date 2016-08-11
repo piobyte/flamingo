@@ -1,7 +1,7 @@
 /* @flow weak */
 /**
  * Debug profiles that choose a processor based on the `processor` query param
- * @module flamingo/src/profiles/debug
+ * @module
  */
 const Promise = require('bluebird');
 const sharp = require('sharp');

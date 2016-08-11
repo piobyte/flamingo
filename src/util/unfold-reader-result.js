@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * Addon module
- * @module flamingo/src/util/unfold-reader-result
+ * @module
  */
 
 /**

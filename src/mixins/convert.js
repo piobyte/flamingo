@@ -3,6 +3,9 @@
 const Promise = require('bluebird');
 const imageProcessor = require('../processor/image');
 const unfoldReaderResult = require('../util/unfold-reader-result');
+const responseWriter = require('../writer/response');
+const readerForUrl = require('../util/reader-for-url');
+const {InvalidInputError} = require('../util/errors');
 
 module.exports = (SuperClass/*:Route*/) => {
   /**
@@ -11,7 +14,8 @@ module.exports = (SuperClass/*:Route*/) => {
    */
   class Convert extends SuperClass {
     /**
-     * Resolves if the given operation is valid
+     * Resolves if the given operation is valid.
+     *
      * @param {FlamingoOperation} operation
      * @returns {Promise.<FlamingoOperation>}
      * @example
@@ -25,6 +29,7 @@ module.exports = (SuperClass/*:Route*/) => {
 
     /**
      * Builds a read function that reads a given operation.
+     *
      * @param {FlamingoOperation} operation
      * @returns {function(FlamingoOperation): Promise.<{type: string, stream: function(): Promise<Stream>}>}
      */
@@ -33,7 +38,9 @@ module.exports = (SuperClass/*:Route*/) => {
     }
 
     /**
-     * Preprocesses reader result. Can be used i.e. to transform a non image input to an image stream
+     * Function that preprocesses the reader result.
+     * Can be used i.e. to transform a non image input to an image stream.
+     *
      * @param {FlamingoOperation} operation
      * @returns {function(): Promise.<Stream>} function that returns a promise which resolves an image stream
      * @example
@@ -56,7 +63,8 @@ module.exports = (SuperClass/*:Route*/) => {
     }
 
     /**
-     * Builds a function that takes a stream and transforms it
+     * Builds a function that takes a stream and transforms it.
+     * This is the point where the incoming image stream is transformed.
      * @param {FlamingoOperation} operation
      * @returns {function(Stream):Stream}
      */
@@ -76,9 +84,73 @@ module.exports = (SuperClass/*:Route*/) => {
     }
 
     /**
+     * Extract a processing instruction from a given operation.
+     * The processing instruction can also expose data useful for the response writer.
+     *
+     * @param {FlamingoOperation} operation
+     * @return {Promise.<{process: Array, response: {}}>}
+     */
+    extractProcess(operation) {
+      return Promise.resolve({process: [], response: {}});
+    }
+
+    /**
+     * Function that resolves a url pointing to the input that should be converted
+     *
+     * @param {FlamingoOperation} operation
+     * @return {Promise.<undefined>}
+     */
+    extractInput(operation) {
+      return Promise.resolve(undefined);
+    }
+
+    /**
+     * Function that resolves a reader for the given input.
+     * Rejects with InvalidInputError if no compatible reader is found.
+     *
+     * @param {Url} input
+     * @return {Promise.<function>} reader
+     * @example
+     * (input) =>
+     *   Promise.resolve((operation) => ({stream: fs.createReadStream('path/to/image.png'), type: 'file'}))
+     */
+    extractReader(input) {
+      const reader = readerForUrl(input);
+
+      if (!reader) {
+        return Promise.reject(new InvalidInputError('No reader available for given input', input));
+      }
+
+      return Promise.resolve(reader);
+    }
+
+    /**
+     * Function that builds an operation for a given request
+     * @param {ClientRequest} request incoming http request
+     * @param {function} reply hapi reply function
+     * @return {Promise.<FlamingoOperation>} Promise that resolves the build operation
+     */
+    buildOperation(request, reply) {
+      return super.buildOperation(request, reply).then(operation =>
+        Promise.all([
+          this.extractInput(operation),
+          this.extractProcess(operation)
+        ]).then(([input, {response, process}]) =>
+          this.extractReader(input).then(reader => {
+            operation.input = input;
+            operation.process = process;
+            operation.response = response;
+            operation.reader = reader;
+            operation.writer = responseWriter;
+
+            return operation;
+          })));
+    }
+
+    /**
      * Overwrites the Routes handle function to start the conversation process
      * @param {FlamingoOperation} operation
-     * @returns Promise
+     * @returns {Promise} promise that contains the whole convert process
      * @see flamingo/src/model/Route
      */
     handle(operation) {

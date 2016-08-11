@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * File access allowed module
- * @module flamingo/src/util/file-access-allowed
+ * @module
  */
 /**
  * Function to ensure that a given file path is whitelisted

@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * GraphicsMagick/ImageMagick image processor module
- * @module flamingo/src/processor/image/gm
+ * @module
  * @see https://github.com/aheckmann/gm
  * @see http://www.imagemagick.org/
  * @see http://www.graphicsmagick.org/

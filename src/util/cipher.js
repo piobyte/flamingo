@@ -1,6 +1,6 @@
 /**
  * Plaintext encipher/decipher module
- * @module flamingo/src/util/cipher
+ * @module
  */
 
 const Promise = require('bluebird');

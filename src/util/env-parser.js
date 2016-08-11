@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * Environment value parser module
- * @module flamingo/src/util/env-parser
+ * @module
  */
 
 module.exports = {

@@ -1,5 +1,6 @@
 const assert = require('assert');
 const ProfileOperation = require('../../../src/mixins/profile-operation');
+const Convert = require('../../../src/mixins/convert');
 const Route = require('../../../src/model/route');
 const FlamingoOperation = require('../../../src/model/flamingo-operation');
 const Config = require('../../../config');
@@ -47,7 +48,7 @@ describe('profile-operation', function () {
       }
     };
 
-    return profileOp.extractProfile(operation).then(extractedProfile =>
+    return profileOp.extractProcess(operation).then(extractedProfile =>
       assert.equal(extractedProfile, profileSpy));
   });
 
@@ -62,39 +63,36 @@ describe('profile-operation', function () {
     operation.config = conf;
     operation.request = {params: {profile: 'someUnknownProfile'}};
 
-    return profileOp.extractProfile(operation)
+    return profileOp.extractProcess(operation)
       .catch(e => assert.ok(e instanceof InvalidInputError));
   });
 
   it('builds an operation', function () {
     return Config.fromEnv().then(config => {
-      const operation = new FlamingoOperation();
       const profile = 'someProfile';
       const givenUrl = 'http://example.com/image.png';
-
-      const ProfileOperationClass = ProfileOperation(class extends Route {
-        buildOperation(request, reply) {
-          return Promise.resolve(operation);
-        }
-      });
-      const profileOp = new ProfileOperationClass();
+      const profileData = {process: [{processor: 'foo'}], response: {header: {foo: 'bar'}}};
+      FlamingoOperation.prototype.profiles = {someProfile: () => Promise.resolve(profileData)};
 
       return encode(givenUrl, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV).then((encoded) => {
-        const profileSpy = {process: [{processor: 'foo'}], response: {header: {foo: 'bar'}}};
         const request = {params: {profile, url: encoded}};
         const reply = sinon.spy();
 
-        operation.config = config;
-        operation.request = request;
-        operation.profiles = {
-          someProfile: (request, config) => Promise.resolve(profileSpy)
-        };
-
-        return profileOp.buildOperation(request, reply).then((operation) => {
-          assert.deepEqual(operation.process, profileSpy.process);
-          assert.deepEqual(operation.response, profileSpy.response);
+        const ProfileOperationClass = ProfileOperation(class extends Convert(Route) {
+          buildOperation(request, reply) {
+            return super.buildOperation(request, reply).then(operation => {
+              operation.process = profileData.process;
+              operation.response = profileData.response;
+              operation.config = config;
+              operation.request = request;
+              return Promise.resolve(operation);
+            });
+          }
+        });
+        return (new ProfileOperationClass(config)).buildOperation(request, reply).then((operation) => {
+          assert.deepEqual(operation.process, profileData.process);
+          assert.deepEqual(operation.response, profileData.response);
           assert.equal(operation.reader, httpReader);
-
           assert.deepEqual(operation.input, url.parse(givenUrl));
           assert.equal(operation.writer, responseWriter);
         });

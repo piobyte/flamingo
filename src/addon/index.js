@@ -5,7 +5,7 @@
  * Flamingo addons only interact with the base flamingo installation using specified hooks, ie.: `"ENV", "CONF", "PROFILES", "ROUTES", "HAPI_PLUGINS"`.
  * Each hook inside an addon must return a function that returns an expected value. To make it easier to change hook names,
  * use the exported `HOOKS` from the `src/addon.js` module (ie. `addon.HOOK.CONF`).
- * @module flamingo/src/addon
+ * @module
  */
 
 /**

@@ -1,7 +1,7 @@
 /* @flow */
 /**
  * Error reply module
- * @module flamingo/src/util/error-reply
+ * @module
  */
 const boom = require('boom');
 const {InvalidInputError, ProcessingError} = require('../util/errors');

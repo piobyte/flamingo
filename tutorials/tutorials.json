@@ -22,5 +22,8 @@
   },
   "image-meta": {
     "title": "Serving image metadata"
+  },
+  "url-transformation-instructions": {
+    "title": "Creating a route that decodes the process from an url param"
   }
 }

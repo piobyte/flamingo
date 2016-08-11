@@ -2,7 +2,7 @@
 
 /**
  * Example profiles
- * @module flamingo/src/profiles/examples
+ * @module
  */
 
 const Promise = require('bluebird');

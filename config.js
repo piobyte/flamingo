@@ -1,3 +1,7 @@
+/**
+ * Config module
+ * @module
+ */
 'use strict';
 
 const supported = require('./src/util/supported');
@@ -7,6 +11,7 @@ const pkg = require('./package');
 
 /**
  * Default {@link Config} values
+ * @namespace
  */
 const DEFAULTS = {};
 
