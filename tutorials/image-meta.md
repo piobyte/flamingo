@@ -25,8 +25,7 @@ class ImageMetaRoute extends Route {
   }
 
   extractInput(operation) {
-    return operation.config.DECODE_PAYLOAD(decodeURIComponent(operation.request.params.url))
-      .then(decoded => url.parse(decoded));
+    return Promise.resolve(url.parse(operation.request.params.url));
   }
 
   handle(operation) {
@@ -40,15 +39,11 @@ class ImageMetaRoute extends Route {
 ### starting the server
 
 ```js
-Config.fromEnv().then(config => {
-  config.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
-
-  return new Server(config, new AddonLoader(__dirname, {}).load())
+Config.fromEnv().then(config => new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new ImageMetaRoute(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`));
-});
+    .then(server => logger.info(`server running at ${server.hapi.info.uri}`)))
 ```
 
 ## Future ideas

@@ -1,3 +1,5 @@
+/* @flow weak */
+
 const Server = require('../src/model/server');
 const Route = require('../src/model/route');
 const Config = require('../config');

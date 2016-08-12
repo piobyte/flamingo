@@ -173,6 +173,9 @@ class Config {
     // setup default values
     Object.keys(DEFAULTS)
       .forEach(key => this[key] = DEFAULTS[key]);
+
+    // see https://nodejs.org/api/util.html#util_custom_inspect_function_on_objects
+    this.CRYPTO.inspect = () => '[𝗥𝗘𝗗𝗔𝗖𝗧𝗘𝗗]';
   }
 
   /**

@@ -8,6 +8,7 @@ const simpleHttpServer = require('../../test/test-util/simple-http-server');
 const path = require('path');
 const url = require('url');
 const Route = require('../model/route');
+const {encode} = require('../util/cipher');
 
 const DEBUG_PORT = 43723;
 const DEBUG_HOST = 'localhost';
@@ -44,7 +45,7 @@ class Debug extends Route {
   constructor(config = {}, method = 'GET', path = '/_debug', description = 'Debug') {
     super(config, method, path, description);
 
-    Promise.all(IMAGES.map((image) => config.ENCODE_PAYLOAD(image.url)))
+    Promise.all(IMAGES.map((image) => encode(image.url, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV)))
       .then((encodedUrls) => {
         IMAGES = encodedUrls.map((encoded, i) => {
           IMAGES[i].enc = encoded;

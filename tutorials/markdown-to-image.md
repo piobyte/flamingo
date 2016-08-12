@@ -61,14 +61,10 @@ class MarkdownRoute extends MarkdownPreprocess(Image) {
 ### starting the server
 
 ```js
-Config.fromEnv().then(config => {
-  config.DECODE_PAYLOAD = (payload) => Promise.resolve(payload);
-
-  return new Server(config, new AddonLoader(__dirname, {}).load())
+Config.fromEnv().then(config => new Server(config, new AddonLoader(__dirname, {}).load())
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new MarkdownRoute(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`));
-});
+    .then(server => logger.info(`server running at ${server.hapi.info.uri}`)));
 ```
 
