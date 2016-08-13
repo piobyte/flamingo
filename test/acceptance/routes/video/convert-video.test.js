@@ -40,23 +40,29 @@ describe('convert video', function () {
     const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(function (req, res) {
+    return simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
+    }).then(httpServer => {
+
+      const HOST = httpServer.address().address;
+      const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+      const flamingoUrl = url.format({
+        protocol: 'http',
+        hostname: HOST,
+        port: FLAMINGO_PORT,
+        pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      });
+
+      return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+        flamingoServer = s;
+
+        return got(flamingoUrl);
+      }).then(function (data) {
+        assert.ok(data);
+        assert.equal(data.statusCode, 200);
+      }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
     });
-
-    const HOST = httpServer.address().address;
-    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
-    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
-
-    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
-      flamingoServer = s;
-
-      return got(flamingoUrl);
-    }).then(function (data) {
-      assert.ok(data);
-      assert.equal(data.statusCode, 200);
-    }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
   });
 
   it.skip('creates an image from an mp4 video', function () {
@@ -65,23 +71,29 @@ describe('convert video', function () {
     const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(function (req, res) {
+    return simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
+    }).then(httpServer => {
+      const HOST = httpServer.address().address;
+
+      const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+      const flamingoUrl = url.format({
+        protocol: 'http',
+        hostname: HOST,
+        port: FLAMINGO_PORT,
+        pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      });
+
+      return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+        flamingoServer = s;
+
+        return got(flamingoUrl);
+      }).then(function (data) {
+        assert.ok(data);
+        assert.equal(data.statusCode, 200);
+      }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
     });
-    const HOST = httpServer.address().address;
-
-    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
-    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
-
-    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
-      flamingoServer = s;
-
-      return got(flamingoUrl);
-    }).then(function (data) {
-      assert.ok(data);
-      assert.equal(data.statusCode, 200);
-    }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
   });
 
   it('creates an image from an avi video', function () {
@@ -89,23 +101,29 @@ describe('convert video', function () {
     const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(function (req, res) {
+    return simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
+    }).then(httpServer => {
+      const HOST = httpServer.address().address;
+
+      const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+      const flamingoUrl = url.format({
+        protocol: 'http',
+        hostname: HOST,
+        port: FLAMINGO_PORT,
+        pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      });
+
+      return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+        flamingoServer = s;
+
+        return got(flamingoUrl);
+      }).then(function (data) {
+        assert.ok(data);
+        assert.equal(data.statusCode, 200);
+      }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
     });
-    const HOST = httpServer.address().address;
-
-    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
-    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
-
-    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
-      flamingoServer = s;
-
-      return got(flamingoUrl);
-    }).then(function (data) {
-      assert.ok(data);
-      assert.equal(data.statusCode, 200);
-    }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
   });
 
   it('creates an image from an quicktime video', function () {
@@ -113,23 +131,29 @@ describe('convert video', function () {
     const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(function (req, res) {
+    return simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
+    }).then(httpServer => {
+      const HOST = httpServer.address().address;
+
+      const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+      const flamingoUrl = url.format({
+        protocol: 'http',
+        hostname: HOST,
+        port: FLAMINGO_PORT,
+        pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      });
+
+      return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+        flamingoServer = s;
+
+        return got(flamingoUrl);
+      }).then(function (data) {
+        assert.ok(data);
+        assert.equal(data.statusCode, 200);
+      }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
     });
-    const HOST = httpServer.address().address;
-
-    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
-    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
-
-    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
-      flamingoServer = s;
-
-      return got(flamingoUrl);
-    }).then(function (data) {
-      assert.ok(data);
-      assert.equal(data.statusCode, 200);
-    }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
   });
 
   it('rejects on ffprobe errors', function () {
@@ -137,22 +161,28 @@ describe('convert video', function () {
     const FILE_PATH = path.join(__dirname, SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(function (req, res) {
+    return simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
+    }).then(httpServer => {
+      const HOST = httpServer.address().address;
+
+      const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+      const flamingoUrl = url.format({
+        protocol: 'http',
+        hostname: HOST,
+        port: FLAMINGO_PORT,
+        pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      });
+
+      return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+        flamingoServer = s;
+
+        return got(flamingoUrl).catch(e => e);
+      }).then(function (data) {
+        assert.ok(data);
+        assert.equal(data.statusCode, 400);
+      }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
     });
-    const HOST = httpServer.address().address;
-
-    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
-    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
-
-    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
-      flamingoServer = s;
-
-      return got(flamingoUrl).catch(e => e);
-    }).then(function (data) {
-      assert.ok(data);
-      assert.equal(data.statusCode, 400);
-    }).finally(() => Promise.all([httpServer.stop(), flamingoServer.stop()]));
   });
 });

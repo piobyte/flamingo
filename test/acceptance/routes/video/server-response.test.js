@@ -41,36 +41,36 @@ describe('video converting server response', function () {
   });
 
   it('returns 400 for all target error codes', function () {
-    const httpServer = simpleHttpServer(function (req, res) {
+    return simpleHttpServer(function (req, res) {
       const code = parseInt(req.url.replace(/\//g, ''), 10);
       res.writeHead(code, {});
       res.end();
-    });
+    }).then(httpServer => {
+      const HOST = httpServer.address().address;
+      const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
 
-    const HOST = httpServer.address().address;
-    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+      let server;
+      const codes = range(400, 600);
 
-    let server;
-    const codes = range(400, 600);
-
-    return startServer({
-      HOST,
-      ACCESS: {
-        HTTPS: {
-          ENABLED: true,
-          READ: [{'hostname': 'errs.example.com'}]
+      return startServer({
+        HOST,
+        ACCESS: {
+          HTTPS: {
+            ENABLED: true,
+            READ: [{'hostname': 'errs.example.com'}]
+          }
         }
-      }
-    }).then(function (s) {
-      server = s;
+      }).then(function (s) {
+        server = s;
 
-      return Promise.all(codes.map(code =>
-        got(url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(`${assetsUrl}/${code}`)}`}))
-          .catch(d => d)
-      ));
-    }).then(function (data) {
-      data.forEach(response => assert.equal(response.statusCode, 400));
-    }).finally(() => Promise.all([httpServer.stop(), server.stop()]));
+        return Promise.all(codes.map(code =>
+          got(url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(`${assetsUrl}/${code}`)}`}))
+            .catch(d => d)
+        ));
+      }).then(function (data) {
+        data.forEach(response => assert.equal(response.statusCode, 400));
+      }).finally(() => Promise.all([httpServer.stop(), server.stop()]));
+    });
   });
 
   it('returns 400 for not whitelisted urls', function () {
@@ -95,25 +95,28 @@ describe('video converting server response', function () {
   });
 
   it('rejects redirects by default', function () {
-    const httpServer = simpleHttpServer(function (req, res) {
+    let HOST;
+    let SERVER_PORT;
+    return simpleHttpServer(function (req, res) {
       res.writeHead(301, {
         'Location': 'http://' + HOST + ':' + SERVER_PORT + '/movie.ogg'
       });
       res.end();
+    }).then(httpServer => {
+      HOST = httpServer.address().address;
+      SERVER_PORT = httpServer.address().port;
+
+      const URL = `http://localhost:${FLAMINGO_PORT}/video/avatar-image/${encodeURIComponent(`https://${HOST}:${SERVER_PORT}/moved.jpg`)}`;
+      let server;
+
+      return startServer({}).then(function (s) {
+        server = s;
+
+        return got(URL).catch(e => e);
+      }).then(function (response) {
+        assert.equal(response.statusCode, 400);
+      }).finally(() => Promise.all([httpServer.stop(), server.stop()]));
     });
-    const HOST = httpServer.address().address;
-    const SERVER_PORT = httpServer.address().port;
-
-    const URL = `http://localhost:${FLAMINGO_PORT}/video/avatar-image/${encodeURIComponent(`https://${HOST}:${SERVER_PORT}/moved.jpg`)}`;
-    let server;
-
-    return startServer({}).then(function (s) {
-      server = s;
-
-      return got(URL).catch(e => e);
-    }).then(function (response) {
-      assert.equal(response.statusCode, 400);
-    }).finally(() => Promise.all([httpServer.stop(), server.stop()]));
   });
 
   it('allows redirect if enabled', function () {
@@ -121,7 +124,7 @@ describe('video converting server response', function () {
 
     let SERVER_PORT;
     let HOST;
-    const httpServer = simpleHttpServer(function (req, res) {
+    return simpleHttpServer(function (req, res) {
       const urlPath = req.url.replace(/\//g, '');
       if (urlPath === 'moved.png') {
         res.writeHead(301, {
@@ -132,24 +135,25 @@ describe('video converting server response', function () {
         res.writeHead(200, {});
         fs.createReadStream(FILE_PATH).pipe(res);
       }
+    }).then(httpServer => {
+      HOST = httpServer.address().address;
+      SERVER_PORT = httpServer.address().port;
+      const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port, pathname: '/moved.png'});
+      const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
+
+      let server;
+
+      return startServer({
+        HOST,
+        ALLOW_READ_REDIRECT: true
+      }).then(function (s) {
+        server = s;
+
+        return got(flamingoUrl);
+      }).then(function (response) {
+        assert.equal(response.statusCode, 200);
+      }).finally(() => Promise.all([httpServer.stop(), server.stop()]));
     });
-    HOST = httpServer.address().address;
-    SERVER_PORT = httpServer.address().port;
-    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port, pathname: '/moved.png'});
-    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
-
-    let server;
-
-    return startServer({
-      HOST,
-      ALLOW_READ_REDIRECT: true
-    }).then(function (s) {
-      server = s;
-
-      return got(flamingoUrl);
-    }).then(function (response) {
-      assert.equal(response.statusCode, 200);
-    }).finally(() => Promise.all([httpServer.stop(), server.stop()]));
   });
 
   it('rejects unknown protocols (no reader available)', function () {

@@ -1,31 +1,19 @@
 'use strict';
+/*eslint new-cap: 0*/
 
 const pkg = require('../../package');
 const Promise = require('bluebird');
 const fs = require('fs');
 const images = require('../../test/fixtures/images/sharp-bench-assets/index');
 const simpleHttpServer = require('../../test/test-util/simple-http-server');
-const path = require('path');
+const nodePath = require('path');
 const url = require('url');
 const Route = require('../model/route');
 const {encode} = require('../util/cipher');
 const omit = require('lodash/omit');
 
-const httpServer = simpleHttpServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'image/jpeg'});
-  fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/sharp-bench-assets', url.parse(req.url).pathname))
-    .pipe(res, {end: true});
-});
+let IMAGES;
 
-/*eslint no-sync:0 */
-const URL = url.format({protocol: 'http', hostname: httpServer.address().address, port: httpServer.address().port});
-
-let IMAGES = images.all().map(function (image) {
-  image.url = `${URL}/${image.filename}`;
-  return image;
-});
-
-/*eslint new-cap: 0*/
 
 /**
  * Debug route that exposes many internal values, should not be used in production
@@ -39,17 +27,29 @@ class Debug extends Route {
    * @param {string} [method='GET']
    * @param {string} [path='/_debug']
    * @param {string} [description='Debug']
-     */
+   */
   constructor(config = {}, method = 'GET', path = '/_debug', description = 'Debug') {
     super(config, method, path, description);
 
-    Promise.all(IMAGES.map((image) => encode(image.url, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV)))
-      .then((encodedUrls) => {
-        IMAGES = encodedUrls.map((encoded, i) => {
-          IMAGES[i].enc = encoded;
-          return IMAGES[i];
-        });
+    simpleHttpServer(function (req, res) {
+      res.writeHead(200, {'Content-Type': 'image/jpeg'});
+      fs.createReadStream(nodePath.join(__dirname, '../../test/fixtures/images/sharp-bench-assets', url.parse(req.url).pathname))
+        .pipe(res, {end: true});
+    }).then(httpServer => {
+      const URL = url.format({protocol: 'http', hostname: httpServer.address().address, port: httpServer.address().port});
+      IMAGES = images.all().map(function (image) {
+        image.url = `${URL}/${image.filename}`;
+        return image;
       });
+
+      return Promise.all(IMAGES.map((image) => encode(image.url, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV)))
+        .then((encodedUrls) => {
+          IMAGES = encodedUrls.map((encoded, i) => {
+            IMAGES[i].enc = encoded;
+            return IMAGES[i];
+          });
+        });
+    });
   }
 
   handle(operation) {
