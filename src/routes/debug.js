@@ -9,21 +9,19 @@ const path = require('path');
 const url = require('url');
 const Route = require('../model/route');
 const {encode} = require('../util/cipher');
+const omit = require('lodash/omit');
 
-const DEBUG_PORT = 43723;
-const DEBUG_HOST = 'localhost';
-
-simpleHttpServer(DEBUG_HOST, DEBUG_PORT, function (req, res) {
+const httpServer = simpleHttpServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'image/jpeg'});
   fs.createReadStream(path.join(__dirname, '../../test/fixtures/images/sharp-bench-assets', url.parse(req.url).pathname))
     .pipe(res, {end: true});
 });
 
 /*eslint no-sync:0 */
-const HOST = 'http://' + DEBUG_HOST + ':' + DEBUG_PORT + '/';
+const URL = url.format({protocol: 'http', hostname: httpServer.address().address, port: httpServer.address().port});
 
 let IMAGES = images.all().map(function (image) {
-  image.url = `${HOST}${image.filename}`;
+  image.url = `${URL}/${image.filename}`;
   return image;
 });
 
@@ -63,14 +61,7 @@ class Debug extends Route {
     profileNames = profileNames
       .filter((name) => name.indexOf('debug-') === 0);
 
-    if (operation.request.query.profiles) {
-      profileNames = operation.request.query.profiles.split(',');
-    }
-    if (operation.request.query.processors) {
-      processors = operation.request.query.processors.split(',');
-    }
-
-    return operation.reply({
+    return Promise.resolve(operation.reply({
       routes: this.server.hapi.connections[0].table().map(t => ({
         method: t.method,
         path: t.path,
@@ -81,8 +72,9 @@ class Debug extends Route {
       base,
       pkg: pkg,
       profiles: profileNames,
-      urls: IMAGES
-    });
+      urls: IMAGES,
+      config: omit(operation.config, 'CRYPTO')
+    }));
   }
 }
 

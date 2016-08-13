@@ -4,6 +4,7 @@ const pkg = require('../../package');
 const Route = require('../model/route');
 const util = require('util');
 const Promise = require('bluebird');
+const omit = require('lodash/omit');
 
 const BASE64_ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAuElEQVQ4jbWRMQqDQBBFnyGVSJpUkj72e4/UphUP4FlyAEkteIecIPZeQAlYiW67qTagzKIo+eWy78+fP/Av9Ulm+iQzS/88F9zqAYDQDzg9H+I/gIP0+O4+REXuNXrEGm1SHaeLK+yGxRXqODWNHoHlMsVy6jg1oR8ATDqQChUTWHAOt3pgnkY0iIp8MsXCm1QqZUqltl/Dwi6Towt83e4/oARzvlyhqtZPtga74s+TSHKecQ0M8AXIOlSRGTKPKQAAAABJRU5ErkJggg==';
 
@@ -91,7 +92,7 @@ pre{
 <h2>Debug</h2>
 <a name="config"></a>
 <h3><a href="#config">Config</a></h3>
-<pre>${util.inspect(operation.config)}</pre>
+<pre>${util.inspect(omit(operation.config, 'CRYPTO'))}</pre>
 <a name="profiles"></a>
 <h3><a href="#profiles">Profiles</a></h3>
 <pre>${util.inspect(operation.profiles)}</pre>

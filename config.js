@@ -23,6 +23,15 @@ const DEFAULTS = {};
 DEFAULTS.PORT = 3000;
 
 /**
+ * The public hostname or IP address.
+ * If not configured, defaults to the operating system hostname and if not available, to 'localhost'
+ * @see http://hapijs.com/api#serverconnectionoptions
+ * @type {string}
+ * @default undefined
+ */
+DEFAULTS.HOST = undefined;
+
+/**
  * @type {boolean}
  * @default false
  */
@@ -137,6 +146,7 @@ DEFAULTS.READER = {
 const ENV_MAPPINGS = [
   ['DEBUG', 'DEBUG', envParser.boolean],
   ['DEFAULT_MIME', 'DEFAULT_MIME'],
+  ['HOST', 'HOST'],
   ['NATIVE_AUTO_ORIENT', 'NATIVE_AUTO_ORIENT', envParser.boolean],
   ['ALLOW_READ_REDIRECT', 'ALLOW_READ_REDIRECT', envParser.boolean],
   ['CLIENT_HINTS', 'CLIENT_HINTS', envParser.boolean],
@@ -173,9 +183,6 @@ class Config {
     // setup default values
     Object.keys(DEFAULTS)
       .forEach(key => this[key] = DEFAULTS[key]);
-
-    // see https://nodejs.org/api/util.html#util_custom_inspect_function_on_objects
-    this.CRYPTO.inspect = () => '[𝗥𝗘𝗗𝗔𝗖𝗧𝗘𝗗]';
   }
 
   /**

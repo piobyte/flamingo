@@ -50,9 +50,9 @@ class UrlTransformationInstructionsRoute extends UrlTransformationInstructions(I
   }
 }
 
-module.exports = () =>
+module.exports = (additionalConfig = {}) =>
   Config.fromEnv().then(config => {
-    config = merge({}, config, {CRYPTO: {ENABLED: false}});
+    config = merge({}, config, additionalConfig, {CRYPTO: {ENABLED: false}});
     return new Server(config, new AddonLoader(__dirname, {}).load())
       .withRoutes([new UrlTransformationInstructionsRoute(config)])
       .start()

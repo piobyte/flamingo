@@ -36,7 +36,8 @@ class Server {
       debug: conf.DEBUG ? {log: ['error'], request: ['error']} : false
     });
     this.hapi.connection({
-      port: this.conf.PORT
+      port: this.conf.PORT,
+      host: this.conf.HOST
     });
   }
 

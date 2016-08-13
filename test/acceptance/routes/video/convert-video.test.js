@@ -6,15 +6,16 @@ const path = require('path');
 const fs = require('fs');
 const got = require('got');
 const exampleProfiles = require('../../../../src/profiles/examples');
+const url = require('url');
 
 const Server = require('../../../../src/model/server');
 const Config = require('../../../../config');
 
-const PORT = 43723; // some random unused port
+const FLAMINGO_PORT = 43723; // some random unused port
 
 function startServer(localConf) {
   return Config.fromEnv().then(config => {
-    config = merge({}, config, {CRYPTO: {ENABLED: false}, PORT: PORT}, localConf);
+    config = merge({}, config, {CRYPTO: {ENABLED: false}, PORT: FLAMINGO_PORT}, localConf);
 
     if (config.CRYPTO.ENABLED) {
       // manually copy cipher, key, iv because they're buffers
@@ -36,20 +37,22 @@ function startServer(localConf) {
 describe('convert video', function () {
   it('creates an image from an ogg video', function () {
     const SRC_FILE = 'trailer_1080p.ogg';
-    const HOST = '127.0.0.1';
-    const SERVER_PORT = PORT + 1;
     const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
+    const httpServer = simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
 
-    return startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+    const HOST = httpServer.address().address;
+    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
+
+    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
       flamingoServer = s;
 
-      return got(`http://${HOST}:${PORT}/video/avatar-image/${encodeURIComponent(`http://${HOST}:${SERVER_PORT}`)}`);
+      return got(flamingoUrl);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 200);
@@ -59,20 +62,22 @@ describe('convert video', function () {
   it.skip('creates an image from an mp4 video', function () {
     // TODO: ProcessingError: Uncaught error: ffmpeg exited with code 1: Error opening filters!
     const SRC_FILE = 'trailer_1080p.mp4';
-    const HOST = '127.0.0.1';
-    const SERVER_PORT = PORT + 1;
     const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
+    const httpServer = simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
+    const HOST = httpServer.address().address;
 
-    return startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
+
+    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
       flamingoServer = s;
 
-      return got(`http://${HOST}:${PORT}/video/avatar-image/${encodeURIComponent(`http://${HOST}:${SERVER_PORT}`)}`);
+      return got(flamingoUrl);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 200);
@@ -81,20 +86,22 @@ describe('convert video', function () {
 
   it('creates an image from an avi video', function () {
     const SRC_FILE = 'trailer_1080p.avi';
-    const HOST = '127.0.0.1';
-    const SERVER_PORT = PORT + 1;
     const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
+    const httpServer = simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
+    const HOST = httpServer.address().address;
 
-    return startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
+
+    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
       flamingoServer = s;
 
-      return got(`http://${HOST}:${PORT}/video/avatar-image/${encodeURIComponent(`http://${HOST}:${SERVER_PORT}`)}`);
+      return got(flamingoUrl);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 200);
@@ -103,21 +110,22 @@ describe('convert video', function () {
 
   it('creates an image from an quicktime video', function () {
     const SRC_FILE = 'trailer_1080p.mov';
-    const HOST = '127.0.0.1';
-    const SERVER_PORT = PORT + 1;
     const FILE_PATH = path.join(__dirname, '../../../fixtures/videos', SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
+    const httpServer = simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
+    const HOST = httpServer.address().address;
 
-    return startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
+
+    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
       flamingoServer = s;
 
-      return got('http://' + HOST + ':' + PORT + '/video/avatar-image/' +
-        encodeURIComponent('http://' + HOST + ':' + SERVER_PORT));
+      return got(flamingoUrl);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 200);
@@ -126,21 +134,22 @@ describe('convert video', function () {
 
   it('rejects on ffprobe errors', function () {
     const SRC_FILE = 'convert-video.test.js';
-    const HOST = '127.0.0.1';
-    const SERVER_PORT = PORT + 1;
     const FILE_PATH = path.join(__dirname, SRC_FILE);
 
     let flamingoServer;
-    const httpServer = simpleHttpServer(HOST, SERVER_PORT, function (req, res) {
+    const httpServer = simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
+    const HOST = httpServer.address().address;
 
-    return startServer({ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
+    const assetsUrl = url.format({protocol: 'http', hostname: HOST, port: httpServer.address().port});
+    const flamingoUrl = url.format({protocol: 'http', hostname: HOST, port: FLAMINGO_PORT, pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`});
+
+    return startServer({HOST: HOST, ACCESS: {HTTPS: {ENABLED: false}}}).then(function (s) {
       flamingoServer = s;
 
-      return got('http://' + HOST + ':' + PORT + '/video/avatar-image/' +
-        encodeURIComponent('http://' + HOST + ':' + SERVER_PORT)).catch(e => e);
+      return got(flamingoUrl).catch(e => e);
     }).then(function (data) {
       assert.ok(data);
       assert.equal(data.statusCode, 400);

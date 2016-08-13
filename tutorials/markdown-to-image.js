@@ -6,6 +6,7 @@ const Config = require('../config');
 const AddonLoader = require('../src/addon/loader');
 const Promise = require('bluebird');
 const logger = require('../src/logger').build('tutorials/markdown-to-image');
+const merge = require('lodash/merge');
 
 const webshot = require('webshot');
 const MarkdownIt = require('markdown-it');
@@ -39,9 +40,12 @@ class MarkdownRoute extends MarkdownPreprocess(Image) {
   }
 }
 
-module.exports = () =>
-  Config.fromEnv().then(config => new Server(config, new AddonLoader(__dirname, {}).load())
-    .withProfiles([require('../src/profiles/examples')])
-    .withRoutes([new MarkdownRoute(config)])
-    .start()
-    .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server));
+module.exports = (additionalConfig = {}) =>
+  Config.fromEnv().then(config => {
+    config = merge({}, config, additionalConfig);
+    return new Server(config, new AddonLoader(__dirname, {}).load())
+      .withProfiles([require('../src/profiles/examples')])
+      .withRoutes([new MarkdownRoute(config)])
+      .start()
+      .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server);
+  });

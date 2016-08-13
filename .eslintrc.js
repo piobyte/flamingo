@@ -6,7 +6,7 @@ module.exports = {
   "extends": "eslint:recommended",
   "rules": {
     "no-var": 2,
-    'no-console': 0,
+    'no-console': 2,
     'no-multi-spaces': 2,
     'indent': ['error', 2, {"SwitchCase": 1}],
     "one-var": ["error", "never"],

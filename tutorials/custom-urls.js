@@ -7,9 +7,9 @@ const AddonLoader = require('../src/addon/loader');
 const merge = require('lodash/merge');
 const logger = require('../src/logger').build('tutorials/custom-urls');
 
-module.exports = () =>
+module.exports = (additionalConfig = {}) =>
   Config.fromEnv().then(config => {
-    config = merge({}, config, {CRYPTO: {ENABLED: false}});
+    config = merge({}, config, additionalConfig, {CRYPTO: {ENABLED: false}});
     return new Server(config, new AddonLoader(__dirname, {}).load())
       .withProfiles([require('../src/profiles/examples')])
       .withRoutes([new Image(config, 'GET', '/convert/image/{profile}/{url}')])

@@ -6,10 +6,6 @@ const fs = require('fs');
 const FlamingoOperation = require('../../../src/model/flamingo-operation');
 const simpleServer = require('../../../test/test-util/simple-http-server');
 
-const IMAGE_HOST = '127.0.0.1';
-const IMAGE_HOST_PORT = 43722; // some random unused port
-const HOST = `http://${IMAGE_HOST}:${IMAGE_HOST_PORT}/Saturn_from_Cassini_Orbiter_(2004-10-06).jpg`;
-
 function error(err) {
   /* eslint no-console: 0 */
   console.error(err);
@@ -18,10 +14,11 @@ function error(err) {
 module.exports = function (suiteConfig) {
   return function (suiteName, description, filePath) {
     let prom = Promise.resolve();
-    const server = simpleServer(IMAGE_HOST, IMAGE_HOST_PORT, function (req, res) {
+    const server = simpleServer(function (req, res) {
       res.writeHead(200, {'Content-Type': 'image/jpeg'});
       fs.createReadStream(filePath).pipe(res, {end: true});
     });
+    const HOST = `http://${server.address().address}:${server.address().port}/Saturn_from_Cassini_Orbiter_(2004-10-06).jpg`;
 
     const convertRemote = function (profileName) {
       return new Promise(function (resolve) {
