@@ -14,9 +14,7 @@ module.exports = function (suiteConfig) {
         const op = new FlamingoOperation();
         let error;
 
-        op.profile = {
-          process: data.process
-        };
+        op.process = data.process;
 
         wstream.on('finish', function () {
           if (error) {

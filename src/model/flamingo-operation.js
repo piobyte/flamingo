@@ -15,7 +15,6 @@ const noop = require('lodash/noop');
 class FlamingoOperation {
   constructor() {
     this.request = {};
-    this.profile = noop;
     this.reply = noop;
 
     this.preprocessorConfig = {
@@ -25,6 +24,9 @@ class FlamingoOperation {
     this.reader = noop;
     this.writer = noop;
     this.input = undefined;
+
+    this.process = [];
+    this.response = {};
   }
 }
 

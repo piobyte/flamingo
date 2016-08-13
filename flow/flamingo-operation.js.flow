@@ -1,6 +1,5 @@
-declare class FlamingoOperation extends Object{
+declare class FlamingoOperation {
   request: any;
-  profile: function;
   reply: function;
 
   preprocessorConfig: Object;
@@ -14,4 +13,7 @@ declare class FlamingoOperation extends Object{
   config: Config;
   addons: Object;
   profiles: Object;
+
+  process: Array<ProcessInstruction>;
+  response: Object;
 }
