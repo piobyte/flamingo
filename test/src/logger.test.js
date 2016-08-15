@@ -75,7 +75,6 @@ describe('logger', function () {
   it('serializes operation object', function () {
     const operation = new FlamingoOperation();
     operation.input = url.parse('https://travis-ci.org/piobyte/flamingo.svg?branch=master');
-    operation.profile = {name: 'example-profile'};
     operation.request = {
       headers: {'user-agent': 'flamingo/2.0.0'},
       path: '/video/example-profile/12345',
@@ -86,7 +85,6 @@ describe('logger', function () {
     assert.deepEqual(logger.serializers.operation(operation),
       {
         input: 'https://travis-ci.org/piobyte/flamingo.svg?branch=master',
-        profile: 'example-profile',
         request: {
           headers: {'user-agent': 'flamingo/2.0.0'},
           path: '/video/example-profile/12345',

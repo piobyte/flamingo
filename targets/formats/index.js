@@ -68,9 +68,7 @@ processors.forEach(function (processor) {
         ALLOW_READ_REDIRECT: false,
         READER: {REQUEST: {TIMEOUT: 3000}}
       };
-      op.profile = {
-        process: processor.process
-      };
+      op.process = processor.process;
       op.input = {href: 'https://assets.flamingo.tld/' + data.desc};
 
       return httpsReader(op).then(unfoldReaderResult)

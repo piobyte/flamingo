@@ -95,7 +95,7 @@ pre{
 <pre>${util.inspect(omit(operation.config, 'CRYPTO'))}</pre>
 <a name="profiles"></a>
 <h3><a href="#profiles">Profiles</a></h3>
-<pre>${util.inspect(operation.profiles)}</pre>
+<pre>${util.inspect(route.server.profiles)}</pre>
 <a name="addons"></a>
 <h3><a href="#addons">Addons</a></h3>
 <pre>${util.inspect(route.server.addonsLoader.addons.map(addon => `${addon.pkg.name}@${addon.pkg.version}`))}</pre>

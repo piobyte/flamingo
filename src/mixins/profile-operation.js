@@ -32,10 +32,10 @@ module.exports = (SuperClass/*: Convert */) => {
      * @returns {Promise<{name: string, response: {}, process: Array<{processor: string, pipe: function}>}>}
      */
     extractProcess(operation) {
-      const profiles = operation.profiles;
+      const profiles = this.server.profiles;
       const profileParam = operation.request.params.profile;
 
-      if (!operation.profiles[profileParam]) {
+      if (!profiles[profileParam]) {
         return Promise.reject(new InvalidInputError(`Requested unknown profile (${profileParam})`));
       }
 

@@ -42,6 +42,4 @@ FlamingoOperation.prototype.config = {};
  * @static
  * @property {{}} profiles
  */
-FlamingoOperation.prototype.profiles = {};
-
 module.exports = FlamingoOperation;

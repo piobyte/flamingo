@@ -1,6 +1,5 @@
 'use strict';
 
-
 const Hapi = require('hapi');
 const merge = require('lodash/merge');
 const logger = require('../logger');
@@ -18,26 +17,26 @@ class Server {
   /**
    * Takes a config and an addon loader to build the server.
    * @constructor
-   * @param {Config} conf
+   * @param {Config} config
    * @param {AddonLoader} addonsLoader
    */
-  constructor(conf, addonsLoader) {
-    this.conf = conf;
-    FlamingoOperation.prototype.config = conf;
+  constructor(config, addonsLoader) {
+    this.config = config;
+    FlamingoOperation.prototype.config = this.config;
     this.addonsLoader = addonsLoader;
 
-    this.addonsLoader.hook(addon.HOOKS.CONF)(this.conf);
-    this.addonsLoader.hook(addon.HOOKS.ENV)(this.conf, process.env);
-    this.addonsLoader.hook(addon.HOOKS.LOG_STREAM, this.conf)(logger, this.conf);
+    this.addonsLoader.hook(addon.HOOKS.CONF)(this.config);
+    this.addonsLoader.hook(addon.HOOKS.ENV)(this.config, process.env);
+    this.addonsLoader.hook(addon.HOOKS.LOG_STREAM, this.config)(logger, this.config);
 
-    this._profiles = {};
+    this.profiles = {};
 
     this.hapi = new Hapi.Server({
-      debug: conf.DEBUG ? {log: ['error'], request: ['error']} : false
+      debug: this.config.DEBUG ? {log: ['error'], request: ['error']} : false
     });
     this.hapi.connection({
-      port: this.conf.PORT,
-      host: this.conf.HOST
+      port: this.config.PORT,
+      host: this.config.HOST
     });
   }
 
@@ -61,10 +60,8 @@ class Server {
    * @returns {Server}
    */
   withProfiles(profiles) {
-    profiles.forEach(profile => {
-      merge(this._profiles, profile);
-    });
-    FlamingoOperation.prototype.profiles = this._profiles;
+    profiles.forEach(profile =>
+      merge(this.profiles, profile));
     return this;
   }
 

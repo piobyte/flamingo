@@ -29,7 +29,7 @@ describe('debug server response', function () {
 
       return got(`http://localhost:${PORT}/_debug`, {json: true});
     }).then(function (response) {
-      assert.equal(response.body.config.PORT, server.conf.PORT);
+      assert.equal(response.body.config.PORT, server.config.PORT);
     }).finally(() => server.stop());
   });
   it('displays debug information if DEBUG is enabled', function () {

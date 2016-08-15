@@ -30,7 +30,6 @@ const serializers = {
   operation: function (operation) {
     return Object.keys(operation).length ? {
       input: this.input(operation.input),
-      profile: operation.profile.name,
       request: this.request(operation.request)
     } : {};
   },

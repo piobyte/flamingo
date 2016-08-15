@@ -13,14 +13,12 @@ describe('gm processor', function () {
     const stream = fs.createReadStream('../../../fixtures/images/base64.png');
     const op = new FlamingoOperation();
 
-    op.profile = {
-      process: [{
-        processor: 'gm',
-        pipe: function (gm) {
-          return gm.gravity('Center');
-        }
-      }]
-    };
+    op.process = [{
+      processor: 'gm',
+      pipe: function (gm) {
+        return gm.gravity('Center');
+      }
+    }];
     op.config = {
       NATIVE_AUTO_ORIENT: true
     };
@@ -37,14 +35,12 @@ describe('gm processor', function () {
     const stream = fs.createReadStream('../../../fixtures/images/base64.png');
     const op = new FlamingoOperation();
 
-    op.profile = {
-      process: [{
-        processor: 'gm',
-        pipe: function (gm) {
-          return gm.gravity('Center');
-        }
-      }]
-    };
+    op.process = [{
+      processor: 'gm',
+      pipe: function (gm) {
+        return gm.gravity('Center');
+      }
+    }];
     op.config = {
       NATIVE_AUTO_ORIENT: true
     };

@@ -12,7 +12,6 @@ declare class FlamingoOperation {
 
   config: Config;
   addons: Object;
-  profiles: Object;
 
   process: Array<ProcessInstruction>;
   response: Object;

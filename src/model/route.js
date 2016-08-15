@@ -98,7 +98,4 @@ class Route {
   }
 }
 
-// global hash of all profiles
-Route.profiles = {};
-
 module.exports = Route;

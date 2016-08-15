@@ -54,7 +54,7 @@ class Debug extends Route {
 
   handle(operation) {
     const base = '/';
-    let profileNames = Object.keys(operation.profiles);
+    let profileNames = Object.keys(this.server.profiles);
     let processors = ['vips', 'gm'];
 
     // only use debug routes

@@ -40,13 +40,14 @@ describe('profile-operation', function () {
 
     operation.request = {params: {profile}};
     operation.config = conf;
-    operation.profiles = {
+    const profiles = {
       someProfile: (request, config) => {
         assert.deepEqual(request, operation.request);
         assert.deepEqual(config, operation.config);
         return Promise.resolve(profileSpy);
       }
     };
+    profileOp.server = {profiles};
 
     return profileOp.extractProcess(operation).then(extractedProfile =>
       assert.equal(extractedProfile, profileSpy));
@@ -59,7 +60,8 @@ describe('profile-operation', function () {
     const operation = new FlamingoOperation();
     const profileSpy = sinon.spy();
 
-    operation.profiles = {someProfile: () => Promise.resolve(profileSpy)};
+    const profiles = {someProfile: () => Promise.resolve(profileSpy)};
+    profileOp.server = {profiles};
     operation.config = conf;
     operation.request = {params: {profile: 'someUnknownProfile'}};
 
@@ -72,7 +74,6 @@ describe('profile-operation', function () {
       const profile = 'someProfile';
       const givenUrl = 'http://example.com/image.png';
       const profileData = {process: [{processor: 'foo'}], response: {header: {foo: 'bar'}}};
-      FlamingoOperation.prototype.profiles = {someProfile: () => Promise.resolve(profileData)};
 
       return encode(givenUrl, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV).then((encoded) => {
         const request = {params: {profile, url: encoded}};
@@ -89,7 +90,11 @@ describe('profile-operation', function () {
             });
           }
         });
-        return (new ProfileOperationClass(config)).buildOperation(request, reply).then((operation) => {
+        const profiles = {someProfile: () => Promise.resolve(profileData)};
+        const profileOp = (new ProfileOperationClass(config));
+        profileOp.server = {profiles};
+
+        return profileOp.buildOperation(request, reply).then((operation) => {
           assert.deepEqual(operation.process, profileData.process);
           assert.deepEqual(operation.response, profileData.response);
           assert.equal(operation.reader, httpReader);
@@ -112,7 +117,7 @@ describe('profile-operation', function () {
 
     operation.request = {params: {profile, url: encodedUrl}};
     operation.config = conf;
-    operation.profiles = {
+    conf.profiles = {
       someProfile: (request, config) => Promise.resolve(profileSpy)
     };
 
