@@ -25,5 +25,8 @@
   },
   "url-transformation-instructions": {
     "title": "Creating a route that decodes the process from an url param"
+  },
+  "website-screenshot": {
+    "title": "Creating a route that creates and converts a website screenshot"
   }
 }

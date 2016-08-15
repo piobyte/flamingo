@@ -55,17 +55,18 @@
     "flow-bin": "^0.30.0",
     "istanbul": "^0.4.4",
     "jsdoc": "^3.4.0",
-    "markdown-it": "^7.0.0",
     "mocha": "^3.0.2",
     "nock": "^8.0.0",
     "node-uuid": "^1.4.7",
     "postman-jsdoc-theme": "0.0.2",
-    "probe-image-size": "^2.1.0",
-    "sinon": "^1.17.5",
-    "webshot": "github:brenden/node-webshot#pull/150/head"
+    "sinon": "^1.17.5"
   },
   "optionalDependencies": {
     "gm": "^1.23.0",
-    "memwatch-next": "^0.3.0"
+    "memwatch-next": "^0.3.0",
+    "screenshot-stream": "^3.4.0",
+    "markdown-it": "^7.0.0",
+    "probe-image-size": "^2.1.0",
+    "webshot": "github:brenden/node-webshot#pull/150/head"
   }
 }

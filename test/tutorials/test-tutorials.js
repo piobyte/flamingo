@@ -7,7 +7,7 @@ const simpleHttpServer = require('../test-util/simple-http-server');
 
 const ASSETS_PORT = 9999;
 const ASSETS_HOST = 'localhost';
-const FLAMINGO_PORT = 3000;
+const FLAMINGO_PORT = 4000;
 const HOST = ASSETS_HOST;
 
 const IMAGE_URL = encodeURIComponent(url.format({
@@ -60,6 +60,17 @@ const expected = [{
     hostname: HOST,
     port: FLAMINGO_PORT,
     pathname: '/md/preview-image/%23%20headline%0A%0Awasd?size=500'
+  }),
+  ok(response) {
+    assert.deepEqual(response.statusCode, 200);
+  }
+}, {
+  file: 'website-screenshot.js',
+  url: url.format({
+    protocol: 'http',
+    hostname: HOST,
+    port: FLAMINGO_PORT,
+    pathname: `/www/preview-image/${IMAGE_URL}`
   }),
   ok(response) {
     assert.deepEqual(response.statusCode, 200);
