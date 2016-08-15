@@ -1,6 +1,5 @@
 const assert = require('assert');
 const httpReader = require('../../../src/reader/https');
-const dataReader = require('../../../src/reader/data');
 const fileReader = require('../../../src/reader/file');
 const url = require('url');
 
@@ -39,16 +38,14 @@ describe('reader-for-url', function () {
     assert.strictEqual(readerForUrl(url.parse(SSH2_URL_0)), undefined);
     assert.strictEqual(readerForUrl(url.parse(SSH2_URL_1)), undefined);
     assert.strictEqual(readerForUrl(url.parse(OGG_URL_0)), undefined);
+
+    assert.strictEqual(readerForUrl(url.parse(DATA_URL_0)), undefined);
   });
 
   it('returns https reader for https? urls', function () {
     assert.strictEqual(readerForUrl(url.parse(HTTP_URL_0)), httpReader);
     assert.strictEqual(readerForUrl(url.parse(HTTP_URL_1)), httpReader);
     assert.strictEqual(readerForUrl(url.parse(HTTPS_URL_0)), httpReader);
-  });
-
-  it('returns data reader for data urls', function () {
-    assert.strictEqual(readerForUrl(url.parse(DATA_URL_0)), dataReader);
   });
 
   it('returns file reader for file urls', function () {
