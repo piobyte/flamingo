@@ -1,5 +1,5 @@
 -b
 --recursive
--R dot
+-R spec
 -c
 -t 10000
