@@ -7,7 +7,18 @@ const reduce = require('lodash/reduce');
 const assert = require('assert');
 const logger = require('../logger').build('addon-loader');
 
+/**
+ * Addon loader
+ * @class
+ */
 class AddonLoader {
+  /**
+   *
+   * @param {string} rootPath location to start looking for addons
+   * @param {object} pkg package.json object
+   * @param {string} [modulesDir=node_modules] modules directory
+   * @param {function} [callbacks] function to later register callbacks on the loader
+   */
   constructor(rootPath, pkg, modulesDir = 'node_modules', callbacks = require('./callbacks')) {
     this.ADDON_KEYWORD = 'flamingo-addon';
 
@@ -44,6 +55,13 @@ class AddonLoader {
     return this;
   }
 
+  /**
+   * Lookup package devDependencies and dependencies and resolve all of them which contain the addon keyword
+   * @param {string} rootPath
+   * @param {object} pkg
+   * @param {string} [modulesDir=node_modules]
+   * @return {Array.<{pkg, path, hooks}>} package metadata
+   */
   discover(rootPath, pkg, modulesDir = 'node_modules') {
     const deps = assign({}, pkg.dependencies, pkg.devDependencies);
 
@@ -54,6 +72,11 @@ class AddonLoader {
       .filter(Boolean);
   }
 
+  /**
+   * Generates metadata for package
+   * @param {{path: string, pkg: object}} addon addon path and package.json object
+   * @return {{pkg, path, hooks}} loaded addon. If no entrypoint was found, the package is skipped and a warning logged.
+   */
   resolvePkg(addon/*: Addon */)/*: ?Addon */ {
     const main = addon.pkg.main || 'index.js';
     const mainPath = path.join(addon.path, main);
@@ -87,6 +110,14 @@ class AddonLoader {
     }
   }
 
+  /**
+   * Take an array of resolvePkg results and already loaded hooks.
+   * It creates a key -> Array.<{hook: string, addon}> map where each key is the hooks identifier.
+   * @param addons
+   * @param loaderHooks
+   * @return {*}
+   * @example
+   */
   reduceAddonsToHooks(addons/* [hooks: {}] */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
     // map addons to object where key equals the addons hooks name
     return reduce(addons, function (hooks, addon) {

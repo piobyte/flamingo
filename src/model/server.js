@@ -12,6 +12,9 @@ const assert = require('assert');
 /**
  * Flamingo server
  * @class
+ * @property {Config} config server config
+ * @property {AddonLoader} addonsLoader addon loader
+ * @property {Object} hapi hapi server instance
  */
 class Server {
   /**

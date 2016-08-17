@@ -53,4 +53,29 @@ describe('loader', function () {
 
     assert.deepEqual(addon, undefined);
   });
+
+  it('#reduceAddonsToHooks', function () {
+    const FOO_HOOK = 'FOO_HOOK';
+    const BAR_HOOK = 'BAR_HOOK';
+    const BAZ_HOOK = 'BAZ_HOOK';
+    const TEST_HOOK = 'TEST_HOOK';
+
+    const FOOBAR = {hooks: {FOO_HOOK, BAR_HOOK}, path: '/tmp/foobar'};
+    const BARBAZ = {hooks: {BAR_HOOK, BAZ_HOOK}, path: '/tmp/barbaz'};
+    const TEST = {hooks: {TEST_HOOK}, path: '/tmp/test'};
+
+    const reduced = loader().reduceAddonsToHooks(
+      [
+        FOOBAR,
+        BARBAZ,
+        TEST,
+      ],
+      {});
+
+    assert.ok(reduced.FOO_HOOK.find(data => data.hook === FOO_HOOK && data.addon.path === FOOBAR.path));
+    assert.ok(reduced.BAR_HOOK.find(data => data.hook === BAR_HOOK && data.addon.path === FOOBAR.path));
+    assert.ok(reduced.BAR_HOOK.find(data => data.hook === BAR_HOOK && data.addon.path === BARBAZ.path));
+    assert.ok(reduced.BAZ_HOOK.find(data => data.hook === BAZ_HOOK && data.addon.path === BARBAZ.path));
+    assert.ok(reduced.TEST_HOOK.find(data => data.hook === TEST_HOOK && data.addon.path === TEST.path));
+  });
 });
