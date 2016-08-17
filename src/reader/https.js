@@ -26,7 +26,7 @@ module.exports = function (operation/*: FlamingoOperation */) {
             headers: {'user-agent': `${pkg.name}/${pkg.version} (${pkg.bugs.url})`}
           });
           stream.on('error', function (err) {
-            reject(new InvalidInputError('http response status ' + err.statusCode, input.href));
+            reject(new InvalidInputError(err.message, input.href));
           });
           stream.on('response', function () {
             resolve(stream);
