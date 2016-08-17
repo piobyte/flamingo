@@ -92,7 +92,7 @@ describe('profile-operation', function () {
         });
         const profiles = {someProfile: () => Promise.resolve(profileData)};
         const profileOp = (new ProfileOperationClass(config));
-        profileOp.server = {profiles};
+        profileOp.server = {profiles, addonsLoader: {hook: () => () => {}}};
 
         return profileOp.buildOperation(request, reply).then((operation) => {
           assert.deepEqual(operation.process, profileData.process);

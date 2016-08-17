@@ -48,3 +48,4 @@ jspm_packages
 docs
 tutorials/supported-files.md
 tools/deploy-docker.sh
+!test/fixtures/node_modules

@@ -1,14 +1,25 @@
 const assert = require('assert');
 const sinon = require('sinon');
-const addon = require('../../../src/addon');
+const {HOOKS:{
+  CONF,
+  ENV,
+  ROUTES,
+  HAPI_PLUGINS,
+  PROFILES,
+  LOG_STREAM,
+  EXTRACT_PROCESS
+}} = require('../../../src/addon');
 const path = require('path');
 const Loader = require('../../../src/addon/loader');
+const FlamingoOperation = require('../../../src/model/flamingo-operation');
 
 function loader() {
   return new Loader(path.join(__dirname, '../../fixtures'), {
     dependencies: {
       'test-addon-0': '^0.1.0',
-      'test-addon-1': '^0.1.0'
+      'test-addon-1': '^0.1.0',
+      'add-auth-header': '^0.1.0',
+      'force-webp': '^0.1.0'
     }
   }).load();
 }
@@ -34,7 +45,7 @@ describe('hook', function () {
     it('should merge all addon configs into the initial config', function () {
       const conf = {FOO: 'bar'};
 
-      loader().hook(addon.HOOKS.CONF)(conf);
+      loader().hook(CONF)(conf);
 
       assert.deepEqual(conf, {
         FOO: 'bar',
@@ -44,7 +55,7 @@ describe('hook', function () {
     it('shouldn\'t overwrite initial config fields', function () {
       const conf = {TEST_CONF: {ENABLED: false}};
 
-      loader().hook(addon.HOOKS.CONF)(conf);
+      loader().hook(CONF)(conf);
 
       assert.deepEqual(conf, {TEST_CONF: {ENABLED: false}});
     });
@@ -52,7 +63,7 @@ describe('hook', function () {
       const conf = {FOO: {Bar: new Buffer('uname -a', 'utf8')}};
       const EXPECTED = new Buffer('uname -a', 'utf8');
 
-      loader().hook(addon.HOOKS.CONF)(conf);
+      loader().hook(CONF)(conf);
 
       assert.ok(conf.FOO.Bar instanceof Buffer);
       assert.strictEqual(conf.FOO.Bar.toString(), EXPECTED.toString());
@@ -64,7 +75,7 @@ describe('hook', function () {
       const conf = {};
       const env = {TEST_CONF_ENABLED: 'false'};
 
-      loader().hook(addon.HOOKS.ENV)(conf, env);
+      loader().hook(ENV)(conf, env);
 
       assert.deepEqual(conf, {TEST: {CONF: {ENABLED: false}}});
     });
@@ -74,7 +85,7 @@ describe('hook', function () {
     it('should call the server.route method', function () {
       const server = {route: sinon.spy()};
 
-      loader().hook(addon.HOOKS.ROUTES)(server);
+      loader().hook(ROUTES)(server);
 
       assert.ok(server.route.calledOn(server));
       assert.ok(server.route.called);
@@ -85,7 +96,7 @@ describe('hook', function () {
     it('should push plugins in the given plugins array', function () {
       const plugins = [];
 
-      loader().hook(addon.HOOKS.HAPI_PLUGINS)(plugins);
+      loader().hook(HAPI_PLUGINS)(plugins);
 
       assert.ok(plugins.length === 1);
     });
@@ -97,7 +108,7 @@ describe('hook', function () {
         addonProfile: true
       };
 
-      loader().hook(addon.HOOKS.PROFILES)(profiles);
+      loader().hook(PROFILES)(profiles);
 
       assert.deepEqual(Object.keys(profiles), ['addonProfile', 'foo-bar']);
     });
@@ -107,9 +118,37 @@ describe('hook', function () {
     it('call the addStreams method of the logger', function () {
       const logger = {addStreams: sinon.spy()};
 
-      loader().hook(addon.HOOKS.LOG_STREAM)(logger);
+      loader().hook(LOG_STREAM)(logger);
 
       assert.ok(logger.addStreams.called);
+    });
+  });
+
+  describe('EXTRACT_PROCESS', function(){
+    it('allows to modify the extracted process', function(){
+      let calledToFormatWebp = false;
+      const extracted = {
+        response: {},
+        process: [{
+          processor: 'sharp',
+          pipe: (pipe) => pipe.rotate()
+        }]
+      };
+
+      const operation = new FlamingoOperation();
+      loader().hook(EXTRACT_PROCESS)(extracted, operation);
+      assert.equal(extracted.response.header['Authorization'], 'Basic 1234');
+      extracted.process[0].pipe({
+        rotate(){ return this; },
+        toFormat(format){
+          if (format === 'webp') {
+            calledToFormatWebp = true;
+          }
+          return this;
+        }
+      });
+
+      assert.ok(calledToFormatWebp);
     });
   });
 });

@@ -3,7 +3,7 @@
 const Hapi = require('hapi');
 const merge = require('lodash/merge');
 const logger = require('../logger');
-const addon = require('../addon/index');
+const {HOOKS:{CONF, LOG_STREAM, ENV}} = require('../addon/index');
 const Promise = require('bluebird');
 const FlamingoOperation = require('./flamingo-operation');
 const Route = require('./route');
@@ -25,9 +25,9 @@ class Server {
     FlamingoOperation.prototype.config = this.config;
     this.addonsLoader = addonsLoader;
 
-    this.addonsLoader.hook(addon.HOOKS.CONF)(this.config);
-    this.addonsLoader.hook(addon.HOOKS.ENV)(this.config, process.env);
-    this.addonsLoader.hook(addon.HOOKS.LOG_STREAM, this.config)(logger, this.config);
+    this.addonsLoader.hook(CONF)(this.config);
+    this.addonsLoader.hook(ENV)(this.config, process.env);
+    this.addonsLoader.hook(LOG_STREAM, this.config)(logger, this.config);
 
     this.profiles = {};
 

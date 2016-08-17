@@ -99,5 +99,20 @@ exports.HOOKS = {
      *  level: "debug"
      * }]
    */
-  LOG_STREAM: 'LOG_STREAM'
+  LOG_STREAM: 'LOG_STREAM',
+
+  /**
+   * Hook that allows you to modify the result from the convert routes `extractProcess` method.
+   * Useful for i.e. modifying the pipe function that converts the image stream.
+   * Example adds an Authorization header to the process response.
+   * @example
+   * exports[EXTRACT_PROCESS] = function () {
+   *   return (extracted, operation) => {
+   *     extracted.response.header = extracted.response.header || {};
+   *     extracted.response.header['Authorization'] = 'Basic 1234';
+   *     return extracted;
+   *   };
+   * };
+   */
+  EXTRACT_PROCESS: 'EXTRACT_PROCESS'
 };

@@ -6,6 +6,7 @@ const unfoldReaderResult = require('../util/unfold-reader-result');
 const responseWriter = require('../writer/response');
 const readerForUrl = require('../util/reader-for-url');
 const {InvalidInputError} = require('../util/errors');
+const {HOOKS: {EXTRACT_PROCESS}} = require('../addon');
 
 module.exports = (SuperClass/*:Route*/) => {
   /**
@@ -125,16 +126,23 @@ module.exports = (SuperClass/*:Route*/) => {
     }
 
     /**
-     * Function that builds an operation for a given request
+     * Function that builds an operation for a given request.
+     * Note: don't overwrite the buildOperation, if you don't know what you're doing.
+     * It's the core convert method that calls other convert methods, used in other mixins.
+     *
      * @param {ClientRequest} request incoming http request
      * @param {function} reply hapi reply function
      * @return {Promise.<FlamingoOperation>} Promise that resolves the build operation
      */
     buildOperation(request, reply) {
+      const server = this.server;
       return super.buildOperation(request, reply).then(operation =>
         Promise.all([
           this.extractInput(operation),
-          this.extractProcess(operation)
+          this.extractProcess(operation).then(extracted => {
+            server.addonsLoader.hook(EXTRACT_PROCESS)(extracted, operation);
+            return extracted;
+          })
         ]).then(([input, {response, process}]) =>
           this.extractReader(input).then(reader => {
             operation.input = input;
