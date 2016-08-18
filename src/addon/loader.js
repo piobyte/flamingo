@@ -116,7 +116,6 @@ class AddonLoader {
    * @param addons
    * @param loaderHooks
    * @return {*}
-   * @example
    */
   reduceAddonsToHooks(addons/* [hooks: {}] */, loaderHooks/*: {[key: string]: []} */)/*: {} */ {
     // map addons to object where key equals the addons hooks name

@@ -42,7 +42,7 @@ class Route {
    * @param {FlamingoOperation} operation
    */
   handle(operation) {
-    return Promise.reject(new Error('not implemented'));
+    return Promise.reject(new Error('Method not implemented: Route.handle()'));
   }
 
   /**

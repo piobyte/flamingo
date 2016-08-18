@@ -78,4 +78,36 @@ describe('loader', function () {
     assert.ok(reduced.BAZ_HOOK.find(data => data.hook === BAZ_HOOK && data.addon.path === BARBAZ.path));
     assert.ok(reduced.TEST_HOOK.find(data => data.hook === TEST_HOOK && data.addon.path === TEST.path));
   });
+
+  it('reduceAddonsToHooks with already initialized hooks object', function () {
+    const FOO_HOOK = 'FOO_HOOK';
+    const BAR_HOOK = 'BAR_HOOK';
+    const BAZ_HOOK = 'BAZ_HOOK';
+    const TEST_HOOK = 'TEST_HOOK';
+    const YET_ANOTHER_HOOK = 'YET_ANOTHER_HOOK';
+
+    const FOOBAR = {hooks: {FOO_HOOK, BAR_HOOK}, path: '/tmp/foobar'};
+    const BARBAZ = {hooks: {BAR_HOOK, BAZ_HOOK}, path: '/tmp/barbaz'};
+    const TEST = {hooks: {TEST_HOOK}, path: '/tmp/test'};
+
+    const reduced = loader().reduceAddonsToHooks(
+      [
+        FOOBAR,
+        BARBAZ,
+        TEST,
+      ],
+      {
+        [YET_ANOTHER_HOOK]: [{
+          hook: YET_ANOTHER_HOOK,
+          addon: {path: '/tmp/yah'}
+        }]
+      });
+
+    assert.ok(reduced.FOO_HOOK.find(data => data.hook === FOO_HOOK && data.addon.path === FOOBAR.path));
+    assert.ok(reduced.BAR_HOOK.find(data => data.hook === BAR_HOOK && data.addon.path === FOOBAR.path));
+    assert.ok(reduced.BAR_HOOK.find(data => data.hook === BAR_HOOK && data.addon.path === BARBAZ.path));
+    assert.ok(reduced.BAZ_HOOK.find(data => data.hook === BAZ_HOOK && data.addon.path === BARBAZ.path));
+    assert.ok(reduced.TEST_HOOK.find(data => data.hook === TEST_HOOK && data.addon.path === TEST.path));
+    assert.ok(reduced.YET_ANOTHER_HOOK.find(data => data.hook === YET_ANOTHER_HOOK && data.addon.path === '/tmp/yah'));
+  });
 });

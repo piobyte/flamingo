@@ -21,9 +21,13 @@ BRANCH_NAME=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
   rm -rf docs || exit 0;
   mkdir docs;
 
+  npm run cover
   npm run formats
   npm run docs
   mv ${DOCS_DIR}/${NAME}/${VERSION}/* ${DOCS_DIR}
+
+  mkdir ${DOCS_DIR}/coverage;
+  mv coverage/lcov-report/* ${DOCS_DIR}/coverage
   rm -rf "docs/${NAME}"
 
   ( cd ${DOCS_DIR}

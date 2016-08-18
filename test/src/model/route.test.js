@@ -22,6 +22,16 @@ function startServer(localConf, route) {
 }
 
 describe('convert', function () {
+  it('handle throws if not implemented', function () {
+    let _server;
+    return startServer({}, new Route({}, 'GET', '/')).then(server => {
+      _server = server;
+
+      return got(`http://${HOST}:${PORT}/`).catch(e => e);
+    }).then(response => assert.equal(response.statusCode, 500))
+      .finally(() => _server.stop());
+  });
+
   it('#handleError called on hapi route handler buildOperation rejection', function () {
     const handleErrorSpy = sinon.spy();
     let server;
