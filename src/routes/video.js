@@ -4,7 +4,8 @@ const VideoPreprocess = require('./../mixins/video-preprocess');
 const Image = require('./image');
 
 /**
- * Route that converts a video url, passed inside the request param, to an image
+ * Route that converts a video to an image.
+ * The video location is extracted from a request param
  * @class
  * @extends Route
  * @mixes VideoPreprocess

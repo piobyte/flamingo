@@ -28,10 +28,18 @@ Flamingo uses jsdoc [docs and tutorials](https://piobyte.github.io/flamingo/) fo
 
 ## Architecture
 
-The whole application includes different readers, preprocessors, processors and writers.
-The data is mostly transferred through Node.js [streams](https://nodejs.org/api/stream.html).
-Reader modules don't resolve streams directly, because a given preprocessor could optimize reading of the input 
-(i.e. pass filepath or url to ffmpeg instead of streaming the whole file first).
+Flamingo provides a [server](https://piobyte.github.io/flamingo/Server.html) and [route](https://piobyte.github.io/flamingo/Route.html) class.
+In addition to that, there are a couple mixins that make it easy to add image conversion to routes.
+The default [image conversion route](https://piobyte.github.io/flamingo/Image.html) is a route created by mixing [ImageStream](https://piobyte.github.io/flamingo/ImageStream.html), 
+[ProfileOperation](https://piobyte.github.io/flamingo/ProfileOperation.html) and [Convert](https://piobyte.github.io/flamingo/Convert.html) with the route class.
+
+This allows for easy composition and creation of new functionality by overriding route hooks.
+See [Tutorial: Basic usage](https://piobyte.github.io/flamingo/tutorial-usage.html) and other documented tutorials on how to write your own, or modify existing routes.
+All custom image conversion routes should mix in [Convert](https://piobyte.github.io/flamingo/Convert.html) because it exposes enough hooks for most use-cases (If your use-case isn't implementable, open an issue).
+
+Data is passed through the route in [FlamingoOperation](https://piobyte.github.io/flamingo/FlamingoOperation.html) instances which hold request related metadata.
+Image data is transformed using node streams. This means flamingo can convert anything as long as it's available/transformable as image stream 
+(i.e. a markdown string can be transformed to a html page which in turn allows the creation of a screenshot which can be streamed into flamingo).
 
 ## Useful bunyan filters
 

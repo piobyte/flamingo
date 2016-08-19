@@ -7,7 +7,7 @@ const {decode} = require('../util/cipher');
 
 module.exports = (SuperClass/*: Convert */) => {
   /**
-   * Profile operation mixin
+   * Mixin that extracts the process instruction by looking them up in a profile which name is encoded in the url.
    * @mixin
    */
   class ProfileOperation extends SuperClass {

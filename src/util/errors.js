@@ -6,6 +6,8 @@
 const util = require('util');
 
 /**
+ * Error that should be used if the input is invalid.
+ * I.e. if profile name is unknown or input is not an image stream
  * @extends Error
  * @param {String} message
  * @param {*} [extra]
@@ -22,6 +24,8 @@ function InvalidInputError(message, extra) {
 }
 
 /**
+ * Error that should be used if a processing operation fails.
+ * I.e. during video to image conversion
  * @extends Error
  * @param {String} message
  * @param {*} [extra]
