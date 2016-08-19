@@ -1,7 +1,7 @@
-var assert = require('assert');
+const assert = require('assert');
 
 describe('best-format', function () {
-  var bestFormat = require('../../../src/util/best-format');
+  const bestFormat = require('../../../src/util/best-format');
 
   it('should return webp if accept requests it', function () {
     // default webkit accept header

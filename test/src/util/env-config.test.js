@@ -1,12 +1,12 @@
-var assert = require('assert');
+const assert = require('assert');
 
 describe('env-parser', function () {
-  var envConfig = require('../../../src/util/env-config'),
-    envParser = require('../../../src/util/env-parser');
+  const envConfig = require('../../../src/util/env-config');
+  const envParser = require('../../../src/util/env-parser');
 
   it('checks that the basic overwriting works', function () {
-    var conf = {EXISTING: {PATH: 'wasd'}, OBJ: {EXISTING: 'fdsa'}},
-      env = {FOO: 'bar', OBJ_PATH: '42', OBJ_FOO_BAR: 'true', OBJ_EXISTING: 'asdf'};
+    const conf = {EXISTING: {PATH: 'wasd'}, OBJ: {EXISTING: 'fdsa'}};
+    const env = {FOO: 'bar', OBJ_PATH: '42', OBJ_FOO_BAR: 'true', OBJ_EXISTING: 'asdf'};
 
     assert.deepEqual(envConfig(conf, env, [
       ['FOO', 'FOO'],

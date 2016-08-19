@@ -1,5 +1,5 @@
-var os = require('os'),
-  sharp = require('sharp');
+const os = require('os');
+const sharp = require('sharp');
 
 function fingerprint() {
   /* eslint no-sync: 0 */

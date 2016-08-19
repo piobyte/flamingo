@@ -1,0 +1,4 @@
+declare interface ProcessInstruction {
+  processor: string;
+  pipe(pipe: any): any;
+}

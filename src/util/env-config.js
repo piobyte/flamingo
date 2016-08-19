@@ -1,23 +1,10 @@
 /* @flow */
 /**
  * Environment object mapping module
- * @module flamingo/src/util/env-config
+ * @module
  */
-var forEach = require('lodash/forEach');
-
-var pathSet = function (object/*: Object */, path/*: string */, value/*: any */) {
-  var obj = object;
-
-  forEach(path.split('.'), function (segment, index, paths) {
-    var isLast = index + 1 === paths.length;
-    if (!obj.hasOwnProperty(segment)) {
-      obj[segment] = isLast ? value : {};
-    } else if (isLast) {
-      obj[segment] = value;
-    }
-    obj = obj[segment];
-  });
-};
+const forEach = require('lodash/forEach');
+const set = require('lodash/set');
 
 /**
  * Use mapping to overwrite config fields with corresponding environment object fields.
@@ -36,13 +23,9 @@ var pathSet = function (object/*: Object */, path/*: string */, value/*: any */)
  * @returns {Object} updated config
  */
 module.exports = function (config/*: Config */, environment/*: {[key: string]: string} */, mappings/*: Array<[string, string, ?function]>*/)/*: Config */ {
-  forEach(mappings, function (mapping) {
-    var envProp = mapping[0],
-      objPath = mapping[1],
-      setVal = mapping[2];
-
+  forEach(mappings, function ([envProp, objPath, setVal]) {
     if (environment.hasOwnProperty(envProp)) {
-      pathSet(config, objPath,
+      set(config, objPath,
         typeof setVal === 'function' ? setVal(environment[envProp]) : environment[envProp]);
     }
   });

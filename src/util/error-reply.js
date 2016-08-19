@@ -1,24 +1,25 @@
 /* @flow */
 /**
  * Error reply module
- * @module flamingo/src/util/error-reply
+ * @module
  */
-var boom = require('boom'),
-  errors = require('../util/errors');
+const boom = require('boom');
+const {InvalidInputError, ProcessingError} = require('../util/errors');
 
 /**
  * Function that calls the reply function with a given error by extracting useful error fields
  * and set the response status code accordingly.
  *
- * @param {function} reply function to reply to request
- * @param {object} error error object
- * @returns {void}
+ * @param {FlamingoOperation} operation
+ * @param {Error} error
  */
-module.exports = function (reply/*: function */, error/*: {statusCode: ?string, name: ?string} */) {
-  var isClientError =
-    error instanceof errors.InvalidInputError ||
-    error instanceof errors.ProcessingError ||
+module.exports = function (error/*: Error */, operation/*: function */) {
+  const isClientError =
+    error instanceof InvalidInputError ||
+    error instanceof ProcessingError ||
     typeof error === 'string';
 
-  reply(isClientError ? boom.badRequest() : /* istanbul ignore next: can't produce an flamingo src error */ boom.internal());
+  const message = (operation.config && operation.config.DEBUG) ? error.message : undefined;
+
+  return isClientError ? boom.badRequest(message) : /* istanbul ignore next: can't produce an flamingo src error */ boom.internal(message);
 };

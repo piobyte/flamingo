@@ -1,13 +1,14 @@
 /* disabled flow because of deprecated signature type mismatch */
 /**
  * Image processor module
- * @module flamingo/src/processor/image
+ * @module
  */
-var deprecate = require('../../util/deprecate'),
-  noop = require('lodash/noop'),
-  logger = require('../../logger').build('processor/image');
+const forEach = require('lodash/forEach');
+const logger = require('../../logger').build('processor/image');
 
-var processors = {sharp: require('./sharp')};
+const processors = {
+  sharp: require('./sharp')
+};
 
 if (require('optional')('gm') !== null) {
   processors.gm = require('./gm');
@@ -26,35 +27,17 @@ if (require('optional')('gm') !== null) {
  * // converted image stream
  */
 module.exports = function (operation/*: FlamingoOperation */)/*: function */ {
-  var transformations;
+  const transformations = operation.process;
 
-  if (arguments.length === 2) {
-    deprecate(noop, 'image processor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
-    var config = arguments[1];
-    transformations = arguments[0];
-
-    return function (stream) {
-      for (var i = 0; i < transformations.length; i++) {
-        if (processors.hasOwnProperty(transformations[i].processor)) {
-          stream = processors[transformations[i].processor](transformations[i].pipe, stream, config);
-        } else {
-          logger.info('Skipping transformation, unknown processor: ' + transformations[i].processor);
-        }
+  return function (stream) {
+    forEach(transformations, transformation => {
+      if (processors.hasOwnProperty(transformation.processor)) {
+        stream = processors[transformation.processor](operation, transformation.pipe, stream);
+      } else {
+        logger.info(`Skipping transformation, unknown processor: ${transformation.processor}`);
       }
-      return stream;
-    };
-  } else {
-    transformations = operation.profile.process;
+    });
 
-    return function (stream) {
-      for (var i = 0; i < transformations.length; i++) {
-        if (processors.hasOwnProperty(transformations[i].processor)) {
-          stream = processors[transformations[i].processor](operation, transformations[i].pipe, stream);
-        } else {
-          logger.info('Skipping transformation, unknown processor: ' + transformations[i].processor);
-        }
-      }
-      return stream;
-    };
-  }
+    return stream;
+  };
 };

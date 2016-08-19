@@ -1,14 +1,20 @@
-var url = require('url'),
-  Benchmark = require('benchmark'),
-  RSVP = require('rsvp'),
-  httpReader = require('../../../src/reader/https'),
-  fs = require('fs'),
-  FlamingoOperation = require('../../../src/util/flamingo-operation'),
-  simpleServer = require('../../../test/test-util/simple-http-server');
+const url = require('url');
+const Benchmark = require('benchmark');
+const Promise = require('bluebird');
+const httpReader = require('../../../src/reader/https');
+const fs = require('fs');
+const FlamingoOperation = require('../../../src/model/flamingo-operation');
+const simpleServer = require('../../../test/test-util/simple-http-server');
 
-var IMAGE_HOST = '127.0.0.1',
-  IMAGE_HOST_PORT = 43722, // some random unused port
-  HOST = 'http://' + IMAGE_HOST + ':' + IMAGE_HOST_PORT + '/Saturn_from_Cassini_Orbiter_(2004-10-06).jpg';
+const IMAGE_HOST = '127.0.0.1';
+const IMAGE_HOST_PORT = 43722; // some random unused port
+const HOST = url.format({
+  protocol: 'http',
+  hostname: IMAGE_HOST,
+  port: IMAGE_HOST_PORT,
+  pathname: '/Saturn_from_Cassini_Orbiter_(2004-10-06).jpg'
+});
+const PARSED_HOST = url.parse(HOST);
 
 function error(err) {
   /* eslint no-console: 0 */
@@ -17,19 +23,21 @@ function error(err) {
 
 module.exports = function (suiteConfig) {
   return function (suiteName, description, filePath) {
-    var prom = RSVP.Promise.resolve(),
-      server = simpleServer(IMAGE_HOST, IMAGE_HOST_PORT, function (req, res) {
-        res.writeHead(200, {'Content-Type': 'image/jpeg'});
-        fs.createReadStream(filePath).pipe(res, {end: true});
-      });
+    let server;
+    let prom = simpleServer(function (req, res) {
+      res.writeHead(200, {'Content-Type': 'image/jpeg'});
+      fs.createReadStream(filePath).pipe(res, {end: true});
+    }, IMAGE_HOST_PORT, IMAGE_HOST).then(s => {
+      server = s;
+    });
 
-    var convertRemote = function (profileName) {
-      return new RSVP.Promise(function (resolve) {
+    const convertRemote = function (profileName) {
+      return new Promise(function (resolve) {
         new Benchmark.Suite(description).add('GM', {
           defer: true,
           fn: function (deferred) {
-            var op = new FlamingoOperation();
-            op.targetUrl = url.parse(HOST);
+            const op = new FlamingoOperation();
+            op.input = PARSED_HOST;
             op.config = {
               ACCESS: {HTTPS: {ENABLED: false}},
               ALLOW_READ_REDIRECT: 0,
@@ -41,16 +49,13 @@ module.exports = function (suiteConfig) {
                   headers: {},
                   query: {processor: 'gm'}
                 }, {
-                  SUPPORTED: {GM: {WEBP: true}},
                   DEFAULT_MIME: 'image/png'
                 }).then(function (profileData) {
-                  var wstream = suiteConfig.temp.createWriteStream(),
-                    op = new FlamingoOperation(),
-                    error;
+                  const wstream = suiteConfig.temp.createWriteStream();
+                  const op = new FlamingoOperation();
+                  let error;
 
-                  op.profile = {
-                    process: profileData.process
-                  };
+                  op.process = profileData.process;
 
                   wstream.on('finish', function () {
                     if (error) {
@@ -58,12 +63,12 @@ module.exports = function (suiteConfig) {
                     }
                     deferred.resolve();
                   });
-                  wstream.on('error', function(err){
+                  wstream.on('error', function (err) {
                     error = err;
                     wstream.end();
                   });
-                  var processorStream = suiteConfig.imageProcessors(op)(rstream);
-                  processorStream.on('error', function(err){
+                  const processorStream = suiteConfig.imageProcessors(op)(rstream);
+                  processorStream.on('error', function (err) {
                     error = err;
                     wstream.end();
                     processorStream.end();
@@ -76,8 +81,8 @@ module.exports = function (suiteConfig) {
         }).add('VIPS', {
           defer: true,
           fn: function (deferred) {
-            var op = new FlamingoOperation();
-            op.targetUrl = url.parse(HOST);
+            const op = new FlamingoOperation();
+            op.input = PARSED_HOST;
             op.config = {
               ACCESS: {HTTPS: {ENABLED: false}},
               ALLOW_READ_REDIRECT: 0,
@@ -90,13 +95,11 @@ module.exports = function (suiteConfig) {
                 }, {
                   DEFAULT_MIME: 'image/png'
                 }).then(function (profileData) {
-                  var wstream = suiteConfig.temp.createWriteStream(),
-                    error,
-                    op = new FlamingoOperation();
+                  const wstream = suiteConfig.temp.createWriteStream();
+                  const op = new FlamingoOperation();
+                  let error;
 
-                  op.profile = {
-                    process: profileData.process
-                  };
+                  op.process = profileData.process;
 
                   wstream.on('finish', function () {
                     if (error) {
@@ -104,12 +107,12 @@ module.exports = function (suiteConfig) {
                     }
                     deferred.resolve();
                   });
-                  wstream.on('error', function(err){
+                  wstream.on('error', function (err) {
                     error = err;
                     wstream.end();
                   });
-                  var processorStream = suiteConfig.imageProcessors(op)(rstream);
-                  processorStream.on('error', function(err){
+                  const processorStream = suiteConfig.imageProcessors(op)(rstream);
+                  processorStream.on('error', function (err) {
                     error = err;
                     wstream.end();
                     processorStream.end();
@@ -120,10 +123,10 @@ module.exports = function (suiteConfig) {
             }).catch(error);
           }
         })
-        .on('cycle', suiteConfig.cycle)
-        .on('error', suiteConfig.error)
-        .on('complete', suiteConfig.complete(suiteName, profileName, resolve))
-        .run(suiteConfig.runConfig);
+          .on('cycle', suiteConfig.cycle)
+          .on('error', suiteConfig.error)
+          .on('complete', suiteConfig.complete(suiteName, profileName, resolve))
+          .run(suiteConfig.runConfig);
       });
     };
 
@@ -132,13 +135,7 @@ module.exports = function (suiteConfig) {
         return convertRemote(name);
       });
     });
-    prom.then(function () {
-      return new RSVP.Promise(function (resolve) {
-        server.close(function () {
-          resolve();
-        });
-      });
-    });
+    prom.then(() => server.stop());
     return prom;
   };
 };

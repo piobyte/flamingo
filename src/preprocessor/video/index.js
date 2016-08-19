@@ -1,45 +1,36 @@
 /* @flow weak */
-var ffmpeg = require('fluent-ffmpeg'),
-  RSVP = require('rsvp'),
-  assign = require('lodash/assign'),
-  isFinite = require('lodash/isFinite'),
-  request = require('request'),
-  errors = require('../../util/errors'),
-  pkg = require('../../../package'),
-  deprecate = require('../../util/deprecate'),
-  noop = require('lodash/noop'),
-  globalConfig = require('../../../config');
 
-function _isPreprocessorConfig(config) {
-  return config.hasOwnProperty('seekPercent');
-}
+/**
+ * Video preprocessor module
+ * @module
+ */
 
-var logger = require('../../logger').build('preprocessor:video'),
-  defaultProcessConf = {
-    seekPercent: 0
-  };
+const ffmpeg = require('fluent-ffmpeg');
+const Promise = require('bluebird');
+const assign = require('lodash/assign');
+const isFinite = require('lodash/isFinite');
+const got = require('got');
+const {ProcessingError, InvalidInputError} = require('../../util/errors');
+const pkg = require('../../../package');
+const {FILE, REMOTE} = require('../../model/reader-type');
 
+const logger = require('../../logger').build('preprocessor:video');
+const defaultProcessConf = {
+  seekPercent: 0
+};
+
+/**
+ * Builds a function that takes a reader result and transforms it into an image stream.
+ * @param {FlamingoOperation} operation
+ * @return {Function}
+ */
 module.exports = function (operation) {
-  var conf,
-    givenProcessConf;
-
-  if (arguments.length === 2) {
-    deprecate(noop, 'Video preprocessor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
-    givenProcessConf = arguments[0];
-    conf = arguments[1];
-  } else if(_isPreprocessorConfig(operation)) {
-    deprecate(noop, 'Video preprocessor called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
-    conf = globalConfig;
-    givenProcessConf = arguments[0];
-  } else {
-    conf = operation.config;
-    givenProcessConf = operation.preprocessorConfig;
-  }
-  //
-  var processConf = assign({}, defaultProcessConf, givenProcessConf);
+  const conf = operation.config;
+  const givenProcessConf = operation.preprocessorConfig;
+  const processConf = assign({}, defaultProcessConf, givenProcessConf);
 
   return function (readerResult) {
-    var ffmpegOptions = {};
+    const ffmpegOptions = {};
 
     /* istanbul ignore else */
     if (conf.PREPROCESSOR.VIDEO.KILL_TIMEOUT) {
@@ -47,18 +38,18 @@ module.exports = function (operation) {
     }
 
     function videoProcessor(input) {
-      return new RSVP.Promise(function (resolve, reject) {
+      return new Promise(function (resolve, reject) {
         ffmpeg.ffprobe(input, function (err, meta) {
           if (err) {
-            reject(new errors.InvalidInputError(err.message, err));
+            reject(new InvalidInputError(err.message, err));
           }
           else {
             /* istanbul ignore next */
             if (!meta.hasOwnProperty('format')) {
-              throw new errors.InvalidInputError('Input format is undetectable by ffprobe');
+              throw new InvalidInputError('Input format is undetectable by ffprobe');
             }
 
-            var duration = isFinite(meta.format.duration) ? meta.format.duration : 0;
+            const duration = isFinite(meta.format.duration) ? meta.format.duration : 0;
 
             // seek to time and save 1 frame
             resolve(ffmpeg(input, ffmpegOptions)
@@ -70,10 +61,10 @@ module.exports = function (operation) {
                 logger.debug(data);
               })
               .on('start', function (commandLine) {
-                logger.info('Spawned ffmpeg with command: ' + commandLine);
+                logger.info(`Spawned ffmpeg with command: ${commandLine}`);
               })
               .on('error', function (e) {
-                throw new errors.ProcessingError(e.message, e);
+                throw new ProcessingError(e.message, e);
               })
               .on('end', function () {
                 logger.debug('ffmpeg end');
@@ -84,34 +75,30 @@ module.exports = function (operation) {
     }
 
     switch (readerResult.type) {
-    case 'file':
-      return videoProcessor(readerResult.path);
-    case 'remote':
-      var promise;
-      if (conf.ALLOW_READ_REDIRECT) {
-        promise = videoProcessor(readerResult.url.href);
-      } else {
-        // do HEAD to check if redirect response code because ffprobe/ffmpeg always follow redirects
-        promise = new RSVP.Promise(function (res, rej) {
-          request.head(readerResult.url.href, {
-            timeout: conf.READER.REQUEST.TIMEOUT,
-            headers: {'User-Agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'},
-            followRedirect: false,
-            maxRedirects: 0
-          }, function (err) {
-            if (err) {
-              rej(new errors.InvalidInputError('Error while doing a HEAD request to check for redirects', err));
-            } else {
-              res(videoProcessor(readerResult.url.href));
-            }
-          });
-        });
+      case FILE: {
+        return videoProcessor(readerResult.path);
       }
-      return promise;
-    default:
-      return readerResult.stream().then(function (stream) {
-        return videoProcessor(stream);
-      });
+      case REMOTE: {
+        let promise;
+        if (conf.ALLOW_READ_REDIRECT) {
+          promise = videoProcessor(readerResult.url.href);
+        } else {
+          // do HEAD to check if redirect response code because ffprobe/ffmpeg always follow redirects
+          promise = got.head(readerResult.url.href, {
+            timeout: conf.READER.REQUEST.TIMEOUT,
+            headers: {'user-agent': pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'},
+            followRedirect: false,
+            retries: 0
+          }).then(() => {
+            return videoProcessor(readerResult.url.href);
+          }).catch(err => new InvalidInputError('Error while doing a HEAD request to check for redirects', err));
+        }
+        return promise;
+      }
+      default: {
+        return readerResult.stream()
+          .then((stream) => videoProcessor(stream));
+      }
     }
   };
 };

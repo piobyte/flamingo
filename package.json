@@ -1,14 +1,14 @@
 {
   "name": "flamingo",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "typecheck": "node_modules/.bin/flow check",
-    "lint": "node node_modules/eslint/bin/eslint.js index.js config.js test src targets",
+    "lint": "node node_modules/eslint/bin/eslint.js index.js config.js test src targets tutorials",
     "predocs": "rm -r docs 2>/dev/null || true",
-    "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r -u tutorials -t ./node_modules/docdash -P package.json -R README.md -d docs",
+    "docs": "node node_modules/jsdoc/jsdoc.js index.js config.js src -r -u tutorials -t ./node_modules/postman-jsdoc-theme -P package.json -R README.md -d docs",
     "pretest": "npm run lint && npm run typecheck",
     "test": "TEST=true npm run cover",
     "preversion": "npm test",
@@ -20,6 +20,9 @@
   },
   "author": "Christian",
   "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
   "bugs": {
     "url": "https://github.com/piobyte/flamingo/issues"
   },
@@ -28,36 +31,42 @@
     "url": "https://github.com/piobyte/flamingo"
   },
   "dependencies": {
-    "boom": "^2.10.1",
-    "bunyan": "^1.4.0",
+    "bluebird": "^3.4.1",
+    "boom": "^3.1.2",
+    "buffer-peek-stream": "^1.0.1",
+    "bunyan": "^1.8.0",
     "clamp": "^1.0.1",
-    "fluent-ffmpeg": "fluent-ffmpeg/node-fluent-ffmpeg.git#a415251fc5008118046ae74a61f72b61cc29c38a",
-    "hapi-lts": "hapijs/hapi.git#69eb13937875d09ce5560138fa18f6458ecf499b",
-    "lodash": "^4.0.1",
+    "file-type": "^3.8.0",
+    "fluent-ffmpeg": "^2.1.0",
+    "got": "^6.3.0",
+    "hapi": "^14.1.0",
+    "is-stream": "^1.1.0",
+    "lodash": "^4.14.2",
     "mimeparse": "^0.1.4",
     "mkdirp": "^0.5.0",
     "optional": "^0.1.3",
-    "request": "^2.67.0",
-    "rsvp": "^3.0.18",
-    "sharp": "0.15.0",
+    "sharp": "^0.15.1",
     "temp": "^0.8.3",
-    "through2": "^2.0.0"
+    "through2": "^2.0.1"
   },
   "devDependencies": {
-    "aws-sdk": "^2.1.39",
-    "benchmark": "^2.0.0",
-    "docdash": "^0.3.0",
-    "eslint": "^1.10.3",
-    "flow-bin": "^0.26.0",
-    "istanbul": "^0.4.1",
+    "benchmark": "^2.1.1",
+    "eslint": "^3.3.1",
+    "flow-bin": "^0.30.0",
+    "istanbul": "^0.4.4",
     "jsdoc": "^3.4.0",
-    "mocha": "^2.3.4",
-    "nock": "^2.18.2",
+    "mocha": "^3.0.2",
+    "nock": "^8.0.0",
     "node-uuid": "^1.4.7",
-    "sinon": "^1.17.2"
+    "postman-jsdoc-theme": "0.0.2",
+    "sinon": "^1.17.5"
   },
   "optionalDependencies": {
-    "gm": "^1.22.0",
-    "memwatch-next": "github:marcominetti/node-memwatch"
+    "gm": "^1.23.0",
+    "memwatch-next": "^0.3.0",
+    "screenshot-stream": "^3.4.0",
+    "markdown-it": "^7.0.0",
+    "probe-image-size": "^2.1.0",
+    "webshot": "github:brenden/node-webshot#pull/150/head"
   }
 }

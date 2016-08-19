@@ -1,19 +1,26 @@
 /* @flow weak */
-var fs = require('fs'),
-  readerType = require('./reader-type'),
-  accessAllowed = require('../util/file-access-allowed'),
-  path = require('path'),
-  noop = require('lodash/noop'),
-  deprecate = require('../util/deprecate'),
-  RSVP = require('rsvp');
+const fs = require('fs');
+const {FILE} = require('../model/reader-type');
+const accessAllowed = require('../util/file-access-allowed');
+const path = require('path');
+const Promise = require('bluebird');
+const {InvalidInputError} = require('../util/errors');
 
-var exists = function (filePath/*: string */) {
-  return new RSVP.Promise(function (resolve) {
-    fs.exists(filePath, function (doesExist) {
-      resolve(doesExist);
+function fileExists(filePath/*: string */) {
+  return new Promise(function (resolve, reject) {
+    fs.stat(filePath, (err, stat) => {
+      if (err) {
+        reject(new InvalidInputError('Input stat error.', err));
+      } else {
+        if (!stat.isFile()) {
+          reject(new InvalidInputError('Input isn\'t a file.', filePath));
+        } else {
+          resolve();
+        }
+      }
     });
   });
-};
+}
 
 /**
  * Function that resolves a read configuration for a given file
@@ -21,37 +28,19 @@ var exists = function (filePath/*: string */) {
  * @return {Promise} resolves with the file read configuration
  */
 module.exports = function (operation/*: FlamingoOperation */) {
-  var filePath,
-    access;
+  const filePath = operation.input;
+  const access = operation.config.ACCESS;
 
-  if (arguments.length === 2) {
-    deprecate(noop, 'File reader called without passing the flamingo operation object.', {id: 'no-flamingo-operation'});
-    filePath = arguments[0];
-    access = arguments[1];
-  } else {
-    filePath = operation.targetUrl;
-    access = operation.config.ACCESS;
+  const readWhitelist = access.FILE.READ;
+  const normalizedPath = path.normalize(filePath.path);
+
+  if (!accessAllowed(normalizedPath, readWhitelist)) {
+    return Promise.reject(new InvalidInputError('File access not allowed.', filePath));
   }
 
-  var readWhitelist = access.FILE.READ,
-    normPath = path.normalize(filePath.path);
-
-  return RSVP.resolve(accessAllowed(normPath, readWhitelist)).then(function () {
-    return exists(normPath).then(function (pathExists) {
-      if (!pathExists) {
-        throw {
-          statusCode: 404,
-          message: 'Input file not found.',
-          error: 'Input file not found.'
-        };
-      }
-      return {
-        stream: function () {
-          return fs.createReadStream(normPath);
-        },
-        type: readerType.FILE,
-        path: normPath
-      };
-    });
-  });
+  return fileExists(normalizedPath).then(() => ({
+    stream: () => fs.createReadStream(normalizedPath),
+    type: FILE,
+    path: normalizedPath
+  }));
 };

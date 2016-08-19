@@ -5,13 +5,12 @@
  * Flamingo addons only interact with the base flamingo installation using specified hooks, ie.: `"ENV", "CONF", "PROFILES", "ROUTES", "HAPI_PLUGINS"`.
  * Each hook inside an addon must return a function that returns an expected value. To make it easier to change hook names,
  * use the exported `HOOKS` from the `src/addon.js` module (ie. `addon.HOOK.CONF`).
- * @module flamingo/src/addon
+ * @module
  */
 
 /**
  * Hooks to register flamino addon functionality.
- * @namespace
- * @type {}
+ * @enum {string}
  * @readonly
  */
 exports.HOOKS = {
@@ -21,7 +20,6 @@ exports.HOOKS = {
    * It must export a function that returns an array of configurations, compatible with the `src/util/env-config.js` module.
    * See the `env-config` module documentation for more information.
    *
-   * @readonly
    * @example
    *   exports[addon.HOOKS.ENV] = function () {
      *       return [
@@ -36,7 +34,6 @@ exports.HOOKS = {
    * It must export a function that returns an object.
    * It will merge the addon config object with the flamingo config (`config.js`).
    *
-   * @readonly
    * @example
    *   exports[addon.HOOKS.CONF] = function () { return {
      *       AWS: {
@@ -51,7 +48,6 @@ exports.HOOKS = {
   /**
    * Hook that allows you to register additional profiles that are available inside the profile conversion route (`src/routes/profile.js`).
    * It must export a function that returns an object.
-   * @readonly
    * @example
    * exports[addon.HOOKS.PROFILES] = {
      *    'my-profile': function (request, query) {
@@ -71,7 +67,6 @@ exports.HOOKS = {
    * Hook that allows you to register additional hapi routes.
    * It must export a function that returns an array of route registration objects
    *
-   * @readonly
    * @see http://hapijs.com/tutorials/routing#routes
    * @example
    * exports[addon.HOOKS.ROUTES] = [{
@@ -89,7 +84,6 @@ exports.HOOKS = {
    * Hook that allows you to register additional hapi plugins.
    * It must export a function that returns an array of plugin registrations.
    *
-   * @readonly
    * @see http://hapijs.com/tutorials/plugins#loading-a-plugin
    */
   HAPI_PLUGINS: 'HAPI_PLUGINS',
@@ -98,7 +92,6 @@ exports.HOOKS = {
    * Hook that allows you to register additional bunyan log streams.
    * Note: As of now, it can't add logs that were generated before the addon is initialized to the addon stream.
    *
-   * @readonly
    * @see https://github.com/trentm/node-bunyan#streams-introduction
    * @example
    * exports[addon.HOOKS.LOG_STREAM] = [{
@@ -106,5 +99,20 @@ exports.HOOKS = {
      *  level: "debug"
      * }]
    */
-  LOG_STREAM: 'LOG_STREAM'
+  LOG_STREAM: 'LOG_STREAM',
+
+  /**
+   * Hook that allows you to modify the result from the convert routes `extractProcess` method.
+   * Useful for i.e. modifying the pipe function that converts the image stream.
+   * Example adds an Authorization header to the process response.
+   * @example
+   * exports[EXTRACT_PROCESS] = function () {
+   *   return (extracted, operation) => {
+   *     extracted.response.header = extracted.response.header || {};
+   *     extracted.response.header['Authorization'] = 'Basic 1234';
+   *     return extracted;
+   *   };
+   * };
+   */
+  EXTRACT_PROCESS: 'EXTRACT_PROCESS'
 };

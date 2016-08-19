@@ -1,31 +1,30 @@
-/* global describe, it */
+const fixture = require('../../test-util/fixture');
+const gm = require('gm');
+const temp = require('temp');
+const path = require('path');
+const url = require('url');
+const fs = require('fs');
+const Promise = require('bluebird');
+const fileReader = require('../../../src/reader/file');
+const FlamingoOperation = require('../../../src/model/flamingo-operation');
+const assert = require('assert');
+const {InvalidInputError} = require('../../../src/util/errors');
 
-var fixture = require('../../test-util/fixture'),
-  gm = require('gm'),
-  temp = require('temp'),
-  path = require('path'),
-  url = require('url'),
-  fs = require('fs'),
-  Promise = require('rsvp').Promise,
-  fileReader = require('../../../src/reader/file'),
-  FlamingoOperation = require('../../../src/util/flamingo-operation'),
-  assert = require('assert');
-
-var compareFileFixtures = function (fixturePath, deprecatedApi) {
+const compareFileFixtures = function (fixturePath) {
   return new Promise(function (resolve, reject) {
-    var TEST_WHITELIST = {FILE: {READ: ['/tmp', path.resolve(__dirname, '../../')]}};
+    const TEST_WHITELIST = {FILE: {READ: ['/tmp', path.resolve(__dirname, '../../')]}};
 
-    var op = new FlamingoOperation();
-    op.targetUrl = url.parse('file://' + fixture.fullFixturePath(fixturePath));
+    const op = new FlamingoOperation();
+    op.input = url.parse('file://' + fixture.fullFixturePath(fixturePath));
     op.config = {
       ACCESS: TEST_WHITELIST
     };
 
-    (deprecatedApi ? fileReader(url.parse('file://' + fixture.fullFixturePath(fixturePath)), TEST_WHITELIST) : fileReader(op)).then(function (readResult) {
+    fileReader(op).then(function (readResult) {
       temp.track();
 
-      var readStream = readResult.stream(),
-        writeTemp = temp.path({suffix: '.png'});
+      const readStream = readResult.stream();
+      const writeTemp = temp.path({suffix: '.png'});
 
       readStream.on('end', function () {
         gm.compare(writeTemp, fixture.fullFixturePath(fixturePath), function (err, isEqual) {
@@ -51,87 +50,55 @@ var compareFileFixtures = function (fixturePath, deprecatedApi) {
 };
 
 describe('file reader', function () {
-  it('tests if streamed png file equals expected output', function (done) {
-    compareFileFixtures('images/base64.png').then(function (equal) {
-      if (equal) {
-        done();
-      } else {
-        done('Not equal');
-      }
-    }).catch(function (err) {
-      done(new Error(JSON.stringify(err)));
-    });
+  it('tests if streamed png file equals expected output', function () {
+    return compareFileFixtures('images/base64.png');
   });
-  it('tests if streamed gif file equals expected output', function (done) {
-    compareFileFixtures('images/base64.gif').then(function (equal) {
-      if (equal) {
-        done();
-      } else {
-        done('Not equal');
-      }
-    }).catch(function (err) {
-      done(new Error(JSON.stringify(err)));
-    });
+  it('tests if streamed gif file equals expected output', function () {
+    return compareFileFixtures('images/base64.gif');
   });
-  it('tests if streamed markdown file is rejected', function (done) {
-    compareFileFixtures('docs/some-file.md').then(function () {
-      assert.fail('shouldn\'t reached this code');
-    }).catch(function () {
-      done();
-    });
+  it('tests if streamed markdown file is rejected', function () {
+    compareFileFixtures('docs/some-file.md')
+      .then(() => assert.fail('shouldn\'t reached this code'))
+      .catch(() => assert.ok(true));
   });
-  it('tests if the reader rejects if file doesn\'t exist', function (done) {
-    var op = new FlamingoOperation();
 
-    op.targetUrl = url.parse('file://' + fixture.fullFixturePath('NON-EXISTANT-FILE'));
+  it('rejects on input stat error', function(){
+    const op = new FlamingoOperation();
+    op.input = url.parse('file://' + path.join(__dirname, 'NON-EXISTANT-FILE'));
     op.config = {
-      ACCESS: {FILE: {READ: [path.resolve(__dirname, '../../')]}}
+      ACCESS: {FILE: {READ: [path.join(__dirname)]}}
     };
 
-    fileReader(op).then(function () {
-      assert.fail('shouldn\'t reached this code');
-    }).catch(function () {
-      done();
+    return fileReader(op).catch((e) => {
+      assert.ok(e instanceof InvalidInputError);
+      assert.equal(e.message, 'Input stat error.');
     });
   });
 
-  describe('deprecated no-flamingo-operation', function(){
-    it('tests if streamed png file equals expected output', function (done) {
-      compareFileFixtures('images/base64.png', true).then(function (equal) {
-        if (equal) {
-          done();
-        } else {
-          done('Not equal');
-        }
-      }).catch(function (err) {
-        done(new Error(JSON.stringify(err)));
-      });
+  it('rejects on input not being a file', function(){
+    const op = new FlamingoOperation();
+    op.input = url.parse('file://' + path.join(__dirname, '../reader'));
+    op.config = {
+      ACCESS: {FILE: {READ: [path.join(__dirname, '..')]}}
+    };
+
+    return fileReader(op).catch((e) => {
+      assert.ok(e instanceof InvalidInputError);
+      assert.equal(e.message, 'Input isn\'t a file.');
     });
-    it('tests if streamed gif file equals expected output', function (done) {
-      compareFileFixtures('images/base64.gif', true).then(function (equal) {
-        if (equal) {
-          done();
-        } else {
-          done('Not equal');
-        }
-      }).catch(function (err) {
-        done(new Error(JSON.stringify(err)));
-      });
-    });
-    it('tests if streamed markdown file is rejected', function (done) {
-      compareFileFixtures('docs/some-file.md', true).then(function () {
-        assert.fail('shouldn\'t reached this code');
-      }).catch(function () {
-        done();
-      });
-    });
-    it('tests if the reader rejects if file doesn\'t exist', function (done) {
-      var fileUrl = url.parse('file://' + fixture.fullFixturePath('NON-EXISTANT-FILE'));
-      fileReader(fileUrl, {FILE: {READ: [path.resolve(__dirname, '../../')]}}).then(function () {
-        assert.fail('shouldn\'t reached this code');
-      }).catch(function () {
-        done();
-      });
+  });
+
+  it('rejects if input access isn\'t allowed', function(){
+    const op = new FlamingoOperation();
+    op.input = url.parse('file://' + path.join(__dirname, 'file.test.js'));
+    op.config = {
+      ACCESS: {FILE: {READ: [path.join(__dirname, 'dir')]}}
+    };
+
+    return fileReader(op).catch((e) => {
+      assert.ok(e instanceof InvalidInputError);
+      assert.ok(e.extra instanceof url.Url);
+      assert.equal(e.message, 'File access not allowed.');
     });
   });
 });

@@ -1,8 +1,8 @@
 'use strict';
 
-var path = require('path');
+const path = require('path');
 
-var images = {
+const images = {
   jpg: '2569067123_aca715a2ee_o.jpg', // http://www.flickr.com/photos/grizdave/2569067123/
   jpgWithExif: 'Landscape_8.jpg', // https://github.com/recurser/exif-orientation-examples/blob/master/Landscape_8.jpg
   jpgWithExifMirroring: 'Landscape_5.jpg', // https://github.com/recurser/exif-orientation-examples/blob/master/Landscape_5.jpg

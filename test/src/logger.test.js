@@ -1,16 +1,19 @@
-var temp = require('temp'),
-  fs = require('fs'),
-  assert = require('assert'),
-  assign = require('lodash/assign');
+const temp = require('temp');
+const Promise = require('bluebird');
+const readFile = Promise.promisify(require('fs').readFile);
+const assert = require('assert');
+const assign = require('lodash/assign');
+const url = require('url');
+const FlamingoOperation = require('../../src/model/flamingo-operation');
 
 describe('logger', function () {
-  var logger = require('../../src/logger');
+  const logger = require('../../src/logger');
 
-  it('checks that the method calls the stream function', function (done) {
-    var tempPath = temp.path({suffix: '.log'}),
-      loggerName = 'test:logger.addStreams',
-      LOG_MESSAGE = 'Time is an illusion. Lunchtime doubly so.',
-      log;
+  it('checks that the method calls the stream function', function () {
+    const tempPath = temp.path({suffix: '.log'});
+    const loggerName = 'test:logger.addStreams';
+    const LOG_MESSAGE = 'Time is an illusion. Lunchtime doubly so.';
+    let log;
 
     logger.addStreams([{
       level: 'fatal',
@@ -20,30 +23,23 @@ describe('logger', function () {
     log = logger.build(loggerName);
     log.fatal(LOG_MESSAGE);
 
-    fs.readFile(tempPath, function (err, data) {
-      if (err) {
-        done(err);
-      }
-
-      var logData = JSON.parse(data.toString('utf8'));
-      assert.equal(logData.msg, LOG_MESSAGE);
-      done();
-    });
+    return readFile(tempPath)
+      .then((data) => assert.equal(JSON.parse(data.toString('utf8')).msg, LOG_MESSAGE));
   });
 
   it('serializes request log objects', function () {
-    var REQUEST = {
-        headers: 'headers',
+    const REQUEST = {
+      headers: 'headers',
+      path: '/foo',
+      route: {
         path: '/foo',
-        route: {
-          path: '/foo',
-          method: 'get'
-        },
         method: 'get'
       },
-      serialized = logger.serializers.request(assign({}, REQUEST, {
-        SOME_WEIRD_EXTRA_FIELD: 'bar'
-      }));
+      method: 'get'
+    };
+    const serialized = logger.serializers.request(assign({}, REQUEST, {
+      SOME_WEIRD_EXTRA_FIELD: 'bar'
+    }));
 
     assert.deepEqual(serialized, REQUEST);
     assert.ok(logger.serializers.request('foo'), 'it doesn\'t break on invalid input');
@@ -51,7 +47,7 @@ describe('logger', function () {
 
   it('serializes request error objects', function () {
     /* eslint no-underscore-dangle: 0 */
-    var err;
+    let err;
     try {
       JSON.parse('foo');
     } catch (e) {
@@ -68,5 +64,33 @@ describe('logger', function () {
     /* eslint no-underscore-dangle: 0 */
 
     assert.deepEqual(logger.serializers.error('pls halp'), {message: 'pls halp'});
+  });
+
+  it('serializes input', function(){
+    assert.deepEqual(logger.serializers.input('# Headline\nsome markdown'), '# Headline\nsome markdown');
+    assert.deepEqual(logger.serializers.input(url.parse('http://zombo.com/')), 'http://zombo.com/');
+    assert.deepEqual(logger.serializers.input({some: 'object'}), '{ some: \'object\' }');
+  });
+
+  it('serializes operation object', function () {
+    const operation = new FlamingoOperation();
+    operation.input = url.parse('https://travis-ci.org/piobyte/flamingo.svg?branch=master');
+    operation.request = {
+      headers: {'user-agent': 'flamingo/2.0.0'},
+      path: '/video/example-profile/12345',
+      method: 'get',
+      route: {path: '/video/{profile}/{url}', method: 'get'}
+    };
+
+    assert.deepEqual(logger.serializers.operation(operation),
+      {
+        input: 'https://travis-ci.org/piobyte/flamingo.svg?branch=master',
+        request: {
+          headers: {'user-agent': 'flamingo/2.0.0'},
+          path: '/video/example-profile/12345',
+          route: {path: '/video/{profile}/{url}', method: 'get'},
+          method: 'get'
+        }
+      });
   });
 });

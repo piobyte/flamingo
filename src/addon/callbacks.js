@@ -1,15 +1,29 @@
 /* @flow weak */
-var envConfig = require('./../util/env-config'),
-  addon = require('./index'),
-  assign = require('lodash/assign'),
-  mergeWith = require('lodash/mergeWith'),
-  partial = require('lodash/partial');
+/**
+ * Addon callbacks module
+ * @module
+ */
+
+const envConfig = require('./../util/env-config');
+const {HOOKS:{
+  CONF,
+  ENV,
+  ROUTES,
+  HAPI_PLUGINS,
+  PROFILES,
+  LOG_STREAM,
+  EXTRACT_PROCESS
+}} = require('./index');
+const assign = require('lodash/assign');
+const mergeWith = require('lodash/mergeWith');
+const partial = require('lodash/partial');
 
 /**
  * Function to be used as merge callback. It's required because by default, lodash isn't keeping a Buffer as a Buffer
  * @see https://github.com/lodash/lodash/issues/1453#issuecomment-139311305
  * @param {*} a
  * @param {*} b
+ * @private
  * @returns {Buffer|undefined} b if b is Buffer
  */
 function mergeBufferAware(a, b) {
@@ -20,36 +34,41 @@ function mergeBufferAware(a, b) {
 
 /**
  * Register default flamingo addon callbacks
- * @param {object} addons
+ * @param {object} loader
  * @returns {*}
  */
-module.exports = function (addons/*: {callback: function} */)/*: {callback: function} */ {
-  addons.callback(addon.HOOKS.CONF, function (conf) {
+module.exports = function (loader/*: {callback: function} */)/*: {callback: function} */ {
+  loader.callback(CONF, function (conf) {
     return function (addonConf) {
       // overwrite addon config with config.js content and merge the result into config.js
       mergeWith(conf, mergeWith(addonConf, conf, mergeBufferAware), mergeBufferAware);
     };
   });
-  addons.callback(addon.HOOKS.ENV, function (config, environment) {
+  loader.callback(EXTRACT_PROCESS, function (extracted, operation) {
+    return function (addonExtractFunction) {
+      return addonExtractFunction(extracted, operation);
+    };
+  });
+  loader.callback(ENV, function (config, environment) {
     // call envConfig on the config.js object given the addon env mappings
     return partial(envConfig, config, environment);
   });
-  addons.callback(addon.HOOKS.PROFILES, function (profiles) {
+  loader.callback(PROFILES, function (profiles) {
     // put addon profile fields on the existing profiles object
     return partial(assign, profiles);
   });
-  addons.callback(addon.HOOKS.ROUTES, function (server) {
+  loader.callback(ROUTES, function (server) {
     // add additional routes
     return server.route.bind(server);
   });
-  addons.callback(addon.HOOKS.HAPI_PLUGINS, function (plugins) {
+  loader.callback(HAPI_PLUGINS, function (plugins) {
     // add hapi plugins
     return plugins.push.bind(plugins);
   });
-  addons.callback(addon.HOOKS.LOG_STREAM, function (logger) {
+  loader.callback(LOG_STREAM, function (logger) {
     // add logger stream
     return logger.addStreams;
   });
 
-  return addons;
+  return loader;
 };

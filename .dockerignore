@@ -3,5 +3,7 @@
 coverage
 docs
 node_modules
+targets
+tutorials
 
 *.iml

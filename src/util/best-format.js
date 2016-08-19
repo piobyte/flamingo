@@ -1,21 +1,23 @@
 /* @flow */
 /**
  * Accept header media type parsing module
- * @module flamingo/src/util/best-format
+ * @module
  */
 
-var mimeparse = require('mimeparse');
+const mimeparse = require('mimeparse');
 
 function parseRanges(ranges/*:string*/) {
-  var parsedRanges = [],
-    rangeParts = ranges.split(',');
-  for (var i = 0; i < rangeParts.length; i++) {
+  const parsedRanges = [];
+  const rangeParts = ranges.split(',');
+
+  for (let i = 0; i < rangeParts.length; i++) {
     parsedRanges.push(mimeparse.parseMediaRange(rangeParts[i]));
   }
+
   return parsedRanges;
 }
 
-var DEFAULT_SUPPORTED = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'image/tiff'];
+const DEFAULT_SUPPORTED = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'image/tiff'];
 
 /**
  * Function to get a media type from a given accept handler using a default media type as fallback.
@@ -33,43 +35,41 @@ var DEFAULT_SUPPORTED = ['image/png', 'image/jpeg', 'image/webp', 'image/gif', '
  * // {mime: 'image/jpeg', type: 'jpeg'}
  */
 module.exports = function (acceptHeader/*:string*/, defaultMime/*:string*/)/*: {mime: string; type: string }*/ {
-  if (acceptHeader) {
-    var parsedHeader = parseRanges(acceptHeader),
-      joinedParsedHeader = parsedHeader.map(function (h) {
-        return h[0] + '/' + h[1];
-      }),
-      bestMatch,
-      highestFitness = 0,
-      highestSupported;
+  let bestMatch;
 
-    highestSupported = DEFAULT_SUPPORTED.map(function (supportedMime) {
-      var fitnessQuality = mimeparse.fitnessAndQualityParsed(supportedMime, parsedHeader);
+  if (acceptHeader) {
+    const parsedHeader = parseRanges(acceptHeader);
+    const joinedParsedHeader = parsedHeader.map(([type, subtype]) => `${type}/${subtype}`);
+
+    let highestFitness = 0;
+    let highestSupported;
+
+    highestSupported = DEFAULT_SUPPORTED.map((supportedMime) => {
+      const fitnessQuality = mimeparse.fitnessAndQualityParsed(supportedMime, parsedHeader);
       highestFitness = Math.max(highestFitness, fitnessQuality[0]);
       return {
         mime: supportedMime,
         fitness: fitnessQuality[0]
       };
-    }).filter(function (parsed) {
-      return parsed.fitness === highestFitness;
-    }).map(function (parsed) {
-      return parsed.mime;
-    }).sort(function (a, b) {
-      /* eslint no-else-return: 0 */
-      var aIndex = joinedParsedHeader.indexOf(a),
-        bIndex = joinedParsedHeader.indexOf(b);
+    }).filter((parsed) => parsed.fitness === highestFitness)
+      .map(({mime}) => mime)
+      .sort((a, b) => {
+        /* eslint no-else-return: 0 */
+        const aIndex = joinedParsedHeader.indexOf(a);
+        const bIndex = joinedParsedHeader.indexOf(b);
 
-      if (aIndex === bIndex) {
-        return 0;
-      }
-      /* istanbul ignore next */
-      if (aIndex === -1 && bIndex > 0) {
-        return 1;
-      } else if (bIndex === -1 && aIndex > 0) {
-        return -1;
-      } else {
-        return aIndex < bIndex ? -1 : 1;
-      }
-    });
+        if (aIndex === bIndex) {
+          return 0;
+        }
+        /* istanbul ignore next */
+        if (aIndex === -1 && bIndex > 0) {
+          return 1;
+        } else if (bIndex === -1 && aIndex > 0) {
+          return -1;
+        } else {
+          return aIndex < bIndex ? -1 : 1;
+        }
+      });
 
     if (highestSupported.length === 1) {
       bestMatch = highestSupported[0];

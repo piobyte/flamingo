@@ -1,0 +1,18 @@
+declare class FlamingoOperation {
+  request: any;
+  reply: function;
+
+  preprocessorConfig: Object;
+  processorConfig: Object;
+
+  reader: function;
+  writer: function;
+
+  input: any;
+
+  config: Config;
+  addons: Object;
+
+  process: Array<ProcessInstruction>;
+  response: Object;
+}

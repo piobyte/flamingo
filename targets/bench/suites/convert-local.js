@@ -1,61 +1,61 @@
-var fs = require('fs'),
-  Benchmark = require('benchmark'),
-  FlamingoOperation = require('../../../src/util/flamingo-operation'),
-  RSVP = require('rsvp');
+const fs = require('fs');
+const Benchmark = require('benchmark');
+const FlamingoOperation = require('../../../src/model/flamingo-operation');
+const Promise = require('bluebird');
 
 module.exports = function (suiteConfig) {
   return function (suiteName, description, filePath) {
-    var prom = RSVP.Promise.resolve(),
-      streamFunction = function (deferred) {
-        return function (data) {
-          var wstream = suiteConfig.temp.createWriteStream(),
-            rstream = fs.createReadStream(filePath),
-            op = new FlamingoOperation(),
-            error;
+    let prom = Promise.resolve();
 
-          op.profile = {
-            process: data.process
-          };
+    function streamFunction(deferred) {
+      return function (data) {
+        const wstream = suiteConfig.temp.createWriteStream();
+        const rstream = fs.createReadStream(filePath);
+        const op = new FlamingoOperation();
+        let error;
 
-          wstream.on('finish', function () {
-            if (error) {
-              deferred.benchmark.abort();
-            }
-            deferred.resolve();
-          });
-          suiteConfig.imageProcessors(op)(rstream)
-            .on('error', function(err){
-              error = err;
-              wstream.end();
-              this.end();
-            })
-            .pipe(wstream);
-        };
-      },
-      convertLocal = function (profileName) {
-        return new RSVP.Promise(function (resolve) {
-          var gmOptions = {SUPPORTED: {GM: {WEBP: true}}, DEFAULT_MIME: 'image/png'},
-            gmRequest = {headers: {}, query: {processor: 'gm'}},
-            vipsOptions = {DEFAULT_MIME: 'image/png'},
-            vipsRequest = {headers: {}, query: {}};
+        op.process = data.process;
 
-          // start benchmarking
-          new Benchmark.Suite(description).add('GM', {
+        wstream.on('finish', function () {
+          if (error) {
+            deferred.benchmark.abort();
+          }
+          deferred.resolve();
+        });
+        suiteConfig.imageProcessors(op)(rstream)
+          .on('error', function (err) {
+            error = err;
+            wstream.end();
+            this.end();
+          })
+          .pipe(wstream);
+      };
+    }
+
+    function convertLocal(profileName) {
+      return new Promise(function (resolve) {
+        const gmOptions = {DEFAULT_MIME: 'image/png'};
+        const gmRequest = {headers: {}, query: {processor: 'gm'}};
+        const vipsOptions = {DEFAULT_MIME: 'image/png'};
+        const vipsRequest = {headers: {}, query: {}};
+
+        // start benchmarking
+        new Benchmark.Suite(description).add('GM', {
+          defer: true, fn: function (deferred) {
+            suiteConfig.profiles[profileName](gmRequest, gmOptions).then(streamFunction(deferred));
+          }
+        })
+          .add('VIPS', {
             defer: true, fn: function (deferred) {
-              suiteConfig.profiles[profileName](gmRequest, gmOptions).then(streamFunction(deferred));
+              suiteConfig.profiles[profileName](vipsRequest, vipsOptions).then(streamFunction(deferred));
             }
           })
-            .add('VIPS', {
-              defer: true, fn: function (deferred) {
-                suiteConfig.profiles[profileName](vipsRequest, vipsOptions).then(streamFunction(deferred));
-              }
-            })
-            .on('cycle', suiteConfig.cycle)
-            .on('error', suiteConfig.error)
-            .on('complete', suiteConfig.complete(suiteName, profileName, resolve))
-            .run(suiteConfig.runConfig);
-        });
-      };
+          .on('cycle', suiteConfig.cycle)
+          .on('error', suiteConfig.error)
+          .on('complete', suiteConfig.complete(suiteName, profileName, resolve))
+          .run(suiteConfig.runConfig);
+      });
+    }
 
     suiteConfig.convertProfiles.forEach(function (name) {
       prom = prom.then(function () {

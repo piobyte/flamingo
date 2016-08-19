@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get install -y software-properties-common curl pkg-config git unzip wget automake build-essential python
 
 # install node
-RUN curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 RUN apt-get install -y nodejs
 
 # Install ffmpeg
@@ -23,7 +23,7 @@ COPY . /data
 
 # Install app dependencies
 RUN cd /data && \
-    npm install flamingo-sentry@1.0.0 --save && \
+    npm install flamingo-sentry --save && \
     npm install --no-optional && \
     npm dedupe
 
