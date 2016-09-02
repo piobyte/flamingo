@@ -5,6 +5,7 @@ const assert = require('assert');
 const assign = require('lodash/assign');
 const url = require('url');
 const FlamingoOperation = require('../../src/model/flamingo-operation');
+const Route = require('../../src/model/route');
 
 describe('logger', function () {
   const logger = require('../../src/logger');
@@ -31,10 +32,6 @@ describe('logger', function () {
     const REQUEST = {
       headers: 'headers',
       path: '/foo',
-      route: {
-        path: '/foo',
-        method: 'get'
-      },
       method: 'get'
     };
     const serialized = logger.serializers.request(assign({}, REQUEST, {
@@ -43,6 +40,19 @@ describe('logger', function () {
 
     assert.deepEqual(serialized, REQUEST);
     assert.ok(logger.serializers.request('foo'), 'it doesn\'t break on invalid input');
+  });
+
+  it('serializes routes', function () {
+    const route = new Route({}, 'POST', '/post-me', 'some post route');
+    const serialized = logger.serializers.route(route);
+
+    assert.deepEqual(serialized, {
+      description: 'some post route',
+      method: 'POST',
+      name: 'Route',
+      path: '/post-me'
+    });
+    assert.ok(logger.serializers.route(42), 'it doesn\'t break on invalid input');
   });
 
   it('serializes request error objects', function () {
@@ -78,8 +88,7 @@ describe('logger', function () {
     operation.request = {
       headers: {'user-agent': 'flamingo/2.0.0'},
       path: '/video/example-profile/12345',
-      method: 'get',
-      route: {path: '/video/{profile}/{url}', method: 'get'}
+      method: 'get'
     };
 
     assert.deepEqual(logger.serializers.operation(operation),
@@ -88,7 +97,6 @@ describe('logger', function () {
         request: {
           headers: {'user-agent': 'flamingo/2.0.0'},
           path: '/video/example-profile/12345',
-          route: {path: '/video/{profile}/{url}', method: 'get'},
           method: 'get'
         }
       });

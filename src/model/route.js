@@ -86,13 +86,15 @@ class Route {
    * @param {function} reply function that replies to the request
    * @param {Error} error
    * @param {FlamingoOperation} [operation]
-     * @return {*} reply return value
-     */
+   * @return {*} reply return value
+   */
   handleError(request, reply, error, operation = {}) {
     const message = `${error.name}: ${error.message} at '${request.path}'`;
     logger.error({
       error: error,
-      operation: operation
+      operation: operation,
+      request: request,
+      route: this
     }, message);
     return reply(errorReply(error, operation));
   }

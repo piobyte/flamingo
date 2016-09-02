@@ -33,14 +33,18 @@ const serializers = {
       request: this.request(operation.request)
     } : {};
   },
+  route: function (route) {
+    return typeof route === 'object' && route.constructor ? {
+      name: route.constructor.name,
+      method: route.method,
+      description: route.description,
+      path: route.path
+    } : _serializerError('route', route);
+  },
   request: function (request) {
-    return typeof request === 'object' && request.hasOwnProperty('route') ? {
+    return typeof request === 'object' && request.hasOwnProperty('path') && request.hasOwnProperty('method') ? {
       headers: request.headers,
       path: request.path,
-      route: {
-        path: request.route.path,
-        method: request.route.method
-      },
       method: request.method
     } :
       _serializerError('request', request);
