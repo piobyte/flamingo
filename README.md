@@ -41,6 +41,10 @@ Data is passed through the route in [FlamingoOperation](https://piobyte.github.i
 Image data is transformed using node streams. This means flamingo can convert anything as long as it's available/transformable as image stream 
 (i.e. a markdown string can be transformed to a html page which in turn allows the creation of a screenshot which can be streamed into flamingo).
 
+## Contributing
+
+- please follow the [angular git commit guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit) to structure your commits
+
 ## Useful bunyan filters
 
 - only log memwatch stats or leaks `bunyan -c 'this.msg === "stats" || this.msg === "leak"'`
