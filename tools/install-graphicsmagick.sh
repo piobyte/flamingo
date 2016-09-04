@@ -13,7 +13,7 @@ tar zxf GraphicsMagick-*.tar.gz
 cd GraphicsMagick-*
 
 # svg support
-apt-get install -y libxml2-dev libfreetype6-dev libltdl-dev
+apt-get install -y libxml2-dev libfreetype6-dev libltdl-dev make
 
 ./configure --enable-shared --with-modules --silent
 make --silent
