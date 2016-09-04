@@ -13,7 +13,7 @@ set -e
 if [ "$(uname)" = "Linux" ]; then
 	# Linux
 	apt-get update
-	apt-get -y install wget tar bzip2
+	apt-get -y install wget tar bzip2 xz-utils
 
   cd /tmp
 	wget ${ARCHIVE} -O ${DIRNAME}.tar.xz

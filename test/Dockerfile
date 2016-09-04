@@ -1,15 +1,4 @@
-FROM ubuntu:14.04
-
-ENV DEBIAN_FRONTEND noninteractive
-
-# install ubuntu dependencies
-RUN apt-get update && \
-    apt-get dist-upgrade -y && \
-    apt-get install -y software-properties-common curl pkg-config git unzip wget automake build-essential python
-
-# install node
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-RUN apt-get install -y nodejs
+FROM node:6-slim
 
 # Install ffmpeg
 COPY tools/install-ffmpeg.sh /tmp/
@@ -18,6 +7,10 @@ RUN bash /tmp/install-ffmpeg.sh; rm /tmp/install-ffmpeg.sh
 # Install graphicsmagick
 COPY tools/install-graphicsmagick.sh /tmp/
 RUN bash /tmp/install-graphicsmagick.sh; rm /tmp/install-graphicsmagick.sh
+
+# libelf-dev for flow-bin
+# libfontconfig-dev libfreetype6 for webshot/phantom
+RUN apt-get -y install git python build-essential libelf-dev libfontconfig-dev libfreetype6
 
 # Bundle app source
 COPY . /data
@@ -28,7 +21,7 @@ RUN cd /data && \
     npm dedupe
 
 # Cleanup (after npm install because node-gyp)
-RUN apt-get remove -y software-properties-common curl pkg-config git unzip wget automake build-essential python && \
+RUN apt-get remove -y git python build-essential make xz-utils && \
     apt-get autoremove -y && \
     apt-get autoclean && \
     apt-get clean && \
