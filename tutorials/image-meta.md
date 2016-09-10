@@ -1,37 +1,49 @@
 # Creating a route that returns image metadata (size, mime) as json
 
-- no image conversion -> simply extend Route
+- does everything a regular conversion does except calling [sharp.metadata](http://sharp.dimens.io/en/stable/api/#metadatacallback) on the input stream
+- mixes `Convert` with `Route` to get existing reader extraction and stream validation behavior
 
 ## Example usage:
 
 ```
 curl http://localhost:3000/image/https%3A%2F%2Fd11xdyzr0div58.cloudfront.net%2Fstatic%2Farchnavbar%2Farchlogo.4fefb38dc270.png
-# {"width":190,"height":40,"type":"png","mime":"image/png","wUnits":"px","hUnits":"px","length":4192}
+# {"format":"png","width":190,"height":40,"space":"srgb","channels":4,"density":90,"hasProfile":false,"hasAlpha":true}
 ```
 
 ## Implementation
 
 - route url `/image/{url}`
 - input extraction resolves `url` request param
-- handler probes the url for information and returns them
-- use [probe-image-size](https://www.npmjs.com/package/probe-image-size) for easy image size extraction
+- overwrites `process` to simply call [sharp.metadata](http://sharp.dimens.io/en/stable/api/#metadatacallback) and resolve the object
+- overwrites `write` to simply reply with the extracted metadata object
 
 ### Route
 
 ```js
-class ImageMetaRoute extends Route {
+class ImageMetaRoute extends Convert(Route) {
   constructor(conf, method = 'GET', path = '/image/{url}', description = 'Image metadata conversion') {
     super(conf, method, path, description);
   }
 
   extractInput(operation) {
-    return Promise.resolve(url.parse(operation.request.params.url));
+    operation.input = url.parse(operation.request.params.url);
+    return Promise.resolve(operation.input);
   }
 
-  handle(operation) {
-    return this.extractInput(operation)
-      .then(inputUrl => probe(url.format(inputUrl)))
-      .then(result => operation.reply(result));
+  process() {
+    return (stream) =>
+      new Promise((resolve, reject) =>
+        stream.pipe(sharp().metadata((err, data) => {
+          if (err) {
+            reject(new InvalidInputError(err));
+          } else {
+            resolve(data);
+          }
+        })));
+  }
+
+  write(operation){
+    return (metadata) => operation.reply(metadata);
   }
 }
 ```
