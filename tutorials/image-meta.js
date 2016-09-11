@@ -1,27 +1,42 @@
 /* @flow weak */
 
 const Server = require('../src/model/server');
+const Convert = require('../src/mixins/convert');
 const Route = require('../src/model/route');
 const Config = require('../config');
 const AddonLoader = require('../src/addon/loader');
-const url = require('url');
-const probe = require('probe-image-size');
 const merge = require('lodash/merge');
 const logger = require('../src/logger').build('tutorials/image-meta');
+const sharp = require('sharp');
+const Promise = require('bluebird');
+const {ProcessingError} = require('../src/util/errors');
+const url = require('url');
 
-class ImageMetaRoute extends Route {
+class ImageMetaRoute extends Convert(Route) {
   constructor(conf, method = 'GET', path = '/image/{url}', description = 'Image metadata conversion') {
     super(conf, method, path, description);
   }
 
   extractInput(operation) {
-    return Promise.resolve(url.parse(operation.request.params.url));
+    operation.input = url.parse(operation.request.params.url);
+    return Promise.resolve(operation.input);
   }
 
-  handle(operation) {
-    return this.extractInput(operation)
-      .then(inputUrl => probe(url.format(inputUrl)))
-      .then(result => operation.reply(result));
+  process() {
+    return (stream) =>
+      new Promise((resolve, reject) =>
+        stream.pipe(sharp().metadata((err, data) => {
+          /* istanbul ignore next */
+          if (err) {
+            reject(new ProcessingError(err));
+          } else {
+            resolve(data);
+          }
+        })));
+  }
+
+  write(operation){
+    return (metadata) => operation.reply(metadata);
   }
 }
 
