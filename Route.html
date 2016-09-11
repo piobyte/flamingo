@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Route - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-addons.html">Addons</a></li><li><a href="tutorial-custom-urls.html">custom-urls</a></li><li><a href="tutorial-hmac-image-convert.html">Creating a hmac validated image conversion route</a></li><li><a href="tutorial-image-meta.html">Serving image metadata</a></li><li><a href="tutorial-markdown-to-image.html">Creating a markdown to image conversion route</a></li><li><a href="tutorial-profile-basics.html">Profile basics</a></li><li><a href="tutorial-supported-files.html">Supported file formats by processor</a></li><li><a href="tutorial-url-transformation-instructions.html">Creating a route that decodes the process from an url param</a></li><li><a href="tutorial-usage.html">Basic usage</a></li><li><a href="tutorial-using-docker.html">Using with docker</a></li><li><a href="tutorial-website-screenshot.html">Creating a route that creates and converts a website screenshot</a></li></ul><h3>Classes</h3><ul><li><a href="AddonLoader.html">AddonLoader</a><ul class='methods'><li data-type='method'><a href="AddonLoader.html#discover">discover</a></li><li data-type='method'><a href="AddonLoader.html#hook">hook</a></li><li data-type='method'><a href="AddonLoader.html#reduceAddonsToHooks">reduceAddonsToHooks</a></li><li data-type='method'><a href="AddonLoader.html#resolvePkg">resolvePkg</a></li></ul></li><li><a href="Debug.html">Debug</a><ul class='methods'><li data-type='method'><a href="Debug.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Debug.html#handle">handle</a></li><li data-type='method'><a href="Debug.html#handleError">handleError</a></li><li data-type='method'><a href="Debug.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="FlamingoOperation.html">FlamingoOperation</a></li><li><a href="Image.html">Image</a><ul class='methods'><li data-type='method'><a href="Image.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Image.html#handle">handle</a></li><li data-type='method'><a href="Image.html#handleError">handleError</a></li><li data-type='method'><a href="Image.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="Index_.html">Index</a><ul class='methods'><li data-type='method'><a href="Index_.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Index_.html#handle">handle</a></li><li data-type='method'><a href="Index_.html#handleError">handleError</a></li><li data-type='method'><a href="Index_.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="module-config-Config.html">Config</a><ul class='methods'><li data-type='method'><a href="module-config-Config.html#.fromEnv">fromEnv</a></li></ul></li><li><a href="module-src_util_errors-InvalidInputError.html">InvalidInputError</a></li><li><a href="module-src_util_errors-ProcessingError.html">ProcessingError</a></li><li><a href="Route.html">Route</a><ul class='methods'><li data-type='method'><a href="Route.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Route.html#handle">handle</a></li><li data-type='method'><a href="Route.html#handleError">handleError</a></li><li data-type='method'><a href="Route.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="Server.html">Server</a><ul class='methods'><li data-type='method'><a href="Server.html#start">start</a></li><li data-type='method'><a href="Server.html#stop">stop</a></li><li data-type='method'><a href="Server.html#withProfiles">withProfiles</a></li><li data-type='method'><a href="Server.html#withRoutes">withRoutes</a></li></ul></li><li><a href="Video.html">Video</a><ul class='methods'><li data-type='method'><a href="Video.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Video.html#handle">handle</a></li><li data-type='method'><a href="Video.html#handleError">handleError</a></li><li data-type='method'><a href="Video.html#hapiConfig">hapiConfig</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-config.html">config</a></li><li><a href="module-src_addon_callbacks.html">src/addon/callbacks</a></li><li><a href="module-src_addon_index.html">src/addon/index</a></li><li><a href="module-src_logger.html">src/logger</a><ul class='methods'><li data-type='method'><a href="module-src_logger.html#~addStreams">addStreams</a></li><li data-type='method'><a href="module-src_logger.html#~build">build</a></li></ul></li><li><a href="module-src_model_reader-type.html">src/model/reader-type</a></li><li><a href="module-src_preprocessor_video_index.html">src/preprocessor/video/index</a></li><li><a href="module-src_processor_image_gm.html">src/processor/image/gm</a></li><li><a href="module-src_processor_image_index.html">src/processor/image/index</a></li><li><a href="module-src_processor_image_sharp.html">src/processor/image/sharp</a></li><li><a href="module-src_profiles_debug.html">src/profiles/debug</a><ul class='methods'><li data-type='method'><a href="module-src_profiles_debug.html#.%2522debug-avatar-image%2522">"debug-avatar-image"</a></li><li data-type='method'><a href="module-src_profiles_debug.html#.%2522debug-preview-image%2522">"debug-preview-image"</a></li></ul></li><li><a href="module-src_profiles_examples.html">src/profiles/examples</a><ul class='methods'><li data-type='method'><a href="module-src_profiles_examples.html#.%2522avatar-image%2522">"avatar-image"</a></li><li data-type='method'><a href="module-src_profiles_examples.html#.%2522preview-image%2522">"preview-image"</a></li></ul></li><li><a href="module-src_util_best-format.html">src/util/best-format</a></li><li><a href="module-src_util_cipher.html">src/util/cipher</a><ul class='methods'><li data-type='method'><a href="module-src_util_cipher.html#.decode">decode</a></li></ul></li><li><a href="module-src_util_deprecate.html">src/util/deprecate</a></li><li><a href="module-src_util_env-config.html">src/util/env-config</a></li><li><a href="module-src_util_env-parser.html">src/util/env-parser</a><ul class='methods'><li data-type='method'><a href="module-src_util_env-parser.html#.boolean">boolean</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.buffer">buffer</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.buffer64">buffer64</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.float">float</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.int">int</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.objectInt">objectInt</a></li></ul></li><li><a href="module-src_util_error-reply.html">src/util/error-reply</a></li><li><a href="module-src_util_errors.html">src/util/errors</a></li><li><a href="module-src_util_file-access-allowed.html">src/util/file-access-allowed</a></li><li><a href="module-src_util_reader-for-url.html">src/util/reader-for-url</a></li><li><a href="module-src_util_supported.html">src/util/supported</a><ul class='methods'><li data-type='method'><a href="module-src_util_supported.html#~hasFFmpeg">hasFFmpeg</a></li></ul></li><li><a href="module-src_util_unfold-reader-result.html">src/util/unfold-reader-result</a></li><li><a href="module-src_util_url-access-allowed.html">src/util/url-access-allowed</a></li><li><a href="module-src_writer_file.html">src/writer/file</a></li><li><a href="module-src_writer_response.html">src/writer/response</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-config-DEFAULTS.html">DEFAULTS</a></li></ul><h3>Mixins</h3><ul><li><a href="Convert.html">Convert</a><ul class='methods'><li data-type='method'><a href="Convert.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Convert.html#extractInput">extractInput</a></li><li data-type='method'><a href="Convert.html#extractProcess">extractProcess</a></li><li data-type='method'><a href="Convert.html#extractReader">extractReader</a></li><li data-type='method'><a href="Convert.html#handle">handle</a></li><li data-type='method'><a href="Convert.html#preprocess">preprocess</a></li><li data-type='method'><a href="Convert.html#process">process</a></li><li data-type='method'><a href="Convert.html#read">read</a></li><li data-type='method'><a href="Convert.html#validOperation">validOperation</a></li><li data-type='method'><a href="Convert.html#validStream">validStream</a></li><li data-type='method'><a href="Convert.html#write">write</a></li></ul></li><li><a href="ImageStream.html">ImageStream</a><ul class='methods'><li data-type='method'><a href="ImageStream.html#validStream">validStream</a></li></ul></li><li><a href="ProfileOperation.html">ProfileOperation</a><ul class='methods'><li data-type='method'><a href="ProfileOperation.html#extractInput">extractInput</a></li><li data-type='method'><a href="ProfileOperation.html#extractProcess">extractProcess</a></li></ul></li><li><a href="VideoPreprocess.html">VideoPreprocess</a><ul class='methods'><li data-type='method'><a href="VideoPreprocess.html#preprocess">preprocess</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Route</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+        Route
+        </h2>
+        
+            <div class="class-description">Route class is the basic class every route should extend.
+The idea is that an incoming request generates a FlamingoOperation
+which is passed through the route and used to store metadata.</div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="Route"><span class="type-signature"></span>new Route<span class="signature">(config, method, path, description<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Config</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">the routes http method</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>path</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">the routes url path</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last">route description</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_model_route.js.html">src/model/route.js</a>, <a href="src_model_route.js.html#line18">line 18</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="buildOperation"><span class="type-signature"></span>buildOperation<span class="signature">(request, reply)</span><span class="type-signature"> &rarr; {Promise.&lt;<a href="FlamingoOperation.html">FlamingoOperation</a>>}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Function to build the flamingo operation based on the incoming request + reply function.
+Each extending class should call super.buildOperation to get a minimal working flamingo operation.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Request</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reply</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_model_route.js.html">src/model/route.js</a>, <a href="src_model_route.js.html#line75">line 75</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://hapijs.com/api#request-properties">http://hapijs.com/api#request-properties</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;<a href="FlamingoOperation.html">FlamingoOperation</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="handle"><span class="type-signature"></span>handle<span class="signature">(operation)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Function that is called for each request.
+To send the response, call `operation.reply()`.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>operation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="FlamingoOperation.html">FlamingoOperation</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_model_route.js.html">src/model/route.js</a>, <a href="src_model_route.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://hapijs.com/api#replyerr-result">http://hapijs.com/api#replyerr-result</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="handleError"><span class="type-signature"></span>handleError<span class="signature">(request, reply, error, operation<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {*}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Function to log and reply errors
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Request</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reply</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">function that replies to the request</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Error</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>operation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="FlamingoOperation.html">FlamingoOperation</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_model_route.js.html">src/model/route.js</a>, <a href="src_model_route.js.html#line91">line 91</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    reply return value
+</div>
+
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="hapiConfig"><span class="type-signature"></span>hapiConfig<span class="signature">(defaults)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+<div class="description">
+    Function to build the hapi route config object
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>defaults</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="src_model_route.js.html">src/model/route.js</a>, <a href="src_model_route.js.html#line53">line 53</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://hapijs.com/api#new-serveroptions">http://hapijs.com/api#new-serveroptions</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Sun Sep 11 2016 16:14:02 GMT+0200 (CEST)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

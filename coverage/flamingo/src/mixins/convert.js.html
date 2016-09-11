@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for flamingo/src/mixins/convert.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">all files</a> / <a href="index.html">flamingo/src/mixins/</a> convert.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>36/36</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>11/11</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>34/34</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">417×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">418×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">208×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">417×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">418×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">420×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">419×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">417×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">426×</span>
+<span class="cline-any cline-yes">426×</span>
+<span class="cline-any cline-yes">426×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">424×</span>
+<span class="cline-any cline-yes">424×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">422×</span>
+<span class="cline-any cline-yes">419×</span>
+<span class="cline-any cline-yes">419×</span>
+<span class="cline-any cline-yes">419×</span>
+<span class="cline-any cline-yes">419×</span>
+<span class="cline-any cline-yes">419×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">419×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">420×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict';
+&nbsp;
+const Promise = require('bluebird');
+const imageProcessor = require('../processor/image');
+const unfoldReaderResult = require('../util/unfold-reader-result');
+const responseWriter = require('../writer/response');
+const readerForUrl = require('../util/reader-for-url');
+const {InvalidInputError} = require('../util/errors');
+const {HOOKS: {EXTRACT_PROCESS}} = require('../addon');
+&nbsp;
+module.exports = (SuperClass/*:Route*/) =&gt; {
+  /**
+   * Basic mixin that represents the flamingo conversation process.
+   * @mixin
+   */
+  class Convert extends SuperClass {
+    /**
+     * Resolves if the given operation is valid.
+     *
+     * @param {FlamingoOperation} operation
+     * @returns {Promise.&lt;FlamingoOperation&gt;}
+     * @example
+     * validOperation(operation) =&gt; operation.input.protocol ?
+     *    Promise.resolve(operation) :
+     *    Promise.reject(new InvalidInputError('target has no protocol'))
+     */
+    validOperation(operation) {
+      return Promise.resolve(operation);
+    }
+&nbsp;
+    /**
+     * Builds a read function that reads a given operation.
+     *
+     * @param {FlamingoOperation} operation
+     * @returns {function(FlamingoOperation): Promise.&lt;{type: string, stream: function(): Promise&lt;Stream&gt;}&gt;}
+     */
+    read(operation) {
+      return (op) =&gt; op.reader(op);
+    }
+&nbsp;
+    /**
+     * Function that preprocesses the reader result.
+     * Can be used i.e. to transform a non image input to an image stream.
+     *
+     * @param {FlamingoOperation} operation
+     * @returns {function(): Promise.&lt;Stream&gt;} function that returns a promise which resolves an image stream
+     * @example
+     * preprocess(operation) {
+     *  return (readerResult) =&gt; markdown2Image(operation.request.path.md);
+     * }
+     */
+    preprocess(operation) {
+      // same as return (readerResult) =&gt; unfoldReaderResult(readerResult);
+      return unfoldReaderResult;
+    }
+&nbsp;
+    /**
+     * Builds a validation function that resolves if the given stream is valid
+     * @param {FlamingoOperation} operation
+     * @returns {function(): Promise.&lt;Stream&gt;}
+     */
+    validStream(operation) {
+      return (stream) =&gt; Promise.resolve(stream);
+    }
+&nbsp;
+    /**
+     * Builds a function that takes a stream and transforms it.
+     * This is the point where the incoming image stream is transformed.
+     * @param {FlamingoOperation} operation
+     * @returns {function(Stream):Stream}
+     */
+    process(operation) {
+      // same as return (stream) =&gt; transform(stream);
+      return imageProcessor(operation);
+    }
+&nbsp;
+    /**
+     * Builds a function that takes a stream and writes it somewhere.
+     * @param {FlamingoOperation} operation
+     * @returns {function(Stream):Promise}
+     */
+    write(operation) {
+      // same as return (stream) =&gt; operation.response.write(stream);
+      return operation.writer(operation);
+    }
+&nbsp;
+    /**
+     * Extract a processing instruction from a given operation.
+     * The processing instruction can also expose data useful for the response writer.
+     *
+     * @param {FlamingoOperation} operation
+     * @return {Promise.&lt;{process: Array, response: {}}&gt;}
+     */
+    extractProcess(operation) {
+      return Promise.resolve({process: [], response: {}});
+    }
+&nbsp;
+    /**
+     * Function that resolves a url pointing to the input that should be converted
+     *
+     * @param {FlamingoOperation} operation
+     * @return {Promise.&lt;undefined&gt;}
+     */
+    extractInput(operation) {
+      return Promise.resolve(undefined);
+    }
+&nbsp;
+    /**
+     * Function that resolves a reader for the given input.
+     * Rejects with InvalidInputError if no compatible reader is found.
+     *
+     * @param {Url} input
+     * @return {Promise.&lt;function&gt;} reader
+     * @example
+     * (input) =&gt;
+     *   Promise.resolve((operation) =&gt; ({stream: fs.createReadStream('path/to/image.png'), type: 'file'}))
+     */
+    extractReader(input) {
+      const reader = readerForUrl(input);
+&nbsp;
+      if (!reader) {
+        return Promise.reject(new InvalidInputError('No reader available for given input', input));
+      }
+&nbsp;
+      return Promise.resolve(reader);
+    }
+&nbsp;
+    /**
+     * Function that builds an operation for a given request.
+     * Note: don't overwrite the buildOperation, if you don't know what you're doing.
+     * It's the core convert method that calls other convert methods, used in other mixins.
+     *
+     * @param {ClientRequest} request incoming http request
+     * @param {function} reply hapi reply function
+     * @return {Promise.&lt;FlamingoOperation&gt;} Promise that resolves the build operation
+     */
+    buildOperation(request, reply) {
+      const server = this.server;
+      return super.buildOperation(request, reply).then(operation =&gt;
+        Promise.all([
+          this.extractInput(operation),
+          this.extractProcess(operation).then(extracted =&gt; {
+            server.addonsLoader.hook(EXTRACT_PROCESS)(extracted, operation);
+            return extracted;
+          })
+        ]).then(([input, {response, process}]) =&gt;
+          this.extractReader(input).then(reader =&gt; {
+            operation.input = input;
+            operation.process = process;
+            operation.response = response;
+            operation.reader = reader;
+            operation.writer = responseWriter;
+&nbsp;
+            return operation;
+          })));
+    }
+&nbsp;
+    /**
+     * Overwrites the Routes handle function to start the conversation process
+     * @param {FlamingoOperation} operation
+     * @returns {Promise} promise that contains the whole convert process
+     * @see flamingo/src/model/Route
+     */
+    handle(operation) {
+      return this.validOperation(operation)
+        .then(this.read(operation))
+        .then(this.preprocess(operation))
+        .then(this.validStream(operation))
+        .then(this.process(operation))
+        .then(this.write(operation));
+    }
+  }
+&nbsp;
+  return Convert;
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sun Sep 11 2016 16:13:37 GMT+0200 (CEST)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>

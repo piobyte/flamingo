@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/model/server.js - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-addons.html">Addons</a></li><li><a href="tutorial-custom-urls.html">custom-urls</a></li><li><a href="tutorial-hmac-image-convert.html">Creating a hmac validated image conversion route</a></li><li><a href="tutorial-image-meta.html">Serving image metadata</a></li><li><a href="tutorial-markdown-to-image.html">Creating a markdown to image conversion route</a></li><li><a href="tutorial-profile-basics.html">Profile basics</a></li><li><a href="tutorial-supported-files.html">Supported file formats by processor</a></li><li><a href="tutorial-url-transformation-instructions.html">Creating a route that decodes the process from an url param</a></li><li><a href="tutorial-usage.html">Basic usage</a></li><li><a href="tutorial-using-docker.html">Using with docker</a></li><li><a href="tutorial-website-screenshot.html">Creating a route that creates and converts a website screenshot</a></li></ul><h3>Classes</h3><ul><li><a href="AddonLoader.html">AddonLoader</a><ul class='methods'><li data-type='method'><a href="AddonLoader.html#discover">discover</a></li><li data-type='method'><a href="AddonLoader.html#hook">hook</a></li><li data-type='method'><a href="AddonLoader.html#reduceAddonsToHooks">reduceAddonsToHooks</a></li><li data-type='method'><a href="AddonLoader.html#resolvePkg">resolvePkg</a></li></ul></li><li><a href="Debug.html">Debug</a><ul class='methods'><li data-type='method'><a href="Debug.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Debug.html#handle">handle</a></li><li data-type='method'><a href="Debug.html#handleError">handleError</a></li><li data-type='method'><a href="Debug.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="FlamingoOperation.html">FlamingoOperation</a></li><li><a href="Image.html">Image</a><ul class='methods'><li data-type='method'><a href="Image.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Image.html#handle">handle</a></li><li data-type='method'><a href="Image.html#handleError">handleError</a></li><li data-type='method'><a href="Image.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="Index_.html">Index</a><ul class='methods'><li data-type='method'><a href="Index_.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Index_.html#handle">handle</a></li><li data-type='method'><a href="Index_.html#handleError">handleError</a></li><li data-type='method'><a href="Index_.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="module-config-Config.html">Config</a><ul class='methods'><li data-type='method'><a href="module-config-Config.html#.fromEnv">fromEnv</a></li></ul></li><li><a href="module-src_util_errors-InvalidInputError.html">InvalidInputError</a></li><li><a href="module-src_util_errors-ProcessingError.html">ProcessingError</a></li><li><a href="Route.html">Route</a><ul class='methods'><li data-type='method'><a href="Route.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Route.html#handle">handle</a></li><li data-type='method'><a href="Route.html#handleError">handleError</a></li><li data-type='method'><a href="Route.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="Server.html">Server</a><ul class='methods'><li data-type='method'><a href="Server.html#start">start</a></li><li data-type='method'><a href="Server.html#stop">stop</a></li><li data-type='method'><a href="Server.html#withProfiles">withProfiles</a></li><li data-type='method'><a href="Server.html#withRoutes">withRoutes</a></li></ul></li><li><a href="Video.html">Video</a><ul class='methods'><li data-type='method'><a href="Video.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Video.html#handle">handle</a></li><li data-type='method'><a href="Video.html#handleError">handleError</a></li><li data-type='method'><a href="Video.html#hapiConfig">hapiConfig</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-config.html">config</a></li><li><a href="module-src_addon_callbacks.html">src/addon/callbacks</a></li><li><a href="module-src_addon_index.html">src/addon/index</a></li><li><a href="module-src_logger.html">src/logger</a><ul class='methods'><li data-type='method'><a href="module-src_logger.html#~addStreams">addStreams</a></li><li data-type='method'><a href="module-src_logger.html#~build">build</a></li></ul></li><li><a href="module-src_model_reader-type.html">src/model/reader-type</a></li><li><a href="module-src_preprocessor_video_index.html">src/preprocessor/video/index</a></li><li><a href="module-src_processor_image_gm.html">src/processor/image/gm</a></li><li><a href="module-src_processor_image_index.html">src/processor/image/index</a></li><li><a href="module-src_processor_image_sharp.html">src/processor/image/sharp</a></li><li><a href="module-src_profiles_debug.html">src/profiles/debug</a><ul class='methods'><li data-type='method'><a href="module-src_profiles_debug.html#.%2522debug-avatar-image%2522">"debug-avatar-image"</a></li><li data-type='method'><a href="module-src_profiles_debug.html#.%2522debug-preview-image%2522">"debug-preview-image"</a></li></ul></li><li><a href="module-src_profiles_examples.html">src/profiles/examples</a><ul class='methods'><li data-type='method'><a href="module-src_profiles_examples.html#.%2522avatar-image%2522">"avatar-image"</a></li><li data-type='method'><a href="module-src_profiles_examples.html#.%2522preview-image%2522">"preview-image"</a></li></ul></li><li><a href="module-src_util_best-format.html">src/util/best-format</a></li><li><a href="module-src_util_cipher.html">src/util/cipher</a><ul class='methods'><li data-type='method'><a href="module-src_util_cipher.html#.decode">decode</a></li></ul></li><li><a href="module-src_util_deprecate.html">src/util/deprecate</a></li><li><a href="module-src_util_env-config.html">src/util/env-config</a></li><li><a href="module-src_util_env-parser.html">src/util/env-parser</a><ul class='methods'><li data-type='method'><a href="module-src_util_env-parser.html#.boolean">boolean</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.buffer">buffer</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.buffer64">buffer64</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.float">float</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.int">int</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.objectInt">objectInt</a></li></ul></li><li><a href="module-src_util_error-reply.html">src/util/error-reply</a></li><li><a href="module-src_util_errors.html">src/util/errors</a></li><li><a href="module-src_util_file-access-allowed.html">src/util/file-access-allowed</a></li><li><a href="module-src_util_reader-for-url.html">src/util/reader-for-url</a></li><li><a href="module-src_util_supported.html">src/util/supported</a><ul class='methods'><li data-type='method'><a href="module-src_util_supported.html#~hasFFmpeg">hasFFmpeg</a></li></ul></li><li><a href="module-src_util_unfold-reader-result.html">src/util/unfold-reader-result</a></li><li><a href="module-src_util_url-access-allowed.html">src/util/url-access-allowed</a></li><li><a href="module-src_writer_file.html">src/writer/file</a></li><li><a href="module-src_writer_response.html">src/writer/response</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-config-DEFAULTS.html">DEFAULTS</a></li></ul><h3>Mixins</h3><ul><li><a href="Convert.html">Convert</a><ul class='methods'><li data-type='method'><a href="Convert.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Convert.html#extractInput">extractInput</a></li><li data-type='method'><a href="Convert.html#extractProcess">extractProcess</a></li><li data-type='method'><a href="Convert.html#extractReader">extractReader</a></li><li data-type='method'><a href="Convert.html#handle">handle</a></li><li data-type='method'><a href="Convert.html#preprocess">preprocess</a></li><li data-type='method'><a href="Convert.html#process">process</a></li><li data-type='method'><a href="Convert.html#read">read</a></li><li data-type='method'><a href="Convert.html#validOperation">validOperation</a></li><li data-type='method'><a href="Convert.html#validStream">validStream</a></li><li data-type='method'><a href="Convert.html#write">write</a></li></ul></li><li><a href="ImageStream.html">ImageStream</a><ul class='methods'><li data-type='method'><a href="ImageStream.html#validStream">validStream</a></li></ul></li><li><a href="ProfileOperation.html">ProfileOperation</a><ul class='methods'><li data-type='method'><a href="ProfileOperation.html#extractInput">extractInput</a></li><li data-type='method'><a href="ProfileOperation.html#extractProcess">extractProcess</a></li></ul></li><li><a href="VideoPreprocess.html">VideoPreprocess</a><ul class='methods'><li data-type='method'><a href="VideoPreprocess.html#preprocess">preprocess</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">src/model/server.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const Hapi = require('hapi');
+const merge = require('lodash/merge');
+const logger = require('../logger');
+const {HOOKS:{CONF, LOG_STREAM, ENV}} = require('../addon/index');
+const Promise = require('bluebird');
+const FlamingoOperation = require('./flamingo-operation');
+const Route = require('./route');
+const assert = require('assert');
+
+/**
+ * Flamingo server
+ * @class
+ * @property {Config} config server config
+ * @property {AddonLoader} addonsLoader addon loader
+ * @property {Object} hapi hapi server instance
+ */
+class Server {
+  /**
+   * Takes a config and an addon loader to build the server.
+   * @constructor
+   * @param {Config} config
+   * @param {AddonLoader} addonsLoader
+   */
+  constructor(config, addonsLoader) {
+    this.config = config;
+    FlamingoOperation.prototype.config = this.config;
+    this.addonsLoader = addonsLoader;
+
+    this.addonsLoader.hook(CONF)(this.config);
+    this.addonsLoader.hook(ENV)(this.config, process.env);
+    this.addonsLoader.hook(LOG_STREAM, this.config)(logger, this.config);
+
+    this.profiles = {};
+
+    this.hapi = new Hapi.Server({
+      debug: this.config.DEBUG ? {log: ['error'], request: ['error']} : false
+    });
+    this.hapi.connection({
+      port: this.config.PORT,
+      host: this.config.HOST
+    });
+  }
+
+  /**
+   * Add the given routes to the server instance
+   * @param {Array.&lt;Route>} routes routes to add to the server instance
+   * @returns {Server}
+   */
+  withRoutes(routes) {
+    routes.forEach((route) => {
+      assert.ok(route instanceof Route);
+      route.server = this;
+      this.hapi.route(route.hapiConfig());
+    });
+    return this;
+  }
+
+  /**
+   * Add the given profiles to the server instance
+   * @param {Array.&lt;{}>} profiles profiles to add to the server instance
+   * @returns {Server}
+   */
+  withProfiles(profiles) {
+    profiles.forEach(profile =>
+      merge(this.profiles, profile));
+    return this;
+  }
+
+  /**
+   * Stop the server instance
+   * @return {Promise.&lt;Server>}
+   */
+  stop() {
+    return new Promise((resolve, reject) => {
+      this.hapi.stop((err) => {
+        /* istanbul ignore next */
+        if (err) reject(err);
+        else resolve(this);
+      });
+    });
+  }
+
+  /**
+   * Starts the server instance
+   * @return {Promise.&lt;Server>}
+   */
+  start() {
+    return new Promise((resolve, reject) => {
+      this.hapi.start((err, data) => {
+        /* istanbul ignore next */
+        if (err) reject(err);
+        else resolve(this);
+      });
+    });
+  }
+}
+
+module.exports = Server;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Sun Sep 11 2016 16:14:02 GMT+0200 (CEST)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>

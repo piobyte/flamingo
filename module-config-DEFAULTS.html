@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>DEFAULTS - Postman Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Tutorials</h3><ul><li><a href="tutorial-addons.html">Addons</a></li><li><a href="tutorial-custom-urls.html">custom-urls</a></li><li><a href="tutorial-hmac-image-convert.html">Creating a hmac validated image conversion route</a></li><li><a href="tutorial-image-meta.html">Serving image metadata</a></li><li><a href="tutorial-markdown-to-image.html">Creating a markdown to image conversion route</a></li><li><a href="tutorial-profile-basics.html">Profile basics</a></li><li><a href="tutorial-supported-files.html">Supported file formats by processor</a></li><li><a href="tutorial-url-transformation-instructions.html">Creating a route that decodes the process from an url param</a></li><li><a href="tutorial-usage.html">Basic usage</a></li><li><a href="tutorial-using-docker.html">Using with docker</a></li><li><a href="tutorial-website-screenshot.html">Creating a route that creates and converts a website screenshot</a></li></ul><h3>Classes</h3><ul><li><a href="AddonLoader.html">AddonLoader</a><ul class='methods'><li data-type='method'><a href="AddonLoader.html#discover">discover</a></li><li data-type='method'><a href="AddonLoader.html#hook">hook</a></li><li data-type='method'><a href="AddonLoader.html#reduceAddonsToHooks">reduceAddonsToHooks</a></li><li data-type='method'><a href="AddonLoader.html#resolvePkg">resolvePkg</a></li></ul></li><li><a href="Debug.html">Debug</a><ul class='methods'><li data-type='method'><a href="Debug.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Debug.html#handle">handle</a></li><li data-type='method'><a href="Debug.html#handleError">handleError</a></li><li data-type='method'><a href="Debug.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="FlamingoOperation.html">FlamingoOperation</a></li><li><a href="Image.html">Image</a><ul class='methods'><li data-type='method'><a href="Image.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Image.html#handle">handle</a></li><li data-type='method'><a href="Image.html#handleError">handleError</a></li><li data-type='method'><a href="Image.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="Index_.html">Index</a><ul class='methods'><li data-type='method'><a href="Index_.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Index_.html#handle">handle</a></li><li data-type='method'><a href="Index_.html#handleError">handleError</a></li><li data-type='method'><a href="Index_.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="module-config-Config.html">Config</a><ul class='methods'><li data-type='method'><a href="module-config-Config.html#.fromEnv">fromEnv</a></li></ul></li><li><a href="module-src_util_errors-InvalidInputError.html">InvalidInputError</a></li><li><a href="module-src_util_errors-ProcessingError.html">ProcessingError</a></li><li><a href="Route.html">Route</a><ul class='methods'><li data-type='method'><a href="Route.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Route.html#handle">handle</a></li><li data-type='method'><a href="Route.html#handleError">handleError</a></li><li data-type='method'><a href="Route.html#hapiConfig">hapiConfig</a></li></ul></li><li><a href="Server.html">Server</a><ul class='methods'><li data-type='method'><a href="Server.html#start">start</a></li><li data-type='method'><a href="Server.html#stop">stop</a></li><li data-type='method'><a href="Server.html#withProfiles">withProfiles</a></li><li data-type='method'><a href="Server.html#withRoutes">withRoutes</a></li></ul></li><li><a href="Video.html">Video</a><ul class='methods'><li data-type='method'><a href="Video.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Video.html#handle">handle</a></li><li data-type='method'><a href="Video.html#handleError">handleError</a></li><li data-type='method'><a href="Video.html#hapiConfig">hapiConfig</a></li></ul></li></ul><h3>Modules</h3><ul><li><a href="module-config.html">config</a></li><li><a href="module-src_addon_callbacks.html">src/addon/callbacks</a></li><li><a href="module-src_addon_index.html">src/addon/index</a></li><li><a href="module-src_logger.html">src/logger</a><ul class='methods'><li data-type='method'><a href="module-src_logger.html#~addStreams">addStreams</a></li><li data-type='method'><a href="module-src_logger.html#~build">build</a></li></ul></li><li><a href="module-src_model_reader-type.html">src/model/reader-type</a></li><li><a href="module-src_preprocessor_video_index.html">src/preprocessor/video/index</a></li><li><a href="module-src_processor_image_gm.html">src/processor/image/gm</a></li><li><a href="module-src_processor_image_index.html">src/processor/image/index</a></li><li><a href="module-src_processor_image_sharp.html">src/processor/image/sharp</a></li><li><a href="module-src_profiles_debug.html">src/profiles/debug</a><ul class='methods'><li data-type='method'><a href="module-src_profiles_debug.html#.%2522debug-avatar-image%2522">"debug-avatar-image"</a></li><li data-type='method'><a href="module-src_profiles_debug.html#.%2522debug-preview-image%2522">"debug-preview-image"</a></li></ul></li><li><a href="module-src_profiles_examples.html">src/profiles/examples</a><ul class='methods'><li data-type='method'><a href="module-src_profiles_examples.html#.%2522avatar-image%2522">"avatar-image"</a></li><li data-type='method'><a href="module-src_profiles_examples.html#.%2522preview-image%2522">"preview-image"</a></li></ul></li><li><a href="module-src_util_best-format.html">src/util/best-format</a></li><li><a href="module-src_util_cipher.html">src/util/cipher</a><ul class='methods'><li data-type='method'><a href="module-src_util_cipher.html#.decode">decode</a></li></ul></li><li><a href="module-src_util_deprecate.html">src/util/deprecate</a></li><li><a href="module-src_util_env-config.html">src/util/env-config</a></li><li><a href="module-src_util_env-parser.html">src/util/env-parser</a><ul class='methods'><li data-type='method'><a href="module-src_util_env-parser.html#.boolean">boolean</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.buffer">buffer</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.buffer64">buffer64</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.float">float</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.int">int</a></li><li data-type='method'><a href="module-src_util_env-parser.html#.objectInt">objectInt</a></li></ul></li><li><a href="module-src_util_error-reply.html">src/util/error-reply</a></li><li><a href="module-src_util_errors.html">src/util/errors</a></li><li><a href="module-src_util_file-access-allowed.html">src/util/file-access-allowed</a></li><li><a href="module-src_util_reader-for-url.html">src/util/reader-for-url</a></li><li><a href="module-src_util_supported.html">src/util/supported</a><ul class='methods'><li data-type='method'><a href="module-src_util_supported.html#~hasFFmpeg">hasFFmpeg</a></li></ul></li><li><a href="module-src_util_unfold-reader-result.html">src/util/unfold-reader-result</a></li><li><a href="module-src_util_url-access-allowed.html">src/util/url-access-allowed</a></li><li><a href="module-src_writer_file.html">src/writer/file</a></li><li><a href="module-src_writer_response.html">src/writer/response</a></li></ul><h3>Namespaces</h3><ul><li><a href="module-config-DEFAULTS.html">DEFAULTS</a></li></ul><h3>Mixins</h3><ul><li><a href="Convert.html">Convert</a><ul class='methods'><li data-type='method'><a href="Convert.html#buildOperation">buildOperation</a></li><li data-type='method'><a href="Convert.html#extractInput">extractInput</a></li><li data-type='method'><a href="Convert.html#extractProcess">extractProcess</a></li><li data-type='method'><a href="Convert.html#extractReader">extractReader</a></li><li data-type='method'><a href="Convert.html#handle">handle</a></li><li data-type='method'><a href="Convert.html#preprocess">preprocess</a></li><li data-type='method'><a href="Convert.html#process">process</a></li><li data-type='method'><a href="Convert.html#read">read</a></li><li data-type='method'><a href="Convert.html#validOperation">validOperation</a></li><li data-type='method'><a href="Convert.html#validStream">validStream</a></li><li data-type='method'><a href="Convert.html#write">write</a></li></ul></li><li><a href="ImageStream.html">ImageStream</a><ul class='methods'><li data-type='method'><a href="ImageStream.html#validStream">validStream</a></li></ul></li><li><a href="ProfileOperation.html">ProfileOperation</a><ul class='methods'><li data-type='method'><a href="ProfileOperation.html#extractInput">extractInput</a></li><li data-type='method'><a href="ProfileOperation.html#extractProcess">extractProcess</a></li></ul></li><li><a href="VideoPreprocess.html">VideoPreprocess</a><ul class='methods'><li data-type='method'><a href="VideoPreprocess.html#preprocess">preprocess</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">DEFAULTS</h1>
+    
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-config.html">config</a>~</span>
+        
+        DEFAULTS
+        </h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Default Config values</div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line16">line 16</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".ALLOW_READ_REDIRECT"><span class="type-signature">(static) </span>ALLOW_READ_REDIRECT<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>false</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line56">line 56</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".CLIENT_HINTS"><span class="type-signature">(static) </span>CLIENT_HINTS<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>false</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line62">line 62</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".CRYPTO"><span class="type-signature">(static) </span>CRYPTO<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    crypto settings (IF YOU WANT TO USE CRYPTO, CHANGE THE DEFAULT VALUES)
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ENABLED</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">whether the url should be decrypted</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>KEY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">buffer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    new Buffer('DjiZ7AWTeNh38zoQiZ76gw==', 'base64')
+                
+                </td>
+            
+
+            <td class="description last">key buffer</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>IV</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">buffer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    new Buffer('_ag3WU77')
+                
+                </td>
+            
+
+            <td class="description last">iv buffer</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>CIPHER</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    BF-CBC
+                
+                </td>
+            
+
+            <td class="description last">crypto cipher</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line78">line 78</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".DEBUG"><span class="type-signature">(static) </span>DEBUG<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>false</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line38">line 38</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".DEFAULT_MIME"><span class="type-signature">(static) </span>DEFAULT_MIME<span class="type-signature"> :string</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>'image/png'</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line44">line 44</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".HOST"><span class="type-signature">(static) </span>HOST<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    The public hostname or IP address.
+If not configured, defaults to the operating system hostname and if not available, to 'localhost'
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>undefined</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="http://hapijs.com/api#serverconnectionoptions">http://hapijs.com/api#serverconnectionoptions</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".NATIVE_AUTO_ORIENT"><span class="type-signature">(static) </span>NATIVE_AUTO_ORIENT<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>true</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line50">line 50</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".PORT"><span class="type-signature">(static) </span>PORT<span class="type-signature"> :number</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-default">Default Value:</dt>
+    <dd class="tag-default"><ul class="dummy">
+            <li>3000</li>
+        </ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".PREPROCESSOR"><span class="type-signature">(static) </span>PREPROCESSOR<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    preprocessor options
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>VIDEO.KILL_TIMEOUT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    120000
+                
+                </td>
+            
+
+            <td class="description last">kill ffmpeg after given amount of milliseconds. Use `-1` to disable</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line96">line 96</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".READER"><span class="type-signature">(static) </span>READER<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    reader options
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>REQUEST.TIMEOUT</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    10000
+                
+                </td>
+            
+
+            <td class="description last">default request timeout</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line139">line 139</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".ROUTES"><span class="type-signature">(static) </span>ROUTES<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    enable/disable specific routes
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>INDEX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">if enabled, register index route</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>PROFILE_CONVERT_IMAGE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">if enabled, register image convert route</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>PROFILE_CONVERT_VIDEO</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">if enabled, register video convert route</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line120">line 120</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".SUPPORTED"><span class="type-signature">(static) </span>SUPPORTED<span class="type-signature"> :object</span></h4>
+
+
+
+
+<div class="description">
+    Object containing flags for supported features. These fields will be overwritting after starting flamingo.
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>GM.FFMPEG</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">if true, ffmpeg is available</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line130">line 130</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id=".VERSION"><span class="type-signature">(static, readonly) </span>VERSION<span class="type-signature"> :string</span></h4>
+
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="config.js.html">config.js</a>, <a href="config.js.html#line68">line 68</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated at Sun Sep 11 2016 16:14:02 GMT+0200 (CEST)
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+</body>
+</html>
