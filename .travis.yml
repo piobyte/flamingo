@@ -6,7 +6,8 @@ cache:
 node_js:
 - '6'
 - 'node'
-sudo: 9000
+sudo: required
+dist: trusty
 addons:
   apt:
     sources:
@@ -15,9 +16,11 @@ addons:
     - g++-4.8
 before_install:
 - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
+- sudo apt-get -y install pkg-config
 - sudo bash tools/install-ffmpeg.sh
 - sudo bash tools/install-imagemagick.sh
 - sudo bash tools/install-graphicsmagick.sh
+- sudo bash tools/install-libvips.sh
 install:
 - npm install
 after_success:

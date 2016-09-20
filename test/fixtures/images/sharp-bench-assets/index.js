@@ -45,6 +45,9 @@ const images = {
   smallJpeg: '../640px-Saturneclipse.jpg',
   largeJpeg: '../Saturn_from_Cassini_Orbiter_(2004-10-06).jpg',
 
+  smallPdf: '../pdf-sample.pdf',
+  largePdf: '../nipguide.pdf',
+
   // svg disabled because https://github.com/aheckmann/gm/issues/466
   svg: 'Wikimedia-logo.svg'// http://commons.wikimedia.org/wiki/File:Wikimedia-logo.svg
 };
