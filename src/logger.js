@@ -4,7 +4,7 @@
  * @module
  */
 
-const pkg = require('../package');
+const pkg = require('../package.json');
 const util = require('util');
 const bunyan = require('bunyan');
 const url = require('url');

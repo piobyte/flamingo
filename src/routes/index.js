@@ -1,6 +1,6 @@
 'use strict';
 
-const pkg = require('../../package');
+const pkg = require('../../package.json');
 const Route = require('../model/route');
 const util = require('util');
 const Promise = require('bluebird');

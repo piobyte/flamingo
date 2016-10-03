@@ -11,7 +11,7 @@ const assign = require('lodash/assign');
 const isFinite = require('lodash/isFinite');
 const got = require('got');
 const {ProcessingError, InvalidInputError} = require('../../util/errors');
-const pkg = require('../../../package');
+const pkg = require('../../../package.json');
 const {FILE, REMOTE} = require('../../model/reader-type');
 
 const logger = require('../../logger').build('preprocessor:video');

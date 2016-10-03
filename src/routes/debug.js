@@ -1,7 +1,7 @@
 'use strict';
 /*eslint new-cap: 0*/
 
-const pkg = require('../../package');
+const pkg = require('../../package.json');
 const Promise = require('bluebird');
 const fs = require('fs');
 const images = require('../../test/fixtures/images/sharp-bench-assets/index');
