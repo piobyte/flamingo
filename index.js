@@ -2,7 +2,7 @@ const logger = require('./src/logger');
 const Server = require('./src/model/server');
 const Config = require('./config');
 const AddonLoader = require('./src/addon/loader');
-const pkg = require('./package');
+const pkg = require('./package.json');
 
 const indexLogger = logger.build('index');
 

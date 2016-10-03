@@ -7,7 +7,7 @@
 const supported = require('./src/util/supported');
 const envParser = require('./src/util/env-parser');
 const envConfig = require('./src/util/env-config');
-const pkg = require('./package');
+const pkg = require('./package.json');
 
 /**
  * Default {@link Config} values

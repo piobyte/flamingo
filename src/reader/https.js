@@ -1,5 +1,5 @@
 /* disabled flow because of deprecated signature type mismatch */
-const pkg = require('../../package');
+const pkg = require('../../package.json');
 const {REMOTE} = require('../model/reader-type');
 const readAllowed = require('../util/url-access-allowed');
 const got = require('got');
