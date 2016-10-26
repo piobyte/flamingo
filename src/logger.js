@@ -18,7 +18,7 @@ function _serializerError(type, input) {
 }
 
 const serializers = {
-  input(input){
+  'input': function(input){
     if (typeof input === 'string') {
       return input;
     } else if (input instanceof url.Url) {
@@ -27,13 +27,13 @@ const serializers = {
       return util.inspect(input);
     }
   },
-  operation: function (operation) {
+  'operation': function (operation) {
     return Object.keys(operation).length ? {
       input: this.input(operation.input),
       request: this.request(operation.request)
     } : {};
   },
-  route: function (route) {
+  'route': function (route) {
     return typeof route === 'object' && route.constructor ? {
       name: route.constructor.name,
       method: route.method,
@@ -41,7 +41,7 @@ const serializers = {
       path: route.path
     } : _serializerError('route', route);
   },
-  request: function (request) {
+  'request': function (request) {
     return typeof request === 'object' && request.hasOwnProperty('path') && request.hasOwnProperty('method') ? {
       headers: request.headers,
       path: request.path,
@@ -49,7 +49,7 @@ const serializers = {
     } :
       _serializerError('request', request);
   },
-  error: function (error) {
+  'error': function (error) {
     const type = typeof error;
 
     switch (type) {

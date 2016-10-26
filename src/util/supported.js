@@ -26,7 +26,7 @@ function hasFFmpeg(/*conf*/) {
  *   .then((supported) =>
  *     console.log(supported.GM.WEBP ? 'webp is supported for gm processor' : 'webp not supported for gm processor'))
  */
-module.exports = function (conf/*: Config */)/*: function */ {
+module.exports = function (conf/*: Config */)/*: Promise<SupportedConfig> */ {
   const supported/*: SupportedConfig */ = {GM: {WEBP: false}};
   temp.track();
 

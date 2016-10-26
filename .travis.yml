@@ -24,11 +24,11 @@ install:
 matrix:
   fast_finish: true
   include:
-    - node_js: '6'
+    - node_js: 'lts/boron'
       env: TARGET=test
     - node_js: 'node'
       env: TARGET=test
-    - node_js: '6'
+    - node_js: 'lts/boron'
       env: TARGET=bench
     - node_js: 'node'
       env: TARGET=bench
