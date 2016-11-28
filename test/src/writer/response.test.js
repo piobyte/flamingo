@@ -37,4 +37,26 @@ describe('response writer', function () {
       assert.ok(headerSpy.calledWithExactly('x-foo', 'bar'));
     });
   });
+
+  it('doesn\'t call reply twice in case of stream error (#10)', function () {
+    const op = new FlamingoOperation();
+    const stream = fs.createReadStream(path.join(__dirname, '../../fixtures/images/base64.png'));
+    const replyStream = temp.createWriteStream();
+    let replyCalled = 0;
+
+    stream.on('readable', function(){
+      stream.emit('error', 'stream error');
+    });
+
+    op.reply = function (stream) {
+      replyCalled++;
+      return stream.pipe(replyStream);
+    };
+    op.response = {};
+
+    return responseWriter(op)(stream).then(
+      () => assert.ok(false),
+      () => assert.equal(replyCalled, 1)
+    );
+  });
 });
