@@ -16,7 +16,8 @@
     "formats": "node targets/formats",
     "precover": "rm -r coverage 2>/dev/null || true",
     "cover": "node node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha",
-    "postcover": "node node_modules/istanbul/lib/cli.js check-coverage"
+    "postcover": "node node_modules/istanbul/lib/cli.js check-coverage",
+    "release": "standard-version"
   },
   "author": "Christian",
   "license": "MIT",
@@ -52,14 +53,15 @@
   "devDependencies": {
     "benchmark": "^2.1.1",
     "eslint": "^3.11.1",
-    "flow-bin": "^0.36.0",
+    "flow-bin": "^0.37.4",
     "istanbul": "^0.4.5",
     "jsdoc": "^3.4.2",
     "mocha": "^3.1.2",
     "nock": "^9.0.0",
     "node-uuid": "^1.4.7",
     "postman-jsdoc-theme": "0.0.2",
-    "sinon": "^1.17.5"
+    "sinon": "^1.17.5",
+    "standard-version": "^4.0.0"
   },
   "optionalDependencies": {
     "gm": "^1.23.0",
