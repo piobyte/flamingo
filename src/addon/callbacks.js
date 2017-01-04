@@ -12,11 +12,14 @@ const {HOOKS:{
   HAPI_PLUGINS,
   PROFILES,
   LOG_STREAM,
-  EXTRACT_PROCESS
+  EXTRACT_PROCESS,
+  START,
+  STOP
 }} = require('./index');
 const assign = require('lodash/assign');
 const mergeWith = require('lodash/mergeWith');
 const partial = require('lodash/partial');
+const noop = require('lodash/noop');
 
 /**
  * Function to be used as merge callback. It's required because by default, lodash isn't keeping a Buffer as a Buffer
@@ -69,6 +72,9 @@ module.exports = function (loader/*: {callback: function} */)/*: {callback: func
     // add logger stream
     return logger.addStreams;
   });
+  // start and stop do nothing except calling the hook
+  loader.callback(START, () => noop);
+  loader.callback(STOP, () => noop);
 
   return loader;
 };

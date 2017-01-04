@@ -114,5 +114,23 @@ exports.HOOKS = {
    *   };
    * };
    */
-  EXTRACT_PROCESS: 'EXTRACT_PROCESS'
+  EXTRACT_PROCESS: 'EXTRACT_PROCESS',
+
+  /**
+   * Hook that is called on `Server.start`. Allows to do some initial addon setup.
+   * This is useful, i.e. if you want do do something with the fully loaded config.
+   * @example
+   * exports[START] = function(){
+   *   AWS.config.update({
+   *     accessKeyId: server.config.accessKeyId,
+   *     secretAccessKey: server.config.secretAccessKey
+   *   });
+   * }
+   */
+  START: 'START',
+
+  /**
+   * Same as the `START` hook but called on `Server.stop`.
+   */
+  STOP: 'STOP'
 };

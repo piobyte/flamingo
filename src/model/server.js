@@ -3,7 +3,7 @@
 const Hapi = require('hapi');
 const merge = require('lodash/merge');
 const logger = require('../logger');
-const {HOOKS:{CONF, LOG_STREAM, ENV}} = require('../addon/index');
+const {HOOKS:{CONF, LOG_STREAM, ENV, START, STOP}} = require('../addon/index');
 const Promise = require('bluebird');
 const FlamingoOperation = require('./flamingo-operation');
 const Route = require('./route');
@@ -73,6 +73,7 @@ class Server {
    * @return {Promise.<Server>}
    */
   stop() {
+    this.addonsLoader.hook(STOP, this)();
     return new Promise((resolve, reject) => {
       this.hapi.stop((err) => {
         /* istanbul ignore next */
@@ -87,6 +88,7 @@ class Server {
    * @return {Promise.<Server>}
    */
   start() {
+    this.addonsLoader.hook(START, this)();
     return new Promise((resolve, reject) => {
       this.hapi.start((err, data) => {
         /* istanbul ignore next */

@@ -7,7 +7,9 @@ const {HOOKS:{
   HAPI_PLUGINS,
   PROFILES,
   LOG_STREAM,
-  EXTRACT_PROCESS
+  EXTRACT_PROCESS,
+  START,
+  STOP
 }} = require('../../../src/addon');
 const path = require('path');
 const Loader = require('../../../src/addon/loader');
@@ -149,6 +151,23 @@ describe('hook', function () {
       });
 
       assert.ok(calledToFormatWebp);
+    });
+  });
+
+  describe('START', function () {
+    it('calls hook function', function () {
+      const server = {foo: 1};
+
+      loader().hook(START, server)();
+      assert.equal(server.foo, 2);
+    });
+  });
+  describe('STOP', function () {
+    it('calls hook function', function () {
+      const server = {foo: 2};
+
+      loader().hook(STOP, server)();
+      assert.equal(server.foo, 3);
     });
   });
 });
