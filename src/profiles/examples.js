@@ -43,6 +43,8 @@ module.exports = {
       dim = clientHintedDimension(request.headers, responseHeader, dim);
     }
 
+    dim = Math.ceil(dim);
+
     return Promise.resolve({
       name: 'avatar-image',
       response: {header: responseHeader},
@@ -76,6 +78,8 @@ module.exports = {
     if (config.CLIENT_HINTS && request.headers.hasOwnProperty('dpr')) {
       dim = clientHintedDimension(request.headers, responseHeader, dim);
     }
+
+    dim = Math.ceil(dim);
 
     return Promise.resolve({
       name: 'preview-image',

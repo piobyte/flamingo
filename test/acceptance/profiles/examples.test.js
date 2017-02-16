@@ -93,6 +93,38 @@ describe('example profiles', function () {
       });
     });
 
+    it('uses Math.ceil on hints dpr width', function () {
+      const pipe = {
+        rotate: noop,
+        toFormat: noop,
+        resize: noop,
+        min: noop,
+        crop: noop
+      };
+      sinon.stub(pipe, 'rotate').withArgs().returns(pipe);
+      sinon.stub(pipe, 'toFormat').withArgs('png').returns(pipe);
+      sinon.stub(pipe, 'resize').withArgs(460, 460).returns(pipe);
+      sinon.stub(pipe, 'min').withArgs().returns(pipe);
+      sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
+
+      return exampleProfiles['avatar-image']({
+        query: {width: '200'},
+        headers: {accept: '', dpr: '2.3'}
+      }, {
+        CLIENT_HINTS: true,
+        DEFAULT_MIME: 'image/png'
+      }).then(function (data) {
+        assert.deepEqual(data.response.header, {
+          'Accept-CH': 'DPR, Width',
+          'Content-DPR': 2.3,
+          'Content-Type': 'image/png',
+          'Vary': 'DPR'
+        });
+
+        data.process[0].pipe(pipe);
+      });
+    });
+
     it('uses client hints width to resize images', function () {
       const pipe = {
         rotate: noop,
@@ -197,6 +229,43 @@ describe('example profiles', function () {
     });
 
     it('uses client hints dpr to scale images', function () {
+      const pipe = {
+        rotate: noop,
+        background: noop,
+        flatten: noop,
+        toFormat: noop,
+        resize: noop,
+        min: noop,
+        crop: noop
+      };
+
+      sinon.stub(pipe, 'rotate').returns(pipe);
+      sinon.stub(pipe, 'background').withArgs('white').returns(pipe);
+      sinon.stub(pipe, 'flatten').returns(pipe);
+      sinon.stub(pipe, 'toFormat').withArgs('png').returns(pipe);
+      sinon.stub(pipe, 'resize').withArgs(400).returns(pipe);
+      sinon.stub(pipe, 'min').returns(pipe);
+      sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
+
+      return exampleProfiles['preview-image']({
+        query: {width: '200'},
+        headers: {accept: '', dpr: '2'}
+      }, {
+        CLIENT_HINTS: true,
+        DEFAULT_MIME: 'image/png'
+      }).then(function (data) {
+        assert.deepEqual(data.response.header, {
+          'Accept-CH': 'DPR, Width',
+          'Content-DPR': 2,
+          'Content-Type': 'image/png',
+          'Vary': 'DPR'
+        });
+
+        data.process[0].pipe(pipe);
+      });
+    });
+
+    it('uses Math.ceil on hints dpr width', function () {
       const pipe = {
         rotate: noop,
         background: noop,

@@ -14,9 +14,9 @@ echo "to globally install libvips if not already available."
 echo
 sleep 5
 
-vips_version_minimum=8.3.3
-vips_version_latest_major_minor=8.3
-vips_version_latest_patch=3
+vips_version_minimum=8.4.2
+vips_version_latest_major_minor=8.4
+vips_version_latest_patch=2
 
 openslide_version_minimum=3.4.0
 openslide_version_latest_major_minor=3.4
