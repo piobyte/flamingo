@@ -61,6 +61,57 @@ describe('example profiles', function () {
       });
     });
 
+    it('allows to set the image width and height via query param', function () {
+      const pipe = {
+        rotate: noop,
+        toFormat: noop,
+        resize: noop,
+        min: noop,
+        crop: noop
+      };
+      sinon.stub(pipe, 'rotate').withArgs().returns(pipe);
+      sinon.stub(pipe, 'toFormat').withArgs('png').returns(pipe);
+      sinon.stub(pipe, 'resize').withArgs(200, 300).returns(pipe);
+      sinon.stub(pipe, 'min').withArgs().returns(pipe);
+      sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
+
+      return exampleProfiles['avatar-image']({
+        query: {width: '200', height: '300'},
+        headers: {accept: ''}
+      }, {
+        DEFAULT_MIME: 'image/png'
+      }).then(function (data) {
+        assert.equal(data.process.length, 1, 'avatar-image has one processor operation');
+
+        data.process[0].pipe(pipe);
+      });
+    });
+    it('allows to set the image height and square it', function () {
+      const pipe = {
+        rotate: noop,
+        toFormat: noop,
+        resize: noop,
+        min: noop,
+        crop: noop
+      };
+      sinon.stub(pipe, 'rotate').withArgs().returns(pipe);
+      sinon.stub(pipe, 'toFormat').withArgs('png').returns(pipe);
+      sinon.stub(pipe, 'resize').withArgs(300, 300).returns(pipe);
+      sinon.stub(pipe, 'min').withArgs().returns(pipe);
+      sinon.stub(pipe, 'crop').withArgs(sharp.gravity.center).returns(pipe);
+
+      return exampleProfiles['avatar-image']({
+        query: {height: '300'},
+        headers: {accept: ''}
+      }, {
+        DEFAULT_MIME: 'image/png'
+      }).then(function (data) {
+        assert.equal(data.process.length, 1, 'avatar-image has one processor operation');
+
+        data.process[0].pipe(pipe);
+      });
+    });
+
     it('uses client hints dpr to scale images', function () {
       const pipe = {
         rotate: noop,

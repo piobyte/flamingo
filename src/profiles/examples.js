@@ -14,14 +14,37 @@ const clamp = require('clamp');
 const MIN_IMAGE_SIZE = 10;
 const MAX_IMAGE_SIZE = 1024;
 
-function clientHintedDimension(requestHeaders, responseHeaders, width) {
-  const dpr = clamp(envParser.float(1)(requestHeaders.dpr), 1, 10);
+const DEFAULT_AVATAR_SIZE = 170;
+const DEFAULT_PREVIEW_IMAGE_SIZE = 200;
 
-  responseHeaders['Content-DPR'] = dpr;
-  responseHeaders['Vary'] = requestHeaders.hasOwnProperty('width') ? 'Width' : 'DPR';
+const {int, float, objectInt} = envParser;
 
-  return responseHeaders['Vary'] === 'DPR' ? width * dpr :
-    clamp(envParser.int(width)(requestHeaders.width), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+function extractDimension(query = {}, defaultSize) {
+  let width;
+  let height;
+
+  const hasHeight = typeof query['height'] === 'string';
+  const hasWidth = typeof query['width'] === 'string';
+
+  if (hasWidth && !hasHeight) {
+    // ?width=300
+    width = clamp(objectInt('width', defaultSize)(query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+    height = width;
+  } else if (hasHeight && !hasWidth) {
+    // ?height=300
+    height = clamp(objectInt('height', defaultSize)(query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+    width = height;
+  } else if (hasHeight && hasWidth) {
+    // ?height=300&width=300
+    width = clamp(objectInt('width', defaultSize)(query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+    height = clamp(objectInt('height', defaultSize)(query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+  } else {
+    // ?
+    width = defaultSize;
+    height = defaultSize;
+  }
+
+  return {width, height};
 }
 
 module.exports = {
@@ -30,20 +53,24 @@ module.exports = {
    * @param {Request} request
    * @param {Object} config
    * @return {Promise.<{process: Array}>}
-     */
+   */
   'avatar-image': function (request, config) {
-    // override dimension with query.width
-    let dim = clamp(envParser.objectInt('width', 170)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+    let {width, height} = extractDimension(request.query, DEFAULT_AVATAR_SIZE);
+
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
     const responseHeader/*: Object */ = config.CLIENT_HINTS ? {'Accept-CH': 'DPR, Width'} : {};
 
     responseHeader['Content-Type'] = format.mime;
 
     if (config.CLIENT_HINTS && request.headers.hasOwnProperty('dpr')) {
-      dim = clientHintedDimension(request.headers, responseHeader, dim);
-    }
+      const dpr = clamp(float(1)(request.headers.dpr), 1, 10);
 
-    dim = Math.ceil(dim);
+      responseHeader['Content-DPR'] = dpr;
+      responseHeader['Vary'] = request.headers.hasOwnProperty('width') ? 'Width' : 'DPR';
+
+      width = responseHeader['Vary'] === 'DPR' ? width * dpr : clamp(int(width)(request.headers.width), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+      height = responseHeader['Vary'] === 'DPR' ? height * dpr : width;
+    }
 
     return Promise.resolve({
       name: 'avatar-image',
@@ -53,7 +80,7 @@ module.exports = {
           return pipe
             .rotate()
             .toFormat(format.type)
-            .resize(dim, dim)
+            .resize(Math.ceil(width), Math.ceil(height))
             .min()
             .crop(sharp.gravity.center);
         }
@@ -66,20 +93,24 @@ module.exports = {
    * @param {Request} request
    * @param {Object} config
    * @return {Promise.<{process: Array}>}
-     */
+   */
   'preview-image': function (request, config) {
-    // override dimension with query.width
-    let dim = clamp(envParser.objectInt('width', 200)(request.query), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+    let {width, height} = extractDimension(request.query, DEFAULT_PREVIEW_IMAGE_SIZE);
+
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
     const responseHeader/*: Object */ = config.CLIENT_HINTS ? {'Accept-CH': 'DPR, Width'} : {};
 
     responseHeader['Content-Type'] = format.mime;
 
     if (config.CLIENT_HINTS && request.headers.hasOwnProperty('dpr')) {
-      dim = clientHintedDimension(request.headers, responseHeader, dim);
-    }
+      const dpr = clamp(float(1)(request.headers.dpr), 1, 10);
 
-    dim = Math.ceil(dim);
+      responseHeader['Content-DPR'] = dpr;
+      responseHeader['Vary'] = request.headers.hasOwnProperty('width') ? 'Width' : 'DPR';
+
+      width = responseHeader['Vary'] === 'DPR' ? width * dpr : clamp(int(width)(request.headers.width), MIN_IMAGE_SIZE, MAX_IMAGE_SIZE);
+      height = responseHeader['Vary'] === 'DPR' ? height * dpr : width;
+    }
 
     return Promise.resolve({
       name: 'preview-image',
@@ -90,7 +121,7 @@ module.exports = {
             .rotate()
             .background('white').flatten()
             .toFormat(format.type)
-            .resize(dim, dim)
+            .resize(Math.ceil(width), Math.ceil(height))
             .min()
             .crop(sharp.gravity.center);
         }
