@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.2"></a>
+## [2.1.2](https://github.com/piobyte/flamingo/compare/v2.1.1...v2.1.2) (2017-02-22)
+
+
+### Bug Fixes
+
+* **examples:** fix not using height query param to resize the image ([73a2152](https://github.com/piobyte/flamingo/commit/73a2152))
+* **examples:** fix not using quality param while changing format ([c61322d](https://github.com/piobyte/flamingo/commit/c61322d))
+
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://github.com/piobyte/flamingo/compare/v2.1.0...v2.1.1) (2017-02-20)
 
