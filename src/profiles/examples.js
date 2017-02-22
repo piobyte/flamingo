@@ -14,8 +14,12 @@ const clamp = require('clamp');
 const MIN_IMAGE_SIZE = 10;
 const MAX_IMAGE_SIZE = 1024;
 
+const MIN_QUALITY = 1;
+const MAX_QUALITY = 100;
+
 const DEFAULT_AVATAR_SIZE = 170;
 const DEFAULT_PREVIEW_IMAGE_SIZE = 200;
+const DEFAULT_QUALITY = 80;
 
 const {int, float, objectInt} = envParser;
 
@@ -56,6 +60,7 @@ module.exports = {
    */
   'avatar-image': function (request, config) {
     let {width, height} = extractDimension(request.query, DEFAULT_AVATAR_SIZE);
+    const quality = clamp(objectInt('q', DEFAULT_QUALITY)(request.query), MIN_QUALITY, MAX_QUALITY);
 
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
     const responseHeader/*: Object */ = config.CLIENT_HINTS ? {'Accept-CH': 'DPR, Width'} : {};
@@ -79,7 +84,7 @@ module.exports = {
         processor: 'sharp', pipe: function (pipe) {
           return pipe
             .rotate()
-            .toFormat(format.type)
+            .toFormat(format.type, {quality})
             .resize(Math.ceil(width), Math.ceil(height))
             .min()
             .crop(sharp.gravity.center);
@@ -96,6 +101,7 @@ module.exports = {
    */
   'preview-image': function (request, config) {
     let {width, height} = extractDimension(request.query, DEFAULT_PREVIEW_IMAGE_SIZE);
+    const quality = clamp(objectInt('q', DEFAULT_QUALITY)(request.query), MIN_QUALITY, MAX_QUALITY);
 
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
     const responseHeader/*: Object */ = config.CLIENT_HINTS ? {'Accept-CH': 'DPR, Width'} : {};
@@ -120,7 +126,7 @@ module.exports = {
           return instance
             .rotate()
             .background('white').flatten()
-            .toFormat(format.type)
+            .toFormat(format.type, {quality})
             .resize(Math.ceil(width), Math.ceil(height))
             .min()
             .crop(sharp.gravity.center);
