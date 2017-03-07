@@ -14,9 +14,11 @@ echo "to globally install libvips if not already available."
 echo
 sleep 5
 
-vips_version_minimum=8.5.5
+vips_version_minimum=8.5.8
 vips_version_latest_major_minor=8.5
-vips_version_latest_patch=5
+vips_version_latest_patch=8
+
+VIPS_VERSION=${vips_version_latest_major_minor}.${vips_version_latest_patch}
 
 openslide_version_minimum=3.4.1
 openslide_version_latest_major_minor=3.4
@@ -24,7 +26,7 @@ openslide_version_latest_patch=1
 
 install_libvips_from_source() {
   echo "Compiling libvips $vips_version_latest_major_minor.$vips_version_latest_patch from source"
-  curl -O http://www.vips.ecs.soton.ac.uk/supported/$vips_version_latest_major_minor/vips-$vips_version_latest_major_minor.$vips_version_latest_patch.tar.gz
+  curl -O https://github.com/jcupitt/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz
   tar zvxf vips-$vips_version_latest_major_minor.$vips_version_latest_patch.tar.gz
   cd vips-$vips_version_latest_major_minor.$vips_version_latest_patch
   CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" ./configure --disable-debug --disable-docs --disable-static --disable-dependency-tracking --enable-cxx=yes --without-python --without-orc --without-fftw $1

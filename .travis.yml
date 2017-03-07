@@ -1,5 +1,6 @@
 language: node_js
 cache:
+  yarn: true
   apt: true
   directories:
   - node_modules
@@ -18,8 +19,6 @@ before_install:
 - sudo bash tools/install-imagemagick.sh
 - sudo bash tools/install-graphicsmagick.sh
 - sudo bash tools/install-libvips.sh
-install:
-- npm install
 
 matrix:
   fast_finish: true
@@ -33,4 +32,4 @@ matrix:
     - node_js: 'node'
       env: TARGET=bench
 
-script: npm run $TARGET
+script: yarn run $TARGET

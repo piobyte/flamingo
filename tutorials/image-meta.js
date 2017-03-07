@@ -1,5 +1,3 @@
-/* @flow weak */
-
 const Server = require('../src/model/server');
 const Convert = require('../src/mixins/convert');
 const Route = require('../src/model/route');

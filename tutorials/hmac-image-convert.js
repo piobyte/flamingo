@@ -1,5 +1,3 @@
-/* @flow weak */
-
 const {InvalidInputError} = require('../src/util/errors');
 const crypto = require('crypto');
 const Promise = require('bluebird');

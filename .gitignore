@@ -49,3 +49,12 @@ docs
 tutorials/supported-files.md
 tools/deploy-docker.sh
 !test/fixtures/node_modules
+!test/src
+
+dts/**/*
+test/**/*.js
+src/**/*.js
+targets/**/*.js
+config.js
+index.js
+.nyc_output

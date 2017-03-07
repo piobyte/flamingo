@@ -1,0 +1,17 @@
+{
+    "defaultSeverity": "error",
+    "extends": [],
+    "jsRules": {},
+    "rules": {
+      "member-access": false,
+      "no-var-requires": false,
+      "max-line-length": [false],
+      "array-type": false,
+      "interface-name": false,
+      "object-literal-sort-keys": false,
+      "space-before-function-paren": false,
+      "only-arrow-functions": false,
+      "quotemark": false
+    },
+    "rulesDirectory": []
+}
