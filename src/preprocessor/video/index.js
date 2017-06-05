@@ -64,6 +64,7 @@ module.exports = function (operation) {
                 logger.info(`Spawned ffmpeg with command: ${commandLine}`);
               })
               .on('error', function (e) {
+                /* istanbul ignore next */
                 throw new ProcessingError(e.message, e);
               })
               .on('end', function () {
@@ -96,6 +97,7 @@ module.exports = function (operation) {
         return promise;
       }
       default: {
+        /* istanbul ignore next */
         return readerResult.stream()
           .then((stream) => videoProcessor(stream));
       }

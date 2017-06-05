@@ -28,8 +28,8 @@ function MarkdownPreprocess(SuperClass) {
       return Promise.resolve((operation) => ({markdown: input}));
     }
 
-    preprocess(operation) {
-      return markdownPreprocessor(operation);
+    preprocess() {
+      return markdownPreprocessor();
     }
   };
 }

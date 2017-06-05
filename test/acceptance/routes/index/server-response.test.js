@@ -10,7 +10,7 @@ const exampleProfiles = require('../../../../src/profiles/examples');
 
 const PORT = 43723; // some random unused port
 
-function startServer(localConf = {}) {
+function startServer(localConf) {
   return Config.fromEnv().then(config => {
     config = merge({}, config, {PORT}, localConf);
     return new Server(config, {addons: [], hook: () => noop})

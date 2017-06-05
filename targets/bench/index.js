@@ -2,7 +2,7 @@
 
 const temp = require('temp');
 const Promise = require('bluebird');
-const uuid = require('node-uuid');
+const uuidV4 = require('uuid/v4');
 const pkg = require('../../package.json');
 const fingerprint = require('./fingerprint');
 const debugProfiles = require('../../src/profiles/debug');
@@ -12,7 +12,7 @@ const sharpAssets = require('../../test/fixtures/images/sharp-bench-assets');
 let benchPromise = Promise.resolve();
 
 const TAGS = process.env.BENCH_TAG ? [process.env.BENCH_TAG] : [];
-const id = uuid.v4();
+const id = uuidV4;
 const BENCH_FILE = `benchmark-${id}.json`;
 const RUN_CONFIG = {'async': true};
 const CONVERT_PROFILES = ['debug-preview-image', 'debug-avatar-image'];

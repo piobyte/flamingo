@@ -1,7 +1,6 @@
-// flow-typed signature: 881add9ffdc0f97ea4f2e5b58e666d14
-// flow-typed version: 69cf36cb0b/bunyan_v1.x.x/flow_>=v0.21.x
+// flow-typed signature: a312495210247e4306e7f02f9fee8a50
+// flow-typed version: aae6f1c1a1/bunyan_v1.x.x/flow_>=v0.21.x
 
-// @flow
 declare module 'bunyan' {
     declare var TRACE: 10;
     declare var DEBUG: 20;
@@ -35,11 +34,14 @@ declare module 'bunyan' {
         },
         [key: string]: any
     };
+    declare type Writable = {
+      write(rec: BunyanRecord): void
+  }
     declare class Logger extends events$EventEmitter {
         constructor(options: LoggerOptions): any;
         addStream(stream: Stream): void;
         addSerializers(serializers: Serializers): void;
-        child(opts: LoggerOptions, simple?: boolean): Logger;
+        child(opts?: LoggerOptions, simple?: boolean): Logger;
         reopenFileStreams(): void;
         level(): string | number;
         level(value: number | string): void;
@@ -93,7 +95,6 @@ declare module 'bunyan' {
         }
     }
     declare interface LoggerOptions {
-        name: string;
         streams?: Array<Stream>;
         level?: BunyanLogLevels | string,
         stream?:  stream$Writable;
@@ -107,14 +108,14 @@ declare module 'bunyan' {
         type?: string;
         level?: number | string;
         path?: string;
-        stream?: stream$Writable | tty$WriteStream | Stream;
+        stream?: stream$Writable | tty$WriteStream | Stream | Writable;
         closeOnExit?: boolean;
         period?: string;
         count?: number;
     }
     declare var stdSerializers: Serializers;
     declare function resolveLevel(value: number | string): number;
-    declare function createLogger(options: LoggerOptions): Logger;
+    declare function createLogger(options: LoggerOptions & { name: string }): Logger;
     declare class RingBuffer extends events$EventEmitter {
         constructor(options: RingBufferOptions): any;
         writable: boolean;

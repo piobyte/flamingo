@@ -17,12 +17,6 @@ function startServer(localConf) {
   return Config.fromEnv().then(config => {
     config = merge({}, config, {CRYPTO: {ENABLED: false}, PORT: FLAMINGO_PORT}, localConf);
 
-    if (config.CRYPTO.ENABLED) {
-      // manually copy cipher, key, iv because they're buffers
-      config.CRYPTO.KEY = Buffer.isBuffer(localConf.CRYPTO.KEY) ? localConf.CRYPTO.KEY : config.CRYPTO.KEY;
-      config.CRYPTO.IV = Buffer.isBuffer(localConf.CRYPTO.IV) ? localConf.CRYPTO.IV : config.CRYPTO.IV;
-    }
-
     return new Server(config, {hook: () => noop})
       .withProfiles([exampleProfiles])
       .withRoutes([

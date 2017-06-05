@@ -31,7 +31,7 @@ module.exports = function (conf/*: Config */)/*: Promise<SupportedConfig> */ {
   temp.track();
 
   return Promise.all([
-    hasFFmpeg(conf)
+    hasFFmpeg()
   ]).then(function ([FFMPEG]/*: Array<boolean> */) {
     /*eslint no-sync: 0*/
     temp.cleanupSync();

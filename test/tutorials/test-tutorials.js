@@ -29,6 +29,7 @@ const expected = [{
         space: 'srgb',
         channels: 3,
         density: 72,
+        depth: 'uchar',
         hasProfile: true,
         hasAlpha: false,
         orientation: 5,
