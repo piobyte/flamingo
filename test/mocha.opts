@@ -3,3 +3,4 @@
 -R spec
 -c
 -t 10000
+--exit
