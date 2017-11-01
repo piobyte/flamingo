@@ -7,18 +7,18 @@ export = function simpleHttpServer(
   port = 0,
   host = 'localhost'
 ): Promise<IServer> {
-  const httpServer: IServer = http.createServer((req, res) => {
+  const httpServer = http.createServer((req, res) => {
     callback(req, res);
   });
   httpServer.timeout = 4 * 1000;
   httpServer.listen(port, host);
 
   return new Promise<IServer>(resolve => {
-    httpServer.stop = Promise.promisify(httpServer.close, {
+    (httpServer as IServer).stop = Promise.promisify(httpServer.close, {
       context: httpServer
     });
     httpServer.listen(port, host, () => {
-      resolve(httpServer);
+      resolve(httpServer as IServer);
     });
   });
 };

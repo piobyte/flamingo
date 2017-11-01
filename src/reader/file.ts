@@ -33,9 +33,9 @@ function fileExists(filePath: string) {
  */
 export = function(operation: FlamingoOperation) {
   const filePath = operation.input;
-  const access = operation.config.ACCESS;
+  const access = operation.config.ACCESS!;
 
-  const readWhitelist = access.FILE.READ;
+  const readWhitelist = access.FILE!.READ;
   const normalizedPath = path.normalize(filePath.path);
 
   if (!accessAllowed(normalizedPath, readWhitelist)) {

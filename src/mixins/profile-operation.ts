@@ -56,5 +56,5 @@ export = function<T extends Constructor<Route>>(Base: T) {
 
       return profiles[profileParam](operation.request, operation.config);
     }
-  }
+  };
 };

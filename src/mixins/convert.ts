@@ -12,9 +12,10 @@ import FlamingoOperation = require('../model/flamingo-operation');
 import errors = require('../util/errors');
 import Addon = require('../addon');
 import Constructor from '../model/Constructor';
-import {ReaderResult} from '../types/ReaderResult';
+import { ReaderResult } from '../types/ReaderResult';
 import Config = require('../../config');
 import Server = require('../model/server');
+import { ProfileInstruction } from '../types/Instruction';
 
 const { InvalidInputError } = errors;
 const { HOOKS } = Addon;

@@ -8,6 +8,6 @@ interface PackageJSON {
 
 interface Addon {
   path?: string;
-  pkg?: PackageJSON;
+  pkg: PackageJSON;
   hooks?: { [name: string]: any };
 }

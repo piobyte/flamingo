@@ -47,7 +47,7 @@ describe('loader', function() {
       path.join(__dirname, '../../fixtures/node_modules/test-addon-0/')
     );
 
-    assert.equal(addon.pkg.name, 'test-addon-0');
+    assert.equal(addon!.pkg!.name, 'test-addon-0');
   });
 
   it('should ignore non flamingo addons', function() {
@@ -64,9 +64,17 @@ describe('loader', function() {
     const BAZ_HOOK = 'BAZ_HOOK';
     const TEST_HOOK = 'TEST_HOOK';
 
-    const FOOBAR = { hooks: { FOO_HOOK, BAR_HOOK }, path: '/tmp/foobar' };
-    const BARBAZ = { hooks: { BAR_HOOK, BAZ_HOOK }, path: '/tmp/barbaz' };
-    const TEST = { hooks: { TEST_HOOK }, path: '/tmp/test' };
+    const FOOBAR = {
+      hooks: { FOO_HOOK, BAR_HOOK },
+      pkg: {},
+      path: '/tmp/foobar'
+    };
+    const BARBAZ = {
+      hooks: { BAR_HOOK, BAZ_HOOK },
+      pkg: {},
+      path: '/tmp/barbaz'
+    };
+    const TEST = { hooks: { TEST_HOOK }, pkg: {}, path: '/tmp/test' };
 
     const reduced = loader().reduceAddonsToHooks([FOOBAR, BARBAZ, TEST], {});
 
@@ -104,9 +112,17 @@ describe('loader', function() {
     const TEST_HOOK = 'TEST_HOOK';
     const YET_ANOTHER_HOOK = 'YET_ANOTHER_HOOK';
 
-    const FOOBAR = { hooks: { FOO_HOOK, BAR_HOOK }, path: '/tmp/foobar' };
-    const BARBAZ = { hooks: { BAR_HOOK, BAZ_HOOK }, path: '/tmp/barbaz' };
-    const TEST = { hooks: { TEST_HOOK }, path: '/tmp/test' };
+    const FOOBAR = {
+      hooks: { FOO_HOOK, BAR_HOOK },
+      pkg: {},
+      path: '/tmp/foobar'
+    };
+    const BARBAZ = {
+      hooks: { BAR_HOOK, BAZ_HOOK },
+      pkg: {},
+      path: '/tmp/barbaz'
+    };
+    const TEST = { hooks: { TEST_HOOK }, pkg: {}, path: '/tmp/test' };
 
     const reduced = loader().reduceAddonsToHooks([FOOBAR, BARBAZ, TEST], {
       [YET_ANOTHER_HOOK]: [

@@ -3,9 +3,9 @@
 # Stop on error
 set -e
 
-# polish mirror because it's faster (won't break travis builds with ~9min download)
-ARCHIVE="http://ftp.icm.edu.pl/pub/unix/graphics/GraphicsMagick/GraphicsMagick-LATEST.tar.gz"
-#ARCHIVE="ftp://ftp.graphicsmagick.org/pub/GraphicsMagick/GraphicsMagick-LATEST.tar.gz"
+GM_VERSION="1.3.26"
+
+ARCHIVE="http://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}.tar.gz"
 
 cd /tmp/
 wget ${ARCHIVE}

@@ -6,6 +6,7 @@ import IndexRoute = require('./src/routes/index');
 import ImageRoute = require('./src/routes/image');
 import VideoRoute = require('./src/routes/video');
 import DebugRoute = require('./src/routes/debug');
+import Route = require('./src/model/route');
 
 const { build } = Logger;
 const indexLogger = build('index');
@@ -24,12 +25,14 @@ try {
 process.on('uncaughtException', err => indexLogger.error(err));
 
 function buildRoutes(config: Config) {
-  return [
-    config.ROUTES.INDEX && new IndexRoute(config),
-    config.ROUTES.PROFILE_CONVERT_IMAGE && new ImageRoute(config),
-    config.ROUTES.PROFILE_CONVERT_VIDEO && new VideoRoute(config),
-    config.DEBUG && new DebugRoute(config)
-  ].filter(Boolean);
+  const routes: Route[] = [];
+
+  if (config.ROUTES && config.ROUTES.INDEX) routes.push(new IndexRoute(config));
+  if (config.ROUTES && config.ROUTES.PROFILE_CONVERT_IMAGE) routes.push(new ImageRoute(config));
+  if (config.ROUTES && config.ROUTES.PROFILE_CONVERT_VIDEO) routes.push(new VideoRoute(config));
+  if (config.DEBUG) routes.push(new DebugRoute(config));
+
+  return routes;
 }
 
 function buildProfiles(config: Config) {
@@ -46,5 +49,5 @@ Config.fromEnv()
       .withRoutes(buildRoutes(config))
       .start()
   )
-  .then(server => indexLogger.info(`server running at ${server.hapi.info.uri}`))
+  .then(server => indexLogger.info(`server running at ${server.hapi.info!.uri}`))
   .catch(error => indexLogger.error(error));

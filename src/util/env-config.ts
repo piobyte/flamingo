@@ -26,7 +26,7 @@ import Mapping from '../types/Mapping';
 
 export = function(
   config: Config | {},
-  environment: { [key: string]: string },
+  environment: { [key: string]: string | undefined },
   mappings: Array<Mapping>
 ): Config | {} {
   forEach(mappings, function(mapping: Mapping) {

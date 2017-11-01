@@ -8,6 +8,7 @@ import clamp = require('clamp');
 
 import bestFormat = require('../util/best-format');
 import envParser = require('../util/env-parser');
+import { ProcessInstruction } from '../types/Instruction';
 
 export = {
   /**
@@ -23,7 +24,7 @@ export = {
       10,
       1024
     );
-    const process = [];
+    const process: ProcessInstruction<sharp.SharpInstance | any>[] = [];
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
@@ -75,7 +76,7 @@ export = {
       10,
       1024
     );
-    const process = [];
+    const process: ProcessInstruction<sharp.SharpInstance | any>[] = [];
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {

@@ -1,5 +1,4 @@
 import assert = require('assert');
-import noop = require('lodash/noop');
 
 import Server = require('../../../src/model/server');
 import Config = require('../../../config');

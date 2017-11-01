@@ -51,7 +51,9 @@ export = function(operation: FlamingoOperation) /*: function */ {
         );
       } else {
         logger.info(
-          `Skipping transformation, unknown processor: ${transformation.processor}`
+          `Skipping transformation, unknown processor: ${
+            transformation.processor
+          }`
         );
       }
     });

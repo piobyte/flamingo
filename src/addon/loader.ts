@@ -102,9 +102,10 @@ class AddonLoader {
    * @return {{pkg, path, hooks}} loaded addon. If no entrypoint was found, the package is skipped and a warning logged.
    */
   resolvePkg(addon: Addon): Addon {
-    const main = addon.pkg.main || 'index.js';
-    const mainPath = path.join(addon.path, main);
     let loadedAddon;
+
+    const main = addon.pkg.main || 'index.js';
+    const mainPath = path.join(addon.path!, main);
 
     /*eslint no-sync: 0*/
     if (fs.existsSync(mainPath)) {
@@ -115,6 +116,7 @@ class AddonLoader {
         "can't find entrypoint for addon: " + addon.pkg.name
       );
     }
+
     return loadedAddon;
   }
 
@@ -150,13 +152,15 @@ class AddonLoader {
       addons,
       function(hooks, addon) {
         forOwn(addon.hooks, function(val, key) {
-          // provide empty array for hook key
-          hooks[key] = hooks[key] || [];
+          if (addon.hooks && addon.hooks.hasOwnProperty(key)) {
+            // provide empty array for hook key
+            hooks[key] = hooks[key] || [];
 
-          hooks[key].push({
-            hook: addon.hooks[key],
-            addon
-          });
+            hooks[key].push({
+              hook: addon.hooks[key],
+              addon
+            });
+          }
         });
         return hooks;
       },

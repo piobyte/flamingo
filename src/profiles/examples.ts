@@ -11,6 +11,7 @@ import envParser = require('../util/env-parser');
 import bestFormat = require('../util/best-format');
 import Config = require('../../config');
 import Profile from '../types/Profile';
+import { ProcessInstruction, ProfileInstruction } from '../types/Instruction';
 
 const MIN_IMAGE_SIZE = 10;
 const MAX_IMAGE_SIZE = 1024;
@@ -132,7 +133,7 @@ const ExampleProfiles: { [profileName: string]: Profile } = {
               .min()
               .crop(sharp.gravity.center);
           }
-        } as ProcessInstruction<sharp.SharpInstance>
+        }
       ]
     });
   },
@@ -196,7 +197,7 @@ const ExampleProfiles: { [profileName: string]: Profile } = {
               .min()
               .crop(sharp.gravity.center);
           }
-        } as ProcessInstruction<sharp.SharpInstance>
+        }
       ]
     });
   }

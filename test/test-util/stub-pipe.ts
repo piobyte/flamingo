@@ -1,14 +1,17 @@
 import sinon = require('sinon');
 import noop = require('lodash/noop');
 
-function buildPipe(fields = []) {
+type Pipe = { [key: string]: (...any) => any };
+type PipeMethod = [string, any[]] | [string];
+
+function buildPipe(fields: string[]): Pipe {
   return fields.reduce((pipe, fieldName) => {
     pipe[fieldName] = noop;
     return pipe;
   }, {});
 }
 
-function stubPipe(pipe, methods = []) {
+function stubPipe(pipe: Pipe, methods: PipeMethod[]) {
   methods.forEach(stubInstruction => {
     const [method, ...argsReturn] = stubInstruction;
 

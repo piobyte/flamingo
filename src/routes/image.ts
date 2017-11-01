@@ -9,8 +9,9 @@ import Convert = require('./../mixins/convert');
 import Config = require('../../config');
 import FlamingoOperation = require('../model/flamingo-operation');
 import Profile from '../types/Profile';
-import {ReaderResult} from '../types/ReaderResult';
+import { ReaderResult } from '../types/ReaderResult';
 import Server = require('../model/server');
+import { ProfileInstruction } from '../types/Instruction';
 
 /**
  * Route that converts an image url, passed inside the request param, to an image

@@ -98,7 +98,7 @@ promise.catch(function (e) {
   const firstRow = ['input'].concat(Object.keys(results));
 
   out.push(firstRow.join('|'));
-  out.push(firstRow.reduce(function (all, title, i) {
+  out.push(firstRow.reduce(function (all: string[], title, i) {
     let line = title.replace(/./g, '-');
     if (i > 0) {
       line = ':' + line + ':';

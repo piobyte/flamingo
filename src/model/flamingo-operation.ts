@@ -3,6 +3,7 @@ import noop = require('lodash/noop');
 import Config = require('../../config');
 import Reader = require('../types/Reader');
 import Writer = require('../types/Writer');
+import { ProcessInstruction } from '../types/Instruction';
 
 /**
  * Base operation class that is intented to be created for each request and holds request metadata.

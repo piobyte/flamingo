@@ -1,5 +1,6 @@
 import got = require('got');
 import Promise = require('bluebird');
+import nodeStream = require('stream');
 
 import errors = require('../util/errors');
 import FlamingoOperation = require('../model/flamingo-operation');
@@ -18,17 +19,17 @@ const { REMOTE } = ReaderType;
 export = function(operation: FlamingoOperation): Promise<ReaderResult> {
   const conf = operation.config;
   const input = operation.input;
-  const access = conf.ACCESS;
+  const access = conf.ACCESS!;
 
-  return access.HTTPS.ENABLED && !readAllowed(input, access.HTTPS.READ)
+  return access.HTTPS!.ENABLED && !readAllowed(input, access.HTTPS!.READ)
     ? Promise.reject(
         'Read not allowed. See `ACCESS.HTTPS.READ` for more information.'
       )
     : Promise.resolve({
-        stream() {
+        stream(): Promise<nodeStream.Readable> {
           return new Promise(function(resolve, reject) {
             const stream = got.stream(input.href, {
-              timeout: conf.READER.REQUEST.TIMEOUT,
+              timeout: conf.READER!.REQUEST!.TIMEOUT,
               followRedirect: conf.ALLOW_READ_REDIRECT,
               headers: {
                 'user-agent': `${pkg.name}/${pkg.version} (${pkg.bugs.url})`

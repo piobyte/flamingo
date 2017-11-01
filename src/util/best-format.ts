@@ -4,9 +4,12 @@
  */
 
 import mimeparse = require('mimeparse');
+// ["application", "xhtml", { "q" : "0.5" }]
+
+type ParsedRange = [string, string, { q: string }];
 
 function parseRanges(ranges: string) {
-  const parsedRanges = [];
+  const parsedRanges: ParsedRange[] = [];
   const rangeParts = ranges.split(',');
 
   for (let i = 0; i < rangeParts.length; i++) {
@@ -40,10 +43,10 @@ const DEFAULT_SUPPORTED = [
  * bestFormat('image/jpeg,image/png,image/svg+xml,image/*;q=0.8,*\/*;q=0.5', 'image/png')
  * // {mime: 'image/jpeg', type: 'jpeg'}
  */
-export = function(acceptHeader: string, defaultMime: string): Mime {
+export = function(acceptHeader: any, defaultMime: string = 'image/png'): Mime {
   let bestMatch;
 
-  if (acceptHeader) {
+  if (typeof acceptHeader === 'string') {
     const parsedHeader = parseRanges(acceptHeader);
     const joinedParsedHeader = parsedHeader.map(
       ([type, subtype]) => `${type}/${subtype}`

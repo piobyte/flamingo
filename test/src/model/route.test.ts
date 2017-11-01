@@ -2,7 +2,6 @@ import assert = require('assert');
 import Promise = require('bluebird');
 import sinon = require('sinon');
 import merge = require('lodash/merge');
-import noop = require('lodash/noop');
 import got = require('got');
 
 import Server = require('../../../src/model/server');

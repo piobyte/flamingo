@@ -21,5 +21,5 @@ export = function<T extends Constructor<Route>>(Base: T) {
     validStream(op: FlamingoOperation): (stream) => Promise<any> {
       return validImageStream(op);
     }
-  }
+  };
 };

@@ -4,7 +4,6 @@ import Promise = require('bluebird');
 import assert = require('assert');
 import sinon = require('sinon');
 import merge = require('lodash/merge');
-import noop = require('lodash/noop');
 import got = require('got');
 
 import Route = require('../../../src/model/route');
@@ -13,7 +12,6 @@ import Convert = require('../../../src/mixins/convert');
 import Server = require('../../../src/model/server');
 import Config = require('../../../config');
 import NoopAddonLoader = require('../../test-util/NoopAddonLoader');
-import FlamingoOperation = require('../../../src/model/flamingo-operation');
 
 const HOST = 'localhost';
 const PORT = 43723; // some random unused port

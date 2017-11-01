@@ -4,7 +4,6 @@ import nock = require('nock');
 import path = require('path');
 import url = require('url');
 import fs = require('fs');
-import noop = require('lodash/noop');
 import range = require('lodash/range');
 import got = require('got');
 import Promise = require('bluebird');
@@ -27,14 +26,14 @@ function startServer(localConf) {
       localConf
     );
 
-    if (config.CRYPTO.ENABLED) {
+    if (config.CRYPTO!.ENABLED) {
       // manually copy cipher, key, iv because they're buffers
-      config.CRYPTO.KEY = Buffer.isBuffer(localConf.CRYPTO.KEY)
+      config.CRYPTO!.KEY = Buffer.isBuffer(localConf.CRYPTO.KEY)
         ? localConf.CRYPTO.KEY
-        : config.CRYPTO.KEY;
-      config.CRYPTO.IV = Buffer.isBuffer(localConf.CRYPTO.IV)
+        : config.CRYPTO!.KEY;
+      config.CRYPTO!.IV = Buffer.isBuffer(localConf.CRYPTO.IV)
         ? localConf.CRYPTO.IV
-        : config.CRYPTO.IV;
+        : config.CRYPTO!.IV;
     }
 
     return new Server(config, new NoopAddonLoader())

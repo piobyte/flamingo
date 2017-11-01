@@ -97,13 +97,15 @@ describe('image converting server response', function() {
   });
 
   it('rejects redirects by default', function() {
-    nock('https://redir.example.com').get('/moved.jpg').reply(
-      301,
-      { status: 'moved' },
-      {
-        Location: 'https://redir.example.com/url.jpg'
-      }
-    );
+    nock('https://redir.example.com')
+      .get('/moved.jpg')
+      .reply(
+        301,
+        { status: 'moved' },
+        {
+          Location: 'https://redir.example.com/url.jpg'
+        }
+      );
 
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
       'https://redir.example.com/moved.jpg'

@@ -53,7 +53,7 @@ class Route {
    * @see {@link http://hapijs.com/api#replyerr-result}
    * @param {FlamingoOperation} operation
    */
-  handle(operation) {
+  handle(operation): Promise<any> {
     return Promise.reject(new Error('Method not implemented: Route.handle()'));
   }
 

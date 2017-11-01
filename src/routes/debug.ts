@@ -45,7 +45,7 @@ class Debug extends Route {
           nodePath.join(
             __dirname,
             '../../test/fixtures/images/sharp-bench-assets',
-            url.parse(req.url).pathname
+            url.parse(req.url).pathname!
           )
         )
         .pipe(res, { end: true });
@@ -64,9 +64,9 @@ class Debug extends Route {
         IMAGES.map(image =>
           encode(
             image.url,
-            config.CRYPTO.CIPHER,
-            config.CRYPTO.KEY,
-            config.CRYPTO.IV
+            config.CRYPTO!.CIPHER,
+            config.CRYPTO!.KEY,
+            config.CRYPTO!.IV
           )
         )
       ).then(encodedUrls => {

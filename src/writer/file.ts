@@ -23,7 +23,7 @@ export = function({ input, reply, config }: FlamingoOperation) {
     const outputDir = path.dirname(outputPath);
     const allowed = fileAccessAllowed(
       path.normalize(outputPath),
-      config.ACCESS.FILE.WRITE
+      config.ACCESS!.FILE!.WRITE
     );
 
     if (!allowed) {

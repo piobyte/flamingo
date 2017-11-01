@@ -20,7 +20,7 @@ class Video extends VideoPreprocess(Image) {
    * @param {string} [method='GET']
    * @param {string} [path='/video/{profile}/{url}']
    * @param {string} [description='Profile video conversion']
-     */
+   */
   constructor(
     conf,
     method = 'GET',

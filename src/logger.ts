@@ -57,8 +57,8 @@ const serializers = {
   },
   request(request) {
     return typeof request === 'object' &&
-    request.hasOwnProperty('path') &&
-    request.hasOwnProperty('method')
+      request.hasOwnProperty('path') &&
+      request.hasOwnProperty('method')
       ? {
           headers: request.headers,
           path: request.path,
@@ -116,9 +116,9 @@ function build(name: string) {
  * @return {void}
  * @example
  * logger.addStreams([{
-     *  stream: process.stderr,
-     *  level: "debug"
-     * }]) // adds stderr output for debug level logs
+ *  stream: process.stderr,
+ *  level: "debug"
+ * }]) // adds stderr output for debug level logs
  */
 function addStreams(newStreamDefs: Array<bunyan.LoggerOptions>) {
   // add def to defs for future loggers

@@ -2,8 +2,6 @@ language: node_js
 cache:
   yarn: true
   apt: true
-  directories:
-  - node_modules
 sudo: required
 dist: trusty
 addons:
@@ -18,18 +16,19 @@ before_install:
 - sudo bash tools/install-ffmpeg.sh
 - sudo bash tools/install-imagemagick.sh
 - sudo bash tools/install-graphicsmagick.sh
-- sudo bash tools/install-libvips.sh
 
 matrix:
   fast_finish: true
   include:
+    - node_js: 'lts/carbon'
+      env: TARGET=test
     - node_js: 'lts/boron'
       env: TARGET=test
     - node_js: 'node'
       env: TARGET=test
-    - node_js: 'lts/boron'
+    - node_js: 'lts/carbon'
       env: TARGET=bench
     - node_js: 'node'
       env: TARGET=bench
 
-script: yarn run $TARGET
+script: yarn run $TARGET && yarn formats

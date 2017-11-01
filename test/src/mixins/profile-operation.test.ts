@@ -33,7 +33,12 @@ describe('profile-operation', function() {
     const testUrl = 'http://example.com/image.png';
 
     return Config.fromEnv().then(config =>
-      encode(testUrl, config.CRYPTO.CIPHER, config.CRYPTO.KEY, config.CRYPTO.IV)
+      encode(
+        testUrl,
+        config.CRYPTO!.CIPHER,
+        config.CRYPTO!.KEY,
+        config.CRYPTO!.IV
+      )
         .then(cipherUrl => {
           operation.config = config;
           operation.request = { params: { url: cipherUrl } };
@@ -97,9 +102,9 @@ describe('profile-operation', function() {
 
       return encode(
         givenUrl,
-        config.CRYPTO.CIPHER,
-        config.CRYPTO.KEY,
-        config.CRYPTO.IV
+        config.CRYPTO!.CIPHER,
+        config.CRYPTO!.KEY,
+        config.CRYPTO!.IV
       ).then(encoded => {
         const request = { params: { profile, url: encoded } };
         const reply = sinon.spy();

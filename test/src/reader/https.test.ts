@@ -26,7 +26,9 @@ describe('https? reader', function() {
   });
 
   it('resolves the expected result', function(done) {
-    nock('http://example.org/').get('/ok').reply(200, { status: 'OK' });
+    nock('http://example.org/')
+      .get('/ok')
+      .reply(200, { status: 'OK' });
 
     const op = new FlamingoOperation();
     op.config = merge({}, DEFAULT_CONF, {
@@ -36,11 +38,11 @@ describe('https? reader', function() {
 
     httpReader(op).then(function(data) {
       assert.ok(!!data.stream);
-      const buf = [];
+      const buf: Buffer[] = [];
       const out = temp.createWriteStream();
 
       data.stream().then(function(stream) {
-        stream.on('data', function(e) {
+        stream.on('data', function(e: Buffer) {
           buf.push(e);
         });
         stream.on('end', function() {

@@ -2233,7 +2233,7 @@ describe('tutorials work as expected', function() {
             path.join(
               __dirname,
               '../../test/fixtures/images/sharp-bench-assets',
-              url.parse(req.url).pathname
+              url.parse(req.url).pathname!
             )
           )
           .pipe(res, { end: true });

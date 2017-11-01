@@ -7,7 +7,7 @@ import FlamingoOperation = require('../model/flamingo-operation');
 import Server = require('../model/server');
 import Hapi = require('hapi');
 
-export = function <T extends Constructor<Route>> (Base: T) {
+export = function<T extends Constructor<Route>>(Base: T) {
   /**
    * Mixin that adds a video preprocessor which creates an image from a given video
    * @mixin
@@ -18,8 +18,8 @@ export = function <T extends Constructor<Route>> (Base: T) {
      * @param operation
      * @see module:flamingo/src/preprocessor/video
      */
-    preprocess (operation) {
+    preprocess(operation) {
       return videoPreprocessor(operation);
     }
-  }
+  };
 };

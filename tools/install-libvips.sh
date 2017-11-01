@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Use of this script is deprecated
-
+echo "I'll remove this script soon as the sharp distribution works fine out of the box."
 echo
 echo "WARNING: This script will stop working at the end of 2016"
 echo

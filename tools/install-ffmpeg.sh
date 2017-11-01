@@ -22,7 +22,6 @@ if [ "$(uname)" = "Linux" ]; then
 
 	cp ${DIRNAME}/ffmpeg /usr/bin
 	cp ${DIRNAME}/ffprobe /usr/bin
-	cp ${DIRNAME}/ffserver /usr/bin
 	cp ${DIRNAME}/ffmpeg $(pwd)
 	cp ${DIRNAME}/ffprobe $(pwd)
 
