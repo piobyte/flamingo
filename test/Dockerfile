@@ -11,13 +11,9 @@ COPY tools/install-graphicsmagick.sh /tmp/
 RUN bash /tmp/install-graphicsmagick.sh; rm /tmp/install-graphicsmagick.sh
 
 # libfontconfig-dev libfreetype6 for webshot/phantom
-RUN apt-get -y install git python build-essential libfontconfig-dev libfreetype6 pkg-config
+RUN apt-get -y install curl git python build-essential libfontconfig-dev libfreetype6 pkg-config
 
-# Install libvips
-COPY tools/install-libvips.sh /tmp/
-RUN bash /tmp/install-libvips.sh; rm /tmp/install-libvips.sh
-
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
@@ -42,4 +38,4 @@ RUN apt-get remove -y git lsb-release pkg-config python curl build-essential mak
 WORKDIR /data
 
 # Define default command.
-CMD ["npm", "t"]
+CMD ["yarn", "test"]
