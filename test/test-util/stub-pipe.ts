@@ -2,7 +2,7 @@ import sinon = require('sinon');
 import noop = require('lodash/noop');
 
 type Pipe = { [key: string]: (...any) => any };
-type PipeMethod = [string, any[]] | [string];
+type PipeMethod = [string, any[], any[]] | [string, any[]] | [string];
 
 function buildPipe(fields: string[]): Pipe {
   return fields.reduce((pipe, fieldName) => {

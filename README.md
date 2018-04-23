@@ -22,6 +22,7 @@ Flamingo uses jsdoc [docs and tutorials](https://piobyte.github.io/flamingo/) fo
 ## Requirements
 
 - minimum node `6`
+- maximum node `9` (10 is currently not supported)
 - [vips](http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS)
 - [graphicsmagick](http://www.graphicsmagick.org/) (for webp support compile from source. See `tools/install-graphicsmagick.sh`)
 - [imagemagick](https://www.imagemagick.org/)

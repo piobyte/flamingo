@@ -6,6 +6,7 @@ import errors = require('../util/errors');
 import cipher = require('../util/cipher');
 import FlamingoOperation = require('../model/flamingo-operation');
 import Constructor from '../model/Constructor';
+import { ProfileInstruction } from '../types/Instruction';
 import Config = require('../../config');
 import Server = require('../model/server');
 import Hapi = require('hapi');

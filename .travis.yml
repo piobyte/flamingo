@@ -16,6 +16,7 @@ before_install:
 - sudo bash tools/install-ffmpeg.sh
 - sudo bash tools/install-imagemagick.sh
 - sudo bash tools/install-graphicsmagick.sh
+- ls -la test/fixtures/images
 
 matrix:
   fast_finish: true
@@ -24,11 +25,11 @@ matrix:
       env: TARGET=test
     - node_js: 'lts/boron'
       env: TARGET=test
-    - node_js: 'node'
+    - node_js: '9'
       env: TARGET=test
     - node_js: 'lts/carbon'
       env: TARGET=bench
-    - node_js: 'node'
+    - node_js: '9'
       env: TARGET=bench
 
 script: yarn run $TARGET && yarn formats
