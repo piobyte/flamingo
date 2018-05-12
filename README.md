@@ -22,7 +22,6 @@ Flamingo uses jsdoc [docs and tutorials](https://piobyte.github.io/flamingo/) fo
 ## Requirements
 
 - minimum node `6`
-- maximum node `9` (10 is currently not supported)
 - [vips](http://www.vips.ecs.soton.ac.uk/index.php?title=VIPS)
 - [graphicsmagick](http://www.graphicsmagick.org/) (for webp support compile from source. See `tools/install-graphicsmagick.sh`)
 - [imagemagick](https://www.imagemagick.org/)
@@ -45,7 +44,3 @@ Image data is transformed using node streams. This means flamingo can convert an
 ## Contributing
 
 - please follow the [angular git commit guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#commit) to structure your commits
-
-## Useful bunyan filters
-
-- only log memwatch stats or leaks `bunyan -c 'this.msg === "stats" || this.msg === "leak"'`

@@ -12,16 +12,6 @@ const { build } = Logger;
 const indexLogger = build('index');
 const pkg = require('./package.json');
 
-try {
-  const memwatch = require('memwatch-next');
-  const memLogger = build('memwatch');
-
-  memwatch.on('leak', info => memLogger.info(info, 'leak'));
-  memwatch.on('stats', info => memLogger.info(info, 'stats'));
-} catch (error) {
-  indexLogger.debug('starting without memwatch');
-}
-
 process.on('uncaughtException', err => indexLogger.error(err));
 
 function buildRoutes(config: Config) {
