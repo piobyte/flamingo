@@ -25,11 +25,11 @@ matrix:
       env: TARGET=test
     - node_js: 'lts/boron'
       env: TARGET=test
-    - node_js: '9'
+    - node_js: 'node'
       env: TARGET=test
     - node_js: 'lts/carbon'
       env: TARGET=bench
-    - node_js: '9'
+    - node_js: 'node'
       env: TARGET=bench
 
 script: yarn run $TARGET && yarn formats
