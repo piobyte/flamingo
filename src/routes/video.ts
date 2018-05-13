@@ -1,6 +1,5 @@
 import VideoPreprocess = require('./../mixins/video-preprocess');
 import Image = require('./image');
-import Promise = require('bluebird');
 import Config = require('../../config');
 import FlamingoOperation = require('../model/flamingo-operation');
 import Server = require('../model/server');

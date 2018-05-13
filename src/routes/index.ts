@@ -1,5 +1,4 @@
 import util = require('util');
-import Promise = require('bluebird');
 import omit = require('lodash/omit');
 
 import Route = require('../model/route');

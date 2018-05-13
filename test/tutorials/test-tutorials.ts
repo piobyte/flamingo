@@ -2248,18 +2248,20 @@ describe('tutorials work as expected', function() {
   });
 
   expected.forEach(({ file, url, ok, error }) => {
-    it(`${file}`, function() {
+    it(`${file}`, async function() {
       let server;
-      return require(path.join('../../tutorials', file))({
-        HOST,
-        PORT: FLAMINGO_PORT
-      })
-        .then(createdServer => {
-          server = createdServer;
-          const request = got(url);
-          return error ? request.catch(error) : request.then(ok);
-        })
-        .finally(() => server.stop());
+
+      try {
+        server = await require(path.join('../../tutorials', file))({
+          HOST,
+          PORT: FLAMINGO_PORT
+        });
+
+        const request = got(url);
+        await (error ? request.catch(error) : request.then(ok));
+      } finally {
+        server.stop();
+      }
     });
   });
 });

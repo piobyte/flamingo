@@ -21,7 +21,7 @@ describe('response writer', function() {
 
     return responseWriter(op)(stream);
   });
-  it('applies response headers', function() {
+  it('applies response headers', async function() {
     const op = new FlamingoOperation();
     const stream = fs.createReadStream(
       path.join(__dirname, '../../fixtures/images/base64.png')
@@ -36,13 +36,15 @@ describe('response writer', function() {
     };
     op.response = { header: { 'x-foo': 'bar' } };
 
-    return responseWriter(op)(stream).finally(() => {
+    try {
+      await responseWriter(op)(stream);
+    } finally {
       assert.ok(headerSpy.called);
       assert.ok(headerSpy.calledWithExactly('x-foo', 'bar'));
-    });
+    }
   });
 
-  it("doesn't call reply twice in case of stream error (#10)", function() {
+  it("doesn't call reply twice in case of stream error (#10)", async function() {
     const op = new FlamingoOperation();
     const stream = fs.createReadStream(
       path.join(__dirname, '../../fixtures/images/base64.png')
@@ -60,9 +62,11 @@ describe('response writer', function() {
     };
     op.response = {};
 
-    return responseWriter(op)(stream).then(
-      () => assert.ok(false),
-      () => assert.equal(replyCalled, 1)
-    );
+    try {
+      await responseWriter(op)(stream);
+      assert.ok(false);
+    } catch {
+      assert.equal(replyCalled, 1);
+    }
   });
 });

@@ -4,7 +4,6 @@
  */
 
 import ffmpeg = require('fluent-ffmpeg');
-import Promise = require('bluebird');
 import assign = require('lodash/assign');
 import isFinite = require('lodash/isFinite');
 import got = require('got');

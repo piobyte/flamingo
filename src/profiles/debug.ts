@@ -2,7 +2,6 @@
  * Debug profiles that choose a processor based on the `processor` query param
  * @module
  */
-import Promise = require('bluebird');
 import sharp = require('sharp');
 import clamp = require('clamp');
 

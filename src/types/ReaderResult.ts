@@ -1,5 +1,4 @@
 import nodeStream = require('stream');
-import Promise = require('bluebird');
 
 /**
  * Object that represents a reader result.

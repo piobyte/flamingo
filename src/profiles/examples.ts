@@ -3,7 +3,6 @@
  * @module
  */
 
-import Promise = require('bluebird');
 import sharp = require('sharp');
 import clamp = require('clamp');
 

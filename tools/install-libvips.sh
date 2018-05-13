@@ -14,9 +14,9 @@ echo "to globally install libvips if not already available."
 echo
 sleep 5
 
-vips_version_minimum=8.5.8
-vips_version_latest_major_minor=8.5
-vips_version_latest_patch=8
+vips_version_minimum=8.6.1
+vips_version_latest_major_minor=8.6
+vips_version_latest_patch=1
 
 VIPS_VERSION=${vips_version_latest_major_minor}.${vips_version_latest_patch}
 

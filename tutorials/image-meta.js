@@ -6,7 +6,6 @@ const AddonLoader = require('../src/addon/loader');
 const merge = require('lodash/merge');
 const logger = require('../src/logger').build('tutorials/image-meta');
 const sharp = require('sharp');
-const Promise = require('bluebird');
 const {ProcessingError} = require('../src/util/errors');
 const url = require('url');
 

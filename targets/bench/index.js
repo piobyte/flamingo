@@ -112,9 +112,11 @@ benchPromise.then(function () {
         }
     };
     console.log('result:\n', BENCH_FILE, '\n', JSON.stringify(benchmarkResult));
+    // TODO: promise.finally
 }).finally(function () {
     /*eslint no-sync: 0 */
     temp.cleanupSync();
 }).catch(function (err) {
     console.error(err);
 });
+//# sourceMappingURL=index.js.map

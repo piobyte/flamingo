@@ -1,6 +1,5 @@
 import path = require('path');
 import fs = require('fs');
-import Promise = require('bluebird');
 
 const BASE_PATH = 'test/fixtures/';
 

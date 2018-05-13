@@ -1,6 +1,5 @@
 import fs = require('fs');
 import Benchmark = require('benchmark');
-import Promise = require('bluebird');
 import FlamingoOperation = require('../../../src/model/flamingo-operation');
 
 module.exports = function (suiteConfig) {

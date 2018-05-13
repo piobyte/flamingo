@@ -1,4 +1,3 @@
-import Promise = require('bluebird');
 import url = require('url');
 
 import Route = require('../model/route');

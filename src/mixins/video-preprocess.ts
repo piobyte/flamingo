@@ -1,7 +1,6 @@
 import videoPreprocessor = require('../preprocessor/video/index');
 import Route = require('../model/route');
 import Constructor from '../model/Constructor';
-import Promise = require('bluebird');
 import Config = require('../../config');
 import FlamingoOperation = require('../model/flamingo-operation');
 import Server = require('../model/server');

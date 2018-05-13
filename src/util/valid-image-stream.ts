@@ -1,4 +1,3 @@
-import Promise = require('bluebird');
 import fileType = require('file-type');
 import peek = require('buffer-peek-stream');
 import isStream = require('is-stream');

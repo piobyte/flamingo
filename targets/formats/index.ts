@@ -2,7 +2,6 @@
 
 import temp = require('temp');
 import nock = require('nock');
-import Promise = require('bluebird');
 import fs = require('fs');
 import path = require('path');
 import fixtures = require('../../test/fixtures/images/sharp-bench-assets/index');
@@ -10,6 +9,7 @@ import httpsReader = require('../../src/reader/https');
 import imageProcessor = require('../../src/processor/image');
 import unfoldReaderResult = require('../../src/util/unfold-reader-result');
 import FlamingoOperation = require('../../src/model/flamingo-operation');
+import Promise = require('bluebird');
 
 const SUPPORTED_FORMATS = 'tutorials/supported-files.md';
 
@@ -50,7 +50,7 @@ const processors = [{
   }]
 }];
 
-let promise = Promise.resolve();
+let promise: Promise<any> = Promise.resolve();
 let endpoint = nock('https://assets.flamingo.tld').persist();
 
 allFixtures.forEach(function (data) {
@@ -91,6 +91,7 @@ processors.forEach(function (processor) {
   });
 });
 
+// TODO: promise.finally
 promise.catch(function (e) {
   console.warn('caught', e);
 }).finally(function () {

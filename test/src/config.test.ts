@@ -14,45 +14,46 @@ class NoopAddonLoader extends AddonLoader {
   constructor() {
     super('', {});
   }
+
   hook(hookName: string) {
     return () => [];
   }
 }
 
-function startServer(localConf) {
-  return Config.fromEnv().then(config => {
-    config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
+async function startServer(localConf) {
+  let config = await Config.fromEnv();
+  config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
 
-    return new Server(config, new NoopAddonLoader())
-      .withProfiles([exampleProfiles])
-      .withRoutes([])
-      .start();
-  });
+  return new Server(config, new NoopAddonLoader())
+    .withProfiles([exampleProfiles])
+    .withRoutes([])
+    .start();
 }
 
 describe('config', function() {
-  it('has no index (fingerprinting) route by default', function() {
+  it('has no index (fingerprinting) route by default', async function() {
     let server;
-    return startServer({
-      ROUTES: { INDEX: false }
-    })
-      .then(function(s) {
-        server = s;
-        return got('http://localhost:' + PORT + '/').catch(e => e);
-      })
-      .then(function(response) {
-        assert.equal(response.statusCode, 404);
-      })
-      .finally(() => server.stop());
+
+    try {
+      server = await startServer({
+        ROUTES: { INDEX: false }
+      });
+      const { statusCode } = await got('http://localhost:' + PORT + '/').catch(
+        e => e
+      );
+      assert.equal(statusCode, 404);
+    } finally {
+      server.stop();
+    }
   });
 
-  it('#fromEnv', function() {
+  it('#fromEnv', async function() {
     const env = {
       TEST: 'true'
     };
     const mappings: Array<Mapping> = [['TEST', 'TEST', val => val === 'true']];
-    return Config.fromEnv(env, mappings).then(config => {
-      assert.equal(config.TEST, true);
-    });
+
+    const config = await Config.fromEnv(env, mappings);
+    assert.equal(config.TEST, true);
   });
 });

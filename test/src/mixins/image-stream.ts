@@ -1,6 +1,5 @@
 import fs = require('fs');
 import path = require('path');
-import Promise = require('bluebird');
 import assert = require('assert');
 import sinon = require('sinon');
 import merge = require('lodash/merge');
@@ -16,18 +15,15 @@ import NoopAddonLoader = require('../../test-util/NoopAddonLoader');
 const HOST = 'localhost';
 const PORT = 43723; // some random unused port
 
-function startServer(localConf, route: Route) {
-  return Config.fromEnv().then(config => {
-    config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
+async function startServer(localConf, route: Route) {
+  let config = await Config.fromEnv();
+  config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
 
-    return new Server(config, new NoopAddonLoader())
-      .withRoutes([route])
-      .start();
-  });
+  return new Server(config, new NoopAddonLoader()).withRoutes([route]).start();
 }
 
 describe('image-stream', function() {
-  it('rejects handling for non image streams', function() {
+  it('rejects handling for non image streams', async function() {
     const image = fs.createReadStream(path.join(__dirname, 'image-stream.js'));
     const errorSpy = sinon.spy();
 
@@ -54,15 +50,12 @@ describe('image-stream', function() {
     };
 
     let server;
-    return startServer({}, new ImageStreamRoute())
-      .then(startedServer => {
-        server = startedServer;
-
-        return got(`${HOST}:${PORT}/non-image`).catch(e => e);
-      })
-      .then(() => {
-        assert.ok(errorSpy.called);
-      })
-      .finally(() => server.stop());
+    try {
+      server = await startServer({}, new ImageStreamRoute());
+      await got(`${HOST}:${PORT}/non-image`).catch(e => e);
+      assert.ok(errorSpy.called);
+    } finally {
+      server.stop();
+    }
   });
 });

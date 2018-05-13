@@ -6,7 +6,6 @@
 import supported = require('./src/util/supported');
 import envParser = require('./src/util/env-parser');
 import envConfig = require('./src/util/env-config');
-import Promise = require('bluebird');
 import Mapping from './src/types/Mapping';
 const pkg = require('./package.json');
 

@@ -1,5 +1,4 @@
 import temp = require('temp');
-import Promise = require('bluebird');
 import fs = require('fs');
 import assert = require('assert');
 import assign = require('lodash/assign');
@@ -8,11 +7,12 @@ import url = require('url');
 import FlamingoOperation = require('../../src/model/flamingo-operation');
 import Route = require('../../src/model/route');
 import logger = require('../../src/logger');
+import Bluebird = require('bluebird');
 
-const readFile = Promise.promisify(fs.readFile);
+const readFile = Bluebird.promisify(fs.readFile);
 
 describe('logger', function() {
-  it('checks that the method calls the stream function', function() {
+  it('checks that the method calls the stream function', async function() {
     const tempPath = temp.path({ suffix: '.log' });
     const loggerName = 'test:logger.addStreams';
     const LOG_MESSAGE = 'Time is an illusion. Lunchtime doubly so.';
@@ -29,9 +29,8 @@ describe('logger', function() {
     log = logger.build(loggerName);
     log.fatal(LOG_MESSAGE);
 
-    return readFile(tempPath).then(data =>
-      assert.equal(JSON.parse(data.toString('utf8')).msg, LOG_MESSAGE)
-    );
+    const data = await readFile(tempPath);
+    assert.equal(JSON.parse(data.toString('utf8')).msg, LOG_MESSAGE);
   });
 
   it('serializes request log objects', function() {

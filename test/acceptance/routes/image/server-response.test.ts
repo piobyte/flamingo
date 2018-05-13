@@ -4,7 +4,6 @@ const nock = require('nock');
 const noop = require('lodash/noop');
 const range = require('lodash/range');
 const got = require('got');
-const Promise = require('bluebird');
 
 import Server = require('../../../../src/model/server');
 import Config = require('../../../../config');
@@ -14,15 +13,14 @@ import ImageRoute = require('../../../../src/routes/image');
 
 const PORT = 43723; // some random unused port
 
-function startServer(localConf) {
-  return Config.fromEnv().then(config => {
-    config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
+async function startServer(localConf) {
+  let config = await Config.fromEnv();
+  config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
 
-    return new Server(config, new NoopAddonLoader())
-      .withProfiles([exampleProfiles])
-      .withRoutes([new ImageRoute(config)])
-      .start();
-  });
+  return new Server(config, new NoopAddonLoader())
+    .withProfiles([exampleProfiles])
+    .withRoutes([new ImageRoute(config)])
+    .start();
 }
 
 describe('image converting server response', function() {
@@ -31,7 +29,7 @@ describe('image converting server response', function() {
     nock.cleanAll();
   });
 
-  it('returns 400 for all target error codes', function() {
+  it('returns 400 for all target error codes', async function() {
     let server;
     const codes = range(400, 600);
     let endpoint = nock('https://errs.example.com');
@@ -40,63 +38,57 @@ describe('image converting server response', function() {
       code => (endpoint = endpoint.get('/' + code).reply(code, {}))
     );
 
-    return startServer({
-      ACCESS: {
-        HTTPS: {
-          ENABLED: true,
-          READ: [{ hostname: 'errs.example.com' }]
+    try {
+      server = await startServer({
+        ACCESS: {
+          HTTPS: {
+            ENABLED: true,
+            READ: [{ hostname: 'errs.example.com' }]
+          }
         }
-      }
-    })
-      .then(function(s) {
-        server = s;
-
-        return Promise.all(
-          codes.map(code =>
-            got(
-              `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
-                `https://errs.example.com/${code}`
-              )}`,
-              {
-                retries: 0,
-                followRedirect: false
-              }
-            ).catch(data => data)
-          )
-        );
-      })
-      .then(function(data) {
-        data.forEach(response => assert.equal(response.statusCode, 400));
-      })
-      .finally(() => server.stop());
+      });
+      const data = await Promise.all(
+        codes.map(code =>
+          got(
+            `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
+              `https://errs.example.com/${code}`
+            )}`,
+            {
+              retries: 0,
+              followRedirect: false
+            }
+          ).catch(data => data)
+        )
+      );
+      data.forEach(response => assert.equal((response as any).statusCode, 400));
+    } finally {
+      server.stop();
+    }
   });
 
-  it('returns 400 for not whitelisted urls', function() {
+  it('returns 400 for not whitelisted urls', async function() {
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
       'https://old.example.com/image.png'
     )}`;
     let server;
 
-    return startServer({
-      ACCESS: {
-        HTTPS: {
-          ENABLED: true,
-          READ: [{ hostname: 'errs.example.com' }]
+    try {
+      server = await startServer({
+        ACCESS: {
+          HTTPS: {
+            ENABLED: true,
+            READ: [{ hostname: 'errs.example.com' }]
+          }
         }
-      }
-    })
-      .then(function(s) {
-        server = s;
-
-        return got(URL).catch(e => e);
-      })
-      .then(function(response) {
-        assert.equal(response.statusCode, 400);
-      })
-      .finally(() => server.stop());
+      });
+      const response = await got(URL).catch(e => e);
+      assert.equal(response.statusCode, 400);
+    } finally {
+      server.stop();
+    }
   });
 
-  it('rejects redirects by default', function() {
+  it('rejects redirects by default', async function() {
     nock('https://redir.example.com')
       .get('/moved.jpg')
       .reply(
@@ -112,19 +104,17 @@ describe('image converting server response', function() {
     )}`;
     let server;
 
-    return startServer({})
-      .then(function(s) {
-        server = s;
+    try {
+      server = await startServer({});
+      const response = await got(URL).catch(e => e);
 
-        return got(URL).catch(e => e);
-      })
-      .then(function(response) {
-        assert.equal(response.statusCode, 400);
-      })
-      .finally(() => server.stop());
+      assert.equal(response.statusCode, 400);
+    } finally {
+      server.stop();
+    }
   });
 
-  it('allows redirect if enabled', function() {
+  it('allows redirect if enabled', async function() {
     nock('https://redir.example.com')
       .get('/moved.png')
       .reply(
@@ -142,74 +132,61 @@ describe('image converting server response', function() {
     )}`;
     let server;
 
-    return startServer({
-      ALLOW_READ_REDIRECT: true
-    })
-      .then(function(s) {
-        server = s;
-
-        return got(URL);
-      })
-      .then(function(response) {
-        assert.equal(response.statusCode, 200);
-      })
-      .finally(() => server.stop())
-      .catch(e => console.error(e));
+    try {
+      server = await startServer({
+        ALLOW_READ_REDIRECT: true
+      });
+      const response = await got(URL);
+      assert.equal(response.statusCode, 200);
+    } finally {
+      server.stop();
+    }
   });
 
-  it('rejects unknown protocols (no reader available)', function() {
+  it('rejects unknown protocols (no reader available)', async function() {
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
       'ftp://ftp.example.com/moved.jpg'
     )}`;
     let server;
 
-    return startServer({})
-      .then(function(s) {
-        server = s;
-
-        return got(URL).catch(e => e);
-      })
-      .then(function(response) {
-        assert.equal(response.statusCode, 400);
-      })
-      .finally(() => server.stop());
+    try {
+      server = await startServer({});
+      const response = await got(URL).catch(e => e);
+      assert.equal(response.statusCode, 400);
+    } finally {
+      server.stop();
+    }
   });
 
-  it('rejects unknown profile', function() {
+  it('rejects unknown profile', async function() {
     const URL = `http://localhost:${PORT}/image/foo/${encodeURIComponent(
       'http://ftp.example.com/moved.jpg'
     )}`;
     let server;
 
-    return startServer({})
-      .then(function(s) {
-        server = s;
-
-        return got(URL).catch(e => e);
-      })
-      .then(function(response) {
-        assert.equal(response.statusCode, 400);
-      })
-      .finally(() => server.stop());
+    try {
+      server = await startServer({});
+      const response = await got(URL).catch(e => e);
+      assert.equal(response.statusCode, 400);
+    } finally {
+      server.stop();
+    }
   });
 
-  it('fails for decryption errors', function() {
+  it('fails for decryption errors', async function() {
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
       'http://ftp.example.com/moved.jpg'
     )}`;
     let server;
 
-    return startServer({
-      CRYPTO: { ENABLED: true }
-    })
-      .then(function(s) {
-        server = s;
-
-        return got(URL).catch(e => e);
-      })
-      .then(function(response) {
-        assert.equal(response.statusCode, 400);
-      })
-      .finally(() => server.stop());
+    try {
+      server = await startServer({
+        CRYPTO: { ENABLED: true }
+      });
+      const response = await got(URL).catch(e => e);
+      assert.equal(response.statusCode, 400);
+    } finally {
+      server.stop();
+    }
   });
 });

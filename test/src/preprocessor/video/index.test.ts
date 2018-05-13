@@ -10,7 +10,7 @@ describe('video preprocessor', function() {
   before(() => temp.track());
   after(done => temp.cleanup(done));
 
-  it('should work without throwing an error', function() {
+  it('should work without throwing an error', async function() {
     const op = new FlamingoOperation();
     const VIDEO_FILE = path.join(
       __dirname,
@@ -35,8 +35,7 @@ describe('video preprocessor', function() {
       }
     };
 
-    return videoProcessor(op)(readResult).then(function(stream) {
-      assert.equal(typeof stream.pipe, 'function');
-    });
+    const stream = await videoProcessor(op)(readResult);
+    assert.equal(typeof stream.pipe, 'function');
   });
 });

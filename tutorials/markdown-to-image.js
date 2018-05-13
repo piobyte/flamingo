@@ -2,7 +2,6 @@ const Image = require('../src/routes/image');
 const Server = require('../src/model/server');
 const Config = require('../config');
 const AddonLoader = require('../src/addon/loader');
-const Promise = require('bluebird');
 const logger = require('../src/logger').build('tutorials/markdown-to-image');
 const merge = require('lodash/merge');
 

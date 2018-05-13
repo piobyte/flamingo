@@ -3,7 +3,6 @@ import temp = require('temp');
 import path = require('path');
 import url = require('url');
 import fs = require('fs');
-import Promise = require('bluebird');
 import assert = require('assert');
 
 import fixture = require('../../test-util/fixture');
@@ -66,11 +65,14 @@ describe('file reader', function() {
   it('tests if streamed gif file equals expected output', function() {
     return compareFileFixtures('images/base64.gif');
   });
-  it('tests if streamed markdown file is rejected', function() {
+  it('tests if streamed markdown file is rejected', async function() {
     /* istanbul ignore next */
-    compareFileFixtures('docs/some-file.md')
-      .then(() => assert.ok(false, "shouldn't reached this code"))
-      .catch(() => assert.ok(true));
+    try {
+      await compareFileFixtures('docs/some-file.md');
+      assert.ok(false, "shouldn't reached this code");
+    } catch {
+      assert.ok(true);
+    }
   });
 
   it('rejects on input stat error', function() {

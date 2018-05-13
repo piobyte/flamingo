@@ -1,5 +1,3 @@
-import Promise = require('bluebird');
-
 import FlamingoOperation = require('../model/flamingo-operation');
 import { ReaderResult } from './ReaderResult';
 

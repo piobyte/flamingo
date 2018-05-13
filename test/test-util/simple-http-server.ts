@@ -1,5 +1,5 @@
 import http = require('http');
-import Promise = require('bluebird');
+
 import IServer from './IServer';
 
 export = function simpleHttpServer(
@@ -14,9 +14,16 @@ export = function simpleHttpServer(
   httpServer.listen(port, host);
 
   return new Promise<IServer>(resolve => {
-    (httpServer as IServer).stop = Promise.promisify(httpServer.close, {
-      context: httpServer
-    });
+    (httpServer as IServer).stop = () =>
+      new Promise((resolve, reject) => {
+        httpServer.close(function(err) {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
     httpServer.listen(port, host, () => {
       resolve(httpServer as IServer);
     });

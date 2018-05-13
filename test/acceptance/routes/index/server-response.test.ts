@@ -11,51 +11,42 @@ import IndexRoute = require('../../../../src/routes/index');
 
 const PORT = 43723; // some random unused port
 
-function startServer(localConf) {
-  return Config.fromEnv().then(config => {
-    config = merge({}, config, { PORT }, localConf);
-    return new Server(config, new NoopAddonLoader())
-      .withProfiles([exampleProfiles])
-      .withRoutes([new IndexRoute(config)])
-      .start();
-  });
+async function startServer(localConf) {
+  let config = await Config.fromEnv();
+
+  config = merge({}, config, { PORT }, localConf);
+  return new Server(config, new NoopAddonLoader())
+    .withProfiles([exampleProfiles])
+    .withRoutes([new IndexRoute(config)])
+    .start();
 }
 
 describe('index server response', function() {
-  it('returns a banner for /', function() {
+  it('returns a banner for /', async function() {
     let server;
 
-    return startServer({ DEBUG: false })
-      .then(function(s) {
-        server = s;
-
-        return got('http://localhost:' + PORT);
-      })
-      .then(function(response) {
-        assert.equal(response.statusCode, 200);
-        assert.ok(
-          response.body.indexOf('debug') === -1,
-          "isn't showing debug information if disabled"
-        );
-      })
-      .finally(() => server.stop());
+    try {
+      server = await startServer({ DEBUG: false });
+      const response = await got('http://localhost:' + PORT);
+      assert.equal(response.statusCode, 200);
+      assert.ok(
+        response.body.indexOf('debug') === -1,
+        "isn't showing debug information if disabled"
+      );
+    } finally {
+      server.stop();
+    }
   });
 
-  it('displays debug information if DEBUG is enabled', function() {
+  it('displays debug information if DEBUG is enabled', async function() {
     let server;
 
-    return startServer({ DEBUG: true })
-      .then(function(s) {
-        server = s;
-
-        return got('http://localhost:' + PORT);
-      })
-      .then(function(response) {
-        // TODO: maybe query DOM for debug div
-        assert.ok(response.body.indexOf('debug') !== -1);
-      })
-      .finally(() => {
-        server.stop();
-      });
+    try {
+      server = await startServer({ DEBUG: true });
+      const response = await got('http://localhost:' + PORT);
+      assert.ok(response.body.indexOf('debug') !== -1);
+    } finally {
+      server.stop();
+    }
   });
 });

@@ -1,6 +1,5 @@
 import url = require('url');
 import Benchmark = require('benchmark');
-import Promise = require('bluebird');
 import httpReader = require('../../../src/reader/https');
 import fs = require('fs');
 import FlamingoOperation = require('../../../src/model/flamingo-operation');

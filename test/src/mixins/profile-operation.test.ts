@@ -1,5 +1,4 @@
 import assert = require('assert');
-import Promise = require('bluebird');
 import sinon = require('sinon');
 import url = require('url');
 
@@ -26,31 +25,27 @@ class ProfilesServer extends Server {
 }
 
 describe('profile-operation', function() {
-  it('extracts the input url by decoding the url param', function() {
+  it('extracts the input url by decoding the url param', async function() {
     const ProfileOperationClass = ProfileOperation(Route);
     const profile = new ProfileOperationClass({}, 'get', '/');
     const operation = new FlamingoOperation();
     const testUrl = 'http://example.com/image.png';
 
-    return Config.fromEnv().then(config =>
-      encode(
-        testUrl,
-        config.CRYPTO!.CIPHER,
-        config.CRYPTO!.KEY,
-        config.CRYPTO!.IV
-      )
-        .then(cipherUrl => {
-          operation.config = config;
-          operation.request = { params: { url: cipherUrl } };
-          return profile.extractInput(operation);
-        })
-        .then(input => {
-          assert.deepEqual(input, url.parse(testUrl));
-        })
+    const config = await Config.fromEnv();
+    const cipherUrl = await encode(
+      testUrl,
+      config.CRYPTO!.CIPHER,
+      config.CRYPTO!.KEY,
+      config.CRYPTO!.IV
     );
+    operation.config = config;
+    operation.request = { params: { url: cipherUrl } };
+
+    const input = await profile.extractInput(operation);
+    assert.deepEqual(input, url.parse(testUrl));
   });
 
-  it('extracts the operations profile based on the profile param', function() {
+  it('extracts the operations profile based on the profile param', async function() {
     const ProfileOperationClass = ProfileOperation(Route);
     const conf = new Config();
     const profileOp = new ProfileOperationClass({}, 'get', '/');
@@ -69,9 +64,8 @@ describe('profile-operation', function() {
     };
     profileOp.server = new ProfilesServer(profiles);
 
-    return profileOp
-      .extractProcess(operation)
-      .then(extractedProfile => assert.equal(extractedProfile, profileSpy));
+    const extractedProfile = await profileOp.extractProcess(operation);
+    assert.equal(extractedProfile, profileSpy);
   });
 
   it('rejects extraction for unknown profiles', function() {
@@ -91,50 +85,48 @@ describe('profile-operation', function() {
       .catch(e => assert.ok(e instanceof InvalidInputError));
   });
 
-  it('builds an operation', function() {
-    return Config.fromEnv().then(config => {
-      const profile = 'someProfile';
-      const givenUrl = 'http://example.com/image.png';
-      const profileData = {
-        process: [{ processor: 'foo', pipe: p => p }],
-        response: { header: { foo: 'bar' } }
-      };
+  it('builds an operation', async function() {
+    const config = await Config.fromEnv();
+    const profile = 'someProfile';
+    const givenUrl = 'http://example.com/image.png';
+    const profileData = {
+      process: [{ processor: 'foo', pipe: p => p }],
+      response: { header: { foo: 'bar' } }
+    };
 
-      return encode(
-        givenUrl,
-        config.CRYPTO!.CIPHER,
-        config.CRYPTO!.KEY,
-        config.CRYPTO!.IV
-      ).then(encoded => {
-        const request = { params: { profile, url: encoded } };
-        const reply = sinon.spy();
+    const encoded = await encode(
+      givenUrl,
+      config.CRYPTO!.CIPHER,
+      config.CRYPTO!.KEY,
+      config.CRYPTO!.IV
+    );
+    const request = { params: { profile, url: encoded } };
+    const reply = sinon.spy();
 
-        const ProfileOperationClass = ProfileOperation(
-          class extends Convert(Route) {
-            buildOperation(request, reply) {
-              return super.buildOperation(request, reply).then(operation => {
-                operation.process = profileData.process;
-                operation.response = profileData.response;
-                operation.config = config;
-                operation.request = request;
-                return Promise.resolve(operation);
-              });
-            }
-          }
-        );
-        const profiles = { someProfile: () => Promise.resolve(profileData) };
-        const profileOp = new ProfileOperationClass(config, 'get', '/');
-        profileOp.server = new ProfilesServer(profiles);
+    const ProfileOperationClass = ProfileOperation(
+      class extends Convert(Route) {
+        buildOperation(request, reply) {
+          return super.buildOperation(request, reply).then(operation => {
+            operation.process = profileData.process;
+            operation.response = profileData.response;
+            operation.config = config;
+            operation.request = request;
+            return Promise.resolve(operation);
+          });
+        }
+      }
+    );
+    const profiles = { someProfile: () => Promise.resolve(profileData) };
+    const profileOp = new ProfileOperationClass(config, 'get', '/');
+    profileOp.server = new ProfilesServer(profiles);
 
-        return profileOp.buildOperation(request, reply).then(operation => {
-          assert.deepEqual(operation.process, profileData.process);
-          assert.deepEqual(operation.response, profileData.response);
-          assert.equal(operation.reader, httpReader);
-          assert.deepEqual(operation.input, url.parse(givenUrl));
-          assert.equal(operation.writer, responseWriter);
-        });
-      });
-    });
+    const operation = await profileOp.buildOperation(request, reply);
+
+    assert.deepEqual(operation.process, profileData.process);
+    assert.deepEqual(operation.response, profileData.response);
+    assert.equal(operation.reader, httpReader);
+    assert.deepEqual(operation.input, url.parse(givenUrl));
+    assert.equal(operation.writer, responseWriter);
   });
 
   it('rejects for unknown readers', function() {

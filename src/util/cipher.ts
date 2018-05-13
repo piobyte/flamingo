@@ -3,7 +3,6 @@
  * @module
  */
 
-import Promise = require('bluebird');
 import crypto = require('crypto');
 
 import errors = require('./errors');

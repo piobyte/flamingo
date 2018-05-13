@@ -1,5 +1,4 @@
 import assert = require('assert');
-import Promise = require('bluebird');
 import sinon = require('sinon');
 import merge = require('lodash/merge');
 import got = require('got');
@@ -12,30 +11,26 @@ import Route = require('../../../src/model/route');
 const HOST = 'localhost';
 const PORT = 43723; // some random unused port
 
-function startServer(localConf, route) {
-  return Config.fromEnv().then(config => {
-    config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
+async function startServer(localConf, route) {
+  let config = await Config.fromEnv();
+  config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
 
-    return new Server(config, new NoopAddonLoader())
-      .withRoutes([route])
-      .start();
-  });
+  return new Server(config, new NoopAddonLoader()).withRoutes([route]).start();
 }
 
 describe('convert', function() {
-  it('handle throws if not implemented', function() {
+  it('handle throws if not implemented', async function() {
     let _server;
-    return startServer({}, new Route({}, 'GET', '/'))
-      .then(server => {
-        _server = server;
-
-        return got(`http://${HOST}:${PORT}/`).catch(e => e);
-      })
-      .then(response => assert.equal(response.statusCode, 500))
-      .finally(() => _server.stop());
+    try {
+      _server = await startServer({}, new Route({}, 'GET', '/'));
+      const { statusCode } = await got(`http://${HOST}:${PORT}/`).catch(e => e);
+      assert.equal(statusCode, 500);
+    } finally {
+      _server.stop();
+    }
   });
 
-  it('#handleError called on hapi route handler buildOperation rejection', function() {
+  it('#handleError called on hapi route handler buildOperation rejection', async function() {
     const handleErrorSpy = sinon.spy();
     let server;
 
@@ -54,17 +49,15 @@ describe('convert', function() {
       }
     }
 
-    return startServer({}, new TestRoute())
-      .then(startedServer => {
-        server = startedServer;
-        return got(`http://${HOST}:${PORT}/handle-error`).catch(e => e);
-      })
-      .then(() => {
-        assert.ok(handleErrorSpy.called);
-      })
-      .finally(() => server.stop());
+    try {
+      server = await startServer({}, new TestRoute());
+      await got(`http://${HOST}:${PORT}/handle-error`).catch(e => e);
+      assert.ok(handleErrorSpy.called);
+    } finally {
+      server.stop();
+    }
   });
-  it('#handleError called on hapi route handler handle rejection', function() {
+  it('#handleError called on hapi route handler handle rejection', async function() {
     const handleErrorSpy = sinon.spy();
     let server;
 
@@ -83,17 +76,15 @@ describe('convert', function() {
       }
     }
 
-    return startServer({}, new TestRoute())
-      .then(startedServer => {
-        server = startedServer;
-        return got(`http://${HOST}:${PORT}/handle-error`).catch(e => e);
-      })
-      .then(() => {
-        assert.ok(handleErrorSpy.called);
-      })
-      .finally(() => server.stop());
+    try {
+      server = await startServer({}, new TestRoute());
+      await got(`http://${HOST}:${PORT}/handle-error`).catch(e => e);
+      assert.ok(handleErrorSpy.called);
+    } finally {
+      server.stop();
+    }
   });
-  it('#handle is called for each request', function() {
+  it('#handle is called for each request', async function() {
     const handleSpy = sinon.spy();
     let server;
 
@@ -108,14 +99,12 @@ describe('convert', function() {
       }
     }
 
-    return startServer({}, new TestRoute())
-      .then(startedServer => {
-        server = startedServer;
-        return got(`http://${HOST}:${PORT}/handle`);
-      })
-      .then(() => {
-        assert.ok(handleSpy.called);
-      })
-      .finally(() => server.stop());
+    try {
+      server = await startServer({}, new TestRoute());
+      await got(`http://${HOST}:${PORT}/handle`);
+      assert.ok(handleSpy.called);
+    } finally {
+      server.stop();
+    }
   });
 });

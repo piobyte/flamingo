@@ -11,7 +11,6 @@
 
 import { ReaderResult } from '../types/ReaderResult';
 import nodeStream = require('stream');
-import Promise = require('bluebird');
 
 export = function(object: ReaderResult): Promise<nodeStream.Readable> {
   return object.stream();

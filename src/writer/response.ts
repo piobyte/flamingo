@@ -3,7 +3,6 @@
  * @module
  */
 import through = require('through2');
-import Promise = require('bluebird');
 import FlamingoOperation = require('../model/flamingo-operation');
 
 /**

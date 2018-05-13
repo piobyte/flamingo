@@ -1,6 +1,5 @@
 import Hapi = require('hapi');
 import merge = require('lodash/merge');
-import Promise = require('bluebird');
 import assert = require('assert');
 
 import Route = require('./route');

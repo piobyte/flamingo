@@ -2,7 +2,6 @@
  * Flamingo route
  * @class
  */
-import Promise = require('bluebird');
 import Hapi = require('hapi');
 
 import Logger = require('../logger');

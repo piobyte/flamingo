@@ -54,7 +54,7 @@ describe('https? reader', function() {
     });
   });
 
-  it('rejects for statusCode >= 400', function() {
+  it('rejects for statusCode >= 400', async function() {
     nock('http://example.org/')
       .get('/bad')
       .reply(400, { status: 'Bad Request' });
@@ -65,18 +65,18 @@ describe('https? reader', function() {
     });
     op.input = url.parse('http://example.org/bad');
 
-    return httpReader(op).then(function(data) {
-      assert.ok(!!data.stream);
-      return data
-        .stream()
-        .then(
-          () => assert.ok(false, "shouldn't resolve this request."),
-          () => assert.ok(true)
-        );
-    });
+    const data = await httpReader(op);
+    assert.ok(!!data.stream);
+
+    try {
+      await data.stream();
+      assert.ok(false, "shouldn't resolve this request.");
+    } catch {
+      assert.ok(true);
+    }
   });
 
-  it('sets the url for error requests', function() {
+  it('sets the url for error requests', async function() {
     nock('http://example.org/')
       .get('/bad')
       .reply(400, { status: 'Bad Request' });
@@ -87,18 +87,18 @@ describe('https? reader', function() {
     });
     op.input = url.parse('http://example.org/bad');
 
-    return httpReader(op).then(function(data) {
-      assert.ok(!!data.stream);
-      return data
-        .stream()
-        .then(
-          () => assert.ok(false, "shouldn't resolve this request."),
-          reason => assert.equal(reason.extra, 'http://example.org/bad')
-        );
-    });
+    const data = await httpReader(op);
+    assert.ok(!!data.stream);
+
+    try {
+      await data.stream();
+      assert.ok(false, "shouldn't resolve this request.");
+    } catch (reason) {
+      assert.equal(reason.extra, 'http://example.org/bad');
+    }
   });
 
-  it('rejects not whitelisted url if access filter is enabled', function() {
+  it('rejects not whitelisted url if access filter is enabled', async function() {
     nock.disableNetConnect();
 
     const op = new FlamingoOperation();
@@ -107,10 +107,12 @@ describe('https? reader', function() {
     });
     op.input = url.parse('http://example.org/bad');
 
-    return httpReader(op).then(
-      () => assert.ok(false, "shouldn't resolve this request."),
-      () => assert.ok(true)
-    );
+    try {
+      await httpReader(op);
+      assert.ok(false, "shouldn't resolve this request.");
+    } catch {
+      assert.ok(true);
+    }
   });
   it('resolves not whitelisted url if access filter is disabled', function() {
     nock.disableNetConnect();

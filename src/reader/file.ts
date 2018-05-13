@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const Promise = require('bluebird');
 
 import FlamingoOperation = require('../model/flamingo-operation');
 import ReaderType = require('../model/reader-type');

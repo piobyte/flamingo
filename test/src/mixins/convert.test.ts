@@ -1,5 +1,4 @@
 import assert = require('assert');
-import Promise = require('bluebird');
 import sinon = require('sinon');
 import fs = require('fs');
 import path = require('path');
@@ -52,7 +51,7 @@ describe('convert', function() {
     assert.ok((operation.writer as any).called);
   });
 
-  it('#handle', function() {
+  it('#handle', async function() {
     const fixture = fs.createReadStream(
       path.join(__dirname, '../../fixtures/images/base64.png')
     );
@@ -92,12 +91,11 @@ describe('convert', function() {
       }
     }();
 
-    return convert.handle(operation).then(() => {
-      assert.ok(readSpy.called);
-      assert.ok(preprocessSpy.called);
-      assert.ok(validStreamSpy.called);
-      assert.ok(processSpy.called);
-      assert.ok(writeSpy.called);
-    });
+    await convert.handle(operation);
+    assert.ok(readSpy.called);
+    assert.ok(preprocessSpy.called);
+    assert.ok(validStreamSpy.called);
+    assert.ok(processSpy.called);
+    assert.ok(writeSpy.called);
   });
 });

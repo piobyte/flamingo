@@ -1,5 +1,4 @@
 import got = require('got');
-import Promise = require('bluebird');
 import nodeStream = require('stream');
 
 import errors = require('../util/errors');

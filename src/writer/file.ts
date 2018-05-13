@@ -5,7 +5,6 @@
 import fs = require('fs');
 import mkdirp = require('mkdirp');
 import path = require('path');
-import Promise = require('bluebird');
 import stream = require('stream');
 import fileAccessAllowed = require('../util/file-access-allowed');
 import FlamingoOperation = require('../model/flamingo-operation');

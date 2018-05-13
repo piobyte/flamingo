@@ -1,4 +1,3 @@
-import Promise = require('bluebird');
 import Url = require('url');
 import Hapi = require('hapi');
 import nodeStream = require('stream');

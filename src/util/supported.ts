@@ -2,7 +2,6 @@
  * Supported features module
  * @module
  */
-import Promise = require('bluebird');
 import temp = require('temp');
 import path = require('path');
 import ffmpeg = require('fluent-ffmpeg');

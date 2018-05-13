@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const temp = require("temp");
 const nock = require("nock");
-const Promise = require("bluebird");
 const fs = require("fs");
 const path = require("path");
 const fixtures = require("../../test/fixtures/images/sharp-bench-assets/index");
@@ -11,6 +10,7 @@ const httpsReader = require("../../src/reader/https");
 const imageProcessor = require("../../src/processor/image");
 const unfoldReaderResult = require("../../src/util/unfold-reader-result");
 const FlamingoOperation = require("../../src/model/flamingo-operation");
+const Promise = require("bluebird");
 const SUPPORTED_FORMATS = 'tutorials/supported-files.md';
 temp.track();
 const results = {};
@@ -83,6 +83,7 @@ processors.forEach(function (processor) {
         });
     });
 });
+// TODO: promise.finally
 promise.catch(function (e) {
     console.warn('caught', e);
 }).finally(function () {
@@ -111,3 +112,4 @@ promise.catch(function (e) {
 }).catch(function (err) {
     console.error(err);
 });
+//# sourceMappingURL=index.js.map

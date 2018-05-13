@@ -58,3 +58,4 @@ targets/**/*.js
 config.js
 index.js
 .nyc_output
+*.map

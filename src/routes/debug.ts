@@ -1,5 +1,4 @@
 /*eslint new-cap: 0*/
-import Promise = require('bluebird');
 import fs = require('fs');
 import nodePath = require('path');
 import url = require('url');

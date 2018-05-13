@@ -1,5 +1,3 @@
-import Promise = require('bluebird');
-
 import Config = require('../../config');
 import { ProfileInstruction } from './Instruction';
 

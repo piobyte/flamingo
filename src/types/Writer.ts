@@ -1,4 +1,3 @@
-import Promise = require('bluebird');
 import nodeStream = require('stream');
 
 import FlamingoOperation = require('../model/flamingo-operation');
