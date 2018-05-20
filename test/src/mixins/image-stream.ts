@@ -52,7 +52,7 @@ describe('image-stream', function() {
     let server;
     try {
       server = await startServer({}, new ImageStreamRoute());
-      await got(`${HOST}:${PORT}/non-image`).catch(e => e);
+      await got(`http://${HOST}:${PORT}/non-image`).catch(e => e);
       assert.ok(errorSpy.called);
     } finally {
       server.stop();
