@@ -7,6 +7,7 @@ import path = require('path');
 import ffmpeg = require('fluent-ffmpeg');
 
 import Config = require('../../config');
+import { SupportedConfig } from '../types/SupportedConfig';
 
 /**
  * Function to check if ffmpeg/ffprobe is installed and usable

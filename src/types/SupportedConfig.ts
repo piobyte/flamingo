@@ -1,4 +1,4 @@
-interface SupportedConfig {
+export interface SupportedConfig {
   FFMPEG?: boolean;
   GM?: { WEBP?: boolean };
 }

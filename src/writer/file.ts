@@ -37,9 +37,12 @@ export = function({ input, reply, config }: FlamingoOperation) {
           reject(err);
         } else {
           stream.on('error', reject);
-          const writeStream = stream.pipe(fs.createWriteStream(outputPath), {
-            end: true
-          });
+          const writeStream = stream.pipe(
+            fs.createWriteStream(outputPath),
+            {
+              end: true
+            }
+          );
           writeStream.on('error', reject);
           writeStream.on('finish', function() {
             resolve(

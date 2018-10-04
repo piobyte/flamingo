@@ -39,15 +39,16 @@ class Debug extends Route {
 
     simpleHttpServer(function(req, res) {
       res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-      fs
-        .createReadStream(
-          nodePath.join(
-            __dirname,
-            '../../test/fixtures/images/sharp-bench-assets',
-            url.parse(req.url).pathname!
-          )
+      fs.createReadStream(
+        nodePath.join(
+          __dirname,
+          '../../test/fixtures/images/sharp-bench-assets',
+          url.parse(req.url).pathname!
         )
-        .pipe(res, { end: true });
+      ).pipe(
+        res,
+        { end: true }
+      );
     }).then(httpServer => {
       const URL = url.format({
         protocol: 'http',

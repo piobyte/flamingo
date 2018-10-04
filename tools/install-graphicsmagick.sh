@@ -3,9 +3,9 @@
 # Stop on error
 set -e
 
-GM_VERSION="1.3.26"
+GM_VERSION="1.3.30"
 
-ARCHIVE="http://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}.tar.gz"
+ARCHIVE="https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}.tar.gz"
 
 cd /tmp/
 wget ${ARCHIVE}

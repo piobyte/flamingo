@@ -2228,15 +2228,16 @@ describe('tutorials work as expected', function() {
     return simpleHttpServer(
       (req, res) => {
         res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-        fs
-          .createReadStream(
-            path.join(
-              __dirname,
-              '../../test/fixtures/images/sharp-bench-assets',
-              url.parse(req.url).pathname!
-            )
+        fs.createReadStream(
+          path.join(
+            __dirname,
+            '../../test/fixtures/images/sharp-bench-assets',
+            url.parse(req.url).pathname!
           )
-          .pipe(res, { end: true });
+        ).pipe(
+          res,
+          { end: true }
+        );
       },
       ASSETS_PORT,
       ASSETS_HOST

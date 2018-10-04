@@ -3,7 +3,7 @@
 # Stop on error
 set -e
 
-ARCHIVE="http://www.imagemagick.org/download/ImageMagick.tar.gz"
+ARCHIVE="https://www.imagemagick.org/download/ImageMagick.tar.gz"
 
 cd /tmp/
 wget ${ARCHIVE}
