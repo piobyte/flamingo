@@ -43,10 +43,13 @@ const expected: Array<TutorialTestDescription> = [
         height: 600,
         space: 'srgb',
         channels: 3,
+        chromaSubsampling: '4:2:0',
         density: 72,
         depth: 'uchar',
         hasProfile: true,
         hasAlpha: false,
+        size: 137611,
+        isProgressive: false,
         orientation: 5,
         exif: {
           type: 'Buffer',
