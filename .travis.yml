@@ -18,18 +18,24 @@ before_install:
 - sudo bash tools/install-graphicsmagick.sh
 - ls -la test/fixtures/images
 
-matrix:
-  fast_finish: true
-  include:
-    - node_js: 'lts/carbon'
-      env: TARGET=test
-    - node_js: 'lts/boron'
-      env: TARGET=test
-    - node_js: 'node'
-      env: TARGET=test
-    - node_js: 'lts/carbon'
-      env: TARGET=bench
-    - node_js: 'node'
-      env: TARGET=bench
+stages:
+- test
+- benchmark
 
-script: yarn run $TARGET && yarn formats
+jobs:
+  include:
+  - stage: test
+    node_js: 'lts/boron'
+    script: yarn run test
+  - stage: test
+    node_js: 'lts/carbon'
+    script: yarn run test
+  - stage: test
+    node_js: 'node'
+    script: yarn run test && yarn formats
+  - stage: benchmark
+    node_js: 'lts/carbon'
+    script: yarn run bench
+  - stage: benchmark
+    node_js: 'node'
+    script: yarn run bench
