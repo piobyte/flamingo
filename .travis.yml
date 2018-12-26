@@ -31,10 +31,13 @@ jobs:
     node_js: 'lts/carbon'
     script: yarn run test
   - stage: test
+    node_js: 'lts/dubnium'
+    script: yarn run test
+  - stage: test
     node_js: 'node'
     script: yarn run test && yarn formats
   - stage: benchmark
-    node_js: 'lts/carbon'
+    node_js: 'lts/dubnium'
     script: yarn run bench
   - stage: benchmark
     node_js: 'node'

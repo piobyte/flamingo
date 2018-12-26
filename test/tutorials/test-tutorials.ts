@@ -14,6 +14,7 @@ const HOST = ASSETS_HOST;
 interface TutorialTestDescription {
   file: string;
   url: string;
+  skip?: boolean;
   ok?: (response: any) => any;
   error?: (response: any) => any;
 }
@@ -2189,6 +2190,8 @@ const expected: Array<TutorialTestDescription> = [
   },
   {
     file: 'website-screenshot.js',
+    // disable this test for node >= 11 as there's a bug in the unmaintained lib
+    skip: parseInt(/v(.*?)\..*/.exec(process.version)![1], 10) >= 11,
     url: url.format({
       protocol: 'http',
       hostname: HOST,
@@ -2251,8 +2254,9 @@ describe('tutorials work as expected', function() {
     return assetsServer.stop();
   });
 
-  expected.forEach(({ file, url, ok, error }) => {
-    it(`${file}`, async function() {
+  expected.forEach(({ skip, file, url, ok, error }) => {
+    const method = skip ? it.skip : it;
+    method(`${file}`, async function() {
       let server;
 
       try {

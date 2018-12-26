@@ -23,7 +23,7 @@ export = {
       10,
       1024
     );
-    const process: ProcessInstruction<sharp.SharpInstance | any>[] = [];
+    const process: ProcessInstruction<sharp.Sharp | any>[] = [];
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
@@ -75,7 +75,7 @@ export = {
       10,
       1024
     );
-    const process: ProcessInstruction<sharp.SharpInstance | any>[] = [];
+    const process: ProcessInstruction<sharp.Sharp | any>[] = [];
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
 
     if (request.query.processor === 'gm') {
