@@ -3,7 +3,7 @@
 # copied from node-fluent-ffmpeg install script
 # https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/blob/master/tools/test-travis.sh
 
-ARCHIVE="https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-64bit-static.tar.xz"
+ARCHIVE="https://johnvansickle.com/ffmpeg/builds/ffmpeg-git-amd64-static.tar.xz"
 DIRNAME="ffmpeg-static"
 
 # Stop on error
