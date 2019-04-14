@@ -1,6 +1,7 @@
-import Hapi = require('hapi');
 import merge = require('lodash/merge');
 import assert = require('assert');
+import Fastify = require('fastify');
+import errors = require('../util/errors');
 
 import Route = require('./route');
 import AddonLoader = require('../addon/loader');
@@ -9,9 +10,11 @@ import logger = require('../logger');
 import Config = require('../../config');
 import Addon = require('../addon/index');
 import Profile from '../types/Profile';
+import { Reply, Request } from '../types/HTTP';
 
 const { HOOKS } = Addon;
 const { CONF, LOG_STREAM, ENV, START, STOP } = HOOKS;
+const { InvalidInputError, ProcessingError } = errors;
 
 /**
  * Flamingo server
@@ -24,7 +27,8 @@ class Server {
   config: Config;
   addonsLoader: AddonLoader;
   profiles: { [name: string]: Profile } = {};
-  hapi: Hapi.Server;
+  fastify: Fastify.FastifyInstance;
+  uri?: string;
 
   /**
    * Takes a config and an addon loader to build the server.
@@ -43,13 +47,44 @@ class Server {
 
     this.profiles = {};
 
-    this.hapi = new Hapi.Server({
-      debug: this.config.DEBUG ? { log: ['error'], request: ['error'] } : false
+    const fastify = Fastify({
+      logger: this.config.DEBUG,
+      maxParamLength: 200
     });
-    this.hapi.connection({
-      port: this.config.PORT,
-      host: this.config.HOST
-    });
+    fastify.setErrorHandler((error, request, reply) =>
+      this.handleError(error, request, reply)
+    );
+    fastify.decorateRequest('operation', undefined);
+    this.fastify = fastify;
+  }
+
+  handleError(error, request: Request, reply: Reply) {
+    // Log error
+    // Send error response
+    const isClientError =
+      error instanceof InvalidInputError ||
+      error instanceof ProcessingError ||
+      typeof error === 'string';
+    const { config } = this;
+
+    const message = config && config.DEBUG ? error.message : undefined;
+    const hasCustomCode = reply.res.statusCode !== 500;
+    const code = hasCustomCode
+      ? reply.res.statusCode
+      : isClientError
+      ? 400
+      : 500;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    const { operation } = request;
+
+    if (isClientError) {
+      this.fastify.log.warn({ err: error, operation }, message);
+    } else {
+      this.fastify.log.error({ err: error, operation }, message);
+    }
+
+    reply.code(code).send({ message, code });
   }
 
   /**
@@ -61,7 +96,9 @@ class Server {
     routes.forEach(route => {
       assert.ok(route instanceof Route);
       route.server = this;
-      this.hapi.route(route.hapiConfig());
+
+      route.registerFastify(this.fastify);
+      // this.hapi.route(route.hapiConfig());
     });
     return this;
   }
@@ -80,31 +117,24 @@ class Server {
    * Stop the server instance
    * @return {Promise.<Server>}
    */
-  stop() {
+  async stop() {
     this.addonsLoader.hook(STOP, this)();
-    return new Promise((resolve, reject) => {
-      this.hapi.stop({ timeout: 0 }, err => {
-        /* istanbul ignore next */
-        if (err) reject(err);
-        else resolve(this);
-      });
-    });
+
+    await this.fastify.close();
+
+    return this;
   }
 
   /**
    * Starts the server instance
    * @return {Promise.<Server>}
    */
-  start(): Promise<Server> {
+  async start(): Promise<Server> {
     this.addonsLoader.hook(START, this)();
 
-    return new Promise<Server>((resolve, reject) => {
-      this.hapi.start(err => {
-        /* istanbul ignore next */
-        if (err) reject(err);
-        else resolve(this);
-      });
-    });
+    this.uri = await this.fastify.listen(this.config.PORT!, this.config.HOST!);
+
+    return this;
   }
 }
 

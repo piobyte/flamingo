@@ -66,6 +66,6 @@ Config.fromEnv().then(config => {
     .withProfiles([profiles])
     .withRoutes([new S3Route(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`));
+    .then(server => console.log(`server running at ${server.uri}`));
 });
 ```

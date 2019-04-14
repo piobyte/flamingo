@@ -20,5 +20,5 @@ return new Server(config, new AddonLoader(__dirname, {}).load())
   .withProfiles([require('../src/profiles/examples')])
   .withRoutes([new Image(config, 'GET', '/convert/image/{profile}/{url}')])
   .start()
-  .then(server => console.log(`server running at ${server.hapi.info.uri}`) || server)
+  .then(server => console.log(`server running at ${server.uri}`) || server)
 ```

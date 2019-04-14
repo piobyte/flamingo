@@ -7,10 +7,10 @@ import ImageRoute = require('./src/routes/image');
 import VideoRoute = require('./src/routes/video');
 import DebugRoute = require('./src/routes/debug');
 import Route = require('./src/model/route');
+import pkg = require('./package.json');
 
 const { build } = Logger;
 const indexLogger = build('index');
-const pkg = require('./package.json');
 
 process.on('uncaughtException', err => indexLogger.error(err));
 
@@ -39,5 +39,5 @@ Config.fromEnv()
       .withRoutes(buildRoutes(config))
       .start()
   )
-  .then(server => indexLogger.info(`server running at ${server.hapi.info!.uri}`))
+  .then(server => indexLogger.info(`server running at ${server.uri}`))
   .catch(error => indexLogger.error(error));

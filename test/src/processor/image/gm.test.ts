@@ -15,13 +15,12 @@ describe('gm processor', function() {
       path.join(__dirname, '../../../fixtures/images/base64.png')
     );
     const op = new FlamingoOperation();
-    let processedStream;
 
     op.config = {
       NATIVE_AUTO_ORIENT: true
     };
 
-    processedStream = gmProcessor(
+    const processedStream = gmProcessor(
       op,
       function(pipe) {
         return pipe.gravity('Center');
@@ -37,13 +36,12 @@ describe('gm processor', function() {
       path.join(__dirname, '../../../fixtures/images/base64.png')
     );
     const op = new FlamingoOperation();
-    let processedStream;
 
     op.config = {
       NATIVE_AUTO_ORIENT: true
     };
 
-    processedStream = gmProcessor(
+    const processedStream = gmProcessor(
       op,
       function(pipe) {
         return pipe.options({ imageMagick: true }).setFormat('webp');

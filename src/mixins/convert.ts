@@ -1,5 +1,4 @@
 import Url = require('url');
-import Hapi = require('hapi');
 import nodeStream = require('stream');
 
 import Route = require('../model/route');
@@ -11,10 +10,9 @@ import FlamingoOperation = require('../model/flamingo-operation');
 import errors = require('../util/errors');
 import Addon = require('../addon');
 import Constructor from '../model/Constructor';
-import { ReaderResult } from '../types/ReaderResult';
-import Config = require('../../config');
-import Server = require('../model/server');
 import { ProfileInstruction } from '../types/Instruction';
+import { Reply, Request } from '../types/HTTP';
+import Convert from './IConvert';
 
 const { InvalidInputError } = errors;
 const { HOOKS } = Addon;
@@ -25,7 +23,7 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
    * Basic mixin that represents the flamingo conversation process.
    * @mixin
    */
-  return class Convert extends Base {
+  return class ConvertImpl extends Base implements Convert {
     /**
      * Resolves if the given operation is valid.
      *
@@ -36,7 +34,7 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      *    Promise.resolve(operation) :
      *    Promise.reject(new InvalidInputError('target has no protocol'))
      */
-    validOperation(operation): Promise<FlamingoOperation> {
+    validOperation(operation: FlamingoOperation): Promise<FlamingoOperation> {
       return Promise.resolve(operation);
     }
 
@@ -134,7 +132,7 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
 
       if (!reader) {
         return Promise.reject(
-          new InvalidInputError('No reader available for given input', input)
+          new InvalidInputError(`No reader available for given input: ${input}`)
         );
       }
 
@@ -150,7 +148,7 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      * @param {function} reply hapi reply function
      * @return {Promise.<FlamingoOperation>} Promise that resolves the build operation
      */
-    buildOperation(request: Request, reply: Hapi.ReplyNoContinue) {
+    buildOperation(request: Request, reply: Reply) {
       const server = this.server;
       return super.buildOperation(request, reply).then(operation =>
         Promise.all([

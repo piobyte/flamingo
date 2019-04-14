@@ -1,7 +1,7 @@
 # Creating a route that returns image metadata (size, mime) as json
 
 - does everything a regular conversion does except calling [sharp.metadata](http://sharp.dimens.io/en/stable/api/#metadatacallback) on the input stream
-- mixes `Convert` with `Route` to get existing reader extraction and stream validation behavior
+- mixes `IConvert` with `Route` to get existing reader extraction and stream validation behavior
 
 ## Example usage:
 
@@ -20,7 +20,7 @@ curl http://localhost:3000/image/https%3A%2F%2Fd11xdyzr0div58.cloudfront.net%2Fs
 ### Route
 
 ```js
-class ImageMetaRoute extends Convert(Route) {
+class ImageMetaRoute extends IConvert(Route) {
   constructor(conf, method = 'GET', path = '/image/{url}', description = 'Image metadata conversion') {
     super(conf, method, path, description);
   }
@@ -31,15 +31,11 @@ class ImageMetaRoute extends Convert(Route) {
   }
 
   process() {
-    return (stream) =>
-      new Promise((resolve, reject) =>
-        stream.pipe(sharp().metadata((err, data) => {
-          if (err) {
-            reject(new InvalidInputError(err));
-          } else {
-            resolve(data);
-          }
-        })));
+    return (stream) => {
+      const metaReader = sharp();
+      stream.pipe(metaReader);
+      return metaReader.metadata();
+    };
   }
 
   write(operation){
@@ -55,7 +51,7 @@ Config.fromEnv().then(config => new Server(config, new AddonLoader(__dirname, {}
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new ImageMetaRoute(config)])
     .start()
-    .then(server => logger.info(`server running at ${server.hapi.info.uri}`)))
+    .then(server => logger.info(`server running at ${server.uri}`)))
 ```
 
 ## Future ideas

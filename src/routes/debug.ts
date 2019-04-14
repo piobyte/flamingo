@@ -12,7 +12,7 @@ import Config = require('../../config');
 import FlamingoOperation = require('../model/flamingo-operation');
 
 const { encode } = cipher;
-const pkg = require('../../package.json');
+import pkg = require('../../package.json');
 
 let IMAGES;
 
@@ -87,12 +87,8 @@ class Debug extends Route {
     profileNames = profileNames.filter(name => name.indexOf('debug-') === 0);
 
     return Promise.resolve(
-      operation.reply({
-        routes: this.server.hapi.connections[0].table().map(t => ({
-          method: t.method,
-          path: t.path,
-          description: t.settings.description
-        })),
+      operation.reply.send({
+        routes: this.server.fastify.printRoutes(),
         addons: this.server.addonsLoader.addons,
         processors,
         base,

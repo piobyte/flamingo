@@ -65,6 +65,6 @@ Config.fromEnv().then(config => new Server(config, new AddonLoader(__dirname, {}
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new MarkdownRoute(config)])
     .start()
-    .then(server => logger.info(`server running at ${server.hapi.info.uri}`)));
+    .then(server => logger.info(`server running at ${server.uri}`)));
 ```
 

@@ -13,7 +13,7 @@ import ReaderType = require('../../model/reader-type');
 import Logger = require('../../logger');
 
 const { build } = Logger;
-const pkg = require('../../../package.json');
+import pkg = require('../../../package.json');
 
 const { ProcessingError, InvalidInputError } = errors;
 const { FILE, REMOTE } = ReaderType;
@@ -44,7 +44,7 @@ export = function(operation) {
       return new Promise(function(resolve, reject) {
         ffmpeg.ffprobe(input, function(err, meta) {
           if (err) {
-            reject(new InvalidInputError(err.message, err));
+            reject(new InvalidInputError(err.message));
           } else {
             /* istanbul ignore next */
             if (!meta.hasOwnProperty('format')) {
@@ -72,7 +72,7 @@ export = function(operation) {
                 })
                 .on('error', function(e) {
                   /* istanbul ignore next */
-                  throw new ProcessingError(e.message, e);
+                  throw new ProcessingError(e.message);
                 })
                 .on('end', function() {
                   logger.debug('ffmpeg end');
@@ -101,16 +101,15 @@ export = function(operation) {
                   pkg.name + '/' + pkg.version + ' (+' + pkg.bugs.url + ')'
               },
               followRedirect: false,
-              retries: 0
+              retry: 0
             })
             .then(() => {
               return videoProcessor(readerResult.url.href);
             })
             .catch(
-              err =>
+              () =>
                 new InvalidInputError(
-                  'Error while doing a HEAD request to check for redirects',
-                  err
+                  'Error while doing a HEAD request to check for redirects'
                 )
             );
         }

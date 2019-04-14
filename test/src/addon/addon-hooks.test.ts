@@ -2,6 +2,7 @@ import assert = require('assert');
 import sinon = require('sinon');
 import path = require('path');
 
+import Addon = require('../../../src/addon');
 const {
   HOOKS: {
     CONF,
@@ -14,7 +15,7 @@ const {
     START,
     STOP
   }
-} = require('../../../src/addon');
+} = Addon;
 import Loader = require('../../../src/addon/loader');
 import FlamingoOperation = require('../../../src/model/flamingo-operation');
 

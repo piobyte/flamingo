@@ -2,13 +2,13 @@
  * Flamingo route
  * @class
  */
-import Hapi = require('hapi');
+import Fastify = require('fastify');
 
 import Logger = require('../logger');
-import errorReply = require('../util/error-reply');
 import Server = require('./server');
 import Config = require('../../config');
 import FlamingoOperation = require('./flamingo-operation');
+import { Reply, Request } from '../types/HTTP';
 
 const { build } = Logger;
 const logger = build('model.route');
@@ -20,7 +20,7 @@ const logger = build('model.route');
  */
 class Route {
   path: string;
-  method: Hapi.HTTP_METHODS;
+  method: 'DELETE' | 'GET' | 'HEAD' | 'PATCH' | 'POST' | 'PUT' | 'OPTIONS';
   config: Config;
   description: string;
   parseState: boolean = false;
@@ -56,28 +56,30 @@ class Route {
     return Promise.reject(new Error('Method not implemented: Route.handle()'));
   }
 
-  /**
-   * Function to build the hapi route config object
-   * @see {@link http://hapijs.com/api#new-serveroptions}
-   * @param {Object} defaults
-   */
-  hapiConfig(defaults: any = {}): Hapi.RouteConfiguration {
-    defaults.method = this.method;
-    defaults.path = this.path;
-    defaults.config = defaults.config || {
-      cors: this.cors,
-      state: { parse: this.parseState }
-    };
-    defaults.config.description = this.description;
-    defaults.config.handler = (request, reply) =>
-      this.buildOperation(request, reply)
-        .then(operation =>
-          this.handle(operation).catch(error =>
-            this.handleError(request, reply, error, operation)
-          )
-        )
-        .catch(error => this.handleError(request, reply, error));
-    return defaults;
+  registerFastify(fastify: Fastify.FastifyInstance) {
+    const { method } = this;
+    let { path } = this;
+
+    if (path.includes('{')) {
+      // TODO has old hapi url
+      path = path.replace(/{\w+}/g, n => `:${n.substring(1, n.length - 1)}`);
+      logger.info(`found hapi url variable pattern, replaced to ${path}`);
+    }
+
+    fastify.route({
+      method,
+      url: path,
+      handler: async (request, reply) => {
+        // can't use preHandler as it's not calling the server.errorHandler on rejection
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        request.operation = await this.buildOperation(request, reply);
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        return this.handle(request.operation);
+      }
+    });
   }
 
   /**
@@ -88,34 +90,12 @@ class Route {
    * @returns {Promise.<FlamingoOperation>}
    * @see {@link http://hapijs.com/api#request-properties}
    */
-  buildOperation(request, reply) {
+  buildOperation(request: Request, reply: Reply) {
     const op = new FlamingoOperation();
     op.request = request;
     op.reply = reply;
     op.config = this.config;
     return Promise.resolve(op);
-  }
-
-  /**
-   * Function to log and reply errors
-   * @param {Request} request
-   * @param {function} reply function that replies to the request
-   * @param {Error} error
-   * @param {FlamingoOperation} [operation]
-   * @return {*} reply return value
-   */
-  handleError(request, reply, error, operation = {}) {
-    const message = `${error.name}: ${error.message} at '${request.path}'`;
-    logger.error(
-      {
-        error,
-        operation,
-        request,
-        route: this
-      },
-      message
-    );
-    return reply(errorReply(error, operation));
   }
 }
 

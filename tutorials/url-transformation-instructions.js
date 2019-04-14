@@ -54,5 +54,5 @@ module.exports = (additionalConfig = {}) =>
     return new Server(config, new AddonLoader(__dirname, {}).load())
       .withRoutes([new UrlTransformationInstructionsRoute(config)])
       .start()
-      .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server);
+      .then(server => logger.info(`server running at ${server.uri}`) || server);
   });

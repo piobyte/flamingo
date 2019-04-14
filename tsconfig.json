@@ -3,18 +3,20 @@
     "node_modules/@types"
   ],
   "include": [
-    "src/**/*",
-    "test/**/*",
+    "src/**/*.ts",
+    "test/**/*.ts",
     "config.ts",
     "index.ts",
     "targets/**/*.ts"
   ],
   "compilerOptions": {
     "pretty": true,
-    "target": "es2015",
+    "target": "es2018",
     "module": "CommonJS",
     "moduleResolution": "node",
     "strictNullChecks": true,
-    "sourceMap": true
+    "resolveJsonModule": true,
+    "sourceMap": false,
+    "noUnusedLocals": true
   }
 }

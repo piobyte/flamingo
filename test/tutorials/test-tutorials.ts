@@ -2161,7 +2161,7 @@ const expected: Array<TutorialTestDescription> = [
       pathname: `/image/preview-image/a3fb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`
     }),
     ok(response) {
-      assert.deepEqual(response.statusCode, 200);
+      assert.equal(response.statusCode, 200);
     }
   },
   {
@@ -2260,6 +2260,7 @@ describe('tutorials work as expected', function() {
       let server;
 
       try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         server = await require(path.join('../../tutorials', file))({
           HOST,
           PORT: FLAMINGO_PORT

@@ -1,5 +1,4 @@
 import path = require('path');
-import fs = require('fs');
 
 const BASE_PATH = 'test/fixtures/';
 

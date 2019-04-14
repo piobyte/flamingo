@@ -16,7 +16,7 @@ describe('server', function() {
   it("#withRoutes doesn't throw when trying to add a Route routes", async function() {
     const config = await Config.fromEnv();
     const server = new Server(config, new NoopAddonLoader());
-    server.withRoutes([new Route(config, 'get', '/test')]);
+    server.withRoutes([new Route(config, 'GET', '/test')]);
     assert.ok(true);
   });
 });

@@ -26,15 +26,14 @@ function decode(
     //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.keyLEN, function (err, key) {
     //    if (err) { reject(err); return; }
     try {
-      let read;
       const decipher = crypto.createDecipheriv(algorithm, key, iv);
 
       decipher.on('error', function(err) {
-        reject(new InvalidInputError('cipher.decode failed', err));
+        reject(new InvalidInputError(`cipher.decode failed: ${err.name}`));
       });
       decipher.end(ciphertext, 'base64');
 
-      read = decipher.read();
+      const read = decipher.read();
 
       if (read !== null) {
         resolve(read.toString('utf8'));
@@ -66,15 +65,14 @@ function encode(
     //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.keyLEN, function (err, key) {
     //    if (err) { reject(err); return; }
     try {
-      let read;
       const cipher = crypto.createCipheriv(algorithm, key, iv);
 
       cipher.on('error', function(err) {
-        reject(new InvalidInputError('cipher.encode failed', err));
+        reject(new InvalidInputError(`cipher.encode failed: ${err.name}`));
       });
       cipher.end(plaintext, 'utf8');
 
-      read = cipher.read();
+      const read = cipher.read();
 
       if (read !== null) {
         resolve(read.toString('base64'));

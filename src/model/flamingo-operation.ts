@@ -4,6 +4,7 @@ import Config = require('../../config');
 import Reader = require('../types/Reader');
 import Writer = require('../types/Writer');
 import { ProcessInstruction } from '../types/Instruction';
+import { Reply, Request } from '../types/HTTP';
 
 /**
  * Base operation class that is intented to be created for each request and holds request metadata.
@@ -16,8 +17,8 @@ import { ProcessInstruction } from '../types/Instruction';
  * @property {*} input
  */
 class FlamingoOperation {
-  request: any = {};
-  reply: any = noop;
+  request: Request;
+  reply: Reply;
   preprocessorConfig: any = {
     seekPercent: 0.1
   };

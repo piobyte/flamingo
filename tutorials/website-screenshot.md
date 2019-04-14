@@ -54,6 +54,6 @@ Config.fromEnv().then(config =>
       .withProfiles([require('../src/profiles/examples')])
       .withRoutes([new WebsiteScreenshotRoute(config)])
       .start()
-      .then(server => logger.info(`server running at ${server.hapi.info.uri}`)));
+      .then(server => logger.info(`server running at ${server.uri}`)));
 ```
 

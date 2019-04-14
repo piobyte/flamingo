@@ -3,7 +3,6 @@ import sharp = require('sharp');
 
 import exampleProfiles = require('../../../src/profiles/examples');
 import Pipe = require('../../test-util/stub-pipe');
-import { ProfileInstruction } from '../../../src/types/Instruction';
 
 const { buildPipe, stubPipe } = Pipe;
 

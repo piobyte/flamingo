@@ -3,34 +3,81 @@
  * @module
  */
 
-import supported = require('./src/util/supported');
-import envParser = require('./src/util/env-parser');
-import envConfig = require('./src/util/env-config');
-import Mapping from './src/types/Mapping';
-const pkg = require('./package.json');
+import supported = require("./src/util/supported");
+import envParser = require("./src/util/env-parser");
+import envConfig = require("./src/util/env-config");
+import pkg = require("./package.json");
+import Mapping from "./src/types/Mapping";
+
+const ENV_MAPPINGS: Array<Mapping> = [
+  ["DEBUG", "DEBUG", envParser.boolean],
+  ["DEFAULT_MIME", "DEFAULT_MIME"],
+  ["HOST", "HOST"],
+  ["NATIVE_AUTO_ORIENT", "NATIVE_AUTO_ORIENT", envParser.boolean],
+  ["ALLOW_READ_REDIRECT", "ALLOW_READ_REDIRECT", envParser.boolean],
+  ["CLIENT_HINTS", "CLIENT_HINTS", envParser.boolean],
+  ["ROUTE_INDEX", "ROUTES.INDEX", envParser.boolean],
+  [
+    "ROUTE_PROFILE_CONVERT_IMAGE",
+    "ROUTES.PROFILE_CONVERT_IMAGE",
+    envParser.boolean
+  ],
+  [
+    "ROUTE_PROFILE_CONVERT_VIDEO",
+    "ROUTES.PROFILE_CONVERT_VIDEO",
+    envParser.boolean
+  ],
+  [
+    "READER_REQUEST_TIMEOUT",
+    "READER.REQUEST.TIMEOUT",
+    envParser.int(10 * 1000)
+  ],
+  ["PORT", "PORT", envParser.int(3000)],
+  [
+    "PREPROCESSOR_VIDEO_KILL_TIMEOUT",
+    "PREPROCESSOR.VIDEO.KILL_TIMEOUT",
+    envParser.int(2 * 60 * 1000)
+  ],
+  ["ACCESS_FILE_READ", "ACCESS.FILE.READ", JSON.parse],
+  ["ACCESS_FILE_WRITE", "ACCESS.FILE.WRITE", JSON.parse],
+  ["ACCESS_HTTPS_ENABLED", "ACCESS.HTTPS.ENABLED", envParser.boolean],
+  ["ACCESS_HTTPS_READ", "ACCESS.HTTPS.READ", JSON.parse],
+  ["ACCESS_HTTPS_WRITE", "ACCESS.HTTPS.WRITE", JSON.parse],
+  ["CRYPTO_ENABLED", "CRYPTO.ENABLED", envParser.boolean],
+  ["CRYPTO_IV", "CRYPTO.IV", envParser.buffer],
+  ["CRYPTO_KEY", "CRYPTO.KEY", envParser.buffer64],
+  ["CRYPTO_CIPHER", "CRYPTO.CIPHER", envParser.buffer],
+  ["CRYPTO_HMAC_KEY", "CRYPTO.HMAC_KEY"]
+];
+
+function addSupported(config): Promise<Config> {
+  return supported(config)
+    .then(SUPPORTED => (config.SUPPORTED = SUPPORTED))
+    .then(() => config);
+}
 
 class Config {
   [name: string]: any;
   PORT?: number = 3000;
   HOST?: string = undefined;
   DEBUG?: boolean = false;
-  DEFAULT_MIME?: string = 'image/png';
+  DEFAULT_MIME?: string = "image/png";
   NATIVE_AUTO_ORIENT?: boolean = true;
   ALLOW_READ_REDIRECT?: boolean = false;
   CLIENT_HINTS?: boolean = false;
   VERSION?: string = pkg.version;
   CRYPTO?: {
-    ENABLED: boolean,
-    KEY: Buffer,
-    IV: Buffer,
-    HMAC_KEY: string,
-    CIPHER: 'BF-CBC' | string,
+    ENABLED: boolean;
+    KEY: Buffer;
+    IV: Buffer;
+    HMAC_KEY: string;
+    CIPHER: "BF-CBC" | string;
   } = {
     ENABLED: true,
-    KEY: new Buffer('DjiZ7AWTeNh38zoQiZ76gw::', 'base64'),
-    IV: new Buffer('_ag3WU77'),
-    HMAC_KEY: 'NLoTxj5d2ts2z5xPREtGUJZC9tCCQFAX',
-    CIPHER: 'BF-CBC', /* Blowfish */
+    KEY: new Buffer("DjiZ7AWTeNh38zoQiZ76gw::", "base64"),
+    IV: new Buffer("_ag3WU77"),
+    HMAC_KEY: "NLoTxj5d2ts2z5xPREtGUJZC9tCCQFAX",
+    CIPHER: "BF-CBC" /* Blowfish */
     // pbkdf2 values to generate the above KEY, IV, CIPHER
     //SECRET: 'XwckHV-3cySkr96QbqhHb2GvianU3ggU',
     //SALT: 'URAdgv-D',
@@ -39,58 +86,58 @@ class Config {
   };
   PREPROCESSOR?: {
     VIDEO: {
-      KILL_TIMEOUT: number,
-    },
+      KILL_TIMEOUT: number;
+    };
   } = {
     VIDEO: {
-      KILL_TIMEOUT: 2 * 60 * 1000,
-    },
+      KILL_TIMEOUT: 2 * 60 * 1000
+    }
   };
   ACCESS?: {
     FILE?: {
-      READ?: Array<string>,
-      WRITE?: Array<string>,
-    },
+      READ?: Array<string>;
+      WRITE?: Array<string>;
+    };
     HTTPS?: {
-      ENABLED?: boolean,
-      READ?: Array<{ [key: string]: string }>,
-      WRITE?: Array<{ [key: string]: string }>,
-    },
+      ENABLED?: boolean;
+      READ?: Array<{ [key: string]: string }>;
+      WRITE?: Array<{ [key: string]: string }>;
+    };
   } = {
     FILE: {
       READ: [],
-      WRITE: [],
+      WRITE: []
     },
     HTTPS: {
       ENABLED: false,
       READ: [],
-      WRITE: [],
-    },
+      WRITE: []
+    }
   };
   ROUTES?: {
-    INDEX?: boolean,
-    PROFILE_CONVERT_IMAGE?: boolean,
-    PROFILE_CONVERT_VIDEO?: boolean,
+    INDEX?: boolean;
+    PROFILE_CONVERT_IMAGE?: boolean;
+    PROFILE_CONVERT_VIDEO?: boolean;
   } = {
     INDEX: true,
     PROFILE_CONVERT_IMAGE: true,
-    PROFILE_CONVERT_VIDEO: true,
+    PROFILE_CONVERT_VIDEO: true
   };
   SUPPORTED?: {
-    FFMPEG?: boolean,
+    FFMPEG?: boolean;
   } = {
-    FFMPEG: true,
+    FFMPEG: true
   };
   READER?: {
     REQUEST?: {
       // http/https request timeout
-      TIMEOUT?: number,
-    },
+      TIMEOUT?: number;
+    };
   } = {
     REQUEST: {
       // http/https request timeout
-      TIMEOUT: 10 * 1000,
-    },
+      TIMEOUT: 10 * 1000
+    }
   };
 
   /**
@@ -100,47 +147,20 @@ class Config {
    * @param {Array} mappings environment mappings{@link flamingo/src/util/env-config}
    * @returns {Promise.<Config>} initialized config instance
    */
-  static fromEnv (env = process.env, mappings: Array<Mapping> = ENV_MAPPINGS): Promise<Config> {
+  static fromEnv(
+    env = process.env,
+    mappings: Array<Mapping> = ENV_MAPPINGS
+  ): Promise<Config> {
     const config = new Config();
     const parsedEnvConfig = envConfig(config, env, mappings);
 
     // update config with new values
-    Object.keys(parsedEnvConfig).forEach((key) =>
-      config[key] = parsedEnvConfig[key]);
+    Object.keys(parsedEnvConfig).forEach(
+      key => (config[key] = parsedEnvConfig[key])
+    );
 
     return addSupported(config);
   }
-}
-
-const ENV_MAPPINGS: Array<Mapping> = [
-  ['DEBUG', 'DEBUG', envParser.boolean],
-  ['DEFAULT_MIME', 'DEFAULT_MIME'],
-  ['HOST', 'HOST'],
-  ['NATIVE_AUTO_ORIENT', 'NATIVE_AUTO_ORIENT', envParser.boolean],
-  ['ALLOW_READ_REDIRECT', 'ALLOW_READ_REDIRECT', envParser.boolean],
-  ['CLIENT_HINTS', 'CLIENT_HINTS', envParser.boolean],
-  ['ROUTE_INDEX', 'ROUTES.INDEX', envParser.boolean],
-  ['ROUTE_PROFILE_CONVERT_IMAGE', 'ROUTES.PROFILE_CONVERT_IMAGE', envParser.boolean],
-  ['ROUTE_PROFILE_CONVERT_VIDEO', 'ROUTES.PROFILE_CONVERT_VIDEO', envParser.boolean],
-  ['READER_REQUEST_TIMEOUT', 'READER.REQUEST.TIMEOUT', envParser.int(10 * 1000)],
-  ['PORT', 'PORT', envParser.int(3000)],
-  ['PREPROCESSOR_VIDEO_KILL_TIMEOUT', 'PREPROCESSOR.VIDEO.KILL_TIMEOUT', envParser.int(2 * 60 * 1000)],
-  ['ACCESS_FILE_READ', 'ACCESS.FILE.READ', JSON.parse],
-  ['ACCESS_FILE_WRITE', 'ACCESS.FILE.WRITE', JSON.parse],
-  ['ACCESS_HTTPS_ENABLED', 'ACCESS.HTTPS.ENABLED', envParser.boolean],
-  ['ACCESS_HTTPS_READ', 'ACCESS.HTTPS.READ', JSON.parse],
-  ['ACCESS_HTTPS_WRITE', 'ACCESS.HTTPS.WRITE', JSON.parse],
-  ['CRYPTO_ENABLED', 'CRYPTO.ENABLED', envParser.boolean],
-  ['CRYPTO_IV', 'CRYPTO.IV', envParser.buffer],
-  ['CRYPTO_KEY', 'CRYPTO.KEY', envParser.buffer64],
-  ['CRYPTO_CIPHER', 'CRYPTO.CIPHER', envParser.buffer],
-  ['CRYPTO_HMAC_KEY', 'CRYPTO.HMAC_KEY'],
-];
-
-function addSupported (config): Promise<Config> {
-  return supported(config)
-    .then((SUPPORTED) => config.SUPPORTED = SUPPORTED)
-    .then(() => config);
 }
 
 /**

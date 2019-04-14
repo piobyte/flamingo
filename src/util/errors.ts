@@ -3,23 +3,17 @@
  * @module
  */
 
-import util = require('util');
-
 /**
  * Error that should be used if the input is invalid.
  * I.e. if profile name is unknown or input is not an image stream
  * @extends Error
  * @param {String} message
- * @param {*} [extra]
  * @constructor
  */
-function InvalidInputError(message, extra?) {
-  Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
-  this.name = this.constructor.name;
-  this.message = message;
-  /* istanbul ignore else */
-  if (extra) {
-    this.extra = extra;
+class InvalidInputError extends Error {
+  constructor(props) {
+    super(props);
+    Error.captureStackTrace(this, InvalidInputError);
   }
 }
 
@@ -31,18 +25,12 @@ function InvalidInputError(message, extra?) {
  * @param {*} [extra]
  * @constructor
  */
-function ProcessingError(message, extra?) {
-  Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
-  this.name = this.constructor.name;
-  this.message = message;
-  /* istanbul ignore else */
-  if (extra) {
-    this.extra = extra;
+class ProcessingError extends Error {
+  constructor(props) {
+    super(props);
+    Error.captureStackTrace(this, ProcessingError);
   }
 }
-
-util.inherits(InvalidInputError, Error);
-util.inherits(ProcessingError, Error);
 
 export = {
   InvalidInputError,

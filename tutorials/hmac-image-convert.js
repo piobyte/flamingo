@@ -42,7 +42,7 @@ function HmacImageConvert(superClass) {
     }
 
     extractInput(operation) {
-      return Promise.resolve(url.parse(decodeURIComponent(operation.request.params.url)));
+      return Promise.resolve(url.parse(operation.request.params.url));
     }
   };
 }
@@ -60,5 +60,5 @@ module.exports = (additionalConfig = {}) =>
       .withProfiles([require('../src/profiles/examples')])
       .withRoutes([new HmacImageConvertRoute(config)])
       .start()
-      .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server);
+      .then(server => logger.info(`server running at ${server.uri}`) || server);
   });

@@ -1,4 +1,4 @@
-const assert = require('assert');
+import assert = require('assert');
 import bestFormat = require('../../../src/util/best-format');
 
 describe('best-format', function() {

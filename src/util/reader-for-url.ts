@@ -20,13 +20,15 @@ const reader = {
  * @example
  * readerForUrl('file:///tmp/foo') // data reader
  */
-export = function(parsedUrl: Url.Url): Reader | undefined {
+export = function(parsedUrl?: Url.Url): Reader | undefined {
   let foundReader;
 
   /* istanbul ignore else */
-  if (typeof parsedUrl.protocol === 'string') {
+  if (parsedUrl && typeof parsedUrl.protocol === 'string') {
     foundReader =
       reader[parsedUrl.protocol.substring(0, parsedUrl.protocol.length - 1)];
+  } else {
+    console.log('couldnt find reader');
   }
 
   return foundReader;

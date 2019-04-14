@@ -1,5 +1,4 @@
 import assert = require('assert');
-import noop = require('lodash/noop');
 import got = require('got');
 import merge = require('lodash/merge');
 

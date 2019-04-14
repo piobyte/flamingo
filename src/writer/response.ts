@@ -2,7 +2,6 @@
  * Flamingo response writer
  * @module
  */
-import through = require('through2');
 import FlamingoOperation = require('../model/flamingo-operation');
 
 /**
@@ -11,21 +10,7 @@ import FlamingoOperation = require('../model/flamingo-operation');
  * @param {FlamingoOperation} operation
  */
 export = function({ reply, response }: FlamingoOperation) {
-  return function(stream) {
-    return new Promise(function(resolve, reject) {
-      stream.on('error', reject);
-
-      // use through because hapi sometimes didn't trigger the read
-      const replyStream = reply(stream.pipe(through()));
-
-      /* istanbul ignore else */
-      if (response && response.header) {
-        Object.keys(response.header).forEach(property =>
-          replyStream.header(property, response.header[property])
-        );
-      }
-
-      replyStream.on('finish', resolve);
-    });
+  return async function(stream) {
+    return reply.headers((response && response.header) || {}).send(stream);
   };
 };

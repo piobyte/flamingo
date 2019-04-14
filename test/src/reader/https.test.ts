@@ -94,7 +94,7 @@ describe('https? reader', function() {
       await data.stream();
       assert.ok(false, "shouldn't resolve this request.");
     } catch (reason) {
-      assert.equal(reason.extra, 'http://example.org/bad');
+      assert.ok(reason.message.includes('Response code 400'));
     }
   });
 

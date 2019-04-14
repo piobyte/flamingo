@@ -39,11 +39,11 @@ describe('convert', function() {
   });
 
   it('#write', function() {
-    const convert = new class extends Convert(DummyRoute) {
+    const convert = new (class extends Convert(DummyRoute) {
       handleError(request, reply, error, operation = {}) {
         return failOnHandleError(operation);
       }
-    }();
+    })();
     const operation = new FlamingoOperation();
 
     operation.writer = sinon.spy();
@@ -69,27 +69,27 @@ describe('convert', function() {
     const writeSpy = sinon.stub().returns(operation => operation);
 
     const operation = new FlamingoOperation();
-    const convert = new class extends Convert(class extends DummyRoute {}) {
-      read() {
-        return readSpy(...arguments);
+    const convert = new (class extends Convert(class extends DummyRoute {}) {
+      read(...args) {
+        return readSpy(...args);
       }
 
-      preprocess() {
-        return preprocessSpy(...arguments);
+      preprocess(...args) {
+        return preprocessSpy(...args);
       }
 
-      validStream() {
-        return validStreamSpy(...arguments);
+      validStream(...args) {
+        return validStreamSpy(...args);
       }
 
-      process() {
-        return processSpy(...arguments);
+      process(...args) {
+        return processSpy(...args);
       }
 
-      write() {
-        return writeSpy(...arguments);
+      write(...args) {
+        return writeSpy(...args);
       }
-    }();
+    })();
 
     await convert.handle(operation);
     assert.ok(readSpy.called);

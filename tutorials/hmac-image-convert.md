@@ -79,7 +79,7 @@ Config.fromEnv().then(config => {
     .withProfiles([require('../src/profiles/examples')])
     .withRoutes([new HmacImageConvertRoute(config)])
     .start()
-    .then(server => console.log(`server running at ${server.hapi.info.uri}`));
+    .then(server => console.log(`server running at ${server.uri}`));
 });
 ```
 

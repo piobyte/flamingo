@@ -37,5 +37,5 @@ module.exports = (additionalConfig = {}) =>
       .withProfiles([require('../src/profiles/examples')])
       .withRoutes([new WebsiteScreenshotRoute(config)])
       .start()
-      .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server);
+      .then(server => logger.info(`server running at ${server.uri}`) || server);
   });

@@ -12,5 +12,5 @@ module.exports = (additionalConfig = {}) =>
       .withProfiles([require('../src/profiles/examples')])
       .withRoutes([new Image(config, 'GET', '/convert/image/{profile}/{url}')])
       .start()
-      .then(server => logger.info(`server running at ${server.hapi.info.uri}`) || server);
+      .then(server => logger.info(`server running at ${server.uri}`) || server);
   });

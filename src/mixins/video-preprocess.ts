@@ -1,10 +1,6 @@
 import videoPreprocessor = require('../preprocessor/video/index');
 import Route = require('../model/route');
 import Constructor from '../model/Constructor';
-import Config = require('../../config');
-import FlamingoOperation = require('../model/flamingo-operation');
-import Server = require('../model/server');
-import Hapi = require('hapi');
 
 export = function<T extends Constructor<Route>>(Base: T) {
   /**

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import assert = require('assert');
 import sinon = require('sinon');
 import merge = require('lodash/merge');
@@ -31,7 +32,6 @@ describe('convert', function() {
   });
 
   it('#handleError called on hapi route handler buildOperation rejection', async function() {
-    const handleErrorSpy = sinon.spy();
     let server;
 
     class TestRoute extends Route {
@@ -39,26 +39,22 @@ describe('convert', function() {
         super({}, 'GET', '/handle-error');
       }
 
+      // @ts-ignore
       buildOperation(request, reply) {
-        return Promise.reject('foo');
-      }
-
-      handleError(request, reply, error, operation) {
-        handleErrorSpy(...arguments);
-        super.handleError(request, reply, error, operation);
+        throw 'foo';
       }
     }
 
     try {
       server = await startServer({}, new TestRoute());
+      sinon.spy(server, 'handleError');
       await got(`http://${HOST}:${PORT}/handle-error`).catch(e => e);
-      assert.ok(handleErrorSpy.called);
+      assert.ok(server.handleError.called);
     } finally {
       server.stop();
     }
   });
   it('#handleError called on hapi route handler handle rejection', async function() {
-    const handleErrorSpy = sinon.spy();
     let server;
 
     class TestRoute extends Route {
@@ -69,23 +65,18 @@ describe('convert', function() {
       handle(Operation) {
         return Promise.reject('foo');
       }
-
-      handleError(request, reply, error, operation) {
-        handleErrorSpy(...arguments);
-        super.handleError(request, reply, error, operation);
-      }
     }
 
     try {
       server = await startServer({}, new TestRoute());
+      sinon.spy(server, 'handleError');
       await got(`http://${HOST}:${PORT}/handle-error`).catch(e => e);
-      assert.ok(handleErrorSpy.called);
+      assert.ok(server.handleError.called);
     } finally {
       server.stop();
     }
   });
   it('#handle is called for each request', async function() {
-    const handleSpy = sinon.spy();
     let server;
 
     class TestRoute extends Route {
@@ -94,15 +85,17 @@ describe('convert', function() {
       }
 
       handle(operation) {
-        handleSpy(...arguments);
-        return Promise.resolve(operation.reply('ok'));
+        return Promise.resolve(operation.reply.send('ok'));
       }
     }
 
     try {
-      server = await startServer({}, new TestRoute());
+      const testRoute = new TestRoute();
+      server = await startServer({}, testRoute);
+      sinon.spy(testRoute, 'handle');
       await got(`http://${HOST}:${PORT}/handle`);
-      assert.ok(handleSpy.called);
+      // @ts-ignore
+      assert.ok(testRoute.handle.called);
     } finally {
       server.stop();
     }

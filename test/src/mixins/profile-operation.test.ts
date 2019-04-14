@@ -13,6 +13,7 @@ import httpReader = require('../../../src/reader/https');
 import responseWriter = require('../../../src/writer/response');
 import Server = require('../../../src/model/server');
 import NoopAddonLoader = require('../../test-util/NoopAddonLoader');
+import { Request } from '../../../src/types/HTTP';
 
 const { InvalidInputError } = errors;
 const { encode } = cipher;
@@ -39,7 +40,7 @@ describe('profile-operation', function() {
       config.CRYPTO!.IV
     );
     operation.config = config;
-    operation.request = { params: { url: cipherUrl } };
+    operation.request = ({ params: { url: cipherUrl } } as any) as Request;
 
     const input = await profile.extractInput(operation);
     assert.deepEqual(input, url.parse(testUrl));
@@ -53,7 +54,7 @@ describe('profile-operation', function() {
     const profile = 'someProfile';
     const profileSpy = sinon.spy();
 
-    operation.request = { params: { profile } };
+    operation.request = ({ params: { profile } } as any) as Request;
     operation.config = conf;
     const profiles = {
       someProfile: (request, config) => {
@@ -78,7 +79,9 @@ describe('profile-operation', function() {
     const profiles = { someProfile: () => Promise.resolve(profileSpy) };
     profileOp.server = new ProfilesServer(profiles);
     operation.config = conf;
-    operation.request = { params: { profile: 'someUnknownProfile' } };
+    operation.request = ({
+      params: { profile: 'someUnknownProfile' }
+    } as any) as Request;
 
     return profileOp
       .extractProcess(operation)
@@ -138,7 +141,9 @@ describe('profile-operation', function() {
     const request = { params: { profile, url: encodedUrl } };
     const reply = sinon.spy();
 
-    operation.request = { params: { profile, url: encodedUrl } };
+    operation.request = ({
+      params: { profile, url: encodedUrl }
+    } as any) as Request;
     operation.config = conf;
     // conf.profiles = {
     //   someProfile: (request, config) => Promise.resolve(profileSpy)

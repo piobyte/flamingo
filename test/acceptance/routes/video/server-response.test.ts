@@ -123,7 +123,7 @@ describe('video converting server response', function() {
 
     const httpServer = await simpleHttpServer(function(req, res) {
       res.writeHead(301, {
-        Location: 'http://' + HOST + ':' + SERVER_PORT + '/movie.ogg'
+        Location: `http://${HOST}:${SERVER_PORT}/movie.ogg`
       });
       res.end();
     });
@@ -253,7 +253,7 @@ describe('video converting server response', function() {
         '../../../fixtures/videos/trailer_1080p.ogg'
       )}`
     )}`;
-    let server;
+    let server: Server;
 
     try {
       server = await startServer({
@@ -265,7 +265,7 @@ describe('video converting server response', function() {
       const { statusCode } = await got(URL);
       assert.equal(statusCode, 200);
     } finally {
-      server.stop();
+      server!.stop();
     }
   });
 });

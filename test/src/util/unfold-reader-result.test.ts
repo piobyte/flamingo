@@ -10,7 +10,8 @@ describe('unfold reader result test', function() {
 
     const streamed = unfoldReaderResult({
       stream: streamSpy,
-      type: ReaderType.FILE
+      type: ReaderType.FILE,
+      path: ''
     });
 
     assert.equal(streamed, true);

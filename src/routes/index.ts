@@ -4,7 +4,7 @@ import omit = require('lodash/omit');
 import Route = require('../model/route');
 import FlamingoOperation = require('../model/flamingo-operation');
 
-const pkg = require('../../package.json');
+import pkg = require('../../package.json');
 
 const BASE64_ICON =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAuElEQVQ4jbWRMQqDQBBFnyGVSJpUkj72e4/UphUP4FlyAEkteIecIPZeQAlYiW67qTagzKIo+eWy78+fP/Av9Ulm+iQzS/88F9zqAYDQDzg9H+I/gIP0+O4+REXuNXrEGm1SHaeLK+yGxRXqODWNHoHlMsVy6jg1oR8ATDqQChUTWHAOt3pgnkY0iIp8MsXCm1QqZUqltl/Dwi6Towt83e4/oARzvlyhqtZPtga74s+TSHKecQ0M8AXIOlSRGTKPKQAAAABJRU5ErkJggg==';
@@ -127,8 +127,10 @@ class Index extends Route {
     super(config, method, path, description);
   }
 
-  handle(operation) {
-    return Promise.resolve(operation.reply(banner(this, operation)));
+  async handle(operation) {
+    return operation.reply
+      .header('Content-Type', 'text/html; charset=utf-8')
+      .send(banner(this, operation));
   }
 }
 

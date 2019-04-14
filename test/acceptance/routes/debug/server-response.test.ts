@@ -1,6 +1,6 @@
-const assert = require('assert');
-const got = require('got');
-const merge = require('lodash/merge');
+import assert = require('assert');
+import got = require('got');
+import merge = require('lodash/merge');
 
 import Server = require('../../../../src/model/server');
 import Config = require('../../../../config');

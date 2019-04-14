@@ -119,4 +119,3 @@ benchPromise.then(function () {
 }).catch(function (err) {
     console.error(err);
 });
-//# sourceMappingURL=index.js.map

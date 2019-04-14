@@ -124,6 +124,7 @@ class AddonLoader {
     // load packagejson if exists
     const pkg = path.join(packagePath, 'package.json');
     if (fs.existsSync(pkg)) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const packageJson = require(pkg);
       const keywords = packageJson.keywords || [];
 

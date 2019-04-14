@@ -14,10 +14,9 @@ describe('sharp processor', function() {
     const stream = fs.createReadStream(
       path.join(__dirname, '../../../fixtures/images/base64.png')
     );
-    let processedStream;
     const op = new FlamingoOperation();
 
-    processedStream = sharpProcessor(
+    const processedStream = sharpProcessor(
       op,
       function(pipe) {
         return pipe.rotate();
@@ -32,10 +31,9 @@ describe('sharp processor', function() {
     const stream = fs.createReadStream(
       path.join(__dirname, '../../../fixtures/images/base64.png')
     );
-    let processedStream;
     const op = new FlamingoOperation();
 
-    processedStream = sharpProcessor(
+    const processedStream = sharpProcessor(
       op,
       function(pipe) {
         return pipe.toFormat('webp');

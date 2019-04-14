@@ -10,7 +10,7 @@ import envParser = require('../util/env-parser');
 import bestFormat = require('../util/best-format');
 import Config = require('../../config');
 import Profile from '../types/Profile';
-import { ProcessInstruction, ProfileInstruction } from '../types/Instruction';
+import { ProfileInstruction } from '../types/Instruction';
 
 const MIN_IMAGE_SIZE = 10;
 const MAX_IMAGE_SIZE = 1024;
@@ -70,9 +70,6 @@ function extractDimension(
 
   return { width, height };
 }
-
-const f: { [name: string]: any } = {};
-f['avatar-image'] = 2;
 
 const ExampleProfiles: { [profileName: string]: Profile } = {
   /**

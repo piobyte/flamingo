@@ -71,7 +71,7 @@ processors.forEach(function (processor) {
         READER: {REQUEST: {TIMEOUT: 3000}}
       };
       op.process = processor.process;
-      op.input = {href: 'https://assets.flamingo.tld/' + data.desc};
+      op.input = {href: `https://assets.flamingo.tld/${data.desc}`};
 
       return httpsReader(op).then(unfoldReaderResult)
         .then(imageProcessor(op))

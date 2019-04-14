@@ -27,7 +27,7 @@ export = function({ input, reply, config }: FlamingoOperation) {
 
     if (!allowed) {
       return Promise.reject(
-        new InvalidInputError('File access not allowed', outputPath)
+        new InvalidInputError(`File access not allowed: ${outputPath}`)
       );
     }
 
@@ -46,10 +46,9 @@ export = function({ input, reply, config }: FlamingoOperation) {
           writeStream.on('error', reject);
           writeStream.on('finish', function() {
             resolve(
-              reply({
-                statusCode: 200,
+              reply.code(200).send({
                 message: outputPath + ' created'
-              }).code(200)
+              })
             );
           });
         }
