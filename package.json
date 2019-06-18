@@ -25,7 +25,7 @@
   "author": "Christian",
   "license": "MIT",
   "engines": {
-    "node": ">=6"
+    "node": ">=6 <12"
   },
   "bugs": {
     "url": "https://github.com/piobyte/flamingo/issues"
