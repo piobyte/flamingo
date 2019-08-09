@@ -1,6 +1,15 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [2.1.11](https://github.com/piobyte/flamingo/compare/v2.1.10...v2.1.11) (2019-08-09)
+
+
+### Bug Fixes
+
+* bump samples to support sharp@0.23.0 ([e38f96b](https://github.com/piobyte/flamingo/commit/e38f96b))
+
+
 
 <a name="2.1.10"></a>
 ## [2.1.10](https://github.com/piobyte/flamingo/compare/v2.1.9...v2.1.10) (2019-06-18)
