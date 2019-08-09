@@ -3,7 +3,7 @@ cache:
   yarn: true
   apt: true
 sudo: required
-dist: trusty
+dist: bionic
 addons:
   apt:
     sources:
@@ -24,9 +24,6 @@ stages:
 
 jobs:
   include:
-  - stage: test
-    node_js: 'lts/boron'
-    script: yarn run test
   - stage: test
     node_js: 'lts/carbon'
     script: yarn run test

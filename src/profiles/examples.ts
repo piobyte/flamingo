@@ -124,13 +124,14 @@ const ExampleProfiles: { [profileName: string]: Profile } = {
       process: [
         {
           processor: 'sharp',
-          pipe(pipe) {
+          pipe(pipe: sharp.Sharp) {
             return pipe
               .rotate()
               .toFormat(format.type, { quality })
-              .resize(Math.ceil(width), Math.ceil(height))
-              .min()
-              .crop(sharp.gravity.center);
+              .resize(Math.ceil(width), Math.ceil(height), {
+                fit: 'outside',
+                position: sharp.gravity.center
+              });
           }
         }
       ]
@@ -186,15 +187,15 @@ const ExampleProfiles: { [profileName: string]: Profile } = {
       process: [
         {
           processor: 'sharp',
-          pipe(instance) {
+          pipe(instance: sharp.Sharp) {
             return instance
               .rotate()
-              .background('white')
-              .flatten()
+              .flatten({ background: 'white' })
               .toFormat(format.type, { quality })
-              .resize(Math.ceil(width), Math.ceil(height))
-              .min()
-              .crop(sharp.gravity.center);
+              .resize(Math.ceil(width), Math.ceil(height), {
+                fit: 'outside',
+                position: sharp.gravity.center
+              });
           }
         }
       ]

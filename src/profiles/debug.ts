@@ -47,15 +47,15 @@ export = {
     } else {
       process.push({
         processor: 'sharp',
-        pipe(pipe) {
+        pipe(pipe: sharp.Sharp) {
           return pipe
             .rotate()
-            .background('white')
-            .flatten()
+            .flatten({ background: 'white' })
             .toFormat(format.type)
-            .resize(dim, dim)
-            .min()
-            .crop(sharp.gravity.center);
+            .resize(dim, dim, {
+              fit: 'outside',
+              position: sharp.gravity.center
+            });
         }
       });
     }
@@ -97,13 +97,14 @@ export = {
     } else {
       process.push({
         processor: 'sharp',
-        pipe(pipe) {
+        pipe(pipe: sharp.Sharp) {
           return pipe
             .rotate()
             .toFormat(format.type)
-            .resize(dim, dim)
-            .min()
-            .crop(sharp.gravity.center);
+            .resize(dim, dim, {
+              fit: 'outside',
+              position: sharp.gravity.center
+            });
         }
       });
     }

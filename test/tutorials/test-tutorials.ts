@@ -2220,7 +2220,7 @@ const expected: Array<TutorialTestDescription> = [
       protocol: 'http',
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/inline/image/resize=300:100,toFormat=webp,rotate=90,min/${IMAGE_URL}`
+      pathname: `/inline/image/resize=300:100,toFormat=webp,rotate=90/${IMAGE_URL}`
     }),
     ok(response) {
       assert.deepEqual(response.statusCode, 200);

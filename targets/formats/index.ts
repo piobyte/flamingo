@@ -10,6 +10,7 @@ import imageProcessor = require('../../src/processor/image');
 import unfoldReaderResult = require('../../src/util/unfold-reader-result');
 import FlamingoOperation = require('../../src/model/flamingo-operation');
 import Promise = require('bluebird');
+import sharp = require('sharp');
 
 const SUPPORTED_FORMATS = 'tutorials/supported-files.md';
 
@@ -25,9 +26,9 @@ const processors = [{
   name: 'sharp',
   process: [{
     processor: 'sharp',
-    pipe: function (sharp) {
+    pipe: function (sharp: sharp.Sharp) {
       return sharp
-        .rotate().resize(200, 200).min().toFormat('png');
+        .rotate().resize(200, 200, { fit: 'outside'}).toFormat('png');
     }
   }]
 }, {

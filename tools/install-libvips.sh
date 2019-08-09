@@ -14,9 +14,9 @@ echo "to globally install libvips if not already available."
 echo
 sleep 5
 
-vips_version_minimum=8.7.4
-vips_version_latest_major_minor=8.7
-vips_version_latest_patch=4
+vips_version_minimum=8.8.1
+vips_version_latest_major_minor=8.8
+vips_version_latest_patch=1
 
 VIPS_VERSION=${vips_version_latest_major_minor}.${vips_version_latest_patch}
 
@@ -29,7 +29,7 @@ install_libvips_from_source() {
   curl -L -O https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz
   tar zvxf vips-$vips_version_latest_major_minor.$vips_version_latest_patch.tar.gz
   cd vips-$vips_version_latest_major_minor.$vips_version_latest_patch
-  CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" ./configure --disable-debug --disable-docs --disable-static --disable-dependency-tracking --enable-cxx=yes --without-python --without-orc --without-fftw $1
+  CXXFLAGS="-D_GLIBCXX_USE_CXX11_ABI=0" ./configure --disable-debug --disable-docs --disable-static --disable-dependency-tracking --enable-cxx=yes --without-python --without-orc --with-heif --without-fftw $1
   make
   make install
   cd ..
@@ -136,7 +136,7 @@ if [ $enable_openslide -eq 1 ] && [ -z $vips_with_openslide ] && [ $openslide_ex
     DISTRO=$(lsb_release -c -s)
     echo "Detected Debian Linux '$DISTRO'"
     case "$DISTRO" in
-      jessie|vivid|wily|xenial)
+      bionic)
         # Debian 8, Ubuntu 15
         echo "Installing libopenslide via apt-get"
         apt-get install -y libopenslide-dev
@@ -160,10 +160,10 @@ if [ -f /etc/debian_version ]; then
   DISTRO=$(lsb_release -c -s)
   echo "Detected Debian Linux '$DISTRO'"
   case "$DISTRO" in
-    jessie|trusty|utopic|vivid|wily|xenial|qiana|rebecca|rafaela|freya)
+    bionic)
       # Debian 8, Ubuntu 14.04+, Mint 17
       echo "Installing libvips dependencies via apt-get"
-      apt-get install -y automake build-essential gobject-introspection liborc-0.4-dev gtk-doc-tools libglib2.0-dev libglib2.0-dev libjpeg-turbo8-dev libgif-dev libpng12-dev libpango1.0-dev libpoppler-glib-dev libwebp-dev libtiff5-dev libexif-dev libgsf-1-dev liblcms2-dev librsvg2-dev libxml2-dev swig curl
+      apt-get install -y automake build-essential gobject-introspection liborc-0.4-dev gtk-doc-tools libglib2.0-dev libglib2.0-dev libjpeg-turbo8-dev libgif-dev libheif-dev libpng-dev libpango1.0-dev libpoppler-glib-dev libwebp-dev libtiff5-dev libexif-dev libgsf-1-dev liblcms2-dev librsvg2-dev libxml2-dev libexpat1-dev swig curl
       install_libvips_from_source
       ;;
     *)

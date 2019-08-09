@@ -25,7 +25,7 @@ const processors = [{
                 processor: 'sharp',
                 pipe: function (sharp) {
                     return sharp
-                        .rotate().resize(200, 200).min().toFormat('png');
+                        .rotate().resize(200, 200, { fit: 'outside' }).toFormat('png');
                 }
             }]
     }, {

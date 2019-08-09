@@ -3,14 +3,14 @@
 # Stop on error
 set -e
 
-GM_VERSION="1.3.30"
+GM_VERSION="1.3.33"
 
 ARCHIVE="https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}.tar.gz"
 
 cd /tmp/
 wget ${ARCHIVE}
-tar zxf GraphicsMagick-*.tar.gz
-cd GraphicsMagick-*
+tar zxf GraphicsMagick-${GM_VERSION}.tar.gz
+cd GraphicsMagick-${GM_VERSION}
 
 # svg support
 apt-get install -y libxml2-dev libfreetype6-dev libltdl-dev make

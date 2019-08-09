@@ -12,3 +12,7 @@ This file is in the public domain because it was solely created by NASA. NASA co
 
 sharp-bench-assets/*_webp_*.webp
 https://developers.google.com/speed/webp/gallery2#image_credits
+
+libheif-assets/*.heic
+https://github.com/strukturag/libheif/blob/master/examples/example.heic
+MIT - https://github.com/strukturag/libheif/blob/master/examples/COPYING

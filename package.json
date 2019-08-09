@@ -25,7 +25,7 @@
   "author": "Christian",
   "license": "MIT",
   "engines": {
-    "node": ">=6 <12"
+    "node": ">=8 <12"
   },
   "bugs": {
     "url": "https://github.com/piobyte/flamingo/issues"
@@ -41,7 +41,7 @@
     "bunyan": "^1.8.12",
     "clamp": "^1.0.1",
     "dts-generator": "^2.1.0",
-    "file-type": "^10.7.1",
+    "file-type": "^12.1.0",
     "fluent-ffmpeg": "^2.1.0",
     "got": "^8.3.1",
     "hapi": "^16.5.2",
@@ -50,7 +50,7 @@
     "mimeparse": "^0.1.4",
     "mkdirp": "^0.5.0",
     "optional": "^0.1.4",
-    "sharp": "^0.21.3",
+    "sharp": "^0.23.0",
     "temp": "^0.9.0",
     "through2": "^2.0.3"
   },
@@ -62,7 +62,7 @@
     "@types/lodash": "^4.14.120",
     "@types/mocha": "^5.2.0",
     "@types/node": "^10.12.19",
-    "@types/sharp": "^0.21.2",
+    "@types/sharp": "^0.22.2",
     "@types/sinon": "^7.0.2",
     "@types/uuid": "^3.4.4",
     "benchmark": "^2.1.1",

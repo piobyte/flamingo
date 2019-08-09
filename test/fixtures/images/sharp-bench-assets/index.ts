@@ -46,6 +46,8 @@ const images = {
   smallPdf: '../pdf-sample.pdf',
   largePdf: '../nipguide.pdf',
 
+  heic: '../libheif/assets/example.heic',
+
   // svg disabled because https://github.com/aheckmann/gm/issues/466
   svg: 'Wikimedia-logo.svg' // http://commons.wikimedia.org/wiki/File:Wikimedia-logo.svg
 };
