@@ -25,11 +25,14 @@ stages:
 jobs:
   include:
   - stage: test
-    node_js: 'lts/carbon'
+    node_js: 'node'
     script: yarn run test
   - stage: test
     node_js: 'lts/dubnium'
     script: yarn run test
+  - stage: benchmark
+    node_js: 'node'
+    script: yarn run bench
   - stage: benchmark
     node_js: 'lts/dubnium'
     script: yarn run bench
