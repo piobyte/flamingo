@@ -1,0 +1,18 @@
+[file]
+[source]
+[license]
+
+Saturn_from_Cassini_Orbiter_(2004-10-06).jpg
+https://commons.wikimedia.org/wiki/File:Saturn_from_Cassini_Orbiter_(2004-10-06).jpg
+This file is in the public domain because it was solely created by NASA. NASA copyright policy states that "NASA material is not protected by copyright unless noted".
+
+640px-Saturneclipse.jpg
+https://commons.wikimedia.org/wiki/File:Saturneclipse.jpg
+This file is in the public domain because it was solely created by NASA. NASA copyright policy states that "NASA material is not protected by copyright unless noted".
+
+sharp-bench-assets/*_webp_*.webp
+https://developers.google.com/speed/webp/gallery2#image_credits
+
+libheif-assets/*.heic
+https://github.com/strukturag/libheif/blob/master/examples/example.heic
+MIT - https://github.com/strukturag/libheif/blob/master/examples/COPYING

@@ -1,0 +1,14 @@
+docs
+tutorials/supported-files.md
+tools/deploy-docker.sh
+
+dts/**/*
+config.js
+index.js
+*.map
+*.d.ts
+*.js
+
+!test/fixtures/node_modules
+!test/fixtures/node_modules/**/*
+!test/fixtures/test-addon/**/*

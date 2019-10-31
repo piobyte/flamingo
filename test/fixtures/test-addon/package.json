@@ -1,8 +1,0 @@
-{
-  "name": "test-addon",
-  "version": "0.1.1",
-  "main": "index.js",
-  "keywords": [
-    "flamingo-addon"
-  ]
-}

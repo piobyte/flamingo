@@ -1,0 +1,52 @@
+{
+  "name": "flamingo-sentry",
+  "version": "2.0.2",
+  "main": "index.js",
+  "description": "flamingo-sentry is a https://github.com/piobyte/flamingo addon to adds a bunyan log stream for sentry integration.",
+  "scripts": {
+    "lint": "eslint index.ts test/**/*.ts",
+    "build": "tsc",
+    "prettier": "prettier --write index.ts \"test/**/*.ts\"",
+    "pretest": "yarn lint && yarn build",
+    "test": "TEST=true yarn cover",
+    "precover": "rm -r coverage 2>/dev/null || true",
+    "cover": "nyc mocha",
+    "docs": "node node_modules/jsdoc/jsdoc.js index.js -r -u tutorials -t ./node_modules/postman-jsdoc-theme -P package.json -R README.md -d docs",
+    "preversion": "yarn test"
+  },
+  "author": "Christian",
+  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
+  "keywords": [
+    "flamingo-addon"
+  ],
+  "bugs": {
+    "url": "https://github.com/piobyte/flamingo-sentry/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piobyte/flamingo-sentry"
+  },
+  "dependencies": {
+    "bunyan": "^1.8.1",
+    "flamingo": "^2.1.4",
+    "lodash.some": "^4.6.0",
+    "nyc": "^14.1.1",
+    "raven": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.12.3",
+    "@typescript-eslint/eslint-plugin": "^2.6.0",
+    "@typescript-eslint/parser": "^2.6.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "got": "^9.6.0",
+    "mocha": "^6.2.2",
+    "mockery": "^2.1.0",
+    "typescript": "^3.6.4"
+  }
+}

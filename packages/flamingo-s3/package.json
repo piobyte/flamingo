@@ -1,0 +1,54 @@
+{
+  "name": "flamingo-s3",
+  "version": "2.2.0",
+  "main": "index.js",
+  "description": "flamingo-s3 is a https://github.com/piobyte/flamingo addon to allow reading and converting images from https://aws.amazon.com/s3/.",
+  "scripts": {
+    "lint": "eslint index.ts test/**/*.ts src/**/*.ts",
+    "build": "tsc",
+    "pretest": "yarn lint && yarn build",
+    "test": "TEST=true yarn cover",
+    "docs": "node node_modules/jsdoc/jsdoc.js index.js src -r -u tutorials -t ./node_modules/postman-jsdoc-theme -P package.json -R README.md -d docs",
+    "cover": "nyc mocha",
+    "prettier": "prettier --write \"{src,test}/**/*.ts\"",
+    "preversion": "yarn test"
+  },
+  "author": "Christian",
+  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
+  "keywords": [
+    "flamingo-addon"
+  ],
+  "bugs": {
+    "url": "https://github.com/piobyte/flamingo-s3/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piobyte/flamingo-s3"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.5.0",
+    "boom": "^7.3.0",
+    "flamingo": "^2.1.4",
+    "lodash.merge": "^4.6.0",
+    "nyc": "^14.1.1"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.12.3",
+    "@typescript-eslint/eslint-plugin": "^2.6.0",
+    "@typescript-eslint/parser": "^2.6.0",
+    "bluebird": "^3.4.1",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "got": "^9.6.0",
+    "mocha": "^6.2.2",
+    "nock": "^11.7.0",
+    "s3rver": "^2.2.9",
+    "sinon": "^7.5.0",
+    "typescript": "^3.6.4"
+  }
+}

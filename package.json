@@ -1,107 +1,17 @@
 {
-  "name": "flamingo",
-  "version": "2.1.11",
-  "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
-  "main": "index.js",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
   "scripts": {
-    "start": "node index.js",
-    "lint": "tslint -c tslint.json index.ts 'src/**/*.ts' config.ts 'test/**/*.ts' 'tutorials/**/*.ts'",
-    "lint-fix": "tslint --fix -c tslint.json index.ts 'src/**/*.ts' config.ts 'test/**/*.ts' 'tutorials/**/*.ts'",
-    "predocs": "rm -r docs 2>/dev/null || yarn build",
-    "docs": "typedoc --excludeExternals --exclude '**/+(test|targets)/**' --mode modules --out docs src/writer/file.ts",
-    "build": "tsc",
-    "pretest": "yarn prettier && yarn lint && yarn build",
-    "test": "TEST=true yarn cover",
-    "preversion": "npm test",
-    "bench": "yarn build && node targets/bench",
-    "formats": "node targets/formats",
-    "cover": "nyc mocha",
-    "release": "standard-version",
-    "prettier": "prettier --single-quote --write --parser typescript \"{src,test}/**/*.ts\"",
-    "prepublishOnly": "yarn test && yarn build && yarn types",
-    "types": "dts-generator --moduleResolution node --name flamingo --project . --out index.d.ts"
-  },
-  "types": "index.d.ts",
-  "author": "Christian",
-  "license": "MIT",
-  "engines": {
-    "node": ">=8 <12"
-  },
-  "bugs": {
-    "url": "https://github.com/piobyte/flamingo/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/piobyte/flamingo"
-  },
-  "dependencies": {
-    "bluebird": "^3.5.3",
-    "boom": "^5.2.0",
-    "buffer-peek-stream": "^1.0.1",
-    "bunyan": "^1.8.12",
-    "clamp": "^1.0.1",
-    "dts-generator": "^2.1.0",
-    "file-type": "^12.1.0",
-    "fluent-ffmpeg": "^2.1.0",
-    "got": "^8.3.1",
-    "hapi": "^16.5.2",
-    "is-stream": "^1.1.0",
-    "lodash": "^4.17.11",
-    "mimeparse": "^0.1.4",
-    "mkdirp": "^0.5.0",
-    "optional": "^0.1.4",
-    "sharp": "^0.23.0",
-    "temp": "^0.9.0",
-    "through2": "^2.0.3"
-  },
-  "devDependencies": {
-    "@types/bluebird": "^3.5.25",
-    "@types/boom": "^4.3.7",
-    "@types/bunyan": "^1.8.5",
-    "@types/hapi": "^16.1.9",
-    "@types/lodash": "^4.14.120",
-    "@types/mocha": "^5.2.0",
-    "@types/node": "^10.12.19",
-    "@types/sharp": "^0.22.2",
-    "@types/sinon": "^7.0.2",
-    "@types/uuid": "^3.4.4",
-    "benchmark": "^2.1.1",
-    "mocha": "^5.2.0",
-    "nock": "^9.2.6",
-    "nyc": "^13.1.0",
-    "prettier": "^1.16.1",
-    "sinon": "^7.2.2",
-    "standard-version": "^4.1.0",
-    "tslint": "^5.12.0",
-    "typedoc": "^0.13.0",
-    "typescript": "^3.2.4",
-    "uuid": "^3.3.2"
-  },
-  "optionalDependencies": {
-    "gm": "^1.23.0",
-    "markdown-it": "^8.4.2",
-    "screenshot-stream": "^4.1.0",
-    "webshot": "makepanic/node-webshot#1ddeb1f396f1de14480d53e017e0b14ee0304e28"
-  },
-  "nyc": {
-    "check-coverage": true,
-    "lines": 96,
-    "statements": 96,
-    "functions": 96,
-    "branches": 90,
-    "reporter": [
-      "text-summary",
-      "html"
-    ],
-    "include": [
-      "src/**/*.js",
-      "test/**/*.js"
-    ],
-    "exclude": [
-      "src/profiles/debug.js",
-      "src/writer/file.js",
-      "tutorials/**/*.js"
-    ],
-    "all": true
+    "test-changed": "yarn lerna run test --concurrency=1 --stream --since HEAD~1",
+    "test": "yarn lerna run test --concurrency=1 --stream",
+    "lint-changed": "yarn lerna run lint --since HEAD~1",
+    "lint": "yarn lerna run lint",
+    "prettier": "yarn lerna run prettier --since HEAD~1",
+    "release": "yarn lerna version -m \"chore(release): bump release versions\" --conventional-commits",
+    "bench": "yarn lerna run bench --stream --no-prefix --since HEAD~1"
   }
 }
