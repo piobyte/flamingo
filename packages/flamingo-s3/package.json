@@ -11,6 +11,7 @@
     "docs": "node node_modules/jsdoc/jsdoc.js index.js src -r -u tutorials -t ./node_modules/postman-jsdoc-theme -P package.json -R README.md -d docs",
     "cover": "nyc mocha",
     "prettier": "prettier --write \"{src,test}/**/*.ts\"",
+    "prepublishOnly": "yarn test && yarn build",
     "preversion": "yarn test"
   },
   "author": "Christian",

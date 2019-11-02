@@ -16,7 +16,6 @@
     "bench": "yarn build && node targets/bench",
     "formats": "node targets/formats",
     "cover": "nyc mocha",
-    "release": "standard-version",
     "prettier": "prettier --write index.ts config.ts \"{src,test}/**/*.ts\"",
     "prepublishOnly": "yarn test && yarn build",
     "types": "dts-generator --moduleResolution node --name flamingo --project . --out index.d.ts"
@@ -78,7 +77,6 @@
     "nyc": "^14.1.1",
     "prettier": "^1.18.2",
     "sinon": "^7.5.0",
-    "standard-version": "^7.0.0",
     "typedoc": "^0.15.0",
     "typescript": "^3.6.4",
     "uuid": "^3.3.3"

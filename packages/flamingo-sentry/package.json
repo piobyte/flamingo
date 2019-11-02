@@ -12,6 +12,7 @@
     "precover": "rm -r coverage 2>/dev/null || true",
     "cover": "nyc mocha",
     "docs": "node node_modules/jsdoc/jsdoc.js index.js -r -u tutorials -t ./node_modules/postman-jsdoc-theme -P package.json -R README.md -d docs",
+    "prepublishOnly": "yarn test && yarn build",
     "preversion": "yarn test"
   },
   "author": "Christian",
