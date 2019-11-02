@@ -18,7 +18,7 @@
     "cover": "nyc mocha",
     "release": "standard-version",
     "prettier": "prettier --write index.ts config.ts \"{src,test}/**/*.ts\"",
-    "prepublishOnly": "yarn test && yarn build && yarn types",
+    "prepublishOnly": "yarn test && yarn build",
     "types": "dts-generator --moduleResolution node --name flamingo --project . --out index.d.ts"
   },
   "types": "index.d.ts",
