@@ -13,10 +13,10 @@ addons:
 before_install:
 - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
 - sudo apt-get -y install pkg-config
-- sudo bash tools/install-ffmpeg.sh
-- sudo bash tools/install-imagemagick.sh
-- sudo bash tools/install-graphicsmagick.sh
-- ls -la test/fixtures/images
+- sudo bash packages/flamingo/tools/install-ffmpeg.sh
+- sudo bash packages/flamingo/tools/install-imagemagick.sh
+- sudo bash packages/flamingo/tools/install-graphicsmagick.sh
+- ls -la packages/flamingo/test/fixtures/images
 
 stages:
 - test
@@ -25,11 +25,11 @@ stages:
 jobs:
   include:
   - stage: test
-    node_js: 'lts/carbon'
-    script: yarn run test
+    node_js: 'node'
+    script: yarn test
   - stage: test
-    node_js: 'lts/dubnium'
-    script: yarn run test
+    node_js: 'lts/erbium'
+    script: yarn test
   - stage: benchmark
-    node_js: 'lts/dubnium'
-    script: yarn run bench
+    node_js: 'lts/erbium'
+    script: yarn bench

@@ -1,0 +1,111 @@
+{
+  "name": "flamingo",
+  "version": "2.1.11",
+  "description": "simple, hapijs based, HTTP server that allows you to convert media files to images",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint index.ts 'src/**/*.ts' config.ts 'test/**/*.ts'",
+    "lint-fix": "eslint --fix index.ts 'src/**/*.ts' config.ts 'test/**/*.ts'",
+    "predocs": "rm -r docs 2>/dev/null || yarn build",
+    "docs": "typedoc --excludeExternals --exclude '**/+(test|targets)/**' --mode modules --out docs src/writer/file.ts",
+    "build": "tsc",
+    "pretest": "yarn prettier && yarn lint && yarn build",
+    "test": "TEST=true yarn cover",
+    "preversion": "npm test",
+    "bench": "yarn build && node targets/bench",
+    "formats": "node targets/formats",
+    "cover": "nyc mocha",
+    "release": "standard-version",
+    "prettier": "prettier --write index.ts config.ts \"{src,test}/**/*.ts\"",
+    "prepublishOnly": "yarn test && yarn build && yarn types",
+    "types": "dts-generator --moduleResolution node --name flamingo --project . --out index.d.ts"
+  },
+  "types": "index.d.ts",
+  "author": "Christian",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12"
+  },
+  "bugs": {
+    "url": "https://github.com/piobyte/flamingo/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/piobyte/flamingo"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^18.4.0",
+    "bluebird": "^3.5.5",
+    "buffer-peek-stream": "^1.0.1",
+    "bunyan": "^1.8.12",
+    "clamp": "^1.0.1",
+    "dts-generator": "^3.0.0",
+    "file-type": "^12.3.1",
+    "fluent-ffmpeg": "^2.1.0",
+    "got": "^8.3.1",
+    "is-stream": "^2.0.0",
+    "lodash": "^4.17.15",
+    "mimeparse": "^0.1.4",
+    "mkdirp": "^0.5.0",
+    "optional": "^0.1.4",
+    "sharp": "^0.23.2",
+    "temp": "^0.9.0",
+    "through2": "^3.0.1"
+  },
+  "resolutions": {
+    "@types/hapi__hapi": "^18.2.5"
+  },
+  "devDependencies": {
+    "@types/bluebird": "^3.5.28",
+    "@types/bunyan": "^1.8.6",
+    "@types/hapi__hapi": "^18.2.5",
+    "@types/lodash": "^4.14.144",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.12.3",
+    "@types/sharp": "^0.23.0",
+    "@types/sinon": "^7.5.0",
+    "@types/uuid": "^3.4.6",
+    "@typescript-eslint/eslint-plugin": "^2.6.0",
+    "@typescript-eslint/parser": "^2.6.0",
+    "benchmark": "^2.1.1",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "lerna": "^3.15.0",
+    "mocha": "^6.2.2",
+    "nock": "^11.3.5",
+    "nyc": "^14.1.1",
+    "prettier": "^1.18.2",
+    "sinon": "^7.5.0",
+    "standard-version": "^7.0.0",
+    "typedoc": "^0.15.0",
+    "typescript": "^3.6.4",
+    "uuid": "^3.3.3"
+  },
+  "optionalDependencies": {
+    "gm": "^1.23.0",
+    "markdown-it": "^8.4.2"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "lines": 95,
+    "statements": 95,
+    "functions": 93,
+    "branches": 88,
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "include": [
+      "src/**/*.js",
+      "test/**/*.js"
+    ],
+    "exclude": [
+      "src/profiles/debug.js",
+      "src/writer/file.js",
+      "tutorials/**/*.js"
+    ],
+    "all": true
+  }
+}

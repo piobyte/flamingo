@@ -1,0 +1,20 @@
+{
+  "typeRoots": [
+    "node_modules/@types"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "index.ts"
+  ],
+  "compilerOptions": {
+    "pretty": true,
+    "target": "es2017",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "strictNullChecks": true,
+    "sourceMap": false,
+    "noUnusedLocals": true
+  }
+}

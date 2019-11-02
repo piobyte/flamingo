@@ -1,0 +1,8 @@
+.idea
+.git
+coverage
+docs
+node_modules
+targets
+
+*.iml
