@@ -1,6 +1,6 @@
 {
   "name": "flamingo-sentry",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "main": "index.js",
   "description": "flamingo-sentry is a https://github.com/piobyte/flamingo addon to adds a bunyan log stream for sentry integration.",
   "scripts": {
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "bunyan": "^1.8.1",
-    "flamingo": "^2.1.4",
+    "flamingo": "^3.0.0",
     "lodash.some": "^4.6.0",
     "nyc": "^14.1.1",
     "raven": "^2.6.0"
