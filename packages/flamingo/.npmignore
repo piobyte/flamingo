@@ -1,0 +1,14 @@
+# ignore everything
+*
+
+## except
+
+# definition file
+!index.d.ts
+
+# source files
+!src/**/*.js
+!config.js
+!index.js
+!README.md
+!LICENSE
