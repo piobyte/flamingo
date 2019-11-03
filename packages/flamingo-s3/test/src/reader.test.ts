@@ -1,7 +1,6 @@
 import assert = require("assert");
 import sinon = require("sinon");
 import reader = require("../../src/reader");
-import Promise = require("bluebird");
 
 describe("reader", function() {
   it("passes given bucket and key to s3 sdk methods", function() {

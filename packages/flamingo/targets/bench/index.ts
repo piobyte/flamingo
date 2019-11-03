@@ -1,7 +1,6 @@
 /*eslint no-console: 0*/
 
 import temp = require('temp');
-import Promise = require('bluebird');
 import uuidV4 = require('uuid/v4');
 import fingerprint = require('./fingerprint');
 import debugProfiles = require('../../src/profiles/debug');

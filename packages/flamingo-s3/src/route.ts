@@ -1,5 +1,8 @@
 import S3Mixin = require("./mixin");
 import Image = require("flamingo/src/routes/image");
+import FlamingoOperation = require("flamingo/src/model/flamingo-operation");
+import Server = require("flamingo/src/model/server");
+import Config = require("flamingo/config");
 
 /**
  * Flamingo Image route

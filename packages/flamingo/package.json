@@ -17,8 +17,8 @@
     "formats": "node targets/formats",
     "cover": "nyc mocha",
     "prettier": "prettier --write index.ts config.ts \"{src,test}/**/*.ts\"",
-    "prepublishOnly": "yarn test && yarn build",
-    "types": "dts-generator --moduleResolution node --name flamingo --project . --out index.d.ts"
+    "prepublishOnly": "yarn test && yarn build && yarn types",
+    "types": "dts-generator --moduleResolution node --prefix flamingo --project . --out index.d.ts"
   },
   "types": "index.d.ts",
   "author": "Christian",
@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "@hapi/hapi": "^18.4.0",
-    "bluebird": "^3.5.5",
     "buffer-peek-stream": "^1.0.1",
     "bunyan": "^1.8.12",
     "clamp": "^1.0.1",
@@ -56,7 +55,6 @@
     "@types/hapi__hapi": "^18.2.5"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.28",
     "@types/bunyan": "^1.8.6",
     "@types/hapi__hapi": "^18.2.5",
     "@types/lodash": "^4.14.144",

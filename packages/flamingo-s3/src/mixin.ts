@@ -1,16 +1,15 @@
 "use strict";
 
-import AWS = require("aws-sdk");
-import Promise = require("bluebird");
 import Errors = require("flamingo/src/util/errors");
 import Route = require("flamingo/src/model/route");
+import FlamingoOperation = require("flamingo/src/model/flamingo-operation");
+import Server = require("flamingo/src/model/server");
+import Config = require("flamingo/config");
 
 import s3Reader = require("./reader");
 import Constructor from "flamingo/src/model/Constructor";
 
 const { InvalidInputError } = Errors;
-
-AWS.config.setPromisesDependency(Promise);
 
 const KEY_DELIMITER = "-";
 
@@ -25,7 +24,7 @@ export = function S3Mixin<T extends Constructor<Route>>(SuperClass: T) {
      * @param {FlamingoOperation} operation
      * @return {Promise.<{bucket: string, key: string}>}
      */
-    extractInput(operation) {
+    extractInput(operation: FlamingoOperation) {
       const bucketAlias = operation.request.params.bucketAlias;
       const bucket = operation.config.AWS.S3.BUCKETS[bucketAlias];
       const keySplit = operation.request.params.key.split(KEY_DELIMITER);

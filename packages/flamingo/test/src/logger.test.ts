@@ -3,13 +3,13 @@ import fs = require("fs");
 import assert = require("assert");
 import assign = require("lodash/assign");
 import url = require("url");
+import util = require("util");
 
 import FlamingoOperation = require("../../src/model/flamingo-operation");
 import Route = require("../../src/model/route");
 import logger = require("../../src/logger");
-import Bluebird = require("bluebird");
 
-const readFile = Bluebird.promisify(fs.readFile);
+const readFile = util.promisify(fs.readFile);
 
 describe("logger", function() {
   it("checks that the method calls the stream function", async function() {

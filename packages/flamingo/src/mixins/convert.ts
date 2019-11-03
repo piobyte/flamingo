@@ -12,6 +12,8 @@ import errors = require("../util/errors");
 import Addon = require("../addon");
 import Constructor from "../model/Constructor";
 import { ProfileInstruction } from "../types/Instruction";
+import Server = require("flamingo/src/model/server");
+import Config = require("flamingo/config");
 
 const { InvalidInputError } = errors;
 const { HOOKS } = Addon;

@@ -5,6 +5,8 @@ import errors = require("../util/errors");
 import cipher = require("../util/cipher");
 import FlamingoOperation = require("../model/flamingo-operation");
 import Constructor from "../model/Constructor";
+import Server = require("flamingo/src/model/server");
+import Config = require("flamingo/config");
 
 const { InvalidInputError } = errors;
 const { decode } = cipher;

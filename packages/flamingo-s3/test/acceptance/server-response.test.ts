@@ -6,7 +6,7 @@ import path = require("path");
 import fs = require("fs");
 import S3rver = require("s3rver");
 
-import Promise = require("bluebird");
+import util = require("util");
 import AWS = require("aws-sdk");
 import got = require("got");
 import Server = require("flamingo/src/model/server");
@@ -15,7 +15,7 @@ import AddonLoader = require("flamingo/src/addon/loader");
 import exampleProfiles = require("flamingo/src/profiles/examples");
 import S3Route = require("../../src/route");
 
-const stat = Promise.promisify(fs.stat);
+const stat = util.promisify(fs.stat);
 
 const PORT = 43723; // some random unused port
 const AWS_ENDPOINT = "localhost:4567";
