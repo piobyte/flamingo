@@ -1,5 +1,8 @@
 import VideoPreprocess = require("./../mixins/video-preprocess");
 import Image = require("./image");
+import Server = require("flamingo/src/model/server");
+import FlamingoOperation = require("flamingo/src/model/flamingo-operation");
+import Config = require("flamingo/config");
 
 /**
  * Route that converts a video to an image.

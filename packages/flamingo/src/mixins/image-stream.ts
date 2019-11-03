@@ -2,6 +2,8 @@ import validImageStream = require("../util/valid-image-stream");
 import Route = require("../model/route");
 import FlamingoOperation = require("../model/flamingo-operation");
 import Constructor from "../model/Constructor";
+import Server = require("flamingo/src/model/server");
+import Config = require("flamingo/config");
 
 export = function<T extends Constructor<Route>>(Base: T) {
   /**

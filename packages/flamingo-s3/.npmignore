@@ -1,50 +1,13 @@
-# https://github.com/github/gitignore/blob/master/Node.gitignore
-# Logs
-logs
-*.log
-npm-debug.log*
+# ignore everything
+*
 
-# Runtime data
-pids
-*.pid
-*.seed
+## except
 
-# Coverage directory used by tools like istanbul
-coverage
+# definition file
+!index.d.ts
 
-# node-waf configuration
-.lock-wscript
-
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
-
-# Dependency directories
-node_modules
-jspm_packages
-
-# Optional npm cache directory
-.npm
-
-# Optional REPL history
-.node_repl_history
-
-# https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore
-*.iml
-.idea/
-*.iws
-/out/
-.idea_modules/
-
-test
-targets
-tutorials
-tools
-docs
-.npmignore
-.dockerignore
-.eslintrc.js
-.flowconfig
-.travis.yml
-.istanbul.yml
-.editorconfig
-Dockerfile
+# source files
+!src/**/*.js
+!index.js
+!README.md
+!LICENSE
