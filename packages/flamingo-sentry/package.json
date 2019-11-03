@@ -12,11 +12,9 @@
     "precover": "rm -r coverage 2>/dev/null || true",
     "cover": "nyc mocha",
     "docs": "node node_modules/jsdoc/jsdoc.js index.js -r -u tutorials -t ./node_modules/postman-jsdoc-theme -P package.json -R README.md -d docs",
-    "prepublishOnly": "yarn test && yarn build && yarn types",
-    "preversion": "yarn test",
-    "types": "dts-generator --moduleResolution node --prefix flamingo-sentry --project . --out index.d.ts"
+    "prepublishOnly": "yarn test && yarn build",
+    "preversion": "yarn test"
   },
-  "types": "index.d.ts",
   "author": "Christian",
   "license": "MIT",
   "engines": {
@@ -44,7 +42,6 @@
     "@types/node": "^12.12.3",
     "@typescript-eslint/eslint-plugin": "^2.6.0",
     "@typescript-eslint/parser": "^2.6.0",
-    "dts-generator": "^3.0.0",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-prettier": "^3.1.1",

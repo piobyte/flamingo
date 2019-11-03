@@ -17,10 +17,8 @@
     "formats": "node targets/formats",
     "cover": "nyc mocha",
     "prettier": "prettier --write index.ts config.ts \"{src,test}/**/*.ts\"",
-    "prepublishOnly": "yarn test && yarn build && yarn types",
-    "types": "dts-generator --moduleResolution node --prefix flamingo --project . --out index.d.ts"
+    "prepublishOnly": "yarn test && yarn build"
   },
-  "types": "index.d.ts",
   "author": "Christian",
   "license": "MIT",
   "engines": {
@@ -38,7 +36,6 @@
     "buffer-peek-stream": "^1.0.1",
     "bunyan": "^1.8.12",
     "clamp": "^1.0.1",
-    "dts-generator": "^3.0.0",
     "file-type": "^12.3.1",
     "fluent-ffmpeg": "^2.1.0",
     "got": "^8.3.1",

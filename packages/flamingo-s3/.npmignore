@@ -3,8 +3,8 @@
 
 ## except
 
-# definition file
-!index.d.ts
+# definition files
+!*.d.ts
 
 # source files
 !src/**/*.js
