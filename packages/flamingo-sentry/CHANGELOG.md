@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.1](https://github.com/piobyte/flamingo-sentry/compare/flamingo-sentry@3.0.0...flamingo-sentry@3.0.1) (2019-11-03)
+
+
+### Bug Fixes
+
+* add dts generation again ([#31](https://github.com/piobyte/flamingo-sentry/issues/31)) ([424e4dc](https://github.com/piobyte/flamingo-sentry/commit/424e4dc))
+
+
+
+
+
 # 3.0.0 (2019-11-02)
 
 
