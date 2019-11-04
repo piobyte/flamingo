@@ -76,7 +76,7 @@ describe("flamingo-s3 server response", function() {
     nock.cleanAll();
   });
 
-  it("returns 400 for unknown bucket alias, bad key format and unknown profile", async function() {
+  it("returns 400 for unknown bucket (#32), unknown bucket alias, bad key format and unknown profile", async function() {
     const server = await startServer({
       AWS: {
         ENDPOINT: AWS_ENDPOINT,
@@ -85,6 +85,10 @@ describe("flamingo-s3 server response", function() {
         SECRET: AWS_SECRET,
         S3: {
           BUCKETS: {
+            unknown: {
+              name: "unknown",
+              path: "unknown/"
+            },
             cats: {
               name: "secret-cats-bucket-name",
               path: "bucket-path/"
@@ -95,6 +99,8 @@ describe("flamingo-s3 server response", function() {
     });
 
     const responses = await Promise.all([
+      // unknown bucket
+      got(`http://localhost:${PORT}/s3/unknown/avatar-image/123`).catch(e => e),
       // unknown alias
       got(`http://localhost:${PORT}/s3/dogs/avatar-image/123`).catch(e => e),
       // unknown profile

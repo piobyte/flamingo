@@ -1,6 +1,9 @@
 import assert = require("assert");
 import sinon = require("sinon");
 import reader = require("../../src/reader");
+import Errors = require("flamingo/src/util/errors");
+
+const { InvalidInputError } = Errors;
 
 describe("reader", function() {
   it("passes given bucket and key to s3 sdk methods", function() {
@@ -58,7 +61,7 @@ describe("reader", function() {
         assert.ok(false, "shouldn't resolve");
       })
       .catch(function(data) {
-        assert.deepEqual(data, headError);
+        assert.ok(data instanceof InvalidInputError);
       });
   });
 

@@ -1,3 +1,8 @@
+import Errors = require("flamingo/src/util/errors");
+import { ReaderResult } from "flamingo/src/types/ReaderResult";
+
+const { InvalidInputError } = Errors;
+
 const type = "s3";
 /**
  * S3 reader module
@@ -18,18 +23,22 @@ const type = "s3";
  * @param {AWS} s3Client AWS s3 client
  * @return {Promise.<ReadResult>} promise that resolves a reader result
  */
-function s3Reader(bucket, key, s3Client) {
+function s3Reader(bucket, key, s3Client): Promise<ReaderResult> {
   const params = {
     Bucket: bucket,
     Key: key
   };
+
   return s3Client
     .headObject(params)
     .promise()
     .then(() => ({
       stream: () => s3Client.getObject(params).createReadStream(),
       type
-    }));
+    }))
+    .catch(error => {
+      throw new InvalidInputError("Error trying to get object metadata", error);
+    });
 }
 
 export = s3Reader;
