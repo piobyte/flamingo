@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.3](https://github.com/piobyte/flamingo-s3/compare/flamingo-s3@3.0.2...flamingo-s3@3.0.3) (2019-11-04)
+
+
+### Bug Fixes
+
+* return InvalidInputError if s3 head fails ([#33](https://github.com/piobyte/flamingo-s3/issues/33)) ([7be623f](https://github.com/piobyte/flamingo-s3/commit/7be623f)), closes [#32](https://github.com/piobyte/flamingo-s3/issues/32)
+
+
+
+
+
 ## [3.0.2](https://github.com/piobyte/flamingo-s3/compare/flamingo-s3@3.0.1...flamingo-s3@3.0.2) (2019-11-03)
 
 

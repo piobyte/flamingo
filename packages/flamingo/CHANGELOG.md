@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.3](https://github.com/piobyte/flamingo/compare/flamingo@3.0.2...flamingo@3.0.3) (2019-11-04)
+
+
+### Bug Fixes
+
+* remove request from path ([#34](https://github.com/piobyte/flamingo/issues/34)) ([ae0375f](https://github.com/piobyte/flamingo/commit/ae0375f))
+
+
+
+
+
 ## [3.0.2](https://github.com/piobyte/flamingo/compare/flamingo@3.0.1...flamingo@3.0.2) (2019-11-03)
 
 
