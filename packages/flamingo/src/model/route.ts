@@ -114,7 +114,7 @@ class Route {
     error,
     operation?: FlamingoOperation
   ) {
-    const message = `${error.name}: ${error.message} at '${request.path}'`;
+    const message = `${error.name}: ${error.message}`;
     logger.error(
       {
         error,
