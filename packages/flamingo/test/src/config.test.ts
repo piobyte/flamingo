@@ -1,6 +1,6 @@
 import assert = require("assert");
 import merge = require("lodash/merge");
-import got = require("got");
+import got from "got";
 
 import exampleProfiles = require("../../src/profiles/examples");
 import Server = require("../../src/model/server");
@@ -38,10 +38,10 @@ describe("config", function() {
       server = await startServer({
         ROUTES: { INDEX: false }
       });
-      const { statusCode } = await got("http://localhost:" + PORT + "/").catch(
+      const { response } = await got("http://localhost:" + PORT + "/").catch(
         e => e
       );
-      assert.equal(statusCode, 404);
+      assert.equal(response.statusCode, 404);
     } finally {
       server.stop();
     }

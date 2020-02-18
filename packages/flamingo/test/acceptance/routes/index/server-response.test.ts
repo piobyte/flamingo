@@ -1,5 +1,5 @@
 import assert = require("assert");
-import got = require("got");
+import got from "got";
 import merge = require("lodash/merge");
 
 import Server = require("../../../../src/model/server");
@@ -42,7 +42,7 @@ describe("index server response", function() {
 
     try {
       server = await startServer({ DEBUG: true });
-      const response = await got("http://localhost:" + PORT);
+      const response = await got(`http://localhost:${PORT}`);
       assert.ok(response.body.indexOf("debug") !== -1);
     } finally {
       server.stop();

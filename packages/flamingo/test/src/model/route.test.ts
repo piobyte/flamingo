@@ -2,7 +2,7 @@
 import assert = require("assert");
 import sinon = require("sinon");
 import merge = require("lodash/merge");
-import got = require("got");
+import got from "got";
 
 import Server = require("../../../src/model/server");
 import Config = require("../../../config");
@@ -25,8 +25,8 @@ describe("convert", function() {
     let _server;
     try {
       _server = await startServer({}, new Route({}, "GET", "/"));
-      const { statusCode } = await got(`http://${HOST}:${PORT}/`).catch(e => e);
-      assert.equal(statusCode, 500);
+      const { response } = await got(`http://${HOST}:${PORT}/`).catch(e => e);
+      assert.equal(response.statusCode, 500);
     } finally {
       _server.stop();
     }

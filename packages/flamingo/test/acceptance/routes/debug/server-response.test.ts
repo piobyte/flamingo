@@ -1,5 +1,5 @@
 import assert = require("assert");
-import got = require("got");
+import got from "got";
 import merge = require("lodash/merge");
 
 import Server = require("../../../../src/model/server");
@@ -25,10 +25,10 @@ describe("debug server response", function() {
 
     try {
       server = await startServer({ DEBUG: true });
-      const response = await got(`http://localhost:${PORT}/_debug`, {
-        json: true
-      });
-      assert.equal(response.body.config.PORT, server.config.PORT);
+      const body: Record<string, any> = await got(
+        `http://localhost:${PORT}/_debug`
+      ).json();
+      assert.equal(body.config.PORT, server.config.PORT);
     } finally {
       server.stop();
     }
@@ -38,10 +38,10 @@ describe("debug server response", function() {
 
     try {
       server = await startServer({ DEBUG: true });
-      const response = await got(`http://localhost:${PORT}/_debug`, {
-        json: true
-      });
-      return got(response.body.urls[0].url);
+      const body: Record<string, any> = await got(
+        `http://localhost:${PORT}/_debug`
+      ).json();
+      return got(body.urls[0].url);
     } finally {
       server.stop();
     }

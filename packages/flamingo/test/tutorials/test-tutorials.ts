@@ -1,8 +1,8 @@
 import assert = require("assert");
 import path = require("path");
-import got = require("got");
 import fs = require("fs");
 import url = require("url");
+import got from "got";
 
 import simpleHttpServer = require("../test-util/simple-http-server");
 
@@ -2240,10 +2240,7 @@ describe("tutorials work as expected", function() {
             "../../test/fixtures/images/sharp-bench-assets",
             url.parse(req.url).pathname!
           )
-        ).pipe(
-          res,
-          { end: true }
-        );
+        ).pipe(res, { end: true });
       },
       ASSETS_PORT,
       ASSETS_HOST

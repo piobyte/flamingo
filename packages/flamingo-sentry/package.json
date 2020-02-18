@@ -18,7 +18,7 @@
   "author": "Christian",
   "license": "MIT",
   "engines": {
-    "node": ">=6"
+    "node": ">=12"
   },
   "keywords": [
     "flamingo-addon"
@@ -34,20 +34,20 @@
     "bunyan": "^1.8.1",
     "flamingo": "^3.0.3",
     "lodash.some": "^4.6.0",
-    "nyc": "^14.1.1",
+    "nyc": "^15.0.0",
     "raven": "^2.6.0"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.3",
-    "@typescript-eslint/eslint-plugin": "^2.6.0",
-    "@typescript-eslint/parser": "^2.6.0",
-    "eslint": "^6.6.0",
-    "eslint-config-prettier": "^6.5.0",
-    "eslint-plugin-prettier": "^3.1.1",
-    "got": "^9.6.0",
-    "mocha": "^6.2.2",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^13.7.1",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "got": "^10.5.7",
+    "mocha": "^7.0.1",
     "mockery": "^2.1.0",
-    "typescript": "^3.6.4"
+    "typescript": "^3.7.5"
   }
 }

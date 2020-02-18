@@ -16,7 +16,7 @@ import Url = require("url");
  */
 export = function readAllowed(
   url: Url.Url,
-  whitelist: Array<Url.Url> = []
+  whitelist: Array<Partial<Url.Url>> = []
 ): boolean {
   return some(whitelist, whitelistUrl => {
     return every(keys(whitelistUrl), whitelistKey => {

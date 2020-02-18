@@ -2,7 +2,7 @@ import Server = require("flamingo/src/model/server");
 import Config = require("flamingo/config");
 import Loader = require("flamingo/src/addon/loader");
 import Route = require("flamingo/src/model/route");
-import got = require("got");
+import got from "got";
 import path = require("path");
 import assert = require("assert");
 import mockery = require("mockery");
@@ -70,8 +70,8 @@ describe("LOG_STREAM", function() {
 
           return got(`http://localhost:${config.PORT}/`).catch(e => e);
         })
-        .then(error => {
-          assert.equal(error.statusCode, 500);
+        .then(({ response }) => {
+          assert.equal(response.statusCode, 500);
           assert.ok(capturedError, "called captureMessage on the raven client");
         })
         .finally(() => _server.stop());
