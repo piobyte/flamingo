@@ -50,12 +50,9 @@ const compareFileFixtures = function(fixturePath) {
             }
           });
         });
-        readStream.pipe(
-          fs.createWriteStream(writeTemp),
-          {
-            end: true
-          }
-        );
+        readStream.pipe(fs.createWriteStream(writeTemp), {
+          end: true
+        });
       })
       .catch(reject);
   });

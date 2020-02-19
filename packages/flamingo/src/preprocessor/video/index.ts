@@ -6,7 +6,7 @@
 import ffmpeg = require("fluent-ffmpeg");
 import assign = require("lodash/assign");
 import isFinite = require("lodash/isFinite");
-import got = require("got");
+import got from "got";
 
 import errors = require("../../util/errors");
 import ReaderType = require("../../model/reader-type");
@@ -101,7 +101,7 @@ export = function(operation) {
                   pkg.name + "/" + pkg.version + " (+" + pkg.bugs.url + ")"
               },
               followRedirect: false,
-              retries: 0
+              retry: 0
             })
             .then(() => {
               return videoProcessor(readerResult.url.href);

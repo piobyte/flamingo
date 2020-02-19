@@ -45,10 +45,7 @@ class Debug extends Route {
           "../../test/fixtures/images/sharp-bench-assets",
           url.parse(req.url).pathname!
         )
-      ).pipe(
-        res,
-        { end: true }
-      );
+      ).pipe(res, { end: true });
     }).then(httpServer => {
       const URL = url.format({
         protocol: "http",

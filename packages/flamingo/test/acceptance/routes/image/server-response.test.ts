@@ -2,7 +2,7 @@ import assert = require("assert");
 import merge = require("lodash/merge");
 import nock = require("nock");
 import range = require("lodash/range");
-import got = require("got");
+import got from "got";
 
 import Server = require("../../../../src/model/server");
 import Config = require("../../../../config");
@@ -53,13 +53,15 @@ describe("image converting server response", function() {
               `https://errs.example.com/${code}`
             )}`,
             {
-              retries: 0,
+              retry: 0,
               followRedirect: false
             }
           ).catch(data => data)
         )
       );
-      data.forEach(response => assert.equal((response as any).statusCode, 400));
+      data.forEach(({ response }) =>
+        assert.equal((response as any).statusCode, 400)
+      );
     } finally {
       server.stop();
     }
@@ -80,7 +82,7 @@ describe("image converting server response", function() {
           }
         }
       });
-      const response = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch(e => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
@@ -105,7 +107,7 @@ describe("image converting server response", function() {
 
     try {
       server = await startServer({});
-      const response = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch(e => e);
 
       assert.equal(response.statusCode, 400);
     } finally {
@@ -114,20 +116,20 @@ describe("image converting server response", function() {
   });
 
   it("allows redirect if enabled", async function() {
-    nock("https://redir.example.com")
+    nock("http://redir.example.com")
       .get("/moved.png")
       .reply(
         301,
         { status: "moved" },
         {
-          Location: "https://redir.example.com/url.png"
+          Location: "http://redir.example.com/url.png"
         }
       )
       .get("/url.png")
       .replyWithFile(200, __dirname + "/../../../fixtures/images/base64.png");
 
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
-      "https://redir.example.com/moved.png"
+      "http://redir.example.com/moved.png"
     )}`;
     let server;
 
@@ -150,7 +152,7 @@ describe("image converting server response", function() {
 
     try {
       server = await startServer({});
-      const response = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch(e => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
@@ -165,7 +167,7 @@ describe("image converting server response", function() {
 
     try {
       server = await startServer({});
-      const response = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch(e => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
@@ -182,7 +184,7 @@ describe("image converting server response", function() {
       server = await startServer({
         CRYPTO: { ENABLED: true }
       });
-      const response = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch(e => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();

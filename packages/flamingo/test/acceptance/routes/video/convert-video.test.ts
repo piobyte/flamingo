@@ -2,7 +2,7 @@ import assert = require("assert");
 import merge = require("lodash/merge");
 import path = require("path");
 import fs = require("fs");
-import got = require("got");
+import got from "got";
 import url = require("url");
 
 import exampleProfiles = require("../../../../src/profiles/examples");
@@ -223,9 +223,8 @@ describe("convert video", function() {
         HOST,
         ACCESS: { HTTPS: { ENABLED: false } }
       });
-      const data = await got(flamingoUrl).catch(e => e);
-      assert.ok(data);
-      assert.equal(data.statusCode, 400);
+      const { response } = await got(flamingoUrl).catch(e => e);
+      assert.equal(response.statusCode, 400);
     } finally {
       await Promise.all([httpServer.stop(), flamingoServer.stop()]);
     }

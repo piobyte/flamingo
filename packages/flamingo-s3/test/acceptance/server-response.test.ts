@@ -8,7 +8,7 @@ import S3rver = require("s3rver");
 
 import util = require("util");
 import AWS = require("aws-sdk");
-import got = require("got");
+import got from "got";
 import Server = require("flamingo/src/model/server");
 import Config = require("flamingo/config");
 import AddonLoader = require("flamingo/src/addon/loader");
@@ -23,6 +23,7 @@ const AWS_REGION = "us-east-1";
 const AWS_SECRET = "abc";
 const AWS_ACCESS_KEY = "123";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
 function startServer(localConf) {
@@ -111,7 +112,7 @@ describe("flamingo-s3 server response", function() {
       )
     ]);
 
-    responses.forEach(response => assert.equal(response.statusCode, 400));
+    responses.forEach(({ response }) => assert.equal(response.statusCode, 400));
 
     return server.stop();
   });

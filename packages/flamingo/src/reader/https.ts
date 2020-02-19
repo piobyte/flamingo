@@ -1,5 +1,6 @@
-import got = require("got");
+import got from "got";
 import nodeStream = require("stream");
+import Url = require("url");
 
 import errors = require("../util/errors");
 import FlamingoOperation = require("../model/flamingo-operation");
@@ -20,7 +21,8 @@ export = function(operation: FlamingoOperation): Promise<ReaderResult> {
   const input = operation.input;
   const access = conf.ACCESS!;
 
-  return access.HTTPS!.ENABLED && !readAllowed(input, access.HTTPS!.READ)
+  return access.HTTPS!.ENABLED &&
+    !readAllowed(input, (access.HTTPS!.READ as unknown) as Array<Url.Url>)
     ? Promise.reject(
         "Read not allowed. See `ACCESS.HTTPS.READ` for more information."
       )

@@ -4,7 +4,7 @@ import path = require("path");
 import assert = require("assert");
 import sinon = require("sinon");
 import merge = require("lodash/merge");
-import got = require("got");
+import got from "got";
 import Hapi = require("@hapi/hapi");
 
 import Route = require("../../../src/model/route");
