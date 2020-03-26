@@ -37,7 +37,7 @@ class Debug extends Route {
   ) {
     super(config, method, path, description);
 
-    simpleHttpServer(function(req, res) {
+    simpleHttpServer(function (req, res) {
       res.writeHead(200, { "Content-Type": "image/jpeg" });
       fs.createReadStream(
         nodePath.join(
@@ -46,19 +46,19 @@ class Debug extends Route {
           url.parse(req.url).pathname!
         )
       ).pipe(res, { end: true });
-    }).then(httpServer => {
+    }).then((httpServer) => {
       const URL = url.format({
         protocol: "http",
         hostname: httpServer.address().address,
-        port: httpServer.address().port
+        port: httpServer.address().port,
       });
-      IMAGES = all().map(function(image) {
+      IMAGES = all().map(function (image) {
         image.url = `${URL}/${image.filename}`;
         return image;
       });
 
       return Promise.all(
-        IMAGES.map(image =>
+        IMAGES.map((image) =>
           encode(
             image.url,
             config.CRYPTO!.CIPHER,
@@ -66,7 +66,7 @@ class Debug extends Route {
             config.CRYPTO!.IV
           )
         )
-      ).then(encodedUrls => {
+      ).then((encodedUrls) => {
         IMAGES = encodedUrls.map((encoded, i) => {
           IMAGES[i].enc = encoded;
           return IMAGES[i];
@@ -81,14 +81,14 @@ class Debug extends Route {
     const processors = ["vips", "gm"];
 
     // only use debug routes
-    profileNames = profileNames.filter(name => name.indexOf("debug-") === 0);
+    profileNames = profileNames.filter((name) => name.indexOf("debug-") === 0);
 
     return Promise.resolve(
       operation.reply.response({
-        routes: this.server.hapi.table().map(t => ({
+        routes: this.server.hapi.table().map((t) => ({
           method: t.method,
           path: t.path,
-          description: t.settings.description
+          description: t.settings.description,
         })),
         addons: this.server.addonsLoader.addons,
         processors,
@@ -96,7 +96,7 @@ class Debug extends Route {
         pkg,
         profiles: profileNames,
         urls: IMAGES,
-        config: omit(operation.config, "CRYPTO")
+        config: omit(operation.config, "CRYPTO"),
       })
     );
   }

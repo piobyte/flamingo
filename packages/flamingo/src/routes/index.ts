@@ -101,7 +101,7 @@ pre{
 <h3><a href="#addons">Addons</a></h3>
 <pre>${util.inspect(
       route.server.addonsLoader.addons.map(
-        addon => `${addon.pkg.name}@${addon.pkg.version}`
+        (addon) => `${addon.pkg.name}@${addon.pkg.version}`
       )
     )}</pre>
 </div>

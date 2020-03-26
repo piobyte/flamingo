@@ -10,7 +10,7 @@
     "test": "TEST=true yarn cover",
     "docs": "node node_modules/jsdoc/jsdoc.js index.js src -r -u tutorials -t ./node_modules/postman-jsdoc-theme -P package.json -R README.md -d docs",
     "cover": "nyc mocha",
-    "prettier": "prettier --write \"{src,test}/**/*.ts\"",
+    "prettier": "prettier --write \"{src,test}/**/*.ts\" index.ts",
     "prepublishOnly": "yarn test && yarn build",
     "preversion": "yarn test"
   },
@@ -30,25 +30,25 @@
     "url": "https://github.com/piobyte/flamingo-s3"
   },
   "dependencies": {
-    "aws-sdk": "^2.620.0",
+    "aws-sdk": "^2.646.0",
     "boom": "^7.3.0",
     "flamingo": "^3.0.4",
     "lodash.merge": "^4.6.0",
     "nyc": "^15.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "^7.0.1",
-    "@types/node": "^13.7.1",
-    "@typescript-eslint/eslint-plugin": "^2.20.0",
-    "@typescript-eslint/parser": "^2.20.0",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^12.12.31",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
     "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-prettier": "^3.1.2",
-    "got": "^10.5.7",
-    "mocha": "^7.0.1",
-    "nock": "^12.0.0",
+    "got": "^10.7.0",
+    "mocha": "^7.1.1",
+    "nock": "^12.0.3",
     "s3rver": "^2.2.9",
-    "sinon": "^8.1.1",
-    "typescript": "^3.7.5"
+    "sinon": "^9.0.1",
+    "typescript": "^3.8.3"
   }
 }

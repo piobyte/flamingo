@@ -12,6 +12,6 @@
 import { ReaderResult } from "../types/ReaderResult";
 import nodeStream = require("stream");
 
-export = function(object: ReaderResult): Promise<nodeStream.Readable> {
+export = function (object: ReaderResult): Promise<nodeStream.Readable> {
   return object.stream();
 };

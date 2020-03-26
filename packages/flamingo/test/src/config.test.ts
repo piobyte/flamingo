@@ -30,16 +30,16 @@ async function startServer(localConf) {
     .start();
 }
 
-describe("config", function() {
-  it("has no index (fingerprinting) route by default", async function() {
+describe("config", function () {
+  it("has no index (fingerprinting) route by default", async function () {
     let server;
 
     try {
       server = await startServer({
-        ROUTES: { INDEX: false }
+        ROUTES: { INDEX: false },
       });
       const { response } = await got("http://localhost:" + PORT + "/").catch(
-        e => e
+        (e) => e
       );
       assert.equal(response.statusCode, 404);
     } finally {
@@ -47,11 +47,13 @@ describe("config", function() {
     }
   });
 
-  it("#fromEnv", async function() {
+  it("#fromEnv", async function () {
     const env = {
-      TEST: "true"
+      TEST: "true",
     };
-    const mappings: Array<Mapping> = [["TEST", "TEST", val => val === "true"]];
+    const mappings: Array<Mapping> = [
+      ["TEST", "TEST", (val) => val === "true"],
+    ];
 
     const config = await Config.fromEnv(env, mappings);
     assert.equal(config.TEST, true);

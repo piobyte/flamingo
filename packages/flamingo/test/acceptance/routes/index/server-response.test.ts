@@ -20,8 +20,8 @@ async function startServer(localConf) {
     .start();
 }
 
-describe("index server response", function() {
-  it("returns a banner for /", async function() {
+describe("index server response", function () {
+  it("returns a banner for /", async function () {
     let server;
 
     try {
@@ -37,7 +37,7 @@ describe("index server response", function() {
     }
   });
 
-  it("displays debug information if DEBUG is enabled", async function() {
+  it("displays debug information if DEBUG is enabled", async function () {
     let server;
 
     try {

@@ -11,7 +11,7 @@
 
 enum ReaderType {
   FILE = "file",
-  REMOTE = "remote"
+  REMOTE = "remote",
 }
 
 export = ReaderType;

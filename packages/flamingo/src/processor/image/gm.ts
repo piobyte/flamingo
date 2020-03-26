@@ -27,14 +27,14 @@ const logger = build("processor/image/gm");
  * image([{ id: 'format', format: 'jpg'}])(fs.createReadStream('sample.png')
  *      .then((resultStream) => {...})
  */
-export = function(
+export = function (
   operation: FlamingoOperation,
   pipeline /*: function */,
   stream /*: {pipe: function }*/
 ) /*: any */ {
   if (gm !== null) {
     const graphics = gm(stream).options({
-      nativeAutoOrient: operation.config.NATIVE_AUTO_ORIENT
+      nativeAutoOrient: operation.config.NATIVE_AUTO_ORIENT,
     });
     return pipeline(graphics).stream();
   } else {

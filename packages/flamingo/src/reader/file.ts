@@ -10,7 +10,7 @@ const { InvalidInputError } = errors;
 const { FILE } = ReaderType;
 
 function fileExists(filePath: string) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     fs.stat(filePath, (err, stat) => {
       if (err) {
         reject(new InvalidInputError("Input stat error.", err));
@@ -30,7 +30,7 @@ function fileExists(filePath: string) {
  * @param {Object} operation
  * @return {Promise} resolves with the file read configuration
  */
-export = function(operation: FlamingoOperation) {
+export = function (operation: FlamingoOperation) {
   const filePath = operation.input;
   const access = operation.config.ACCESS!;
 
@@ -46,6 +46,6 @@ export = function(operation: FlamingoOperation) {
   return fileExists(normalizedPath).then(() => ({
     stream: () => fs.createReadStream(normalizedPath),
     type: FILE,
-    path: normalizedPath
+    path: normalizedPath,
   }));
 };

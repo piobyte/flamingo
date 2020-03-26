@@ -13,10 +13,10 @@ export = function simpleHttpServer(
   httpServer.timeout = 4 * 1000;
   httpServer.listen(port, host);
 
-  return new Promise<IServer>(resolve => {
+  return new Promise<IServer>((resolve) => {
     (httpServer as IServer).stop = () =>
       new Promise((resolve, reject) => {
-        httpServer.close(function(err) {
+        httpServer.close(function (err) {
           if (err) {
             reject(err);
           } else {

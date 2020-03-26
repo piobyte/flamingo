@@ -14,10 +14,10 @@ import { SupportedConfig } from "../types/SupportedConfig";
  * @returns {Promise} resolves true or false depending on the ffmpeg/ffprobe support
  */
 function hasFFmpeg() {
-  return new Promise(resolve =>
+  return new Promise((resolve) =>
     ffmpeg.ffprobe(
       path.join(__dirname, "../../test/fixtures/videos/trailer_1080p.ogg"),
-      err => resolve(!err)
+      (err) => resolve(!err)
     )
   );
 }
@@ -30,11 +30,11 @@ function hasFFmpeg() {
  *   .then((supported) =>
  *     console.log(supported.GM.WEBP ? 'webp is supported for gm processor' : 'webp not supported for gm processor'))
  */
-export = function(conf?: Config): Promise<SupportedConfig> {
+export = function (conf?: Config): Promise<SupportedConfig> {
   const supported: SupportedConfig = { FFMPEG: false, GM: { WEBP: false } };
   temp.track();
 
-  return Promise.all([hasFFmpeg()]).then(function([FFMPEG]) {
+  return Promise.all([hasFFmpeg()]).then(function ([FFMPEG]) {
     /*eslint no-sync: 0*/
     temp.cleanupSync();
 

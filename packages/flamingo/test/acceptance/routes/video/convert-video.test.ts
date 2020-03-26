@@ -31,8 +31,8 @@ async function startServer(localConf) {
     .start();
 }
 
-describe("convert video", function() {
-  it("creates an image from an ogg video", async function() {
+describe("convert video", function () {
+  it("creates an image from an ogg video", async function () {
     const SRC_FILE = "trailer_1080p.ogg";
     const FILE_PATH = path.join(
       __dirname,
@@ -41,7 +41,7 @@ describe("convert video", function() {
     );
 
     let flamingoServer;
-    const httpServer = await simpleHttpServer(function(req, res) {
+    const httpServer = await simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
@@ -50,19 +50,19 @@ describe("convert video", function() {
     const assetsUrl = url.format({
       protocol: "http",
       hostname: HOST,
-      port: httpServer.address().port
+      port: httpServer.address().port,
     });
     const flamingoUrl = url.format({
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`,
     });
 
     try {
       flamingoServer = await startServer({
         HOST,
-        ACCESS: { HTTPS: { ENABLED: false } }
+        ACCESS: { HTTPS: { ENABLED: false } },
       });
       const data = await got(flamingoUrl);
       assert.ok(data);
@@ -72,7 +72,7 @@ describe("convert video", function() {
     }
   });
 
-  it.skip("creates an image from an mp4 video", async function() {
+  it.skip("creates an image from an mp4 video", async function () {
     // TODO: ProcessingError: Uncaught error: ffmpeg exited with code 1: Error opening filters!
     const SRC_FILE = "trailer_1080p.mp4";
     const FILE_PATH = path.join(
@@ -82,7 +82,7 @@ describe("convert video", function() {
     );
 
     let flamingoServer;
-    const httpServer = await simpleHttpServer(function(req, res) {
+    const httpServer = await simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
@@ -92,19 +92,19 @@ describe("convert video", function() {
     const assetsUrl = url.format({
       protocol: "http",
       hostname: HOST,
-      port: httpServer.address().port
+      port: httpServer.address().port,
     });
     const flamingoUrl = url.format({
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`,
     });
 
     try {
       flamingoServer = await startServer({
         HOST,
-        ACCESS: { HTTPS: { ENABLED: false } }
+        ACCESS: { HTTPS: { ENABLED: false } },
       });
       const data = await got(flamingoUrl);
       assert.ok(data);
@@ -114,7 +114,7 @@ describe("convert video", function() {
     }
   });
 
-  it("creates an image from an avi video", async function() {
+  it("creates an image from an avi video", async function () {
     const SRC_FILE = "trailer_1080p.avi";
     const FILE_PATH = path.join(
       __dirname,
@@ -123,7 +123,7 @@ describe("convert video", function() {
     );
 
     let flamingoServer;
-    const httpServer = await simpleHttpServer(function(req, res) {
+    const httpServer = await simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
@@ -133,19 +133,19 @@ describe("convert video", function() {
     const assetsUrl = url.format({
       protocol: "http",
       hostname: HOST,
-      port: httpServer.address().port
+      port: httpServer.address().port,
     });
     const flamingoUrl = url.format({
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`,
     });
 
     try {
       flamingoServer = await startServer({
         HOST,
-        ACCESS: { HTTPS: { ENABLED: false } }
+        ACCESS: { HTTPS: { ENABLED: false } },
       });
       const data = await got(flamingoUrl);
       assert.ok(data);
@@ -155,7 +155,7 @@ describe("convert video", function() {
     }
   });
 
-  it("creates an image from an quicktime video", async function() {
+  it("creates an image from an quicktime video", async function () {
     const SRC_FILE = "trailer_1080p.mov";
     const FILE_PATH = path.join(
       __dirname,
@@ -164,7 +164,7 @@ describe("convert video", function() {
     );
 
     let flamingoServer;
-    const httpServer = await simpleHttpServer(function(req, res) {
+    const httpServer = await simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
@@ -173,19 +173,19 @@ describe("convert video", function() {
     const assetsUrl = url.format({
       protocol: "http",
       hostname: HOST,
-      port: httpServer.address().port
+      port: httpServer.address().port,
     });
     const flamingoUrl = url.format({
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`,
     });
 
     try {
       flamingoServer = await startServer({
         HOST,
-        ACCESS: { HTTPS: { ENABLED: false } }
+        ACCESS: { HTTPS: { ENABLED: false } },
       });
       const data = await got(flamingoUrl);
       assert.ok(data);
@@ -195,12 +195,12 @@ describe("convert video", function() {
     }
   });
 
-  it("rejects on ffprobe errors", async function() {
+  it("rejects on ffprobe errors", async function () {
     const SRC_FILE = "convert-video.test.js";
     const FILE_PATH = path.join(__dirname, SRC_FILE);
 
     let flamingoServer;
-    const httpServer = await simpleHttpServer(function(req, res) {
+    const httpServer = await simpleHttpServer(function (req, res) {
       res.writeHead(200, {});
       fs.createReadStream(FILE_PATH).pipe(res);
     });
@@ -209,21 +209,21 @@ describe("convert video", function() {
     const assetsUrl = url.format({
       protocol: "http",
       hostname: HOST,
-      port: httpServer.address().port
+      port: httpServer.address().port,
     });
     const flamingoUrl = url.format({
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`,
     });
 
     try {
       flamingoServer = await startServer({
         HOST,
-        ACCESS: { HTTPS: { ENABLED: false } }
+        ACCESS: { HTTPS: { ENABLED: false } },
       });
-      const { response } = await got(flamingoUrl).catch(e => e);
+      const { response } = await got(flamingoUrl).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       await Promise.all([httpServer.stop(), flamingoServer.stop()]);

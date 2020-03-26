@@ -4,13 +4,13 @@ import assert = require("assert");
 import unfoldReaderResult = require("../../../src/util/unfold-reader-result");
 import ReaderType = require("../../../src/model/reader-type");
 
-describe("unfold reader result test", function() {
-  it("checks that the method calls the stream function", function() {
+describe("unfold reader result test", function () {
+  it("checks that the method calls the stream function", function () {
     const streamSpy = sinon.stub().returns(true);
 
     const streamed = unfoldReaderResult({
       stream: streamSpy,
-      type: ReaderType.FILE
+      type: ReaderType.FILE,
     });
 
     assert.equal(streamed, true);

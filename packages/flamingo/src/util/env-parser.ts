@@ -23,7 +23,7 @@ const Parsers = {
    * parser.int(42)('wasd') // 42
    */
   int(def: number) /*: function */ {
-    return function(val?: any): number {
+    return function (val?: any): number {
       let parsed = parseInt(val, 10);
       if (isNaN(parsed)) {
         parsed = def;
@@ -41,7 +41,7 @@ const Parsers = {
    * parser.float(1.3)('wasd') // 1.3
    */
   float(def: any) /*: function */ {
-    return function(val?: any): number {
+    return function (val?: any): number {
       let parsed = parseFloat(val);
       if (isNaN(parsed)) {
         parsed = def;
@@ -75,7 +75,7 @@ const Parsers = {
    * @example
    * parser.buffer64('DjiZ7AWTeNh38zoQiZ76gw==') // Buffer.from('DjiZ7AWTeNh38zoQiZ76gw==', 'base64')
    */
-  buffer64: (val: string): Buffer => Buffer.from(val, "base64")
+  buffer64: (val: string): Buffer => Buffer.from(val, "base64"),
 };
 
 export = Parsers;

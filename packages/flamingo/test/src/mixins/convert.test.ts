@@ -11,13 +11,13 @@ import Route = require("../../../src/model/route");
 import DummyRoute = require("../../test-util/DummyRoute");
 
 function failOnHandleError(operation) {
-  return err => {
+  return (err) => {
     assert.ok(false, err);
   };
 }
 
-describe("convert", function() {
-  it("#validOperation rejects", function() {
+describe("convert", function () {
+  it("#validOperation rejects", function () {
     function testMixin(superClass) {
       return class TestMixin extends superClass {
         handleError(request, reply, error, operation = {}) {
@@ -42,7 +42,7 @@ describe("convert", function() {
       .catch(() => assert.ok(true, "validOperation triggers a convert reject"));
   });
 
-  it("#write", function() {
+  it("#write", function () {
     const convert = new (class extends Convert(DummyRoute) {
       handleError(request, reply, error, operation = {}) {
         return (failOnHandleError(operation) as any) as Hapi.ResponseObject;
@@ -55,22 +55,24 @@ describe("convert", function() {
     assert.ok((operation.writer as any).called);
   });
 
-  it("#handle", async function() {
+  it("#handle", async function () {
     const fixture = fs.createReadStream(
       path.join(__dirname, "../../fixtures/images/base64.png")
     );
     const readSpy = sinon.stub().returns(() =>
       Promise.resolve({
         stream: () => Promise.resolve(fixture),
-        type: "remote"
+        type: "remote",
       })
     );
-    const preprocessSpy = sinon.stub().returns(operation => operation.stream());
+    const preprocessSpy = sinon
+      .stub()
+      .returns((operation) => operation.stream());
     const validStreamSpy = sinon
       .stub()
-      .returns(operation => Promise.resolve(operation));
-    const processSpy = sinon.stub().returns(operation => stream => stream);
-    const writeSpy = sinon.stub().returns(operation => operation);
+      .returns((operation) => Promise.resolve(operation));
+    const processSpy = sinon.stub().returns((operation) => (stream) => stream);
+    const writeSpy = sinon.stub().returns((operation) => operation);
 
     const operation = new FlamingoOperation();
     const convert = new (class extends Convert(class extends DummyRoute {}) {

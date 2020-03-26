@@ -8,8 +8,8 @@ import Hapi = require("@hapi/hapi");
 import responseWriter = require("../../../src/writer/response");
 import FlamingoOperation = require("../../../src/model/flamingo-operation");
 
-describe("response writer", function() {
-  it("passes the stream to the reply function", function() {
+describe("response writer", function () {
+  it("passes the stream to the reply function", function () {
     const op = new FlamingoOperation();
     const stream = fs.createReadStream(
       path.join(__dirname, "../../fixtures/images/base64.png")
@@ -17,14 +17,14 @@ describe("response writer", function() {
     const replyStream = temp.createWriteStream();
 
     op.reply = {
-      response: function(stream: any) {
+      response: function (stream: any) {
         return stream.pipe(replyStream);
-      }
+      },
     } as Hapi.ResponseToolkit;
 
     return responseWriter(op)(stream);
   });
-  it("applies response headers", async function() {
+  it("applies response headers", async function () {
     const op = new FlamingoOperation();
     const stream = fs.createReadStream(
       path.join(__dirname, "../../fixtures/images/base64.png")
@@ -35,9 +35,9 @@ describe("response writer", function() {
     replyStream.header = headerSpy;
 
     op.reply = {
-      response: function(stream: any) {
+      response: function (stream: any) {
         return stream.pipe(replyStream);
-      }
+      },
     } as Hapi.ResponseToolkit;
     op.response = { header: { "x-foo": "bar" } };
 
@@ -49,7 +49,7 @@ describe("response writer", function() {
     }
   });
 
-  it.skip("doesn't call reply twice in case of stream error (#10)", async function() {
+  it.skip("doesn't call reply twice in case of stream error (#10)", async function () {
     const op = new FlamingoOperation();
     const stream = fs.createReadStream(
       path.join(__dirname, "../../fixtures/images/base64.png")
@@ -57,15 +57,15 @@ describe("response writer", function() {
     const replyStream = temp.createWriteStream();
     let replyCalled = 0;
 
-    stream.on("readable", function() {
+    stream.on("readable", function () {
       stream.emit("error", "stream error");
     });
 
     op.reply = {
-      response: function(stream: any) {
+      response: function (stream: any) {
         replyCalled++;
         return stream.pipe(replyStream);
-      }
+      },
     } as Hapi.ResponseToolkit;
     op.response = {};
 

@@ -49,7 +49,7 @@ const images = {
   heic: "../libheif-assets/example.heic",
 
   // svg disabled because https://github.com/aheckmann/gm/issues/466
-  svg: "Wikimedia-logo.svg" // http://commons.wikimedia.org/wiki/File:Wikimedia-logo.svg
+  svg: "Wikimedia-logo.svg", // http://commons.wikimedia.org/wiki/File:Wikimedia-logo.svg
 };
 
 export interface ImageDescription {
@@ -60,10 +60,10 @@ export interface ImageDescription {
 }
 
 function all(): Array<ImageDescription> {
-  return Object.keys(images).map(imageName => ({
+  return Object.keys(images).map((imageName) => ({
     desc: imageName,
     path: path.join(__dirname, images[imageName]),
-    filename: images[imageName]
+    filename: images[imageName],
   }));
 }
 

@@ -25,14 +25,14 @@ import Server = require("flamingo/src/model/server");
  * `AWS_ACCESS_KEY` => `AWS.ACCESS_KEY`
  * `AWS_S3_BUCKETS` => `AWS.S3.BUCKETS`
  */
-exports[addon.HOOKS.ENV] = function() {
+exports[addon.HOOKS.ENV] = function () {
   return [
     ["AWS_ENDPOINT", "AWS.ENDPOINT"],
     ["AWS_REGION", "AWS.REGION"],
     ["AWS_SECRET", "AWS.SECRET"],
     ["AWS_ACCESS_KEY", "AWS.ACCESS_KEY"],
     ["AWS_S3_BUCKETS", "AWS.S3.BUCKETS", JSON.parse],
-    ["AWS_S3_FORCE_PATH_STYLE", "AWS.S3.FORCE_PATH_STYLE", envParser.boolean]
+    ["AWS_S3_FORCE_PATH_STYLE", "AWS.S3.FORCE_PATH_STYLE", envParser.boolean],
   ];
 };
 
@@ -42,7 +42,7 @@ exports[addon.HOOKS.ENV] = function() {
  * @function
  * @return {{AWS: {ENDPOINT: string, REGION: string, ACCESS_KEY: string, SECRET: string, S3: {VERSION: string, BUCKETS: {alias: {name: string, path: string}}}}}}
  */
-exports[addon.HOOKS.CONF] = function() {
+exports[addon.HOOKS.CONF] = function () {
   return {
     AWS: {
       ENDPOINT: "",
@@ -55,11 +55,11 @@ exports[addon.HOOKS.CONF] = function() {
         BUCKETS: {
           alias: {
             name: "bucket-id",
-            path: "bucket-path/"
-          }
-        }
-      }
-    }
+            path: "bucket-path/",
+          },
+        },
+      },
+    },
   };
 };
 
@@ -70,14 +70,14 @@ exports[addon.HOOKS.CONF] = function() {
  * @function
  * @param {Server} server server instance
  */
-exports[addon.HOOKS.START] = function(server: Server) {
+exports[addon.HOOKS.START] = function (server: Server) {
   const config /*: { credentials: any, region: string, apiVersion: string, endpoint?: string, s3ForcePathStyle?: boolean } */ = {
     credentials: new AWS.Credentials(
       server.config.AWS.ACCESS_KEY,
       server.config.AWS.SECRET
     ),
     region: server.config.AWS.REGION,
-    apiVersion: server.config.AWS.S3.VERSION
+    apiVersion: server.config.AWS.S3.VERSION,
   };
   if (server.config.AWS.ENDPOINT !== "") {
     config["endpoint"] = server.config.AWS.ENDPOINT;

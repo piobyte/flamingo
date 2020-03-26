@@ -57,7 +57,7 @@ class AddonLoader {
       addonLoaderLogger.info(
         "using addons: " +
           addons
-            .map(addon => `${addon.pkg.name}@${addon.pkg.version}`)
+            .map((addon) => `${addon.pkg.name}@${addon.pkg.version}`)
             .join(", ")
       );
     }
@@ -89,7 +89,7 @@ class AddonLoader {
     const deps = assign({}, pkg.dependencies, pkg.devDependencies);
 
     return Object.keys(deps)
-      .map(dependency =>
+      .map((dependency) =>
         this.fromPackage(path.join(rootPath, modulesDir, dependency, "/"))
       )
       .filter(Boolean)
@@ -133,7 +133,7 @@ class AddonLoader {
         return {
           path: packagePath,
           pkg: packageJson,
-          hooks: {}
+          hooks: {},
         };
       }
     } else {
@@ -152,15 +152,15 @@ class AddonLoader {
     // map addons to object where key equals the addons hooks name
     return reduce(
       addons,
-      function(hooks, addon) {
-        forOwn(addon.hooks, function(val, key) {
+      function (hooks, addon) {
+        forOwn(addon.hooks, function (val, key) {
           if (addon.hooks && addon.hooks.hasOwnProperty(key)) {
             // provide empty array for hook key
             hooks[key] = hooks[key] || [];
 
             hooks[key].push({
               hook: addon.hooks[key],
-              addon
+              addon,
             });
           }
         });
@@ -199,7 +199,7 @@ class AddonLoader {
     if (this._hooks[hookName]) {
       hookFunction = (...args) => {
         const callbackFn = this._callbacks[hookName](...args);
-        return this._hooks[hookName].map(hook =>
+        return this._hooks[hookName].map((hook) =>
           callbackFn(hook.hook(hookConfig))
         );
       };

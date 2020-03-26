@@ -22,19 +22,19 @@ async function startServer(localConf) {
     .start();
 }
 
-describe("image converting server response", function() {
-  afterEach(function() {
+describe("image converting server response", function () {
+  afterEach(function () {
     nock.enableNetConnect();
     nock.cleanAll();
   });
 
-  it("returns 400 for all target error codes", async function() {
+  it("returns 400 for all target error codes", async function () {
     let server;
     const codes = range(400, 600);
     let endpoint = nock("https://errs.example.com");
 
     codes.forEach(
-      code => (endpoint = endpoint.get("/" + code).reply(code, {}))
+      (code) => (endpoint = endpoint.get("/" + code).reply(code, {}))
     );
 
     try {
@@ -42,21 +42,21 @@ describe("image converting server response", function() {
         ACCESS: {
           HTTPS: {
             ENABLED: true,
-            READ: [{ hostname: "errs.example.com" }]
-          }
-        }
+            READ: [{ hostname: "errs.example.com" }],
+          },
+        },
       });
       const data = await Promise.all(
-        codes.map(code =>
+        codes.map((code) =>
           got(
             `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
               `https://errs.example.com/${code}`
             )}`,
             {
               retry: 0,
-              followRedirect: false
+              followRedirect: false,
             }
-          ).catch(data => data)
+          ).catch((data) => data)
         )
       );
       data.forEach(({ response }) =>
@@ -67,7 +67,7 @@ describe("image converting server response", function() {
     }
   });
 
-  it("returns 400 for not whitelisted urls", async function() {
+  it("returns 400 for not whitelisted urls", async function () {
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
       "https://old.example.com/image.png"
     )}`;
@@ -78,27 +78,25 @@ describe("image converting server response", function() {
         ACCESS: {
           HTTPS: {
             ENABLED: true,
-            READ: [{ hostname: "errs.example.com" }]
-          }
-        }
+            READ: [{ hostname: "errs.example.com" }],
+          },
+        },
       });
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
     }
   });
 
-  it("rejects redirects by default", async function() {
-    nock("https://redir.example.com")
-      .get("/moved.jpg")
-      .reply(
-        301,
-        { status: "moved" },
-        {
-          Location: "https://redir.example.com/url.jpg"
-        }
-      );
+  it("rejects redirects by default", async function () {
+    nock("https://redir.example.com").get("/moved.jpg").reply(
+      301,
+      { status: "moved" },
+      {
+        Location: "https://redir.example.com/url.jpg",
+      }
+    );
 
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
       "https://redir.example.com/moved.jpg"
@@ -107,7 +105,7 @@ describe("image converting server response", function() {
 
     try {
       server = await startServer({});
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
 
       assert.equal(response.statusCode, 400);
     } finally {
@@ -115,14 +113,14 @@ describe("image converting server response", function() {
     }
   });
 
-  it("allows redirect if enabled", async function() {
+  it("allows redirect if enabled", async function () {
     nock("http://redir.example.com")
       .get("/moved.png")
       .reply(
         301,
         { status: "moved" },
         {
-          Location: "http://redir.example.com/url.png"
+          Location: "http://redir.example.com/url.png",
         }
       )
       .get("/url.png")
@@ -135,7 +133,7 @@ describe("image converting server response", function() {
 
     try {
       server = await startServer({
-        ALLOW_READ_REDIRECT: true
+        ALLOW_READ_REDIRECT: true,
       });
       const response = await got(URL);
       assert.equal(response.statusCode, 200);
@@ -144,7 +142,7 @@ describe("image converting server response", function() {
     }
   });
 
-  it("rejects unknown protocols (no reader available)", async function() {
+  it("rejects unknown protocols (no reader available)", async function () {
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
       "ftp://ftp.example.com/moved.jpg"
     )}`;
@@ -152,14 +150,14 @@ describe("image converting server response", function() {
 
     try {
       server = await startServer({});
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
     }
   });
 
-  it("rejects unknown profile", async function() {
+  it("rejects unknown profile", async function () {
     const URL = `http://localhost:${PORT}/image/foo/${encodeURIComponent(
       "http://ftp.example.com/moved.jpg"
     )}`;
@@ -167,14 +165,14 @@ describe("image converting server response", function() {
 
     try {
       server = await startServer({});
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
     }
   });
 
-  it("fails for decryption errors", async function() {
+  it("fails for decryption errors", async function () {
     const URL = `http://localhost:${PORT}/image/avatar-image/${encodeURIComponent(
       "http://ftp.example.com/moved.jpg"
     )}`;
@@ -182,9 +180,9 @@ describe("image converting server response", function() {
 
     try {
       server = await startServer({
-        CRYPTO: { ENABLED: true }
+        CRYPTO: { ENABLED: true },
       });
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();

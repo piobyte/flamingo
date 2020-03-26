@@ -37,7 +37,7 @@ function ensureLogMessage(obj) {
  * `SENTRY_DSN` => `SENTRY_DSN`
  * @return {Array} environment mappings
  */
-exports[addon.HOOKS.ENV] = function() {
+exports[addon.HOOKS.ENV] = function () {
   return [["SENTRY_DSN", "SENTRY_DSN"]];
 };
 
@@ -47,9 +47,9 @@ exports[addon.HOOKS.ENV] = function() {
  * @function
  * @return {{SENTRY_DSN: undefined}}
  */
-exports[addon.HOOKS.CONF] = function() {
+exports[addon.HOOKS.CONF] = function () {
   return {
-    SENTRY_DSN: undefined
+    SENTRY_DSN: undefined,
   };
 };
 
@@ -68,7 +68,7 @@ exports[addon.HOOKS.CONF] = function() {
  * @see {@link bunyan.docs}
  * @return {Array.<BunyanStreamDefinition>} bunyan stream definitions
  */
-exports[addon.HOOKS.LOG_STREAM] = function(conf) {
+exports[addon.HOOKS.LOG_STREAM] = function (conf) {
   const levels = {};
   levels[bunyan.DEBUG] = "debug";
   levels[bunyan.INFO] = "info";
@@ -82,7 +82,7 @@ exports[addon.HOOKS.LOG_STREAM] = function(conf) {
     {
       level: bunyan.WARN,
       stream: {
-        write: function(msg) {
+        write: function (msg) {
           let obj: { [key: string]: any } = {};
           /* istanbul ignore next */
           try {
@@ -95,10 +95,10 @@ exports[addon.HOOKS.LOG_STREAM] = function(conf) {
           obj.flamingo = { version: conf.VERSION };
           Raven.captureMessage(obj.msg, {
             level: levels[obj.level],
-            extra: obj
+            extra: obj,
           });
-        }
-      }
-    }
+        },
+      },
+    },
   ];
 };

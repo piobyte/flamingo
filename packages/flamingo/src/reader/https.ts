@@ -16,35 +16,34 @@ const { REMOTE } = ReaderType;
  * Reader that creates a stream for a given http/https resource
  * @param {object} operation flamingo process operation
  */
-export = function(operation: FlamingoOperation): Promise<ReaderResult> {
+export = function (operation: FlamingoOperation): Promise<ReaderResult> {
   const conf = operation.config;
   const input = operation.input;
-  const access = conf.ACCESS!;
 
-  return access.HTTPS!.ENABLED &&
-    !readAllowed(input, (access.HTTPS!.READ as unknown) as Array<Url.Url>)
+  return conf.access?.HTTPS?.ENABLED &&
+    !readAllowed(input, (conf.access?.HTTPS?.READ as unknown) as Array<Url.Url>)
     ? Promise.reject(
         "Read not allowed. See `ACCESS.HTTPS.READ` for more information."
       )
     : Promise.resolve({
         stream(): Promise<nodeStream.Readable> {
-          return new Promise(function(resolve, reject) {
+          return new Promise(function (resolve, reject) {
             const stream = got.stream(input.href, {
-              timeout: conf.READER!.REQUEST!.TIMEOUT,
+              timeout: conf.READER?.REQUEST?.TIMEOUT,
               followRedirect: conf.ALLOW_READ_REDIRECT,
               headers: {
-                "user-agent": `${pkg.name}/${pkg.version} (${pkg.bugs.url})`
-              }
+                "user-agent": `${pkg.name}/${pkg.version} (${pkg.bugs.url})`,
+              },
             });
-            stream.on("error", function(err) {
+            stream.on("error", function (err) {
               reject(new InvalidInputError(err.message, input.href));
             });
-            stream.on("response", function() {
+            stream.on("response", function () {
               resolve(stream);
             });
           });
         },
         url: input,
-        type: REMOTE
+        type: REMOTE,
       });
 };

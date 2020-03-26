@@ -19,8 +19,8 @@ async function startServer(localConf) {
     .start();
 }
 
-describe("debug server response", function() {
-  it("displays debug information if DEBUG is enabled", async function() {
+describe("debug server response", function () {
+  it("displays debug information if DEBUG is enabled", async function () {
     let server;
 
     try {
@@ -33,7 +33,7 @@ describe("debug server response", function() {
       server.stop();
     }
   });
-  it("displays debug information if DEBUG is enabled", async function() {
+  it("displays debug information if DEBUG is enabled", async function () {
     let server;
 
     try {

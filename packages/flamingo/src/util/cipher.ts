@@ -22,13 +22,13 @@ function decode(
   key: Buffer,
   iv: Buffer
 ): Promise<string | any> {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.keyLEN, function (err, key) {
     //    if (err) { reject(err); return; }
     try {
       const decipher = crypto.createDecipheriv(algorithm, key, iv);
 
-      decipher.on("error", function(err) {
+      decipher.on("error", function (err) {
         reject(new InvalidInputError("cipher.decode failed", err));
       });
       decipher.end(ciphertext, "base64");
@@ -61,13 +61,13 @@ function encode(
   key: Buffer,
   iv: Buffer
 ): Promise<string | any> {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     //crypto.pbkdf2(config.CRYPTO.SECRET, config.CRYPTO.SALT, config.CRYPTO.ITERATIONS, config.CRYPTO.keyLEN, function (err, key) {
     //    if (err) { reject(err); return; }
     try {
       const cipher = crypto.createCipheriv(algorithm, key, iv);
 
-      cipher.on("error", function(err) {
+      cipher.on("error", function (err) {
         reject(new InvalidInputError("cipher.encode failed", err));
       });
       cipher.end(plaintext, "utf8");

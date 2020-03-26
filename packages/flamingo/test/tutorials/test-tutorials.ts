@@ -24,7 +24,7 @@ const IMAGE_URL = encodeURIComponent(
     protocol: "http",
     hostname: ASSETS_HOST,
     port: ASSETS_PORT,
-    pathname: "/Landscape_5.jpg"
+    pathname: "/Landscape_5.jpg",
   })
 );
 
@@ -35,7 +35,7 @@ const expected: Array<TutorialTestDescription> = [
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/image/${IMAGE_URL}`
+      pathname: `/image/${IMAGE_URL}`,
     }),
     ok(response) {
       assert.deepEqual(JSON.parse(response.body), {
@@ -180,8 +180,8 @@ const expected: Array<TutorialTestDescription> = [
             0,
             0,
             0,
-            0
-          ]
+            0,
+          ],
         },
         icc: {
           type: "Buffer",
@@ -2145,11 +2145,11 @@ const expected: Array<TutorialTestDescription> = [
             0,
             0,
             192,
-            108
-          ]
-        }
+            108,
+          ],
+        },
       });
-    }
+    },
   },
   {
     // TODO: constant hash
@@ -2158,11 +2158,11 @@ const expected: Array<TutorialTestDescription> = [
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/image/preview-image/a3fb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`
+      pathname: `/image/preview-image/a3fb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`,
     }),
     ok(response) {
       assert.deepEqual(response.statusCode, 200);
-    }
+    },
   },
   {
     file: "hmac-image-convert.js",
@@ -2170,11 +2170,11 @@ const expected: Array<TutorialTestDescription> = [
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/image/preview-image/eeeb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`
+      pathname: `/image/preview-image/eeeb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`,
     }),
     error(response) {
       assert.equal(response.statusCode, 400);
-    }
+    },
   },
   {
     file: "markdown-to-image.js",
@@ -2182,11 +2182,11 @@ const expected: Array<TutorialTestDescription> = [
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: "/md/preview-image/%23%20headline%0A%0Awasd?size=500"
+      pathname: "/md/preview-image/%23%20headline%0A%0Awasd?size=500",
     }),
     ok(response) {
       assert.deepEqual(response.statusCode, 200);
-    }
+    },
   },
   {
     file: "website-screenshot.js",
@@ -2196,11 +2196,11 @@ const expected: Array<TutorialTestDescription> = [
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/www/preview-image/${IMAGE_URL}`
+      pathname: `/www/preview-image/${IMAGE_URL}`,
     }),
     ok(response) {
       assert.deepEqual(response.statusCode, 200);
-    }
+    },
   },
   {
     file: "custom-urls.js",
@@ -2208,11 +2208,11 @@ const expected: Array<TutorialTestDescription> = [
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/convert/image/preview-image/${IMAGE_URL}`
+      pathname: `/convert/image/preview-image/${IMAGE_URL}`,
     }),
     ok(response) {
       assert.deepEqual(response.statusCode, 200);
-    }
+    },
   },
   {
     file: "url-transformation-instructions.js",
@@ -2220,17 +2220,17 @@ const expected: Array<TutorialTestDescription> = [
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/inline/image/resize=300:100,toFormat=webp,rotate=90/${IMAGE_URL}`
+      pathname: `/inline/image/resize=300:100,toFormat=webp,rotate=90/${IMAGE_URL}`,
     }),
     ok(response) {
       assert.deepEqual(response.statusCode, 200);
-    }
-  }
+    },
+  },
 ];
 
-describe("tutorials work as expected", function() {
+describe("tutorials work as expected", function () {
   let assetsServer;
-  before(function() {
+  before(function () {
     return simpleHttpServer(
       (req, res) => {
         res.writeHead(200, { "Content-Type": "image/jpeg" });
@@ -2244,23 +2244,23 @@ describe("tutorials work as expected", function() {
       },
       ASSETS_PORT,
       ASSETS_HOST
-    ).then(server => (assetsServer = server));
+    ).then((server) => (assetsServer = server));
   });
 
-  after(function() {
+  after(function () {
     return assetsServer.stop();
   });
 
   expected.forEach(({ skip, file, url, ok, error }) => {
     const method = skip ? it.skip : it.skip;
-    method(`${file}`, async function() {
+    method(`${file}`, async function () {
       let server;
 
       try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         server = await require(path.join("../../tutorials", file))({
           HOST,
-          PORT: FLAMINGO_PORT
+          PORT: FLAMINGO_PORT,
         });
 
         const request = got(url);

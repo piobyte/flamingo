@@ -10,7 +10,7 @@ import Reader = require("../types/Reader");
 const reader = {
   http: httpsReader,
   https: httpsReader,
-  file: fileReader
+  file: fileReader,
 };
 
 /**
@@ -20,7 +20,7 @@ const reader = {
  * @example
  * readerForUrl('file:///tmp/foo') // data reader
  */
-export = function(parsedUrl: Url.Url): Reader | undefined {
+export = function (parsedUrl: Url.Url): Reader | undefined {
   let foundReader;
 
   /* istanbul ignore else */

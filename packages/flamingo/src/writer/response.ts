@@ -10,14 +10,14 @@ import FlamingoOperation = require("../model/flamingo-operation");
  * @return {Function} Function that replies a given stream
  * @param {FlamingoOperation} operation
  */
-export = function({ reply, response }: FlamingoOperation) {
-  return async function(stream) {
+export = function ({ reply, response }: FlamingoOperation) {
+  return async function (stream) {
     // use through because hapi sometimes didn't trigger the read
     const replyStream = reply.response(stream.pipe(through()));
 
     /* istanbul ignore else */
     if (response && response.header) {
-      Object.keys(response.header).forEach(property =>
+      Object.keys(response.header).forEach((property) =>
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         replyStream.header(property, response.header![property])
       );

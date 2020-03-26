@@ -46,7 +46,7 @@ class Server {
     this.hapi = new Hapi.Server({
       debug: this.config.DEBUG ? { log: ["error"], request: ["error"] } : false,
       port: this.config.PORT,
-      host: this.config.HOST
+      host: this.config.HOST,
     });
   }
 
@@ -56,7 +56,7 @@ class Server {
    * @returns {Server}
    */
   withRoutes(routes: Array<Route>) {
-    routes.forEach(route => {
+    routes.forEach((route) => {
       assert.ok(route instanceof Route);
       route.server = this;
       this.hapi.route(route.hapiConfig());
@@ -70,7 +70,7 @@ class Server {
    * @returns {Server}
    */
   withProfiles(profiles) {
-    profiles.forEach(profile => merge(this.profiles, profile));
+    profiles.forEach((profile) => merge(this.profiles, profile));
     return this;
   }
 
