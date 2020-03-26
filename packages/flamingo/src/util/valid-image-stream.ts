@@ -7,8 +7,8 @@ import { Readable as ReadableStream } from "stream";
 
 const { ProcessingError, InvalidInputError } = errors;
 
-export = function(_operation?: FlamingoOperation) {
-  return async function(stream: ReadableStream): Promise<ReadableStream> {
+export = function (_operation?: FlamingoOperation) {
+  return async function (stream: ReadableStream): Promise<ReadableStream> {
     if (!isStream(stream)) throw new ProcessingError("Not a stream");
 
     return new Promise((resolve, reject) => {

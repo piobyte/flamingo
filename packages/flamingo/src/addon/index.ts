@@ -130,7 +130,7 @@ enum HOOKS {
   /**
    * Same as the `START` hook but called on `Server.stop`.
    */
-  STOP = "STOP"
+  STOP = "STOP",
 }
 
 export { HOOKS };

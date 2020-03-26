@@ -21,7 +21,7 @@ import FlamingoOperation = require("../../model/flamingo-operation");
  * sharpProcessor((sharpInstance) => sharpInstance.rotate(), fs.createReadStream('sample.png'))
  */
 
-export = function(
+export = function (
   operation: FlamingoOperation,
   pipeline /*: function */,
   stream /*: {pipe: function } */

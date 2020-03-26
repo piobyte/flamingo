@@ -66,7 +66,7 @@ class Route {
     defaults.path = this.path;
     defaults.config = defaults.config || {
       cors: this.cors,
-      state: { parse: this.parseState }
+      state: { parse: this.parseState },
     };
     defaults.config.description = this.description;
     defaults.config.handler = (
@@ -75,11 +75,11 @@ class Route {
     ) => {
       let _operation;
       return this.buildOperation(request, reply)
-        .then(operation => {
+        .then((operation) => {
           _operation = operation;
           return this.handle(operation);
         })
-        .catch(error => this.handleError(request, reply, error, _operation));
+        .catch((error) => this.handleError(request, reply, error, _operation));
     };
     return defaults;
   }
@@ -120,7 +120,7 @@ class Route {
         error,
         operation,
         request,
-        route: this
+        route: this,
       },
       message
     );

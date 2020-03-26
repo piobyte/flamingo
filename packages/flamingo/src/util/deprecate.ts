@@ -17,7 +17,7 @@ const deprecateLogger = logger.build("deprecate");
  * @example
  * deprecate(() => myOldFoo(), 'myOldFoo is deprecated, use myNewFoo instead.');
  */
-export = function(
+export = function (
   deprecatedFunction /*: function */,
   warning: string,
   options /*: {id: string}*/

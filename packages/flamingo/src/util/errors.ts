@@ -46,5 +46,5 @@ util.inherits(ProcessingError, Error);
 
 export = {
   InvalidInputError,
-  ProcessingError
+  ProcessingError,
 };

@@ -16,8 +16,8 @@ const { InvalidInputError } = errors;
  * Creates a function that calls the given reply function with a stream
  * @return {Function} function that writes a stream to a given file
  */
-export = function({ input, reply, config }: FlamingoOperation) {
-  return function(stream: stream.Writable) {
+export = function ({ input, reply, config }: FlamingoOperation) {
+  return function (stream: stream.Writable) {
     const outputPath = path.normalize(input.path);
     const outputDir = path.dirname(outputPath);
     const allowed = fileAccessAllowed(
@@ -31,22 +31,22 @@ export = function({ input, reply, config }: FlamingoOperation) {
       );
     }
 
-    return new Promise(function(resolve, reject) {
-      mkdirp(outputDir, function(err) {
+    return new Promise(function (resolve, reject) {
+      mkdirp(outputDir, function (err) {
         if (err) {
           reject(err);
         } else {
           stream.on("error", reject);
           const writeStream = stream.pipe(fs.createWriteStream(outputPath), {
-            end: true
+            end: true,
           });
           writeStream.on("error", reject);
-          writeStream.on("finish", function() {
+          writeStream.on("finish", function () {
             resolve(
               reply
                 .response({
                   statusCode: 200,
-                  message: outputPath + " created"
+                  message: outputPath + " created",
                 })
                 .code(200)
             );

@@ -24,8 +24,8 @@ class ProfilesServer extends Server {
   }
 }
 
-describe("profile-operation", function() {
-  it("extracts the input url by decoding the url param", async function() {
+describe("profile-operation", function () {
+  it("extracts the input url by decoding the url param", async function () {
     const ProfileOperationClass = ProfileOperation(Route);
     const profile = new ProfileOperationClass({}, "get", "/");
     const operation = new FlamingoOperation();
@@ -45,7 +45,7 @@ describe("profile-operation", function() {
     assert.deepEqual(input, url.parse(testUrl));
   });
 
-  it("extracts the operations profile based on the profile param", async function() {
+  it("extracts the operations profile based on the profile param", async function () {
     const ProfileOperationClass = ProfileOperation(Route);
     const conf = new Config();
     const profileOp = new ProfileOperationClass({}, "get", "/");
@@ -60,7 +60,7 @@ describe("profile-operation", function() {
         assert.deepEqual(request, operation.request);
         assert.deepEqual(config, operation.config);
         return Promise.resolve(profileSpy);
-      }
+      },
     };
     profileOp.server = new ProfilesServer(profiles);
 
@@ -68,7 +68,7 @@ describe("profile-operation", function() {
     assert.equal(extractedProfile, profileSpy);
   });
 
-  it("rejects extraction for unknown profiles", function() {
+  it("rejects extraction for unknown profiles", function () {
     const ProfileOperationClass = ProfileOperation(Route);
     const conf = new Config();
     const profileOp = new ProfileOperationClass({}, "get", "/");
@@ -82,16 +82,16 @@ describe("profile-operation", function() {
 
     return profileOp
       .extractProcess(operation)
-      .catch(e => assert.ok(e instanceof InvalidInputError));
+      .catch((e) => assert.ok(e instanceof InvalidInputError));
   });
 
-  it("builds an operation", async function() {
+  it("builds an operation", async function () {
     const config = await Config.fromEnv();
     const profile = "someProfile";
     const givenUrl = "http://example.com/image.png";
     const profileData = {
-      process: [{ processor: "foo", pipe: p => p }],
-      response: { header: { foo: "bar" } }
+      process: [{ processor: "foo", pipe: (p) => p }],
+      response: { header: { foo: "bar" } },
     };
 
     const encoded = await encode(
@@ -106,7 +106,7 @@ describe("profile-operation", function() {
     const ProfileOperationClass = ProfileOperation(
       class extends Convert(Route) {
         buildOperation(request, reply) {
-          return super.buildOperation(request, reply).then(operation => {
+          return super.buildOperation(request, reply).then((operation) => {
             operation.process = profileData.process;
             operation.response = profileData.response;
             operation.config = config;
@@ -129,7 +129,7 @@ describe("profile-operation", function() {
     assert.equal(operation.writer, responseWriter);
   });
 
-  it("rejects for unknown readers", function() {
+  it("rejects for unknown readers", function () {
     const conf = new Config();
     const operation = new FlamingoOperation();
     const profile = "someProfile";
@@ -161,6 +161,6 @@ describe("profile-operation", function() {
 
     return profileOp
       .buildOperation(request, reply)
-      .catch(e => assert.ok(e instanceof InvalidInputError));
+      .catch((e) => assert.ok(e instanceof InvalidInputError));
   });
 });

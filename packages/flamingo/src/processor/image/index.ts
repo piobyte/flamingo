@@ -18,7 +18,7 @@ const processors: {
   sharp: any;
   gm?: any;
 } = {
-  sharp
+  sharp,
 };
 
 if (optional("gm") !== null) {
@@ -38,11 +38,11 @@ if (optional("gm") !== null) {
  * image([{ processor: 'sharp', pipe: (sharp) => sharp.toFormat('jpeg') }])(fs.createReadStream('sample.png')
  * // converted image stream
  */
-export = function(operation: FlamingoOperation) /*: function */ {
+export = function (operation: FlamingoOperation) /*: function */ {
   const transformations = operation.process;
 
-  return function(stream: nodeStream.Readable) {
-    forEach(transformations, transformation => {
+  return function (stream: nodeStream.Readable) {
+    forEach(transformations, (transformation) => {
       if (processors.hasOwnProperty(transformation.processor)) {
         stream = processors[transformation.processor](
           operation,

@@ -7,5 +7,5 @@ function createFullFixturePath(fixturePath) {
 }
 
 export = {
-  fullFixturePath: createFullFixturePath
+  fullFixturePath: createFullFixturePath,
 };

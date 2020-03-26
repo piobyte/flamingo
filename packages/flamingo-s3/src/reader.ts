@@ -26,7 +26,7 @@ const type = "s3";
 function s3Reader(bucket, key, s3Client): Promise<ReaderResult> {
   const params = {
     Bucket: bucket,
-    Key: key
+    Key: key,
   };
 
   return s3Client
@@ -34,9 +34,9 @@ function s3Reader(bucket, key, s3Client): Promise<ReaderResult> {
     .promise()
     .then(() => ({
       stream: () => s3Client.getObject(params).createReadStream(),
-      type
+      type,
     }))
-    .catch(error => {
+    .catch((error) => {
       throw new InvalidInputError("Error trying to get object metadata", error);
     });
 }

@@ -12,12 +12,12 @@ function buildPipe(fields: string[]): Pipe {
 }
 
 function stubPipe(pipe: Pipe, methods: PipeMethod[]) {
-  methods.forEach(stubInstruction => {
+  methods.forEach((stubInstruction) => {
     const [method, ...argsReturn] = stubInstruction;
 
     const stub = sinon.stub(pipe, method);
     if (argsReturn.length) {
-      argsReturn.forEach(args => {
+      argsReturn.forEach((args) => {
         stub.withArgs(...args).returns(pipe);
       });
     } else {
@@ -28,5 +28,5 @@ function stubPipe(pipe: Pipe, methods: PipeMethod[]) {
 
 export = {
   stubPipe,
-  buildPipe
+  buildPipe,
 };

@@ -20,7 +20,7 @@ class FlamingoOperation {
   request: any = {};
   reply: Hapi.ResponseToolkit = (noop as any) as Hapi.ResponseToolkit;
   preprocessorConfig: any = {
-    seekPercent: 0.1
+    seekPercent: 0.1,
   };
   reader: Reader = noop;
   writer: Writer = () => noop;

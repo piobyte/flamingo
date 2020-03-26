@@ -15,8 +15,8 @@ const {
     LOG_STREAM,
     EXTRACT_PROCESS,
     START,
-    STOP
-  }
+    STOP,
+  },
 } = Addon;
 
 function loader() {
@@ -25,18 +25,18 @@ function loader() {
       "test-addon-0": "^0.1.0",
       "test-addon-1": "^0.1.0",
       "add-auth-header": "^0.1.0",
-      "force-webp": "^0.1.0"
-    }
+      "force-webp": "^0.1.0",
+    },
   }).load();
 }
 
-describe("hook", function() {
-  it("should throw an error if an unregistered hook is called", function() {
-    assert.throws(function() {
+describe("hook", function () {
+  it("should throw an error if an unregistered hook is called", function () {
+    assert.throws(function () {
       loader().hook("LOREM_IPSUM");
     });
   });
-  it("should do nothing if an registered hook is called without addons using it", function() {
+  it("should do nothing if an registered hook is called without addons using it", function () {
     const spy = sinon.spy();
     const l = loader();
 
@@ -46,25 +46,25 @@ describe("hook", function() {
     assert.ok(!spy.called);
   });
 
-  describe("CONF", function() {
-    it("should merge all addon configs into the initial config", function() {
+  describe("CONF", function () {
+    it("should merge all addon configs into the initial config", function () {
       const conf = { FOO: "bar" };
 
       loader().hook(CONF)(conf);
 
       assert.deepEqual(conf, {
         FOO: "bar",
-        TEST_CONF: { ENABLED: true }
+        TEST_CONF: { ENABLED: true },
       });
     });
-    it("shouldn't overwrite initial config fields", function() {
+    it("shouldn't overwrite initial config fields", function () {
       const conf = { TEST_CONF: { ENABLED: false } };
 
       loader().hook(CONF)(conf);
 
       assert.deepEqual(conf, { TEST_CONF: { ENABLED: false } });
     });
-    it("keeps buffer objects intact (https://github.com/lodash/lodash/issues/1453)", function() {
+    it("keeps buffer objects intact (https://github.com/lodash/lodash/issues/1453)", function () {
       const conf = { FOO: { Bar: Buffer.from("uname -a", "utf8") } };
       const EXPECTED = Buffer.from("uname -a", "utf8");
 
@@ -75,8 +75,8 @@ describe("hook", function() {
     });
   });
 
-  describe("ENV", function() {
-    it("should handle environment variables", function() {
+  describe("ENV", function () {
+    it("should handle environment variables", function () {
       const conf = {};
       const env = { TEST_CONF_ENABLED: "false" };
 
@@ -86,8 +86,8 @@ describe("hook", function() {
     });
   });
 
-  describe("ROUTES", function() {
-    it("should call the server.route method", function() {
+  describe("ROUTES", function () {
+    it("should call the server.route method", function () {
       const server = { route: sinon.spy() };
 
       loader().hook(ROUTES)(server);
@@ -97,8 +97,8 @@ describe("hook", function() {
     });
   });
 
-  describe("HAPI_PLUGINS", function() {
-    it("should push plugins in the given plugins array", function() {
+  describe("HAPI_PLUGINS", function () {
+    it("should push plugins in the given plugins array", function () {
       const plugins = [];
 
       loader().hook(HAPI_PLUGINS)(plugins);
@@ -107,10 +107,10 @@ describe("hook", function() {
     });
   });
 
-  describe("PROFILES", function() {
-    it("should merge addon profiles in existing profile object", function() {
+  describe("PROFILES", function () {
+    it("should merge addon profiles in existing profile object", function () {
       const profiles = {
-        addonProfile: true
+        addonProfile: true,
       };
 
       loader().hook(PROFILES)(profiles);
@@ -119,8 +119,8 @@ describe("hook", function() {
     });
   });
 
-  describe("LOG_STREAM", function() {
-    it("call the addStreams method of the logger", function() {
+  describe("LOG_STREAM", function () {
+    it("call the addStreams method of the logger", function () {
       const logger = { addStreams: sinon.spy() };
 
       loader().hook(LOG_STREAM)(logger);
@@ -129,17 +129,17 @@ describe("hook", function() {
     });
   });
 
-  describe("EXTRACT_PROCESS", function() {
-    it("allows to modify the extracted process", function() {
+  describe("EXTRACT_PROCESS", function () {
+    it("allows to modify the extracted process", function () {
       let calledToFormatWebp = false;
       const extracted: any = {
         response: { header: {} },
         process: [
           {
             processor: "sharp",
-            pipe: pipe => pipe.rotate()
-          }
-        ]
+            pipe: (pipe) => pipe.rotate(),
+          },
+        ],
       };
 
       const operation = new FlamingoOperation();
@@ -154,23 +154,23 @@ describe("hook", function() {
             calledToFormatWebp = true;
           }
           return this;
-        }
+        },
       });
 
       assert.ok(calledToFormatWebp);
     });
   });
 
-  describe("START", function() {
-    it("calls hook function", function() {
+  describe("START", function () {
+    it("calls hook function", function () {
       const server = { foo: 1 };
 
       loader().hook(START, server)();
       assert.equal(server.foo, 2);
     });
   });
-  describe("STOP", function() {
-    it("calls hook function", function() {
+  describe("STOP", function () {
+    it("calls hook function", function () {
       const server = { foo: 2 };
 
       loader().hook(STOP, server)();

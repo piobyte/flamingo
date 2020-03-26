@@ -20,19 +20,19 @@ async function startServer(localConf, route) {
   return new Server(config, new NoopAddonLoader()).withRoutes([route]).start();
 }
 
-describe("convert", function() {
-  it("handle throws if not implemented", async function() {
+describe("convert", function () {
+  it("handle throws if not implemented", async function () {
     let _server;
     try {
       _server = await startServer({}, new Route({}, "GET", "/"));
-      const { response } = await got(`http://${HOST}:${PORT}/`).catch(e => e);
+      const { response } = await got(`http://${HOST}:${PORT}/`).catch((e) => e);
       assert.equal(response.statusCode, 500);
     } finally {
       _server.stop();
     }
   });
 
-  it("#handleError called on hapi route handler buildOperation rejection", async function() {
+  it("#handleError called on hapi route handler buildOperation rejection", async function () {
     const handleErrorSpy = sinon.spy();
     let server;
 
@@ -53,13 +53,13 @@ describe("convert", function() {
 
     try {
       server = await startServer({}, new TestRoute());
-      await got(`http://${HOST}:${PORT}/handle-error`).catch(e => e);
+      await got(`http://${HOST}:${PORT}/handle-error`).catch((e) => e);
       assert.ok(handleErrorSpy.called);
     } finally {
       server.stop();
     }
   });
-  it("#handleError called on hapi route handler handle rejection", async function() {
+  it("#handleError called on hapi route handler handle rejection", async function () {
     const handleErrorSpy = sinon.spy();
     let server;
 
@@ -80,13 +80,13 @@ describe("convert", function() {
 
     try {
       server = await startServer({}, new TestRoute());
-      await got(`http://${HOST}:${PORT}/handle-error`).catch(e => e);
+      await got(`http://${HOST}:${PORT}/handle-error`).catch((e) => e);
       assert.ok(handleErrorSpy.called);
     } finally {
       server.stop();
     }
   });
-  it("#handle is called for each request", async function() {
+  it("#handle is called for each request", async function () {
     const handleSpy = sinon.spy();
     let server;
 

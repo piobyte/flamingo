@@ -15,7 +15,7 @@ const { InvalidInputError, ProcessingError } = errors;
  * @param {FlamingoOperation} operation
  * @param {Error} error
  */
-export = function(error: Error, operation?: FlamingoOperation) {
+export = function (error: Error, operation?: FlamingoOperation) {
   const isClientError =
     error instanceof InvalidInputError ||
     error instanceof ProcessingError ||

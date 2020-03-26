@@ -24,7 +24,7 @@ function _serializerError(type: string, input: any): SerializerError {
   return {
     _serializerError: `serializer ${type} got invalid input: ${util.inspect(
       input
-    )}`
+    )}`,
   };
 }
 
@@ -42,7 +42,7 @@ const serializers = {
     return Object.keys(operation).length
       ? {
           input: this.input(operation.input),
-          request: this.request(operation.request)
+          request: this.request(operation.request),
         }
       : {};
   },
@@ -52,7 +52,7 @@ const serializers = {
           name: route.constructor.name,
           method: route.method,
           description: route.description,
-          path: route.path
+          path: route.path,
         }
       : _serializerError("route", route);
   },
@@ -63,7 +63,7 @@ const serializers = {
       ? {
           headers: request.headers,
           path: request.path,
-          method: request.method
+          method: request.method,
         }
       : _serializerError("request", request);
   },
@@ -82,7 +82,7 @@ const serializers = {
     }
 
     return _serializerError("error", error);
-  }
+  },
 };
 
 /**
@@ -102,7 +102,7 @@ function build(name: string) {
     loggers[name] = bunyan.createLogger({
       name,
       streams: streamDefs,
-      serializers
+      serializers,
     });
   }
 
@@ -126,13 +126,15 @@ function addStreams(newStreamDefs: Array<bunyan.LoggerOptions>) {
   streamDefs = streamDefs.concat(newStreamDefs);
 
   // update existing loggers
-  Object.keys(loggers).forEach(loggerName =>
-    newStreamDefs.forEach(streamDef => loggers[loggerName].addStream(streamDef))
+  Object.keys(loggers).forEach((loggerName) =>
+    newStreamDefs.forEach((streamDef) =>
+      loggers[loggerName].addStream(streamDef)
+    )
   );
 }
 
 export = {
   serializers,
   build,
-  addStreams
+  addStreams,
 };

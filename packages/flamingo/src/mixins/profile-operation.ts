@@ -5,13 +5,13 @@ import errors = require("../util/errors");
 import cipher = require("../util/cipher");
 import FlamingoOperation = require("../model/flamingo-operation");
 import Constructor from "../model/Constructor";
-import Server = require("flamingo/src/model/server");
-import Config = require("flamingo/config");
+import Server = require("../model/server");
+import Config = require("../../config");
 
 const { InvalidInputError } = errors;
 const { decode } = cipher;
 
-export = function<T extends Constructor<Route>>(Base: T) {
+export = function <T extends Constructor<Route>>(Base: T) {
   /**
    * Mixin that extracts the process instruction by looking them up in a profile which name is encoded in the url.
    * @mixin
@@ -33,7 +33,7 @@ export = function<T extends Constructor<Route>>(Base: T) {
           )
         : Promise.resolve(payload);
 
-      return decodePromise.then(decoded => url.parse(decoded));
+      return decodePromise.then((decoded) => url.parse(decoded));
     }
 
     /**

@@ -7,16 +7,16 @@ import path = require("path");
 import assert = require("assert");
 import mockery = require("mockery");
 
-describe("LOG_STREAM", function() {
-  before(function() {
+describe("LOG_STREAM", function () {
+  before(function () {
     mockery.enable();
     mockery.warnOnUnregistered(false);
   });
-  after(function() {
+  after(function () {
     mockery.disable();
   });
 
-  it("calls Raven.captureMessage", function() {
+  it("calls Raven.captureMessage", function () {
     let capturedError = false;
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const config = () => ({ install() {} });
@@ -27,15 +27,15 @@ describe("LOG_STREAM", function() {
     };
     mockery.registerMock("raven", {
       config,
-      captureMessage
+      captureMessage,
     });
 
     const loader = new Loader(path.join(__dirname, "../"), {});
     const addon = {
       path: path.join(__dirname, "../.."),
-      pkg: require("../../package.json")
+      pkg: require("../../package.json"),
     };
-    return Config.fromEnv().then(config => {
+    return Config.fromEnv().then((config) => {
       const reduced = loader.reduceAddonsToHooks(
         [loader.resolvePkg(addon)],
         loader._hooks
@@ -65,10 +65,10 @@ describe("LOG_STREAM", function() {
         .withProfiles([])
         .withRoutes([new ErrorRoute(config)])
         .start()
-        .then(server => {
+        .then((server) => {
           _server = server;
 
-          return got(`http://localhost:${config.PORT}/`).catch(e => e);
+          return got(`http://localhost:${config.PORT}/`).catch((e) => e);
         })
         .then(({ response }) => {
           assert.equal(response.statusCode, 500);

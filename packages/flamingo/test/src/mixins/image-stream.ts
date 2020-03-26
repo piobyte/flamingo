@@ -25,8 +25,8 @@ async function startServer(localConf, route: Route) {
   return new Server(config, new NoopAddonLoader()).withRoutes([route]).start();
 }
 
-describe("image-stream", function() {
-  it("rejects handling for non image streams", async function() {
+describe("image-stream", function () {
+  it("rejects handling for non image streams", async function () {
     const image = fs.createReadStream(path.join(__dirname, "image-stream.js"));
     const errorSpy = sinon.spy();
 
@@ -36,11 +36,11 @@ describe("image-stream", function() {
       }
 
       buildOperation(request, reply) {
-        return super.buildOperation(request, reply).then(operation => {
-          operation.reader = operation =>
+        return super.buildOperation(request, reply).then((operation) => {
+          operation.reader = (operation) =>
             Promise.resolve({
               stream: () => Promise.resolve(image),
-              type: "remote"
+              type: "remote",
             });
           return operation;
         });
@@ -60,7 +60,7 @@ describe("image-stream", function() {
     let server;
     try {
       server = await startServer({}, new ImageStreamRoute());
-      await got(`http://${HOST}:${PORT}/non-image`).catch(e => e);
+      await got(`http://${HOST}:${PORT}/non-image`).catch((e) => e);
       assert.ok(errorSpy.called);
     } finally {
       server.stop();

@@ -12,8 +12,8 @@ import errors = require("../util/errors");
 import Addon = require("../addon");
 import Constructor from "../model/Constructor";
 import { ProfileInstruction } from "../types/Instruction";
-import Server = require("flamingo/src/model/server");
-import Config = require("flamingo/config");
+import Server = require("../model/server");
+import Config = require("../../config");
 
 const { InvalidInputError } = errors;
 const { HOOKS } = Addon;
@@ -46,7 +46,7 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      * @returns {function(FlamingoOperation): Promise.<{type: string, stream: function(): Promise<Stream>}>}
      */
     read(operation: FlamingoOperation) {
-      return op => op.reader(op);
+      return (op) => op.reader(op);
     }
 
     /**
@@ -151,15 +151,15 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      */
     buildOperation(request: Request, reply: Hapi.ResponseToolkit) {
       const server = this.server;
-      return super.buildOperation(request, reply).then(operation =>
+      return super.buildOperation(request, reply).then((operation) =>
         Promise.all([
           this.extractInput(operation),
-          this.extractProcess(operation).then(extracted => {
+          this.extractProcess(operation).then((extracted) => {
             server.addonsLoader.hook(EXTRACT_PROCESS)(extracted, operation);
             return extracted;
-          })
+          }),
         ]).then(([input, { response, process }]) =>
-          this.extractReader(input).then(reader => {
+          this.extractReader(input).then((reader) => {
             operation.input = input;
             operation.process = process;
             operation.response = response;

@@ -3,22 +3,22 @@ import url = require("url");
 
 import readAllowed = require("../../../src/util/url-access-allowed");
 
-describe("read access allowed", function() {
-  it("disallows all urls for an empty whitelist", function() {
+describe("read access allowed", function () {
+  it("disallows all urls for an empty whitelist", function () {
     assert.ok(
       !readAllowed(url.parse("gopher://foobar:11211/1stats%0aquit"), [])
     );
   });
 
-  it("allows whitelisted urls", function() {
+  it("allows whitelisted urls", function () {
     assert.ok(
       readAllowed(url.parse("gopher://foobar:11211/1stats%0aquit"), [
-        { hostname: "foobar" }
+        { hostname: "foobar" },
       ])
     );
     assert.ok(
       readAllowed(url.parse("http://wikipedia.org/"), [
-        { hostname: "wikipedia.org" }
+        { hostname: "wikipedia.org" },
       ])
     );
     assert.ok(
@@ -26,10 +26,10 @@ describe("read access allowed", function() {
     );
   });
 
-  it("disallows not whitelisted urls", function() {
+  it("disallows not whitelisted urls", function () {
     assert.ok(
       !readAllowed(url.parse("gopher://foobar:11211/1stats%0aquit"), [
-        { protocol: "https:" }
+        { protocol: "https:" },
       ])
     );
     assert.ok(
@@ -37,14 +37,14 @@ describe("read access allowed", function() {
     );
   });
 
-  it("supports complex whitelists", function() {
+  it("supports complex whitelists", function () {
     const COMPLEX_WHITELIST = [
       {
         protocol: "ssh2.exec:",
         auth: "user:pass",
         port: "22",
-        pathname: "/usr/local/bin/somecmd"
-      }
+        pathname: "/usr/local/bin/somecmd",
+      },
     ];
 
     assert.ok(

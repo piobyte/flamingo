@@ -42,7 +42,7 @@ export = {
             .flatten()
             .gravity("Center")
             .extent(dim, dim);
-        }
+        },
       });
     } else {
       process.push({
@@ -54,9 +54,9 @@ export = {
             .toFormat(format.type)
             .resize(dim, dim, {
               fit: "outside",
-              position: sharp.gravity.center
+              position: sharp.gravity.center,
             });
-        }
+        },
       });
     }
 
@@ -92,23 +92,20 @@ export = {
             .background("transparent")
             .gravity("Center")
             .extent(dim, dim);
-        }
+        },
       });
     } else {
       process.push({
         processor: "sharp",
         pipe(pipe: sharp.Sharp) {
-          return pipe
-            .rotate()
-            .toFormat(format.type)
-            .resize(dim, dim, {
-              fit: "outside",
-              position: sharp.gravity.center
-            });
-        }
+          return pipe.rotate().toFormat(format.type).resize(dim, dim, {
+            fit: "outside",
+            position: sharp.gravity.center,
+          });
+        },
       });
     }
 
     return Promise.resolve({ process });
-  }
+  },
 };

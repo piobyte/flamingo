@@ -27,7 +27,7 @@ const AWS_ACCESS_KEY = "123";
 const noop = () => {};
 
 function startServer(localConf) {
-  return Config.fromEnv().then(config => {
+  return Config.fromEnv().then((config) => {
     config = merge({}, config, { PORT }, localConf);
 
     return new Server(
@@ -42,15 +42,15 @@ function startServer(localConf) {
   });
 }
 
-describe("flamingo-s3 server response", function() {
-  beforeEach(async function() {
+describe("flamingo-s3 server response", function () {
+  beforeEach(async function () {
     this.fakes3 = await new Promise((resolve, reject) => {
       const runningServer = new S3rver({
         port: 4567,
         hostname: "localhost",
         silent: false,
-        s3ForcePathStyle: true
-      }).run(err => {
+        s3ForcePathStyle: true,
+      }).run((err) => {
         if (err) {
           return reject(err);
         }
@@ -66,18 +66,18 @@ describe("flamingo-s3 server response", function() {
       region: AWS_REGION,
       sslEnabled: false,
       s3ForcePathStyle: true,
-      credentials: new AWS.Credentials(AWS_ACCESS_KEY, AWS_SECRET)
+      credentials: new AWS.Credentials(AWS_ACCESS_KEY, AWS_SECRET),
     });
   });
 
-  afterEach(function(done) {
+  afterEach(function (done) {
     this.fakes3.close(done);
   });
-  afterEach(function() {
+  afterEach(function () {
     nock.cleanAll();
   });
 
-  it("returns 400 for unknown bucket (#32), unknown bucket alias, bad key format and unknown profile", async function() {
+  it("returns 400 for unknown bucket (#32), unknown bucket alias, bad key format and unknown profile", async function () {
     const server = await startServer({
       AWS: {
         ENDPOINT: AWS_ENDPOINT,
@@ -88,28 +88,30 @@ describe("flamingo-s3 server response", function() {
           BUCKETS: {
             unknown: {
               name: "unknown",
-              path: "unknown/"
+              path: "unknown/",
             },
             cats: {
               name: "secret-cats-bucket-name",
-              path: "bucket-path/"
-            }
-          }
-        }
-      }
+              path: "bucket-path/",
+            },
+          },
+        },
+      },
     });
 
     const responses = await Promise.all([
       // unknown bucket
-      got(`http://localhost:${PORT}/s3/unknown/avatar-image/123`).catch(e => e),
+      got(`http://localhost:${PORT}/s3/unknown/avatar-image/123`).catch(
+        (e) => e
+      ),
       // unknown alias
-      got(`http://localhost:${PORT}/s3/dogs/avatar-image/123`).catch(e => e),
+      got(`http://localhost:${PORT}/s3/dogs/avatar-image/123`).catch((e) => e),
       // unknown profile
-      got(`http://localhost:${PORT}/s3/cats/avatar-image/123`).catch(e => e),
+      got(`http://localhost:${PORT}/s3/cats/avatar-image/123`).catch((e) => e),
       // bad key format
       got(`http://localhost:${PORT}/s3/cats/unknown-profile/foo-bar`).catch(
-        e => e
-      )
+        (e) => e
+      ),
     ]);
 
     responses.forEach(({ response }) => assert.equal(response.statusCode, 400));
@@ -117,27 +119,27 @@ describe("flamingo-s3 server response", function() {
     return server.stop();
   });
 
-  it("configures AWS from given config", async function() {
+  it("configures AWS from given config", async function () {
     let config = await Config.fromEnv();
 
     config = merge({}, config, {
       PORT,
       AWS: {
         ACCESS_KEY: "123",
-        SECRET: "abc"
-      }
+        SECRET: "abc",
+      },
     });
 
     // manually load module as addon
     const loader = new AddonLoader(path.join(__dirname, "..", ".."), {
-      "flamingo-s3": "*"
+      "flamingo-s3": "*",
     });
     loader.addons = [
       {
         pkg: require("../../package.json"),
         path: path.join(__dirname, "..", ".."),
-        hooks: require("../../index")
-      }
+        hooks: require("../../index"),
+      },
     ];
     loader.finalize(loader.reduceAddonsToHooks(loader.addons, loader._hooks));
 
@@ -156,7 +158,7 @@ describe("flamingo-s3 server response", function() {
     return server.stop();
   });
 
-  it("returns the image for valid s3 objects", async function() {
+  it("returns the image for valid s3 objects", async function () {
     const bucketName = "secret-cats-bucket-name";
     const fileDir = "fixtures/";
     const file = "fixture.jpg";
@@ -178,23 +180,23 @@ describe("flamingo-s3 server response", function() {
           BUCKETS: {
             cats: {
               name: bucketName,
-              path: "cats/"
-            }
-          }
-        }
-      }
+              path: "cats/",
+            },
+          },
+        },
+      },
     });
 
     // manually load module as addon
     const loader = new AddonLoader(path.join(__dirname, "..", ".."), {
-      "flamingo-s3": "*"
+      "flamingo-s3": "*",
     });
     loader.addons = [
       {
         pkg: require("../../package.json"),
         path: path.join(__dirname, "..", ".."),
-        hooks: require("../../index")
-      }
+        hooks: require("../../index"),
+      },
     ];
     loader.finalize(loader.reduceAddonsToHooks(loader.addons, loader._hooks));
 
@@ -211,7 +213,7 @@ describe("flamingo-s3 server response", function() {
       region: AWS_REGION,
       sslEnabled: false,
       s3ForcePathStyle: true,
-      credentials: new AWS.Credentials(AWS_ACCESS_KEY, AWS_SECRET)
+      credentials: new AWS.Credentials(AWS_ACCESS_KEY, AWS_SECRET),
     });
 
     const { size } = (await stat(fixture)) as { size: number };
@@ -226,7 +228,7 @@ describe("flamingo-s3 server response", function() {
         Bucket: bucketName,
         Key: "cats/" + fileDir + file,
         ContentLength: size,
-        Body: fs.createReadStream(fixture)
+        Body: fs.createReadStream(fixture),
       })
       .promise();
     const response = await got(

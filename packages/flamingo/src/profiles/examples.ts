@@ -130,11 +130,11 @@ const ExampleProfiles: { [profileName: string]: Profile } = {
               .toFormat(format.type, { quality })
               .resize(Math.ceil(width), Math.ceil(height), {
                 fit: "outside",
-                position: sharp.gravity.center
+                position: sharp.gravity.center,
               });
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
   },
 
@@ -194,13 +194,13 @@ const ExampleProfiles: { [profileName: string]: Profile } = {
               .toFormat(format.type, { quality })
               .resize(Math.ceil(width), Math.ceil(height), {
                 fit: "outside",
-                position: sharp.gravity.center
+                position: sharp.gravity.center,
               });
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
-  }
+  },
 };
 
 export = ExampleProfiles;

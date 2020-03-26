@@ -11,8 +11,8 @@ import logger = require("../../src/logger");
 
 const readFile = util.promisify(fs.readFile);
 
-describe("logger", function() {
-  it("checks that the method calls the stream function", async function() {
+describe("logger", function () {
+  it("checks that the method calls the stream function", async function () {
     const tempPath = temp.path({ suffix: ".log" });
     const loggerName = "test:logger.addStreams";
     const LOG_MESSAGE = "Time is an illusion. Lunchtime doubly so.";
@@ -21,8 +21,8 @@ describe("logger", function() {
       {
         name: "temp",
         level: "fatal",
-        path: tempPath
-      }
+        path: tempPath,
+      },
     ]);
 
     const log = logger.build(loggerName);
@@ -32,15 +32,15 @@ describe("logger", function() {
     assert.equal(JSON.parse(data.toString("utf8")).msg, LOG_MESSAGE);
   });
 
-  it("serializes request log objects", function() {
+  it("serializes request log objects", function () {
     const REQUEST = {
       headers: "headers",
       path: "/foo",
-      method: "get"
+      method: "get",
     };
     const serialized = logger.serializers.request(
       assign({}, REQUEST, {
-        SOME_WEIRD_EXTRA_FIELD: "bar"
+        SOME_WEIRD_EXTRA_FIELD: "bar",
       })
     );
 
@@ -51,7 +51,7 @@ describe("logger", function() {
     );
   });
 
-  it("serializes routes", function() {
+  it("serializes routes", function () {
     const route = new Route({}, "POST", "/post-me", "some post route");
     const serialized = logger.serializers.route(route);
 
@@ -59,7 +59,7 @@ describe("logger", function() {
       description: "some post route",
       method: "POST",
       name: "Route",
-      path: "/post-me"
+      path: "/post-me",
     });
     assert.ok(
       logger.serializers.route(42),
@@ -67,7 +67,7 @@ describe("logger", function() {
     );
   });
 
-  it("serializes request error objects", function() {
+  it("serializes request error objects", function () {
     /* eslint no-underscore-dangle: 0 */
     let err;
     try {
@@ -88,15 +88,15 @@ describe("logger", function() {
     );
   });
 
-  it("serializes request error strings", function() {
+  it("serializes request error strings", function () {
     /* eslint no-underscore-dangle: 0 */
 
     assert.deepEqual(logger.serializers.error("pls halp"), {
-      message: "pls halp"
+      message: "pls halp",
     });
   });
 
-  it("serializes input", function() {
+  it("serializes input", function () {
     assert.deepEqual(
       logger.serializers.input("# Headline\nsome markdown"),
       "# Headline\nsome markdown"
@@ -111,7 +111,7 @@ describe("logger", function() {
     );
   });
 
-  it("serializes operation object", function() {
+  it("serializes operation object", function () {
     const operation = new FlamingoOperation();
     operation.input = url.parse(
       "https://travis-ci.org/piobyte/flamingo.svg?branch=master"
@@ -119,7 +119,7 @@ describe("logger", function() {
     operation.request = {
       headers: { "user-agent": "flamingo/2.0.0" },
       path: "/video/example-profile/12345",
-      method: "get"
+      method: "get",
     };
 
     assert.deepEqual(logger.serializers.operation(operation), {
@@ -127,8 +127,8 @@ describe("logger", function() {
       request: {
         headers: { "user-agent": "flamingo/2.0.0" },
         path: "/video/example-profile/12345",
-        method: "get"
-      }
+        method: "get",
+      },
     });
   });
 });

@@ -41,14 +41,14 @@ async function startServer(localConf) {
     .start();
 }
 
-describe("video converting server response", function() {
-  afterEach(function() {
+describe("video converting server response", function () {
+  afterEach(function () {
     nock.enableNetConnect();
     nock.cleanAll();
   });
 
-  it("returns 400 for all target error codes", async function() {
-    const httpServer = await simpleHttpServer(function(req, res) {
+  it("returns 400 for all target error codes", async function () {
+    const httpServer = await simpleHttpServer(function (req, res) {
       const code = parseInt(req.url.replace(/\//g, ""), 10);
       res.writeHead(code, {});
       res.end();
@@ -58,7 +58,7 @@ describe("video converting server response", function() {
     const assetsUrl = url.format({
       protocol: "http",
       hostname: HOST,
-      port: httpServer.address().port
+      port: httpServer.address().port,
     });
 
     let server;
@@ -70,12 +70,12 @@ describe("video converting server response", function() {
         ACCESS: {
           HTTPS: {
             ENABLED: true,
-            READ: [{ hostname: "errs.example.com" }]
-          }
-        }
+            READ: [{ hostname: "errs.example.com" }],
+          },
+        },
       });
       const data = await Promise.all(
-        codes.map(code =>
+        codes.map((code) =>
           got(
             url.format({
               protocol: "http",
@@ -83,9 +83,9 @@ describe("video converting server response", function() {
               port: FLAMINGO_PORT,
               pathname: `/video/avatar-image/${encodeURIComponent(
                 `${assetsUrl}/${code}`
-              )}`
+              )}`,
             })
-          ).catch(d => d)
+          ).catch((d) => d)
         )
       );
       data.forEach(({ response }) => assert.equal(response.statusCode, 400));
@@ -94,7 +94,7 @@ describe("video converting server response", function() {
     }
   });
 
-  it("returns 400 for not whitelisted urls", async function() {
+  it("returns 400 for not whitelisted urls", async function () {
     const URL = `http://localhost:${FLAMINGO_PORT}/video/avatar-image/${encodeURIComponent(
       "https://old.example.com/test.ogv"
     )}`;
@@ -106,24 +106,24 @@ describe("video converting server response", function() {
         ACCESS: {
           HTTPS: {
             ENABLED: true,
-            READ: [{ hostname: "errs.example.com" }]
-          }
-        }
+            READ: [{ hostname: "errs.example.com" }],
+          },
+        },
       });
-      const { response } = await got(URL).catch(d => d);
+      const { response } = await got(URL).catch((d) => d);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
     }
   });
 
-  it("rejects redirects by default", async function() {
+  it("rejects redirects by default", async function () {
     let HOST;
     let SERVER_PORT;
 
-    const httpServer = await simpleHttpServer(function(req, res) {
+    const httpServer = await simpleHttpServer(function (req, res) {
       res.writeHead(301, {
-        Location: "http://" + HOST + ":" + SERVER_PORT + "/movie.ogg"
+        Location: "http://" + HOST + ":" + SERVER_PORT + "/movie.ogg",
       });
       res.end();
     });
@@ -138,14 +138,14 @@ describe("video converting server response", function() {
 
     try {
       server = await startServer({});
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       await Promise.all([httpServer.stop(), server.stop()]);
     }
   });
 
-  it("allows redirect if enabled", async function() {
+  it("allows redirect if enabled", async function () {
     const FILE_PATH = path.join(
       __dirname,
       "../../../fixtures/videos/trailer_1080p.ogg"
@@ -153,7 +153,7 @@ describe("video converting server response", function() {
 
     let SERVER_PORT;
     let HOST;
-    const httpServer = await simpleHttpServer(function(req, res) {
+    const httpServer = await simpleHttpServer(function (req, res) {
       const urlPath = req.url.replace(/\//g, "");
       if (urlPath === "moved.png") {
         res.writeHead(301, {
@@ -161,8 +161,8 @@ describe("video converting server response", function() {
             protocol: "http",
             hostname: HOST,
             port: SERVER_PORT,
-            pathname: "/movie.ogg"
-          })
+            pathname: "/movie.ogg",
+          }),
         });
         res.end();
       } else {
@@ -176,13 +176,13 @@ describe("video converting server response", function() {
       protocol: "http",
       hostname: HOST,
       port: httpServer.address().port,
-      pathname: "/moved.png"
+      pathname: "/moved.png",
     });
     const flamingoUrl = url.format({
       protocol: "http",
       hostname: HOST,
       port: FLAMINGO_PORT,
-      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`
+      pathname: `/video/avatar-image/${encodeURIComponent(assetsUrl)}`,
     });
 
     let server;
@@ -190,7 +190,7 @@ describe("video converting server response", function() {
     try {
       server = await startServer({
         HOST,
-        ALLOW_READ_REDIRECT: true
+        ALLOW_READ_REDIRECT: true,
       });
       const { statusCode } = await got(flamingoUrl);
       assert.equal(statusCode, 200);
@@ -199,7 +199,7 @@ describe("video converting server response", function() {
     }
   });
 
-  it("rejects unknown protocols (no reader available)", async function() {
+  it("rejects unknown protocols (no reader available)", async function () {
     const URL = `http://localhost:${FLAMINGO_PORT}/video/avatar-image/${encodeURIComponent(
       "ftp://ftp.example.com/moved.jpg"
     )}`;
@@ -207,14 +207,14 @@ describe("video converting server response", function() {
 
     try {
       server = await startServer({});
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
     }
   });
 
-  it("rejects unknown profile", async function() {
+  it("rejects unknown profile", async function () {
     const URL = `http://localhost:${FLAMINGO_PORT}/video/foo/${encodeURIComponent(
       "http://ftp.example.com/moved.jpg"
     )}`;
@@ -222,14 +222,14 @@ describe("video converting server response", function() {
 
     try {
       server = await startServer({});
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
     }
   });
 
-  it("fails for decryption errors", async function() {
+  it("fails for decryption errors", async function () {
     const URL = `http://localhost:${FLAMINGO_PORT}/video/avatar-image/${encodeURIComponent(
       "http://ftp.example.com/moved.jpg"
     )}`;
@@ -237,16 +237,16 @@ describe("video converting server response", function() {
 
     try {
       server = await startServer({
-        CRYPTO: { ENABLED: true }
+        CRYPTO: { ENABLED: true },
       });
-      const { response } = await got(URL).catch(e => e);
+      const { response } = await got(URL).catch((e) => e);
       assert.equal(response.statusCode, 400);
     } finally {
       server.stop();
     }
   });
 
-  it("uses the file reader for file uris", async function() {
+  it("uses the file reader for file uris", async function () {
     const URL = `http://localhost:${FLAMINGO_PORT}/video/avatar-image/${encodeURIComponent(
       `file://${path.join(
         __dirname,
@@ -259,8 +259,8 @@ describe("video converting server response", function() {
       server = await startServer({
         CRYPTO: { ENABLED: false },
         ACCESS: {
-          FILE: { READ: [path.join(__dirname, "../../../fixtures/videos")] }
-        }
+          FILE: { READ: [path.join(__dirname, "../../../fixtures/videos")] },
+        },
       });
       const { statusCode } = await got(URL);
       assert.equal(statusCode, 200);

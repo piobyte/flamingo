@@ -37,7 +37,7 @@ const DEFAULT_SUPPORTED = ["image/png", "image/jpeg", "image/webp"];
  * bestFormat('image/jpeg,image/png,image/svg+xml,image/*;q=0.8,*\/*;q=0.5', 'image/png')
  * // {mime: 'image/jpeg', type: 'jpeg'}
  */
-export = function(acceptHeader: any, defaultMime: string = "image/png"): Mime {
+export = function (acceptHeader: any, defaultMime: string = "image/png"): Mime {
   let bestMatch;
 
   if (typeof acceptHeader === "string") {
@@ -48,7 +48,7 @@ export = function(acceptHeader: any, defaultMime: string = "image/png"): Mime {
 
     let highestFitness = 0;
 
-    const highestSupported = DEFAULT_SUPPORTED.map(supportedMime => {
+    const highestSupported = DEFAULT_SUPPORTED.map((supportedMime) => {
       const fitnessQuality = mimeparse.fitnessAndQualityParsed(
         supportedMime,
         parsedHeader
@@ -56,10 +56,10 @@ export = function(acceptHeader: any, defaultMime: string = "image/png"): Mime {
       highestFitness = Math.max(highestFitness, fitnessQuality[0]);
       return {
         mime: supportedMime,
-        fitness: fitnessQuality[0]
+        fitness: fitnessQuality[0],
       };
     })
-      .filter(parsed => parsed.fitness === highestFitness)
+      .filter((parsed) => parsed.fitness === highestFitness)
       .map(({ mime }) => mime)
       .sort((a, b) => {
         /* eslint no-else-return: 0 */

@@ -21,8 +21,8 @@ const {
     LOG_STREAM,
     EXTRACT_PROCESS,
     START,
-    STOP
-  }
+    STOP,
+  },
 } = Addon;
 
 /**
@@ -44,9 +44,9 @@ function mergeBufferAware(a, b) {
  * @param {object} loader
  * @returns {*}
  */
-export = function(loader: AddonLoader): AddonLoader {
-  loader.callback(CONF, conf => {
-    return addonConf => {
+export = function (loader: AddonLoader): AddonLoader {
+  loader.callback(CONF, (conf) => {
+    return (addonConf) => {
       // overwrite addon config with config.js content and merge the result into config.js
       mergeWith(
         conf,
@@ -56,7 +56,7 @@ export = function(loader: AddonLoader): AddonLoader {
     };
   });
   loader.callback(EXTRACT_PROCESS, (extracted, operation) => {
-    return function(addonExtractFunction) {
+    return function (addonExtractFunction) {
       return addonExtractFunction(extracted, operation);
     };
   });
@@ -64,19 +64,19 @@ export = function(loader: AddonLoader): AddonLoader {
     // call envConfig on the config.js object given the addon env mappings
     return partial(envConfig, config, environment);
   });
-  loader.callback(PROFILES, profiles => {
+  loader.callback(PROFILES, (profiles) => {
     // put addon profile fields on the existing profiles object
     return partial(assign, profiles);
   });
-  loader.callback(ROUTES, server => {
+  loader.callback(ROUTES, (server) => {
     // add additional routes
     return server.route.bind(server);
   });
-  loader.callback(HAPI_PLUGINS, plugins => {
+  loader.callback(HAPI_PLUGINS, (plugins) => {
     // add hapi plugins
     return plugins.push.bind(plugins);
   });
-  loader.callback(LOG_STREAM, logger => {
+  loader.callback(LOG_STREAM, (logger) => {
     // add logger stream
     return logger.addStreams;
   });

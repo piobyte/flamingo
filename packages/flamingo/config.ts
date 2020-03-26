@@ -11,7 +11,7 @@ import pkg = require("./package.json");
 
 function addSupported(config): Promise<Config> {
   return supported(config)
-    .then(SUPPORTED => (config.SUPPORTED = SUPPORTED))
+    .then((SUPPORTED) => (config.SUPPORTED = SUPPORTED))
     .then(() => config);
 }
 
@@ -26,23 +26,23 @@ const ENV_MAPPINGS: Array<Mapping> = [
   [
     "ROUTE_PROFILE_CONVERT_IMAGE",
     "ROUTES.PROFILE_CONVERT_IMAGE",
-    envParser.boolean
+    envParser.boolean,
   ],
   [
     "ROUTE_PROFILE_CONVERT_VIDEO",
     "ROUTES.PROFILE_CONVERT_VIDEO",
-    envParser.boolean
+    envParser.boolean,
   ],
   [
     "READER_REQUEST_TIMEOUT",
     "READER.REQUEST.TIMEOUT",
-    envParser.int(10 * 1000)
+    envParser.int(10 * 1000),
   ],
   ["PORT", "PORT", envParser.int(3000)],
   [
     "PREPROCESSOR_VIDEO_KILL_TIMEOUT",
     "PREPROCESSOR.VIDEO.KILL_TIMEOUT",
-    envParser.int(2 * 60 * 1000)
+    envParser.int(2 * 60 * 1000),
   ],
   ["ACCESS_FILE_READ", "ACCESS.FILE.READ", JSON.parse],
   ["ACCESS_FILE_WRITE", "ACCESS.FILE.WRITE", JSON.parse],
@@ -53,7 +53,7 @@ const ENV_MAPPINGS: Array<Mapping> = [
   ["CRYPTO_IV", "CRYPTO.IV", envParser.buffer],
   ["CRYPTO_KEY", "CRYPTO.KEY", envParser.buffer64],
   ["CRYPTO_CIPHER", "CRYPTO.CIPHER", envParser.buffer],
-  ["CRYPTO_HMAC_KEY", "CRYPTO.HMAC_KEY"]
+  ["CRYPTO_HMAC_KEY", "CRYPTO.HMAC_KEY"],
 ];
 
 class Config {
@@ -77,7 +77,7 @@ class Config {
     KEY: Buffer.from("DjiZ7AWTeNh38zoQiZ76gw::", "base64"),
     IV: Buffer.from("_ag3WU77"),
     HMAC_KEY: "NLoTxj5d2ts2z5xPREtGUJZC9tCCQFAX",
-    CIPHER: "BF-CBC" /* Blowfish */
+    CIPHER: "BF-CBC" /* Blowfish */,
     // pbkdf2 values to generate the above KEY, IV, CIPHER
     //SECRET: 'XwckHV-3cySkr96QbqhHb2GvianU3ggU',
     //SALT: 'URAdgv-D',
@@ -90,8 +90,8 @@ class Config {
     };
   } = {
     VIDEO: {
-      KILL_TIMEOUT: 2 * 60 * 1000
-    }
+      KILL_TIMEOUT: 2 * 60 * 1000,
+    },
   };
   ACCESS?: {
     FILE?: {
@@ -106,13 +106,13 @@ class Config {
   } = {
     FILE: {
       READ: [],
-      WRITE: []
+      WRITE: [],
     },
     HTTPS: {
       ENABLED: false,
       READ: [],
-      WRITE: []
-    }
+      WRITE: [],
+    },
   };
   ROUTES?: {
     INDEX?: boolean;
@@ -121,12 +121,12 @@ class Config {
   } = {
     INDEX: true,
     PROFILE_CONVERT_IMAGE: true,
-    PROFILE_CONVERT_VIDEO: true
+    PROFILE_CONVERT_VIDEO: true,
   };
   SUPPORTED?: {
     FFMPEG?: boolean;
   } = {
-    FFMPEG: true
+    FFMPEG: true,
   };
   READER?: {
     REQUEST?: {
@@ -136,8 +136,8 @@ class Config {
   } = {
     REQUEST: {
       // http/https request timeout
-      TIMEOUT: 10 * 1000
-    }
+      TIMEOUT: 10 * 1000,
+    },
   };
 
   /**
@@ -156,7 +156,7 @@ class Config {
 
     // update config with new values
     Object.keys(parsedEnvConfig).forEach(
-      key => (config[key] = parsedEnvConfig[key])
+      (key) => (config[key] = parsedEnvConfig[key])
     );
 
     return addSupported(config);

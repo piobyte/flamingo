@@ -12,7 +12,7 @@ import pkg = require("./package.json");
 const { build } = Logger;
 const indexLogger = build("index");
 
-process.on("uncaughtException", err => indexLogger.error(err));
+process.on("uncaughtException", (err) => indexLogger.error(err));
 
 function buildRoutes(config: Config) {
   const routes: Route[] = [];
@@ -30,18 +30,18 @@ function buildRoutes(config: Config) {
 function buildProfiles(config: Config) {
   return [
     require("./src/profiles/examples"),
-    config.DEBUG && require("./src/profiles/debug")
+    config.DEBUG && require("./src/profiles/debug"),
   ].filter(Boolean);
 }
 
 Config.fromEnv()
-  .then(config =>
+  .then((config) =>
     new Server(config, new AddonLoader(__dirname, pkg).load())
       .withProfiles(buildProfiles(config))
       .withRoutes(buildRoutes(config))
       .start()
   )
-  .then(server =>
+  .then((server) =>
     indexLogger.info(`server running at ${server.hapi.info!.uri}`)
   )
-  .catch(error => indexLogger.error(error));
+  .catch((error) => indexLogger.error(error));

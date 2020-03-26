@@ -2,14 +2,14 @@ import assert = require("assert");
 import envConfig = require("../../../src/util/env-config");
 import envParser = require("../../../src/util/env-parser");
 
-describe("env-parser", function() {
-  it("checks that the basic overwriting works", function() {
+describe("env-parser", function () {
+  it("checks that the basic overwriting works", function () {
     const conf = { EXISTING: { PATH: "wasd" }, OBJ: { EXISTING: "fdsa" } };
     const env = {
       FOO: "bar",
       OBJ_PATH: "42",
       OBJ_FOO_BAR: "true",
-      OBJ_EXISTING: "asdf"
+      OBJ_EXISTING: "asdf",
     };
 
     assert.deepEqual(
@@ -19,7 +19,7 @@ describe("env-parser", function() {
         ["OBJ_FOO_BAR", "OBJ.FOO.BAR", envParser.boolean],
         ["OBJ_EXISTING", "OBJ.EXISTING"],
         ["EXISTING_PATH", "EXISTING.PATH"],
-        ["SOME_FIELD", "SOME.FIELD"]
+        ["SOME_FIELD", "SOME.FIELD"],
       ]),
       {
         FOO: "bar",
@@ -27,8 +27,8 @@ describe("env-parser", function() {
         OBJ: {
           PATH: 42,
           FOO: { BAR: true },
-          EXISTING: "asdf"
-        }
+          EXISTING: "asdf",
+        },
       }
     );
   });

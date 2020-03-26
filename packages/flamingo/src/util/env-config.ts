@@ -24,12 +24,12 @@ import Mapping from "../types/Mapping";
  * @returns {Object} updated config
  */
 
-export = function(
+export = function (
   config: Config | {},
   environment: { [key: string]: string | undefined },
   mappings: Array<Mapping>
 ): Config | {} {
-  forEach(mappings, function(mapping: Mapping) {
+  forEach(mappings, function (mapping: Mapping) {
     const [envProp, objPath] = mapping;
     let setVal;
     if (mapping.length === 3) {

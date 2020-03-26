@@ -19,7 +19,7 @@ const { ProcessingError, InvalidInputError } = errors;
 const { FILE, REMOTE } = ReaderType;
 const logger = build("preprocessor:video");
 const defaultProcessConf = {
-  seekPercent: 0
+  seekPercent: 0,
 };
 
 /**
@@ -27,12 +27,12 @@ const defaultProcessConf = {
  * @param {FlamingoOperation} operation
  * @return {Function}
  */
-export = function(operation) {
+export = function (operation) {
   const conf = operation.config;
   const givenProcessConf = operation.preprocessorConfig;
   const processConf = assign({}, defaultProcessConf, givenProcessConf);
 
-  return function(readerResult) {
+  return function (readerResult) {
     const ffmpegOptions: { [key: string]: any } = {};
 
     /* istanbul ignore else */
@@ -41,8 +41,8 @@ export = function(operation) {
     }
 
     function videoProcessor(input) {
-      return new Promise(function(resolve, reject) {
-        ffmpeg.ffprobe(input, function(err, meta) {
+      return new Promise(function (resolve, reject) {
+        ffmpeg.ffprobe(input, function (err, meta) {
           if (err) {
             reject(new InvalidInputError(err.message, err));
           } else {
@@ -64,17 +64,17 @@ export = function(operation) {
                 .seekInput(duration * processConf.seekPercent)
                 .frames(1)
                 .format("image2")
-                .on("codecData", function(data) {
+                .on("codecData", function (data) {
                   logger.debug(data);
                 })
-                .on("start", function(commandLine) {
+                .on("start", function (commandLine) {
                   logger.info(`Spawned ffmpeg with command: ${commandLine}`);
                 })
-                .on("error", function(e) {
+                .on("error", function (e) {
                   /* istanbul ignore next */
                   throw new ProcessingError(e.message, e);
                 })
-                .on("end", function() {
+                .on("end", function () {
                   logger.debug("ffmpeg end");
                 })
             );
@@ -98,16 +98,16 @@ export = function(operation) {
               timeout: conf.READER.REQUEST.TIMEOUT,
               headers: {
                 "user-agent":
-                  pkg.name + "/" + pkg.version + " (+" + pkg.bugs.url + ")"
+                  pkg.name + "/" + pkg.version + " (+" + pkg.bugs.url + ")",
               },
               followRedirect: false,
-              retry: 0
+              retry: 0,
             })
             .then(() => {
               return videoProcessor(readerResult.url.href);
             })
             .catch(
-              err =>
+              (err) =>
                 new InvalidInputError(
                   "Error while doing a HEAD request to check for redirects",
                   err
@@ -118,7 +118,7 @@ export = function(operation) {
       }
       default: {
         /* istanbul ignore next */
-        return readerResult.stream().then(stream => videoProcessor(stream));
+        return readerResult.stream().then((stream) => videoProcessor(stream));
       }
     }
   };
