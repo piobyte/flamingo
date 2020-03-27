@@ -1,6 +1,6 @@
 {
   "name": "flamingo-s3",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "main": "index.js",
   "description": "flamingo-s3 is a https://github.com/piobyte/flamingo addon to allow reading and converting images from https://aws.amazon.com/s3/.",
   "scripts": {
@@ -32,7 +32,7 @@
   "dependencies": {
     "aws-sdk": "^2.646.0",
     "boom": "^7.3.0",
-    "flamingo": "^3.0.4",
+    "flamingo": "^3.0.5",
     "lodash.merge": "^4.6.0",
     "nyc": "^15.0.0"
   },
