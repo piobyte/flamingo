@@ -6,6 +6,29 @@
  * use the exported `HOOKS` from the `src/addon.js` module (ie. `addon.HOOK.CONF`).
  * @module
  */
+import Mapping from "../types/Mapping";
+import Server = require("../model/server");
+import Profile from "../types/Profile";
+import Config = require("../../config");
+import bunyan = require("bunyan");
+import FlamingoOperation = require("../model/flamingo-operation");
+import { ProfileInstruction } from "../types/Instruction";
+
+/**
+ * Type for each addon hook type
+ */
+type HOOK = {
+  [HOOKS.ENV]: () => Mapping[];
+  [HOOKS.CONF]: () => Record<string, any>;
+  [HOOKS.START]: (server: Server) => void;
+  [HOOKS.STOP]: (server: Server) => void;
+  [HOOKS.PROFILES]: () => { [profileName: string]: Profile };
+  [HOOKS.LOG_STREAM]: (conf: Config) => Array<bunyan.Stream>;
+  [HOOKS.EXTRACT_PROCESS]: () => (
+    profile: ProfileInstruction,
+    operation: FlamingoOperation
+  ) => ProfileInstruction;
+};
 
 /**
  * Hooks to register flamino addon functionality.
@@ -133,4 +156,4 @@ enum HOOKS {
   STOP = "STOP",
 }
 
-export { HOOKS };
+export { HOOKS, HOOK };

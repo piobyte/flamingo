@@ -1,6 +1,7 @@
 import addon = require("flamingo/src/addon");
 import Raven = require("raven");
 import bunyan = require("bunyan");
+import { HOOK, HOOKS } from "flamingo/src/addon";
 
 /**
  * sentry addon hooks
@@ -39,7 +40,7 @@ function ensureLogMessage(obj) {
  */
 exports[addon.HOOKS.ENV] = function () {
   return [["SENTRY_DSN", "SENTRY_DSN"]];
-};
+} as HOOK[HOOKS.ENV];
 
 /**
  * Returns default addon conf
@@ -51,7 +52,7 @@ exports[addon.HOOKS.CONF] = function () {
   return {
     SENTRY_DSN: undefined,
   };
-};
+} as HOOK[HOOKS.CONF];
 
 /**
  * Result of input reading
@@ -83,7 +84,7 @@ exports[addon.HOOKS.LOG_STREAM] = function (conf) {
       level: bunyan.WARN,
       stream: {
         write: function (msg) {
-          let obj: { [key: string]: any } = {};
+          let obj: Record<string, any> = {};
           /* istanbul ignore next */
           try {
             obj = ensureLogMessage(JSON.parse(msg));
@@ -101,4 +102,4 @@ exports[addon.HOOKS.LOG_STREAM] = function (conf) {
       },
     },
   ];
-};
+} as HOOK[HOOKS.LOG_STREAM];

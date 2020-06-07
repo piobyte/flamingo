@@ -57,7 +57,7 @@ export = function S3Mixin<T extends Constructor<Route>>(SuperClass: T) {
         s3Reader(
           bucket.name,
           `${bucket.path}${key}`,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           this.server.s3Client
         )

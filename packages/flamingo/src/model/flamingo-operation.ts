@@ -26,7 +26,7 @@ class FlamingoOperation {
   writer: Writer = () => noop;
   input: any = undefined;
   process: Array<ProcessInstruction<any>> = [];
-  response: { header?: { [key: string]: string } };
+  response: { header?: Record<string, string> };
   config: Config = {};
 }
 

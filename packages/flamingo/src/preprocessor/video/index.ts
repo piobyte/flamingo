@@ -33,7 +33,7 @@ export = function (operation) {
   const processConf = assign({}, defaultProcessConf, givenProcessConf);
 
   return function (readerResult) {
-    const ffmpegOptions: { [key: string]: any } = {};
+    const ffmpegOptions: Record<string, any> = {};
 
     /* istanbul ignore else */
     if (conf.PREPROCESSOR.VIDEO.KILL_TIMEOUT) {

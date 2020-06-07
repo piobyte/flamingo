@@ -25,7 +25,7 @@ const DEFAULT_QUALITY = 80;
 const { int, float, objectInt } = envParser;
 
 function extractDimension(
-  query: { [key: string]: any } = {},
+  query: Record<string, any> = {},
   defaultSize: number
 ) {
   let width;
@@ -93,7 +93,7 @@ const ExampleProfiles: { [profileName: string]: Profile } = {
     );
 
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
-    const responseHeader: { [key: string]: any } = config.CLIENT_HINTS
+    const responseHeader: Record<string, any> = config.CLIENT_HINTS
       ? { "Accept-CH": "DPR, Width" }
       : {};
 
@@ -156,7 +156,7 @@ const ExampleProfiles: { [profileName: string]: Profile } = {
     );
 
     const format = bestFormat(request.headers.accept, config.DEFAULT_MIME);
-    const responseHeader: { [key: string]: any } = config.CLIENT_HINTS
+    const responseHeader: Record<string, any> = config.CLIENT_HINTS
       ? { "Accept-CH": "DPR, Width" }
       : {};
 

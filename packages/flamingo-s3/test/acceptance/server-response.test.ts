@@ -32,7 +32,7 @@ function startServer(localConf) {
 
     return new Server(
       config,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       { hook: () => noop }
     )
@@ -60,7 +60,7 @@ describe("flamingo-s3 server response", function () {
 
     AWS.config.update({
       // config for fake s3 server (only used in testing)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       endpoint: new AWS.Endpoint(AWS_ENDPOINT),
       region: AWS_REGION,
@@ -149,7 +149,7 @@ describe("flamingo-s3 server response", function () {
       .start();
 
     const s3Client: AWS.S3 =
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       server.s3Client;
     assert.equal(s3Client.config.credentials!.accessKeyId, "123");
@@ -207,7 +207,7 @@ describe("flamingo-s3 server response", function () {
 
     AWS.config.update({
       // config for fake s3 server (only used in testing)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       endpoint: new AWS.Endpoint(AWS_ENDPOINT),
       region: AWS_REGION,
@@ -218,7 +218,7 @@ describe("flamingo-s3 server response", function () {
 
     const { size } = (await stat(fixture)) as { size: number };
     const s3Client: AWS.S3 =
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       server.s3Client;
 
