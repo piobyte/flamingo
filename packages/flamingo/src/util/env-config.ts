@@ -25,10 +25,10 @@ import Mapping from "../types/Mapping";
  */
 
 export = function (
-  config: Config | {},
-  environment: { [key: string]: string | undefined },
+  config: Config,
+  environment: Record<string, string | undefined>,
   mappings: Array<Mapping>
-): Config | {} {
+): Config {
   forEach(mappings, function (mapping: Mapping) {
     const [envProp, objPath] = mapping;
     let setVal;

@@ -1,7 +1,7 @@
 /*eslint no-console: 0*/
 
 import temp = require('temp');
-import uuidV4 = require('uuid/v4');
+import uuid = require('uuid');
 import fingerprint = require('./fingerprint');
 import debugProfiles = require('../../src/profiles/debug');
 import imageProcessors = require('../../src/processor/image');
@@ -11,7 +11,7 @@ const pkg = require('../../package.json');
 let benchPromise = Promise.resolve();
 
 const TAGS = process.env.BENCH_TAG ? [process.env.BENCH_TAG] : [];
-const id = uuidV4();
+const id = uuid.v4();
 const BENCH_FILE = `benchmark-${id}.json`;
 const RUN_CONFIG = {'async': true};
 const CONVERT_PROFILES = ['debug-preview-image', 'debug-avatar-image'];

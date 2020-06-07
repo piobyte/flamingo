@@ -34,7 +34,7 @@ describe("convert", function () {
 
     const convert = new (testMixin(Convert(Route)))();
     const operation = new FlamingoOperation();
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     operation.shouldFail = true;
     return convert

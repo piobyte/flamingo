@@ -100,8 +100,8 @@ class Config {
     };
     HTTPS?: {
       ENABLED?: boolean;
-      READ?: Array<{ [key: string]: string }>;
-      WRITE?: Array<{ [key: string]: string }>;
+      READ?: Array<Record<string, string>>;
+      WRITE?: Array<Record<string, string>>;
     };
   } = {
     FILE: {

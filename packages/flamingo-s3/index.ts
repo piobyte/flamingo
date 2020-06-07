@@ -12,6 +12,7 @@ import addon = require("flamingo/src/addon");
 import AWS = require("aws-sdk");
 import envParser = require("flamingo/src/util/env-parser");
 import Server = require("flamingo/src/model/server");
+import { HOOK, HOOKS } from "flamingo/src/addon";
 
 /**
  * Returns s3 environment mappings
@@ -25,7 +26,7 @@ import Server = require("flamingo/src/model/server");
  * `AWS_ACCESS_KEY` => `AWS.ACCESS_KEY`
  * `AWS_S3_BUCKETS` => `AWS.S3.BUCKETS`
  */
-exports[addon.HOOKS.ENV] = function () {
+exports[HOOKS.ENV] = function () {
   return [
     ["AWS_ENDPOINT", "AWS.ENDPOINT"],
     ["AWS_REGION", "AWS.REGION"],
@@ -34,7 +35,7 @@ exports[addon.HOOKS.ENV] = function () {
     ["AWS_S3_BUCKETS", "AWS.S3.BUCKETS", JSON.parse],
     ["AWS_S3_FORCE_PATH_STYLE", "AWS.S3.FORCE_PATH_STYLE", envParser.boolean],
   ];
-};
+} as HOOK[HOOKS.ENV];
 
 /**
  * Returns default addon configuration
@@ -61,7 +62,7 @@ exports[addon.HOOKS.CONF] = function () {
       },
     },
   };
-};
+} as HOOK[HOOKS.CONF];
 
 /**
  * Update AWS config on start and create a AWS-S3 client (`s3Client` variable) on the server instance.
@@ -87,12 +88,12 @@ exports[addon.HOOKS.START] = function (server: Server) {
   }
   AWS.config.update(config);
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   if (!server.s3Client) {
     //NOTE: s3Client is a private field and shouldn't be relied on apart from the implemented behavior.
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     server.s3Client = new AWS.S3();
   }
-};
+} as HOOK[HOOKS.START];

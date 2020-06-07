@@ -3,8 +3,6 @@
  * @module
  */
 
-import util = require("util");
-
 /**
  * Error that should be used if the input is invalid.
  * I.e. if profile name is unknown or input is not an image stream
@@ -13,13 +11,18 @@ import util = require("util");
  * @param {*} [extra]
  * @constructor
  */
-function InvalidInputError(message, extra?) {
-  Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
-  this.name = this.constructor.name;
-  this.message = message;
-  /* istanbul ignore else */
-  if (extra) {
-    this.extra = extra;
+class InvalidInputError extends Error {
+  public extra?: any;
+
+  constructor(message: string, extra?: any) {
+    super(message);
+    // Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
+    this.name = this.constructor.name;
+    this.message = message;
+    /* istanbul ignore else */
+    if (extra) {
+      this.extra = extra;
+    }
   }
 }
 
@@ -31,20 +34,30 @@ function InvalidInputError(message, extra?) {
  * @param {*} [extra]
  * @constructor
  */
-function ProcessingError(message, extra?) {
-  Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
-  this.name = this.constructor.name;
-  this.message = message;
-  /* istanbul ignore else */
-  if (extra) {
-    this.extra = extra;
+class ProcessingError extends Error {
+  public extra?: any;
+
+  constructor(message: string, extra?: any) {
+    super(message);
+    // Error.captureStackTrace && Error.captureStackTrace(this, this.constructor);
+    this.name = this.constructor.name;
+    this.message = message;
+    /* istanbul ignore else */
+    if (extra) {
+      this.extra = extra;
+    }
   }
 }
 
-util.inherits(InvalidInputError, Error);
-util.inherits(ProcessingError, Error);
+const isInvalidInputError = (e: Error): e is InvalidInputError =>
+  e instanceof InvalidInputError;
+const isProcessingError = (e: Error): e is ProcessingError =>
+  e instanceof ProcessingError;
 
 export = {
   InvalidInputError,
   ProcessingError,
+
+  isInvalidInputError,
+  isProcessingError,
 };

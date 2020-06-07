@@ -10,7 +10,7 @@ import fileReader = require("../../../src/reader/file");
 import FlamingoOperation = require("../../../src/model/flamingo-operation");
 import errors = require("../../../src/util/errors");
 
-const { InvalidInputError } = errors;
+const { InvalidInputError, isInvalidInputError } = errors;
 const compareFileFixtures = function (fixturePath) {
   return new Promise(function (resolve, reject) {
     const TEST_WHITELIST = {
@@ -82,8 +82,8 @@ describe("file reader", function () {
       ACCESS: { FILE: { READ: [path.join(__dirname)] } },
     };
 
-    return fileReader(op).catch((e) => {
-      assert.ok(e instanceof InvalidInputError);
+    return fileReader(op).catch((e: Error) => {
+      assert.ok(isInvalidInputError(e));
       assert.equal(e.message, "Input stat error.");
     });
   });
@@ -95,8 +95,8 @@ describe("file reader", function () {
       ACCESS: { FILE: { READ: [path.join(__dirname, "..")] } },
     };
 
-    return fileReader(op).catch((e) => {
-      assert.ok(e instanceof InvalidInputError);
+    return fileReader(op).catch((e: Error) => {
+      assert.ok(isInvalidInputError(e));
       assert.equal(e.message, "Input isn't a file.");
     });
   });
@@ -108,8 +108,8 @@ describe("file reader", function () {
       ACCESS: { FILE: { READ: [path.join(__dirname, "dir")] } },
     };
 
-    return fileReader(op).catch((e) => {
-      assert.ok(e instanceof InvalidInputError);
+    return fileReader(op).catch((e: Error) => {
+      assert.ok(isInvalidInputError(e));
       // TODO: protocol file: ??
       assert.equal(e.extra.protocol, "file:");
       assert.equal(e.message, "File access not allowed.");
