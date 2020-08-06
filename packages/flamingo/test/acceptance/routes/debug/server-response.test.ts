@@ -28,7 +28,7 @@ describe("debug server response", function () {
       const body: Record<string, any> = await got(
         `http://localhost:${PORT}/_debug`
       ).json();
-      assert.equal(body.config.PORT, server.config.PORT);
+      assert.strictEqual(body.config.PORT, server.config.PORT);
     } finally {
       server.stop();
     }

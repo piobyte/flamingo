@@ -52,7 +52,7 @@ describe("hook", function () {
 
       loader().hook(CONF)(conf);
 
-      assert.deepEqual(conf, {
+      assert.deepStrictEqual(conf, {
         FOO: "bar",
         TEST_CONF: { ENABLED: true },
       });
@@ -62,7 +62,7 @@ describe("hook", function () {
 
       loader().hook(CONF)(conf);
 
-      assert.deepEqual(conf, { TEST_CONF: { ENABLED: false } });
+      assert.deepStrictEqual(conf, { TEST_CONF: { ENABLED: false } });
     });
     it("keeps buffer objects intact (https://github.com/lodash/lodash/issues/1453)", function () {
       const conf = { FOO: { Bar: Buffer.from("uname -a", "utf8") } };
@@ -82,7 +82,7 @@ describe("hook", function () {
 
       loader().hook(ENV)(conf, env);
 
-      assert.deepEqual(conf, { TEST: { CONF: { ENABLED: false } } });
+      assert.deepStrictEqual(conf, { TEST: { CONF: { ENABLED: false } } });
     });
   });
 
@@ -115,7 +115,10 @@ describe("hook", function () {
 
       loader().hook(PROFILES)(profiles);
 
-      assert.deepEqual(Object.keys(profiles), ["addonProfile", "foo-bar"]);
+      assert.deepStrictEqual(Object.keys(profiles), [
+        "addonProfile",
+        "foo-bar",
+      ]);
     });
   });
 
@@ -144,7 +147,7 @@ describe("hook", function () {
 
       const operation = new FlamingoOperation();
       loader().hook(EXTRACT_PROCESS)(extracted, operation);
-      assert.equal(extracted.response.header.Authorization, "Basic 1234");
+      assert.strictEqual(extracted.response.header.Authorization, "Basic 1234");
       extracted.process[0].pipe({
         rotate() {
           return this;
@@ -166,7 +169,7 @@ describe("hook", function () {
       const server = { foo: 1 };
 
       loader().hook(START, server)();
-      assert.equal(server.foo, 2);
+      assert.strictEqual(server.foo, 2);
     });
   });
   describe("STOP", function () {
@@ -174,7 +177,7 @@ describe("hook", function () {
       const server = { foo: 2 };
 
       loader().hook(STOP, server)();
-      assert.equal(server.foo, 3);
+      assert.strictEqual(server.foo, 3);
     });
   });
 });

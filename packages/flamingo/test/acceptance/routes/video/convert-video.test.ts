@@ -66,7 +66,7 @@ describe("convert video", function () {
       });
       const data = await got(flamingoUrl);
       assert.ok(data);
-      assert.equal(data.statusCode, 200);
+      assert.strictEqual(data.statusCode, 200);
     } finally {
       await Promise.all([httpServer.stop(), flamingoServer.stop()]);
     }
@@ -108,7 +108,7 @@ describe("convert video", function () {
       });
       const data = await got(flamingoUrl);
       assert.ok(data);
-      assert.equal(data.statusCode, 200);
+      assert.strictEqual(data.statusCode, 200);
     } finally {
       await Promise.all([httpServer.stop(), flamingoServer.stop()]);
     }
@@ -149,7 +149,7 @@ describe("convert video", function () {
       });
       const data = await got(flamingoUrl);
       assert.ok(data);
-      assert.equal(data.statusCode, 200);
+      assert.strictEqual(data.statusCode, 200);
     } finally {
       await Promise.all([httpServer.stop(), flamingoServer.stop()]);
     }
@@ -189,7 +189,7 @@ describe("convert video", function () {
       });
       const data = await got(flamingoUrl);
       assert.ok(data);
-      assert.equal(data.statusCode, 200);
+      assert.strictEqual(data.statusCode, 200);
     } finally {
       await Promise.all([httpServer.stop(), flamingoServer.stop()]);
     }
@@ -224,7 +224,7 @@ describe("convert video", function () {
         ACCESS: { HTTPS: { ENABLED: false } },
       });
       const { response } = await got(flamingoUrl).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       await Promise.all([httpServer.stop(), flamingoServer.stop()]);
     }

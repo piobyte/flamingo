@@ -41,7 +41,7 @@ describe("config", function () {
       const { response } = await got("http://localhost:" + PORT + "/").catch(
         (e) => e
       );
-      assert.equal(response.statusCode, 404);
+      assert.strictEqual(response.statusCode, 404);
     } finally {
       server.stop();
     }
@@ -56,6 +56,6 @@ describe("config", function () {
     ];
 
     const config = await Config.fromEnv(env, mappings);
-    assert.equal(config.TEST, true);
+    assert.strictEqual(config.TEST, true);
   });
 });

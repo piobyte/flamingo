@@ -44,7 +44,10 @@ describe("https? reader", function () {
           buf.push(e);
         });
         stream.on("end", function () {
-          assert.equal(Buffer.concat(buf).toString("utf8"), '{"status":"OK"}');
+          assert.strictEqual(
+            Buffer.concat(buf).toString("utf8"),
+            '{"status":"OK"}'
+          );
           done();
         });
         stream.pipe(out);
@@ -92,7 +95,7 @@ describe("https? reader", function () {
       await data.stream();
       assert.ok(false, "shouldn't resolve this request.");
     } catch (reason) {
-      assert.equal(reason.extra, "http://example.org/bad");
+      assert.strictEqual(reason.extra, "http://example.org/bad");
     }
   });
 
