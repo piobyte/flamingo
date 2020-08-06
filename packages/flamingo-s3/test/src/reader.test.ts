@@ -15,13 +15,13 @@ describe("reader", function () {
     };
     const s3 = {
       headObject(params) {
-        assert.deepEqual(params, S3_PARAMS);
+        assert.deepStrictEqual(params, S3_PARAMS);
         return {
           promise: () => Promise.resolve(),
         };
       },
       getObject: function (params) {
-        assert.deepEqual(params, S3_PARAMS);
+        assert.deepStrictEqual(params, S3_PARAMS);
       },
     };
 

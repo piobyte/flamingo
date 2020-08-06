@@ -13,6 +13,6 @@ describe("unfold reader result test", function () {
       type: ReaderType.FILE,
     });
 
-    assert.equal(streamed, true);
+    assert.strictEqual(streamed, true);
   });
 });

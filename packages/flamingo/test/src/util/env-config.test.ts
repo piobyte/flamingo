@@ -12,7 +12,7 @@ describe("env-parser", function () {
       OBJ_EXISTING: "asdf",
     };
 
-    assert.deepEqual(
+    assert.deepStrictEqual(
       envConfig(conf, env, [
         ["FOO", "FOO"],
         ["OBJ_PATH", "OBJ.PATH", envParser.int(0)],

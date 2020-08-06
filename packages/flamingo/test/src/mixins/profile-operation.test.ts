@@ -42,7 +42,7 @@ describe("profile-operation", function () {
     operation.request = { params: { url: cipherUrl } };
 
     const input = await profile.extractInput(operation);
-    assert.deepEqual(input, url.parse(testUrl));
+    assert.deepStrictEqual(input, url.parse(testUrl));
   });
 
   it("extracts the operations profile based on the profile param", async function () {
@@ -57,15 +57,15 @@ describe("profile-operation", function () {
     operation.config = conf;
     const profiles = {
       someProfile: (request, config) => {
-        assert.deepEqual(request, operation.request);
-        assert.deepEqual(config, operation.config);
+        assert.deepStrictEqual(request, operation.request);
+        assert.deepStrictEqual(config, operation.config);
         return Promise.resolve(profileSpy);
       },
     };
     profileOp.server = new ProfilesServer(profiles);
 
     const extractedProfile = await profileOp.extractProcess(operation);
-    assert.equal(extractedProfile, profileSpy);
+    assert.strictEqual(extractedProfile, profileSpy);
   });
 
   it("rejects extraction for unknown profiles", function () {
@@ -122,11 +122,11 @@ describe("profile-operation", function () {
 
     const operation = await profileOp.buildOperation(request, reply);
 
-    assert.deepEqual(operation.process, profileData.process);
-    assert.deepEqual(operation.response, profileData.response);
-    assert.equal(operation.reader, httpReader);
-    assert.deepEqual(operation.input, url.parse(givenUrl));
-    assert.equal(operation.writer, responseWriter);
+    assert.deepStrictEqual(operation.process, profileData.process);
+    assert.deepStrictEqual(operation.response, profileData.response);
+    assert.strictEqual(operation.reader, httpReader);
+    assert.deepStrictEqual(operation.input, url.parse(givenUrl));
+    assert.strictEqual(operation.writer, responseWriter);
   });
 
   it("rejects for unknown readers", function () {

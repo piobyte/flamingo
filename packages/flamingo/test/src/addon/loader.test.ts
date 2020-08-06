@@ -15,7 +15,7 @@ describe("loader", function () {
       pkg: {},
     };
 
-    assert.equal(loader().resolvePkg(testAddon), undefined);
+    assert.strictEqual(loader().resolvePkg(testAddon), undefined);
   });
 
   it("loads the file that is defined in the main field", function () {
@@ -47,7 +47,7 @@ describe("loader", function () {
       path.join(__dirname, "../../fixtures/node_modules/test-addon-0/")
     );
 
-    assert.equal(addon!.pkg!.name, "test-addon-0");
+    assert.strictEqual(addon!.pkg!.name, "test-addon-0");
   });
 
   it("should ignore non flamingo addons", function () {
@@ -55,7 +55,7 @@ describe("loader", function () {
       path.join(__dirname, "../../fixtures/node_modules/other-module/")
     );
 
-    assert.deepEqual(addon, undefined);
+    assert.deepStrictEqual(addon, undefined);
   });
 
   it("#reduceAddonsToHooks", function () {

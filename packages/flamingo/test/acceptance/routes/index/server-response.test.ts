@@ -27,7 +27,7 @@ describe("index server response", function () {
     try {
       server = await startServer({ DEBUG: false });
       const response = await got("http://localhost:" + PORT);
-      assert.equal(response.statusCode, 200);
+      assert.strictEqual(response.statusCode, 200);
       assert.ok(
         response.body.indexOf("debug") === -1,
         "isn't showing debug information if disabled"

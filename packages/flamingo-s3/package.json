@@ -30,25 +30,25 @@
     "url": "https://github.com/piobyte/flamingo-s3"
   },
   "dependencies": {
-    "aws-sdk": "^2.691.0",
+    "aws-sdk": "^2.727.1",
     "boom": "^7.3.0",
     "flamingo": "^3.0.5",
     "lodash.merge": "^4.6.0",
     "nyc": "^15.1.0"
   },
   "devDependencies": {
-    "@types/mocha": "^7.0.2",
-    "@types/node": "^14.0.11",
-    "@typescript-eslint/eslint-plugin": "^3.1.0",
-    "@typescript-eslint/parser": "^3.1.0",
-    "eslint": "^7.2.0",
+    "@types/mocha": "^8.0.1",
+    "@types/node": "^14.0.27",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
+    "@typescript-eslint/parser": "^3.8.0",
+    "eslint": "^7.6.0",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "got": "^11.3.0",
-    "mocha": "^7.2.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "got": "^11.5.1",
+    "mocha": "^8.1.1",
     "nock": "^12.0.3",
     "s3rver": "^2.2.9",
     "sinon": "^9.0.2",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.7"
   }
 }

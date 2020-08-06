@@ -71,7 +71,7 @@ describe("LOG_STREAM", function () {
           return got(`http://localhost:${config.PORT}/`).catch((e) => e);
         })
         .then(({ response }) => {
-          assert.equal(response.statusCode, 500);
+          assert.strictEqual(response.statusCode, 500);
           assert.ok(capturedError, "called captureMessage on the raven client");
         })
         .finally(() => _server.stop());

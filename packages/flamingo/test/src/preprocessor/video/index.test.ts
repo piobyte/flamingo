@@ -36,6 +36,6 @@ describe("video preprocessor", function () {
     };
 
     const stream = await videoProcessor(op)(readResult);
-    assert.equal(typeof stream.pipe, "function");
+    assert.strictEqual(typeof stream.pipe, "function");
   });
 });

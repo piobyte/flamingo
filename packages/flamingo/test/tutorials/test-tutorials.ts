@@ -38,7 +38,7 @@ const expected: Array<TutorialTestDescription> = [
       pathname: `/image/${IMAGE_URL}`,
     }),
     ok(response) {
-      assert.deepEqual(JSON.parse(response.body), {
+      assert.deepStrictEqual(JSON.parse(response.body), {
         format: "jpeg",
         width: 450,
         height: 600,
@@ -2161,7 +2161,7 @@ const expected: Array<TutorialTestDescription> = [
       pathname: `/image/preview-image/a3fb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`,
     }),
     ok(response) {
-      assert.deepEqual(response.statusCode, 200);
+      assert.deepStrictEqual(response.statusCode, 200);
     },
   },
   {
@@ -2173,7 +2173,7 @@ const expected: Array<TutorialTestDescription> = [
       pathname: `/image/preview-image/eeeb18e9c39d61a654d85ed0f2a9954e1f2f4b42cbc4d04a0e3a6c58a2e46c39/${IMAGE_URL}`,
     }),
     error(response) {
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     },
   },
   {
@@ -2185,7 +2185,7 @@ const expected: Array<TutorialTestDescription> = [
       pathname: "/md/preview-image/%23%20headline%0A%0Awasd?size=500",
     }),
     ok(response) {
-      assert.deepEqual(response.statusCode, 200);
+      assert.deepStrictEqual(response.statusCode, 200);
     },
   },
   {
@@ -2199,7 +2199,7 @@ const expected: Array<TutorialTestDescription> = [
       pathname: `/www/preview-image/${IMAGE_URL}`,
     }),
     ok(response) {
-      assert.deepEqual(response.statusCode, 200);
+      assert.deepStrictEqual(response.statusCode, 200);
     },
   },
   {
@@ -2211,7 +2211,7 @@ const expected: Array<TutorialTestDescription> = [
       pathname: `/convert/image/preview-image/${IMAGE_URL}`,
     }),
     ok(response) {
-      assert.deepEqual(response.statusCode, 200);
+      assert.deepStrictEqual(response.statusCode, 200);
     },
   },
   {
@@ -2223,7 +2223,7 @@ const expected: Array<TutorialTestDescription> = [
       pathname: `/inline/image/resize=300:100,toFormat=webp,rotate=90/${IMAGE_URL}`,
     }),
     ok(response) {
-      assert.deepEqual(response.statusCode, 200);
+      assert.deepStrictEqual(response.statusCode, 200);
     },
   },
 ];

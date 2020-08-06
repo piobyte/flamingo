@@ -84,7 +84,7 @@ describe("file reader", function () {
 
     return fileReader(op).catch((e: Error) => {
       assert.ok(isInvalidInputError(e));
-      assert.equal(e.message, "Input stat error.");
+      assert.strictEqual(e.message, "Input stat error.");
     });
   });
 
@@ -97,7 +97,7 @@ describe("file reader", function () {
 
     return fileReader(op).catch((e: Error) => {
       assert.ok(isInvalidInputError(e));
-      assert.equal(e.message, "Input isn't a file.");
+      assert.strictEqual(e.message, "Input isn't a file.");
     });
   });
 
@@ -111,8 +111,8 @@ describe("file reader", function () {
     return fileReader(op).catch((e: Error) => {
       assert.ok(isInvalidInputError(e));
       // TODO: protocol file: ??
-      assert.equal(e.extra.protocol, "file:");
-      assert.equal(e.message, "File access not allowed.");
+      assert.strictEqual(e.extra.protocol, "file:");
+      assert.strictEqual(e.message, "File access not allowed.");
     });
   });
 });

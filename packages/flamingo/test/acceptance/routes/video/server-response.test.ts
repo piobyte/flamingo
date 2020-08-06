@@ -88,7 +88,9 @@ describe("video converting server response", function () {
           ).catch((d) => d)
         )
       );
-      data.forEach(({ response }) => assert.equal(response.statusCode, 400));
+      data.forEach(({ response }) =>
+        assert.strictEqual(response.statusCode, 400)
+      );
     } finally {
       await Promise.all([httpServer.stop(), server.stop()]);
     }
@@ -111,7 +113,7 @@ describe("video converting server response", function () {
         },
       });
       const { response } = await got(URL).catch((d) => d);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }
@@ -139,7 +141,7 @@ describe("video converting server response", function () {
     try {
       server = await startServer({});
       const { response } = await got(URL).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       await Promise.all([httpServer.stop(), server.stop()]);
     }
@@ -193,7 +195,7 @@ describe("video converting server response", function () {
         ALLOW_READ_REDIRECT: true,
       });
       const { statusCode } = await got(flamingoUrl);
-      assert.equal(statusCode, 200);
+      assert.strictEqual(statusCode, 200);
     } finally {
       await Promise.all([httpServer.stop(), server.stop()]);
     }
@@ -208,7 +210,7 @@ describe("video converting server response", function () {
     try {
       server = await startServer({});
       const { response } = await got(URL).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }
@@ -223,7 +225,7 @@ describe("video converting server response", function () {
     try {
       server = await startServer({});
       const { response } = await got(URL).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }
@@ -240,7 +242,7 @@ describe("video converting server response", function () {
         CRYPTO: { ENABLED: true },
       });
       const { response } = await got(URL).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }
@@ -263,7 +265,7 @@ describe("video converting server response", function () {
         },
       });
       const { statusCode } = await got(URL);
-      assert.equal(statusCode, 200);
+      assert.strictEqual(statusCode, 200);
     } finally {
       server.stop();
     }

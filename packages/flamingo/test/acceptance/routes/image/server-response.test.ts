@@ -60,7 +60,7 @@ describe("image converting server response", function () {
         )
       );
       data.forEach(({ response }) =>
-        assert.equal((response as any).statusCode, 400)
+        assert.strictEqual((response as any).statusCode, 400)
       );
     } finally {
       server.stop();
@@ -83,7 +83,7 @@ describe("image converting server response", function () {
         },
       });
       const { response } = await got(URL).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }
@@ -107,7 +107,7 @@ describe("image converting server response", function () {
       server = await startServer({});
       const { response } = await got(URL).catch((e) => e);
 
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }
@@ -136,7 +136,7 @@ describe("image converting server response", function () {
         ALLOW_READ_REDIRECT: true,
       });
       const response = await got(URL);
-      assert.equal(response.statusCode, 200);
+      assert.strictEqual(response.statusCode, 200);
     } finally {
       server.stop();
     }
@@ -151,7 +151,7 @@ describe("image converting server response", function () {
     try {
       server = await startServer({});
       const { response } = await got(URL).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }
@@ -166,7 +166,7 @@ describe("image converting server response", function () {
     try {
       server = await startServer({});
       const { response } = await got(URL).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }
@@ -183,7 +183,7 @@ describe("image converting server response", function () {
         CRYPTO: { ENABLED: true },
       });
       const { response } = await got(URL).catch((e) => e);
-      assert.equal(response.statusCode, 400);
+      assert.strictEqual(response.statusCode, 400);
     } finally {
       server.stop();
     }

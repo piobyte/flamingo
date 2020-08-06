@@ -114,7 +114,9 @@ describe("flamingo-s3 server response", function () {
       ),
     ]);
 
-    responses.forEach(({ response }) => assert.equal(response.statusCode, 400));
+    responses.forEach(({ response }) =>
+      assert.strictEqual(response.statusCode, 400)
+    );
 
     return server.stop();
   });
@@ -152,8 +154,8 @@ describe("flamingo-s3 server response", function () {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       server.s3Client;
-    assert.equal(s3Client.config.credentials!.accessKeyId, "123");
-    assert.equal(s3Client.config.credentials!.secretAccessKey, "abc");
+    assert.strictEqual(s3Client.config.credentials!.accessKeyId, "123");
+    assert.strictEqual(s3Client.config.credentials!.secretAccessKey, "abc");
 
     return server.stop();
   });
@@ -234,7 +236,7 @@ describe("flamingo-s3 server response", function () {
     const response = await got(
       `http://localhost:${PORT}/s3/cats/avatar-image/fixtures-fixture.jpg`
     );
-    assert.equal(response.statusCode, 200);
+    assert.strictEqual(response.statusCode, 200);
     return server.stop();
   });
 });

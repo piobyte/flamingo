@@ -73,7 +73,7 @@ describe("response writer", function () {
       await responseWriter(op)(stream);
       assert.ok(false);
     } catch {
-      assert.equal(replyCalled, 1);
+      assert.strictEqual(replyCalled, 1);
     }
   });
 });

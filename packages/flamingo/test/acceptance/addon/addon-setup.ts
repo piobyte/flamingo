@@ -72,7 +72,7 @@ describe("addon setup examples", function () {
     const addResults = _loader.hook("IMG_PIPE", supports)(pipe);
     const lastResult = addResults[addResults.length - 1];
 
-    assert.deepEqual(lastResult, [{ id: "format", format: "webp" }]);
+    assert.deepStrictEqual(lastResult, [{ id: "format", format: "webp" }]);
 
     _loader.unload();
   });

@@ -26,7 +26,7 @@ describe("convert", function () {
     try {
       _server = await startServer({}, new Route({}, "GET", "/"));
       const { response } = await got(`http://${HOST}:${PORT}/`).catch((e) => e);
-      assert.equal(response.statusCode, 500);
+      assert.strictEqual(response.statusCode, 500);
     } finally {
       _server.stop();
     }

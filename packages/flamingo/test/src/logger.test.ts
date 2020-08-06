@@ -29,7 +29,7 @@ describe("logger", function () {
     log.fatal(LOG_MESSAGE);
 
     const data = await readFile(tempPath);
-    assert.equal(JSON.parse(data.toString("utf8")).msg, LOG_MESSAGE);
+    assert.strictEqual(JSON.parse(data.toString("utf8")).msg, LOG_MESSAGE);
   });
 
   it("serializes request log objects", function () {
@@ -44,7 +44,7 @@ describe("logger", function () {
       })
     );
 
-    assert.deepEqual(serialized, REQUEST);
+    assert.deepStrictEqual(serialized, REQUEST);
     assert.ok(
       logger.serializers.request("foo"),
       "it doesn't break on invalid input"
@@ -55,7 +55,7 @@ describe("logger", function () {
     const route = new Route({}, "POST", "/post-me", "some post route");
     const serialized = logger.serializers.route(route);
 
-    assert.deepEqual(serialized, {
+    assert.deepStrictEqual(serialized, {
       description: "some post route",
       method: "POST",
       name: "Route",
@@ -91,21 +91,21 @@ describe("logger", function () {
   it("serializes request error strings", function () {
     /* eslint no-underscore-dangle: 0 */
 
-    assert.deepEqual(logger.serializers.error("pls halp"), {
+    assert.deepStrictEqual(logger.serializers.error("pls halp"), {
       message: "pls halp",
     });
   });
 
   it("serializes input", function () {
-    assert.deepEqual(
+    assert.deepStrictEqual(
       logger.serializers.input("# Headline\nsome markdown"),
       "# Headline\nsome markdown"
     );
-    assert.deepEqual(
+    assert.deepStrictEqual(
       logger.serializers.input(url.parse("http://zombo.com/")),
       url.format(url.parse("http://zombo.com"))
     );
-    assert.deepEqual(
+    assert.deepStrictEqual(
       logger.serializers.input({ some: "object" }),
       "{ some: 'object' }"
     );
@@ -122,7 +122,7 @@ describe("logger", function () {
       method: "get",
     };
 
-    assert.deepEqual(logger.serializers.operation(operation), {
+    assert.deepStrictEqual(logger.serializers.operation(operation), {
       input: "https://travis-ci.org/piobyte/flamingo.svg?branch=master",
       request: {
         headers: { "user-agent": "flamingo/2.0.0" },
