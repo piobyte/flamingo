@@ -45,8 +45,7 @@
     "mkdirp": "^1.0.4",
     "optional": "^0.1.4",
     "sharp": "^0.25.4",
-    "temp": "^0.9.1",
-    "through2": "^3.0.1"
+    "temp": "^0.9.1"
   },
   "resolutions": {
     "@types/hapi__hapi": "^18.2.5"

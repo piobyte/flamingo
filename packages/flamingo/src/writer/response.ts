@@ -2,7 +2,6 @@
  * Flamingo response writer
  * @module
  */
-import through = require("through2");
 import FlamingoOperation = require("../model/flamingo-operation");
 
 /**
@@ -13,7 +12,7 @@ import FlamingoOperation = require("../model/flamingo-operation");
 export = function ({ reply, response }: FlamingoOperation) {
   return async function (stream) {
     // use through because hapi sometimes didn't trigger the read
-    const replyStream = reply.response(stream.pipe(through()));
+    const replyStream = reply.response(stream);
 
     /* istanbul ignore else */
     if (response && response.header) {
