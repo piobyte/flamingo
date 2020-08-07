@@ -4,9 +4,6 @@
   <img style="width: 200px;image-rendering: -moz-crisp-edges;image-rendering: -o-crisp-edges;image-rendering: -webkit-optimize-contrast;-ms-interpolation-mode: nearest-neighbor;image-rendering: pixelated;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QAAAAAAAD5Q7t/AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AYbEyIWn856RAAAARNJREFUOMvFkzFLA0EQhb8LVnaLWWwCIsRKLDTX2R1oeW0aiZ29YrNN2m39DWJjcc22B/cLDi00NgoSDKZYZBtNmsDZSMC7PRNI4SuHeR9vd2bgvxX4inEcFwA3G9ucfLzO68aYSv+azxyGIUIIrpzj6KDN6d0Lb5dnAEUZEvjM3cEQgPfJF53mJuPJJwCz/gVKqV9JKgnyPCcHeqMRezv7ADw833PdaoFSLHyC1hoApRRMLUwtPeC8WOfx+JA0Tf8GAEgp0VqTZRkAT84hhMA5V+ltLDOq7mDoNdcCrLVIKYmiCIDb3S2EEMsDyqqLXwEYYwL189PWWnwTKu9BY9VV9gKSJAGYT6Eu/sJbKMt3CyvrG47MZlX69GMPAAAAAElFTkSuQmCC" alt="">
 </div>
 
-[![Build Status](https://travis-ci.org/piobyte/flamingo-s3.png?branch=master)](https://travis-ci.org/piobyte/flamingo-s3)
-[![Dependency Status](https://david-dm.org/piobyte/flamingo-s3.svg)](https://david-dm.org/piobyte/flamingo-s3)
-[![Code Climate](https://codeclimate.com/github/piobyte/flamingo-s3.png)](https://codeclimate.com/github/piobyte/flamingo-s3)
 ![npm version](https://badge.fury.io/js/flamingo-s3.svg)
 ![MIT licensed](https://img.shields.io/github/license/piobyte/flamingo-s3.svg)
 

@@ -1,7 +1,5 @@
 # flamingo-sentry
-[![Build Status](https://travis-ci.org/piobyte/flamingo-sentry.png?branch=master)](https://travis-ci.org/piobyte/flamingo-sentry)
-[![Dependency Status](https://david-dm.org/piobyte/flamingo-sentry.svg)](https://david-dm.org/piobyte/flamingo-sentry)
-[![Code Climate](https://codeclimate.com/github/piobyte/flamingo-sentry.png)](https://codeclimate.com/github/piobyte/flamingo-sentry)
+
 ![npm version](https://badge.fury.io/js/flamingo-sentry.svg)
 ![MIT licensed](https://img.shields.io/github/license/piobyte/flamingo-sentry.svg)
 
