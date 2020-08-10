@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.1.0](https://github.com/piobyte/flamingo/compare/flamingo@3.0.5...flamingo@3.1.0) (2020-08-10)
+
+
+### Bug Fixes
+
+* correctly implement the hapi plugins hook ([b52cfbe](https://github.com/piobyte/flamingo/commit/b52cfbed8a7d661e9b45222c46681dbb890a2243))
+
+
+### Features
+
+* add addon for prometheus metric integration ([f8c4d69](https://github.com/piobyte/flamingo/commit/f8c4d693c8ff1e6991d83a8754058599bad343f7))
+
+
+
+
+
 ## [3.0.5](https://github.com/piobyte/flamingo/compare/flamingo@3.0.4...flamingo@3.0.5) (2020-03-27)
 
 **Note:** Version bump only for package flamingo
