@@ -100,7 +100,7 @@ class Server {
 
     this.loadedPlugins = true;
 
-    this.addonsLoader.hook(HAPI_PLUGINS)(this.plugins);
+    this.addonsLoader.hook(HAPI_PLUGINS, this)(this.plugins);
 
     return Promise.all(
       this.plugins.map((plugin) => this.hapi.register(plugin))

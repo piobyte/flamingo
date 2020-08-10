@@ -26,10 +26,10 @@ jobs:
   include:
   - stage: test
     node_js: 'node'
-    script: yarn test
+    script: yarn test-changed
   - stage: test
     node_js: 'lts/erbium'
-    script: yarn test
+    script: yarn test-changed
   - stage: benchmark
     node_js: 'lts/erbium'
     script: yarn bench

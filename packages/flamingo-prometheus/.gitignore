@@ -1,0 +1,5 @@
+docs
+tools/deploy-docker.sh
+*.map
+*.js
+*.d.ts

@@ -29,7 +29,7 @@ type HOOK = {
     profile: ProfileInstruction,
     operation: FlamingoOperation
   ) => ProfileInstruction;
-  [HOOKS.HAPI_PLUGINS]: () => Plugin<unknown>[];
+  [HOOKS.HAPI_PLUGINS]: (server: Server) => Plugin<unknown>[];
 };
 
 /**

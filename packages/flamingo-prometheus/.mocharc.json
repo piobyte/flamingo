@@ -1,0 +1,8 @@
+{
+  "reporter": "spec",
+  "bail": true,
+  "exit": true,
+  "recursive": true,
+  "color": true,
+  "timeout": 10000
+}
