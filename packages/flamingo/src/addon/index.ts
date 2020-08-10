@@ -13,6 +13,7 @@ import Config = require("../../config");
 import bunyan = require("bunyan");
 import FlamingoOperation = require("../model/flamingo-operation");
 import { ProfileInstruction } from "../types/Instruction";
+import { Plugin } from "@hapi/hapi";
 
 /**
  * Type for each addon hook type
@@ -28,6 +29,7 @@ type HOOK = {
     profile: ProfileInstruction,
     operation: FlamingoOperation
   ) => ProfileInstruction;
+  [HOOKS.HAPI_PLUGINS]: () => Plugin<unknown>[];
 };
 
 /**
