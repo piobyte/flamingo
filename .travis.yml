@@ -31,5 +31,5 @@ jobs:
     node_js: 'lts/erbium'
     script: yarn test-changed
   - stage: benchmark
-    node_js: 'lts/erbium'
+    node_js: 'node'
     script: yarn bench
