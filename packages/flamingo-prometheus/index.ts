@@ -18,7 +18,7 @@ const {
  */
 exports[addon.HOOKS.ENV] = function () {
   return [
-    ["PROMETHEUS_LABELS", "PROMETHEUS.LABELS"],
+    ["PROMETHEUS_LABELS", "PROMETHEUS.LABELS", JSON.parse],
     ["PROMETHEUS_URL", "PROMETHEUS.URL"],
   ];
 } as HOOK[HOOKS.ENV];
