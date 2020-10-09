@@ -3,7 +3,7 @@
 # Stop on error
 set -e
 
-GM_VERSION="1.3.33"
+GM_VERSION="1.3.35"
 
 ARCHIVE="https://downloads.sourceforge.net/project/graphicsmagick/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}.tar.gz"
 
