@@ -6,6 +6,7 @@
 import ffmpeg = require("fluent-ffmpeg");
 import assign = require("lodash/assign");
 import isFinite = require("lodash/isFinite");
+import stream = require("stream");
 import got from "got";
 
 import errors = require("../../util/errors");
@@ -21,6 +22,11 @@ const logger = build("preprocessor:video");
 const defaultProcessConf = {
   seekPercent: 0,
 };
+
+const isStream = (stream) =>
+  stream !== null &&
+  typeof stream === "object" &&
+  typeof stream.pipe === "function";
 
 /**
  * Builds a function that takes a reader result and transforms it into an image stream.
@@ -41,8 +47,18 @@ export = function (operation) {
     }
 
     function videoProcessor(input) {
+      let ffprobeInput = input;
+      let ffmpegInput = input;
+
+      if (isStream(input)) {
+        // if we have a stream as input, split the streams to avoid ffprobe partially consuming the stream
+        // (see https://github.com/fluent-ffmpeg/node-fluent-ffmpeg#reading-video-metadata)
+        ffprobeInput = input.pipe(new stream.PassThrough());
+        ffmpegInput = input.pipe(new stream.PassThrough());
+      }
+
       return new Promise(function (resolve, reject) {
-        ffmpeg.ffprobe(input, function (err, meta) {
+        ffmpeg.ffprobe(ffprobeInput, function (err, meta) {
           if (err) {
             reject(new InvalidInputError(err.message, err));
           } else {
@@ -59,7 +75,7 @@ export = function (operation) {
 
             // seek to time and save 1 frame
             resolve(
-              ffmpeg(input, ffmpegOptions)
+              ffmpeg(ffmpegInput, ffmpegOptions)
                 .noAudio()
                 .seekInput(duration * processConf.seekPercent)
                 .frames(1)
