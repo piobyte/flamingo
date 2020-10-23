@@ -5,6 +5,7 @@ import url = require("url");
 import got from "got";
 
 import simpleHttpServer = require("../test-util/simple-http-server");
+import IServer from "../test-util/IServer";
 
 const ASSETS_PORT = 9999;
 const ASSETS_HOST = "localhost";
@@ -2229,7 +2230,7 @@ const expected: Array<TutorialTestDescription> = [
 ];
 
 describe("tutorials work as expected", function () {
-  let assetsServer;
+  let assetsServer: IServer;
   before(function () {
     return simpleHttpServer(
       (req, res) => {
@@ -2238,7 +2239,7 @@ describe("tutorials work as expected", function () {
           path.join(
             __dirname,
             "../../test/fixtures/images/sharp-bench-assets",
-            url.parse(req.url).pathname!
+            url.parse(req.url!).pathname!
           )
         ).pipe(res, { end: true });
       },

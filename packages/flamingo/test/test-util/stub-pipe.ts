@@ -1,14 +1,14 @@
 import sinon = require("sinon");
 import noop = require("lodash/noop");
 
-type Pipe = Record<string, (...any) => any>;
+type Pipe = Record<string, (...any: any[]) => any>;
 type PipeMethod = [string, any[], any[]] | [string, any[]] | [string];
 
 function buildPipe(fields: string[]): Pipe {
   return fields.reduce((pipe, fieldName) => {
     pipe[fieldName] = noop;
     return pipe;
-  }, {});
+  }, {} as Record<string, any>);
 }
 
 function stubPipe(pipe: Pipe, methods: PipeMethod[]) {

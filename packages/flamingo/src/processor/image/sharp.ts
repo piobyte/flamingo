@@ -6,7 +6,9 @@
  */
 
 import sharp = require("sharp");
+import nodeStream = require("stream");
 import FlamingoOperation = require("../../model/flamingo-operation");
+import { Processor } from "../../types/Processor";
 
 /**
  * Function that takes an array with processing operations and returns a function that can be called with an stream.
@@ -23,8 +25,8 @@ import FlamingoOperation = require("../../model/flamingo-operation");
 
 export = function (
   operation: FlamingoOperation,
-  pipeline /*: function */,
-  stream /*: {pipe: function } */
-) /*: any */ {
+  pipeline: (sharp: sharp.Sharp) => sharp.Sharp,
+  stream: nodeStream.Readable
+): nodeStream.Readable {
   return stream.pipe(pipeline(sharp()));
-};
+} as Processor<sharp.Sharp>;

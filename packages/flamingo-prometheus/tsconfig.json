@@ -13,7 +13,7 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "strictNullChecks": true,
+    "strict": true,
     "sourceMap": false,
     "declaration": true,
     "noUnusedLocals": true

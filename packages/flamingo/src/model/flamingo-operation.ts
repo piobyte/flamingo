@@ -22,11 +22,12 @@ class FlamingoOperation {
   preprocessorConfig: any = {
     seekPercent: 0.1,
   };
-  reader: Reader = noop;
-  writer: Writer = () => noop;
+  reader: Reader = () => Promise.reject("operation reader isn't implemented");
+  writer: Writer = () => () =>
+    Promise.reject("operation writer isn't implemented");
   input: any = undefined;
   process: Array<ProcessInstruction<any>> = [];
-  response: { header?: Record<string, string> };
+  response?: { header?: Record<string, string> };
   config: Config = {};
 }
 

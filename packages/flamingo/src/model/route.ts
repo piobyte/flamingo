@@ -22,10 +22,11 @@ class Route {
   path: string;
   method: Hapi.Util.HTTP_METHODS_PARTIAL;
   config: Config;
-  description: string;
   parseState: boolean = false;
   cors: boolean = true;
-  server: Server;
+
+  declare description: string;
+  declare server: Server;
 
   /**
    *
@@ -34,7 +35,12 @@ class Route {
    * @param {string} path the routes url path
    * @param {string} [description=''] route description
    */
-  constructor(config, method, path, description = "") {
+  constructor(
+    config: Config,
+    method: Hapi.Util.HTTP_METHODS_PARTIAL,
+    path: string,
+    description: string = ""
+  ) {
     this.path = path;
     this.method = method;
     this.cors = true;
@@ -52,7 +58,7 @@ class Route {
    * @see {@link http://hapijs.com/api#replyerr-result}
    * @param {FlamingoOperation} operation
    */
-  handle(operation): Promise<any> {
+  handle(operation: FlamingoOperation): Promise<any> {
     return Promise.reject(new Error("Method not implemented: Route.handle()"));
   }
 
@@ -73,7 +79,7 @@ class Route {
       request: Hapi.Request,
       reply: Hapi.ResponseToolkit
     ) => {
-      let _operation;
+      let _operation: FlamingoOperation;
       return this.buildOperation(request, reply)
         .then((operation) => {
           _operation = operation;
@@ -92,7 +98,7 @@ class Route {
    * @returns {Promise.<FlamingoOperation>}
    * @see {@link http://hapijs.com/api#request-properties}
    */
-  buildOperation(request, reply: Hapi.ResponseToolkit) {
+  buildOperation(request: Hapi.Request, reply: Hapi.ResponseToolkit) {
     const op = new FlamingoOperation();
     op.request = request;
     op.reply = reply;
@@ -109,9 +115,9 @@ class Route {
    * @return {*} reply return value
    */
   handleError(
-    request,
+    request: Hapi.Request,
     reply: Hapi.ResponseToolkit,
-    error,
+    error: Error,
     operation?: FlamingoOperation
   ) {
     const message = `${error.name}: ${error.message}`;

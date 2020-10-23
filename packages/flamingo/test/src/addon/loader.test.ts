@@ -59,10 +59,10 @@ describe("loader", function () {
   });
 
   it("#reduceAddonsToHooks", function () {
-    const FOO_HOOK = "FOO_HOOK";
-    const BAR_HOOK = "BAR_HOOK";
-    const BAZ_HOOK = "BAZ_HOOK";
-    const TEST_HOOK = "TEST_HOOK";
+    const FOO_HOOK = () => "FOO_HOOK";
+    const BAR_HOOK = () => "BAR_HOOK";
+    const BAZ_HOOK = () => "BAZ_HOOK";
+    const TEST_HOOK = () => "TEST_HOOK";
 
     const FOOBAR = {
       hooks: { FOO_HOOK, BAR_HOOK },
@@ -106,11 +106,11 @@ describe("loader", function () {
   });
 
   it("reduceAddonsToHooks with already initialized hooks object", function () {
-    const FOO_HOOK = "FOO_HOOK";
-    const BAR_HOOK = "BAR_HOOK";
-    const BAZ_HOOK = "BAZ_HOOK";
-    const TEST_HOOK = "TEST_HOOK";
-    const YET_ANOTHER_HOOK = "YET_ANOTHER_HOOK";
+    const FOO_HOOK = () => "FOO_HOOK";
+    const BAR_HOOK = () => "BAR_HOOK";
+    const BAZ_HOOK = () => "BAZ_HOOK";
+    const TEST_HOOK = () => "TEST_HOOK";
+    const YET_ANOTHER_HOOK = () => "YET_ANOTHER_HOOK";
 
     const FOOBAR = {
       hooks: { FOO_HOOK, BAR_HOOK },
@@ -125,10 +125,10 @@ describe("loader", function () {
     const TEST = { hooks: { TEST_HOOK }, pkg: {}, path: "/tmp/test" };
 
     const reduced = loader().reduceAddonsToHooks([FOOBAR, BARBAZ, TEST], {
-      [YET_ANOTHER_HOOK]: [
+      YET_ANOTHER_HOOK: [
         {
           hook: YET_ANOTHER_HOOK,
-          addon: { path: "/tmp/yah" },
+          addon: { pkg: {}, path: "/tmp/yah" },
         },
       ],
     });

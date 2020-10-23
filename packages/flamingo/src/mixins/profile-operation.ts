@@ -22,15 +22,12 @@ export = function <T extends Constructor<Route>>(Base: T) {
      * @param {FlamingoOperation} operation
      * @return {Promise.<Url>} resolves `url.parse(decodedUrlParam)`
      */
-    extractInput(operation) {
+    extractInput(operation: FlamingoOperation) {
       const payload = decodeURIComponent(operation.request.params.url);
-      const decodePromise = operation.config.CRYPTO.ENABLED
-        ? decode(
-            payload,
-            operation.config.CRYPTO.CIPHER,
-            operation.config.CRYPTO.KEY,
-            operation.config.CRYPTO.IV
-          )
+      const { CRYPTO } = operation.config;
+
+      const decodePromise = CRYPTO?.ENABLED
+        ? decode(payload, CRYPTO!.CIPHER, CRYPTO!.KEY, CRYPTO!.IV)
         : Promise.resolve(payload);
 
       return decodePromise.then((decoded) => url.parse(decoded));

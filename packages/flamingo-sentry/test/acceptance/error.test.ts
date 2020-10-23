@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import Server = require("flamingo/src/model/server");
 import Config = require("flamingo/config");
 import Loader = require("flamingo/src/addon/loader");
@@ -5,7 +6,9 @@ import Route = require("flamingo/src/model/route");
 import got from "got";
 import path = require("path");
 import assert = require("assert");
+// @ts-ignore
 import mockery = require("mockery");
+import Hapi = require("@hapi/hapi");
 
 describe("LOG_STREAM", function () {
   before(function () {
@@ -20,7 +23,7 @@ describe("LOG_STREAM", function () {
     let capturedError = false;
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const config = () => ({ install() {} });
-    const captureMessage = (message, data) => {
+    const captureMessage = (message: any, data: any) => {
       if (data.level === "error") {
         capturedError = true;
       }
@@ -37,15 +40,15 @@ describe("LOG_STREAM", function () {
     };
     return Config.fromEnv().then((config) => {
       const reduced = loader.reduceAddonsToHooks(
-        [loader.resolvePkg(addon)],
+        [loader.resolvePkg(addon)!],
         loader._hooks
       );
       loader.finalize(reduced);
 
       class ErrorRoute extends Route {
         constructor(
-          config,
-          method = "GET",
+          config: Config,
+          method: Hapi.Util.HTTP_METHODS_PARTIAL = "GET",
           path = "/",
           description = "Index route that errors"
         ) {
@@ -59,7 +62,7 @@ describe("LOG_STREAM", function () {
         }
       }
 
-      let _server;
+      let _server: Server;
       config.PORT = 9912;
       return new Server(config, loader)
         .withProfiles([])

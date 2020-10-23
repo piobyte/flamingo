@@ -1,9 +1,11 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-non-null-assertion,@typescript-eslint/ban-ts-comment */
 import assert = require("assert");
+// @ts-ignore
 import merge = require("lodash.merge");
 import nock = require("nock");
 import path = require("path");
 import fs = require("fs");
+// @ts-ignore
 import S3rver = require("s3rver");
 
 import util = require("util");
@@ -26,7 +28,7 @@ const AWS_ACCESS_KEY = "123";
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
 
-function startServer(localConf) {
+function startServer(localConf: Config) {
   return Config.fromEnv().then((config) => {
     config = merge({}, config, { PORT }, localConf);
 
@@ -50,7 +52,7 @@ describe("flamingo-s3 server response", function () {
         hostname: "localhost",
         silent: false,
         s3ForcePathStyle: true,
-      }).run((err) => {
+      }).run((err: Error) => {
         if (err) {
           return reject(err);
         }
@@ -134,7 +136,9 @@ describe("flamingo-s3 server response", function () {
 
     // manually load module as addon
     const loader = new AddonLoader(path.join(__dirname, "..", ".."), {
-      "flamingo-s3": "*",
+      dependencies: {
+        "flamingo-s3": "*",
+      },
     });
     loader.addons = [
       {
@@ -191,7 +195,9 @@ describe("flamingo-s3 server response", function () {
 
     // manually load module as addon
     const loader = new AddonLoader(path.join(__dirname, "..", ".."), {
-      "flamingo-s3": "*",
+      dependencies: {
+        "flamingo-s3": "*",
+      },
     });
     loader.addons = [
       {

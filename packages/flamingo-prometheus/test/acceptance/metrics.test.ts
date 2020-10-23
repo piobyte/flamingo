@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import Server = require("flamingo/src/model/server");
 import Config = require("flamingo/config");
 import Loader = require("flamingo/src/addon/loader");
 import got from "got";
 import path = require("path");
 import assert = require("assert");
+// @ts-ignore
 import merge = require("lodash.merge");
 import IndexRoute = require("flamingo/src/routes/index");
 
@@ -17,7 +19,7 @@ function startServer(localConf = {}) {
   };
   return Config.fromEnv().then((config) => {
     const reduced = loader.reduceAddonsToHooks(
-      [loader.resolvePkg(addon)],
+      [loader.resolvePkg(addon)!],
       loader._hooks
     );
     loader.finalize(reduced);

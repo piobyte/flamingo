@@ -2,8 +2,10 @@
  * Supported features module
  * @module
  */
-import temp = require("temp");
 import path = require("path");
+// @ts-ignore
+import temp = require("temp");
+// @ts-ignore
 import ffmpeg = require("fluent-ffmpeg");
 
 import Config = require("../../config");
@@ -17,7 +19,7 @@ function hasFFmpeg() {
   return new Promise((resolve) =>
     ffmpeg.ffprobe(
       path.join(__dirname, "../../test/fixtures/videos/trailer_1080p.ogg"),
-      (err) => resolve(!err)
+      (err: Error) => resolve(!err)
     )
   );
 }

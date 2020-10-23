@@ -3,6 +3,7 @@ import assert = require("assert");
 import sinon = require("sinon");
 import merge = require("lodash/merge");
 import got from "got";
+import Hapi = require("@hapi/hapi");
 
 import Server = require("../../../src/model/server");
 import Config = require("../../../config");
@@ -13,7 +14,7 @@ import FlamingoOperation = require("../../../src/model/flamingo-operation");
 const HOST = "localhost";
 const PORT = 43723; // some random unused port
 
-async function startServer(localConf, route) {
+async function startServer(localConf: Config, route: Route) {
   let config = await Config.fromEnv();
   config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
 
@@ -28,7 +29,7 @@ describe("convert", function () {
       const { response } = await got(`http://${HOST}:${PORT}/`).catch((e) => e);
       assert.strictEqual(response.statusCode, 500);
     } finally {
-      _server.stop();
+      _server?.stop();
     }
   });
 
@@ -41,11 +42,16 @@ describe("convert", function () {
         super({}, "GET", "/handle-error");
       }
 
-      buildOperation(request, reply) {
+      buildOperation(request: Hapi.Request, reply: Hapi.ResponseToolkit) {
         return Promise.reject("foo");
       }
 
-      handleError(request, reply, error, operation) {
+      handleError(
+        request: Hapi.Request,
+        reply: Hapi.ResponseToolkit,
+        error: Error,
+        operation: FlamingoOperation
+      ) {
         handleErrorSpy(...arguments);
         return super.handleError(request, reply, error, operation);
       }
@@ -56,7 +62,7 @@ describe("convert", function () {
       await got(`http://${HOST}:${PORT}/handle-error`).catch((e) => e);
       assert.ok(handleErrorSpy.called);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
   it("#handleError called on hapi route handler handle rejection", async function () {
@@ -68,11 +74,16 @@ describe("convert", function () {
         super({}, "GET", "/handle-error");
       }
 
-      handle(Operation) {
+      handle(operation: FlamingoOperation) {
         return Promise.reject("foo");
       }
 
-      handleError(request, reply, error, operation) {
+      handleError(
+        request: Hapi.Request,
+        reply: Hapi.ResponseToolkit,
+        error: Error,
+        operation: FlamingoOperation
+      ) {
         handleErrorSpy(...arguments);
         return super.handleError(request, reply, error, operation);
       }
@@ -83,7 +94,7 @@ describe("convert", function () {
       await got(`http://${HOST}:${PORT}/handle-error`).catch((e) => e);
       assert.ok(handleErrorSpy.called);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
   it("#handle is called for each request", async function () {
@@ -106,7 +117,7 @@ describe("convert", function () {
       await got(`http://${HOST}:${PORT}/handle`);
       assert.ok(handleSpy.called);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 });

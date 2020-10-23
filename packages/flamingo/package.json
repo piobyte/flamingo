@@ -51,6 +51,7 @@
     "@types/hapi__hapi": "^18.2.5"
   },
   "devDependencies": {
+    "@types/benchmark": "^1.0.33",
     "@types/bunyan": "^1.8.6",
     "@types/hapi__hapi": "^20.0.1",
     "@types/lodash": "^4.14.162",
@@ -96,7 +97,9 @@
     "exclude": [
       "src/profiles/debug.js",
       "src/writer/file.js",
-      "tutorials/**/*.js"
+      "src/types/*",
+      "tutorials/**/*.js",
+      "test/**/*"
     ],
     "all": true
   }

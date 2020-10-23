@@ -2,6 +2,7 @@ import assert = require("assert");
 import sinon = require("sinon");
 import reader = require("../../src/reader");
 import Errors = require("flamingo/src/util/errors");
+import { S3 } from "aws-sdk";
 
 const { InvalidInputError } = Errors;
 
@@ -14,18 +15,18 @@ describe("reader", function () {
       Key: KEY,
     };
     const s3 = {
-      headObject(params) {
+      headObject(params: any) {
         assert.deepStrictEqual(params, S3_PARAMS);
         return {
           promise: () => Promise.resolve(),
         };
       },
-      getObject: function (params) {
+      getObject: function (params: any) {
         assert.deepStrictEqual(params, S3_PARAMS);
       },
     };
 
-    return reader(BUCKET, KEY, s3);
+    return reader(BUCKET, KEY, (s3 as unknown) as S3);
   });
 
   it("checks that the bucket exists before resolving the stream object", function () {
@@ -40,7 +41,7 @@ describe("reader", function () {
       getObject: sinon.spy(),
     };
 
-    return reader(BUCKET, KEY, s3).then(function (data) {
+    return reader(BUCKET, KEY, (s3 as unknown) as S3).then(function (data) {
       assert.ok(calledHead, "called headObject");
       assert.ok(data.stream, "has stream method");
     });
@@ -51,12 +52,12 @@ describe("reader", function () {
     const BUCKET = "bucket";
     const KEY = "key";
     const s3 = {
-      headObject: function (_) {
+      headObject: function () {
         return { promise: () => Promise.reject(headError) };
       },
     };
 
-    return reader(BUCKET, KEY, s3)
+    return reader(BUCKET, KEY, (s3 as unknown) as S3)
       .then(function () {
         assert.ok(false, "shouldn't resolve");
       })
@@ -78,7 +79,7 @@ describe("reader", function () {
       },
     };
 
-    return reader(BUCKET, KEY, s3).then(function (data) {
+    return reader(BUCKET, KEY, (s3 as unknown) as S3).then(function (data) {
       data.stream();
       assert.ok(data.stream, "has stream method");
       assert.ok(createReadStream.called, "called object.createReadStream");
@@ -95,7 +96,7 @@ describe("reader", function () {
       getObject: sinon.spy(),
     };
 
-    return reader(BUCKET, KEY, s3).then(function (data) {
+    return reader(BUCKET, KEY, (s3 as unknown) as S3).then(function (data) {
       assert.strictEqual(data.type, "s3");
     });
   });

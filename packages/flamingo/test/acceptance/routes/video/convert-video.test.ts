@@ -16,7 +16,7 @@ import Image = require("../../../../src/routes/image");
 
 const FLAMINGO_PORT = 43723; // some random unused port
 
-async function startServer(localConf) {
+async function startServer(localConf: Config) {
   let config = await Config.fromEnv();
   config = merge(
     {},
@@ -68,7 +68,7 @@ describe("convert video", function () {
       assert.ok(data);
       assert.strictEqual(data.statusCode, 200);
     } finally {
-      await Promise.all([httpServer.stop(), flamingoServer.stop()]);
+      await Promise.all([httpServer.stop(), flamingoServer?.stop()]);
     }
   });
 
@@ -110,7 +110,7 @@ describe("convert video", function () {
       assert.ok(data);
       assert.strictEqual(data.statusCode, 200);
     } finally {
-      await Promise.all([httpServer.stop(), flamingoServer.stop()]);
+      await Promise.all([httpServer.stop(), flamingoServer?.stop()]);
     }
   });
 
@@ -151,7 +151,7 @@ describe("convert video", function () {
       assert.ok(data);
       assert.strictEqual(data.statusCode, 200);
     } finally {
-      await Promise.all([httpServer.stop(), flamingoServer.stop()]);
+      await Promise.all([httpServer.stop(), flamingoServer?.stop()]);
     }
   });
 
@@ -191,7 +191,7 @@ describe("convert video", function () {
       assert.ok(data);
       assert.strictEqual(data.statusCode, 200);
     } finally {
-      await Promise.all([httpServer.stop(), flamingoServer.stop()]);
+      await Promise.all([httpServer.stop(), flamingoServer?.stop()]);
     }
   });
 
@@ -226,7 +226,7 @@ describe("convert video", function () {
       const { response } = await got(flamingoUrl).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      await Promise.all([httpServer.stop(), flamingoServer.stop()]);
+      await Promise.all([httpServer.stop(), flamingoServer?.stop()]);
     }
   });
 });

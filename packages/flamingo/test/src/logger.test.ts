@@ -1,3 +1,4 @@
+// @ts-ignore
 import temp = require("temp");
 import fs = require("fs");
 import assert = require("assert");

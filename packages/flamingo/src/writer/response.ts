@@ -3,6 +3,7 @@
  * @module
  */
 import FlamingoOperation = require("../model/flamingo-operation");
+import stream = require("stream");
 
 /**
  * Creates a function that calls the given reply function with a stream
@@ -10,7 +11,7 @@ import FlamingoOperation = require("../model/flamingo-operation");
  * @param {FlamingoOperation} operation
  */
 export = function ({ reply, response }: FlamingoOperation) {
-  return async function (stream) {
+  return async function (stream: stream.Stream) {
     // use through because hapi sometimes didn't trigger the read
     const replyStream = reply.response(stream);
 

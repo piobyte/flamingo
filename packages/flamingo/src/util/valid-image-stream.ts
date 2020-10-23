@@ -1,4 +1,5 @@
 import FileType = require("file-type");
+// @ts-ignore
 import peek = require("buffer-peek-stream");
 import isStream = require("is-stream");
 import errors = require("./errors");
@@ -12,15 +13,19 @@ export = function (_operation?: FlamingoOperation) {
     if (!isStream(stream)) throw new ProcessingError("Not a stream");
 
     return new Promise((resolve, reject) => {
-      peek(stream, 256, async (err, data, outputStream) => {
-        const file = await FileType.fromBuffer(data);
+      peek(
+        stream,
+        256,
+        async (err: Error, data: Buffer, outputStream: ReadableStream) => {
+          const file = await FileType.fromBuffer(data);
 
-        if (file?.mime.split("/")[0] === "image") {
-          resolve(outputStream);
-        } else {
-          reject(new InvalidInputError("Not an image stream"));
+          if (file?.mime.split("/")[0] === "image") {
+            resolve(outputStream);
+          } else {
+            reject(new InvalidInputError("Not an image stream"));
+          }
         }
-      });
+      );
     });
   };
 };

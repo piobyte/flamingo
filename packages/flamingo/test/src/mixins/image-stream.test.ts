@@ -18,7 +18,7 @@ import FlamingoOperation = require("../../../src/model/flamingo-operation");
 const HOST = "localhost";
 const PORT = 43723; // some random unused port
 
-async function startServer(localConf, route: Route) {
+async function startServer(localConf: Config, route: Route) {
   let config = await Config.fromEnv();
   config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
 
@@ -27,7 +27,9 @@ async function startServer(localConf, route: Route) {
 
 describe("image-stream", function () {
   it("rejects handling for non image streams", async function () {
-    const image = fs.createReadStream(path.join(__dirname, "image-stream.js"));
+    const image = fs.createReadStream(
+      path.join(__dirname, "image-stream.test.js")
+    );
     const errorSpy = sinon.spy();
 
     const ImageStreamRoute = class extends ImageStream(Convert(Route)) {
@@ -35,7 +37,7 @@ describe("image-stream", function () {
         super({}, "GET", "/non-image");
       }
 
-      buildOperation(request, reply) {
+      buildOperation(request: Hapi.Request, reply: Hapi.ResponseToolkit) {
         return super.buildOperation(request, reply).then((operation) => {
           operation.reader = (operation) =>
             Promise.resolve({
@@ -47,9 +49,9 @@ describe("image-stream", function () {
       }
 
       handleError(
-        request,
+        request: Hapi.Request,
         reply: Hapi.ResponseToolkit,
-        error,
+        error: Error,
         operation?: FlamingoOperation
       ) {
         errorSpy(...arguments);
@@ -63,7 +65,7 @@ describe("image-stream", function () {
       await got(`http://${HOST}:${PORT}/non-image`).catch((e) => e);
       assert.ok(errorSpy.called);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 });

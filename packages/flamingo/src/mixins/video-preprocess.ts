@@ -4,6 +4,8 @@ import Constructor from "../model/Constructor";
 import Server = require("../model/server");
 import FlamingoOperation = require("../model/flamingo-operation");
 import Config = require("../../config");
+import { ReaderResult } from "../types/ReaderResult";
+import nodeStream = require("stream");
 
 export = function <T extends Constructor<Route>>(Base: T) {
   /**
@@ -16,7 +18,9 @@ export = function <T extends Constructor<Route>>(Base: T) {
      * @param operation
      * @see module:flamingo/src/preprocessor/video
      */
-    preprocess(operation) {
+    preprocess(
+      operation: FlamingoOperation
+    ): (result: ReaderResult) => Promise<nodeStream.Readable> {
       return videoPreprocessor(operation);
     }
   };

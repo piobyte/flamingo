@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import path = require("path");
 import fs = require("fs");
 import assign = require("lodash/assign");
@@ -8,10 +9,12 @@ import reduce = require("lodash/reduce");
 
 import Logger = require("../logger");
 import defaultCallbacks = require("./callbacks");
-import { Addon, PackageJSON } from "../types/Addon";
+import { Addon, isAddon, PackageJSON } from "../types/Addon";
 
 const { build } = Logger;
 const addonLoaderLogger = build("addon-loader");
+
+type Hooks = Record<string, { hook: Function; addon: Addon }[]>;
 
 /**
  * Addon loader
@@ -19,8 +22,8 @@ const addonLoaderLogger = build("addon-loader");
  */
 class AddonLoader {
   ADDON_KEYWORD = "flamingo-addon";
-  _hooks = {};
-  private _callbacks = {};
+  _hooks: Hooks = {};
+  private _callbacks: Record<string, Function> = {};
   private _loaded = false;
 
   callbacks;
@@ -37,8 +40,8 @@ class AddonLoader {
    * @param {function} [callbacks] function to later register callbacks on the loader
    */
   constructor(
-    rootPath,
-    pkg,
+    rootPath: string,
+    pkg: PackageJSON,
     modulesDir = "node_modules",
     callbacks = defaultCallbacks
   ) {
@@ -92,9 +95,9 @@ class AddonLoader {
       .map((dependency) =>
         this.fromPackage(path.join(rootPath, modulesDir, dependency, "/"))
       )
-      .filter(Boolean)
+      .filter(isAddon)
       .map(this.resolvePkg)
-      .filter(Boolean);
+      .filter(isAddon);
   }
 
   /**
@@ -102,7 +105,7 @@ class AddonLoader {
    * @param {{path: string, pkg: object}} addon addon path and package.json object
    * @return {{pkg, path, hooks}} loaded addon. If no entrypoint was found, the package is skipped and a warning logged.
    */
-  resolvePkg(addon: Addon): Addon {
+  resolvePkg(addon: Addon): Addon | undefined {
     let loadedAddon;
 
     const main = addon.pkg.main || "index.js";
@@ -148,7 +151,7 @@ class AddonLoader {
    * @param loaderHooks
    * @return {*}
    */
-  reduceAddonsToHooks(addons: Array<Addon>, loaderHooks) {
+  reduceAddonsToHooks(addons: Array<Addon>, loaderHooks: Hooks): Hooks {
     // map addons to object where key equals the addons hooks name
     return reduce(
       addons,
@@ -170,11 +173,11 @@ class AddonLoader {
     );
   }
 
-  callback(hookName: string, callback: (...any) => any) {
+  callback(hookName: string, callback: (...args: any[]) => any) {
     this._callbacks[hookName] = callback;
   }
 
-  finalize(hooks /*: {} */) {
+  finalize(hooks: Hooks) {
     this._hooks = hooks;
     this.callbacks(this);
     this._loaded = true;
@@ -190,11 +193,11 @@ class AddonLoader {
    * @example
    * results = hook('IMG_PIPE')(pipe);
    */
-  hook(hookName: string, hookConfig?: any): (...any) => any {
+  hook(hookName: string, hookConfig?: any): (...args: any[]) => any {
     assert(this._loaded, "addons have to be loaded before calling any hooks");
-    assert(this._callbacks[hookName], "no registered callback for " + hookName);
+    assert(this._callbacks[hookName], `no registered callback for ${hookName}`);
 
-    let hookFunction: (any) => Array<any> = () => [];
+    let hookFunction: (...args: any[]) => Array<any> = () => [];
 
     if (this._hooks[hookName]) {
       hookFunction = (...args) => {

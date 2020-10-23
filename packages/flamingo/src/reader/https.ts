@@ -10,13 +10,16 @@ import { ReaderResult } from "../types/ReaderResult";
 
 const { InvalidInputError } = errors;
 import pkg = require("../../package.json");
+import Reader = require("../types/Reader");
 const { REMOTE } = ReaderType;
 
 /**
  * Reader that creates a stream for a given http/https resource
  * @param {object} operation flamingo process operation
  */
-export = function (operation: FlamingoOperation): Promise<ReaderResult> {
+const httpsReader: Reader = function (
+  operation: FlamingoOperation
+): Promise<ReaderResult> {
   const conf = operation.config;
   const input = operation.input;
 
@@ -47,3 +50,5 @@ export = function (operation: FlamingoOperation): Promise<ReaderResult> {
         type: REMOTE,
       });
 };
+
+export = httpsReader;

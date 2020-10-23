@@ -7,7 +7,7 @@ import Reader = require("../types/Reader");
  * @module
  */
 
-const reader = {
+const reader: Record<string, Reader> = {
   http: httpsReader,
   https: httpsReader,
   file: fileReader,

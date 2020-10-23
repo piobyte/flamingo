@@ -18,10 +18,11 @@ const deprecateLogger = logger.build("deprecate");
  * deprecate(() => myOldFoo(), 'myOldFoo is deprecated, use myNewFoo instead.');
  */
 export = function (
-  deprecatedFunction /*: function */,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  deprecatedFunction: Function,
   warning: string,
-  options /*: {id: string}*/
-) /*: any */ {
+  options: { id: string }
+): any {
   deprecateLogger.warn(options, warning);
   return deprecatedFunction();
 };

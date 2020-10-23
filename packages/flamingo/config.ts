@@ -9,7 +9,7 @@ import envConfig = require("./src/util/env-config");
 import Mapping from "./src/types/Mapping";
 import pkg = require("./package.json");
 
-function addSupported(config): Promise<Config> {
+function addSupported(config: Config): Promise<Config> {
   return supported(config)
     .then((SUPPORTED) => (config.SUPPORTED = SUPPORTED))
     .then(() => config);

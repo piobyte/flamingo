@@ -1,4 +1,5 @@
 import assert = require("assert");
+// @ts-ignore
 import temp = require("temp");
 import path = require("path");
 

@@ -3,13 +3,15 @@
  * @module
  */
 import sharp = require("sharp");
+// @ts-ignore
 import clamp = require("clamp");
 
 import bestFormat = require("../util/best-format");
 import envParser = require("../util/env-parser");
-import { ProcessInstruction } from "../types/Instruction";
+import { ProcessInstruction, ProfileInstruction } from "../types/Instruction";
+import Profile from "../types/Profile";
 
-export = {
+const DebugProfiles: Record<string, Profile> = {
   /**
    * Same as example preview image profile, with additional option to set processor with the `processor` query param.
    * @param {Request} request
@@ -17,7 +19,7 @@ export = {
    * @see module:flamingo/src/profiles/examples
    * @return {Promise.<{process: Array}>}
    */
-  "debug-preview-image"(request, config) {
+  "debug-preview-image"(request, config): Promise<ProfileInstruction> {
     const dim = clamp(
       envParser.objectInt("width", 200)(request.query),
       10,
@@ -69,7 +71,7 @@ export = {
    * @see module:flamingo/src/profiles/examples
    * @return {Promise.<{process: Array}>}
    */
-  "debug-avatar-image"(request, config) {
+  "debug-avatar-image"(request, config): Promise<ProfileInstruction> {
     const dim = clamp(
       envParser.objectInt("width", 200)(request.query),
       10,
@@ -109,3 +111,5 @@ export = {
     return Promise.resolve({ process });
   },
 };
+
+export = DebugProfiles;

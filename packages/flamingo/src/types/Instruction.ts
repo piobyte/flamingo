@@ -5,6 +5,6 @@ export interface ProcessInstruction<T> {
 
 export interface ProfileInstruction {
   name?: string;
-  response: { [responseField: string]: any };
+  response?: { [responseField: string]: any };
   process: Array<ProcessInstruction<any>>;
 }

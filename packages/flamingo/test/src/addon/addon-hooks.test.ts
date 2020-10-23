@@ -4,6 +4,7 @@ import path = require("path");
 import Addon = require("../../../src/addon");
 import Loader = require("../../../src/addon/loader");
 import FlamingoOperation = require("../../../src/model/flamingo-operation");
+import sharp = require("sharp");
 
 const {
   HOOKS: {
@@ -99,7 +100,7 @@ describe("hook", function () {
 
   describe("HAPI_PLUGINS", function () {
     it("should push plugins in the given plugins array", function () {
-      const plugins = [];
+      const plugins: any[] = [];
 
       loader().hook(HAPI_PLUGINS)(plugins);
 
@@ -140,7 +141,7 @@ describe("hook", function () {
         process: [
           {
             processor: "sharp",
-            pipe: (pipe) => pipe.rotate(),
+            pipe: (pipe: sharp.Sharp) => pipe.rotate(),
           },
         ],
       };
@@ -148,17 +149,17 @@ describe("hook", function () {
       const operation = new FlamingoOperation();
       loader().hook(EXTRACT_PROCESS)(extracted, operation);
       assert.strictEqual(extracted.response.header.Authorization, "Basic 1234");
-      extracted.process[0].pipe({
+      extracted.process[0].pipe(({
         rotate() {
           return this;
         },
-        toFormat(format) {
+        toFormat(format: string) {
           if (format === "webp") {
             calledToFormatWebp = true;
           }
           return this;
         },
-      });
+      } as unknown) as sharp.Sharp);
 
       assert.ok(calledToFormatWebp);
     });

@@ -7,6 +7,9 @@ function loader() {
   return new Loader(path.join(__dirname, "../../fixtures"), {});
 }
 
+type Supports = { webp: boolean };
+type Op = { id: string; [arg: string]: any };
+
 describe("addon setup examples", function () {
   it("IMG_PIPE hook that processes a given list of operations", function () {
     const hooks = {};
@@ -18,8 +21,8 @@ describe("addon setup examples", function () {
       {
         pkg: { name: "force-webp" },
         hooks: {
-          IMG_PIPE(supports) {
-            return function (pipe) {
+          IMG_PIPE(supports: Supports) {
+            return function (pipe: Op[]) {
               return supports.webp
                 ? pipe.map(function (p) {
                     if (p.id === "format") {
@@ -36,7 +39,7 @@ describe("addon setup examples", function () {
         pkg: { name: "force-square" },
         hooks: {
           IMG_PIPE() {
-            return function (pipe) {
+            return function (pipe: Op[]) {
               return pipe.map(function (p) {
                 if (p.id === "resize") {
                   return { id: "resize", w: p.w, h: p.w };
@@ -51,7 +54,7 @@ describe("addon setup examples", function () {
         pkg: { name: "skip-resize" },
         hooks: {
           IMG_PIPE() {
-            return (pipe) => pipe.filter((p) => p.id !== "resize");
+            return (pipe: Op[]) => pipe.filter((p) => p.id !== "resize");
           },
         },
       },
@@ -60,7 +63,7 @@ describe("addon setup examples", function () {
     const reduced = _loader.reduceAddonsToHooks(addons, hooks);
 
     _loader.callback("IMG_PIPE", function (pipe) {
-      return function (addonTransform) {
+      return function (addonTransform: any) {
         pipe = addonTransform(pipe);
         return pipe;
       };
@@ -68,7 +71,7 @@ describe("addon setup examples", function () {
 
     _loader.finalize(reduced);
 
-    const supports = { webp: true };
+    const supports: Supports = { webp: true };
     const addResults = _loader.hook("IMG_PIPE", supports)(pipe);
     const lastResult = addResults[addResults.length - 1];
 

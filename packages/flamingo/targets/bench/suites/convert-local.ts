@@ -1,63 +1,74 @@
-import fs = require('fs');
-import Benchmark = require('benchmark');
-import FlamingoOperation = require('../../../src/model/flamingo-operation');
+import fs = require("fs");
+import Benchmark = require("benchmark");
+import FlamingoOperation = require("../../../src/model/flamingo-operation");
+import { Deferred } from "benchmark";
 
-module.exports = function (suiteConfig) {
-  return function (suiteName, description, filePath) {
+module.exports = function (suiteConfig: any) {
+  return function (suiteName: string, description: string, filePath: string) {
     let prom: Promise<any> = Promise.resolve();
 
-    function streamFunction (deferred) {
-      return function (data) {
+    function streamFunction(deferred: Deferred) {
+      return function (data: any) {
         const wstream = suiteConfig.temp.createWriteStream();
         const rstream = fs.createReadStream(filePath);
         const op = new FlamingoOperation();
-        let error;
+        let error: Error;
 
         op.process = data.process;
         op.config = {};
 
-        wstream.on('finish', function () {
+        wstream.on("finish", function () {
           if (error) {
             deferred.benchmark.abort();
           }
+          // @ts-ignore
           deferred.resolve();
         });
-        suiteConfig.imageProcessors(op)(rstream)
-          .on('error', function (err) {
+        suiteConfig
+          .imageProcessors(op)(rstream)
+          .on("error", function (err: Error) {
             error = err;
             wstream.end();
+            // @ts-ignore
             this.end();
           })
           .pipe(wstream);
       };
     }
 
-    function convertLocal (profileName) {
+    function convertLocal(profileName: string) {
       return new Promise(function (resolve) {
-        const gmOptions = {DEFAULT_MIME: 'image/png'};
-        const gmRequest = {headers: {}, query: {processor: 'gm'}};
-        const vipsOptions = {DEFAULT_MIME: 'image/png'};
-        const vipsRequest = {headers: {}, query: {}};
+        const gmOptions = { DEFAULT_MIME: "image/png" };
+        const gmRequest = { headers: {}, query: { processor: "gm" } };
+        const vipsOptions = { DEFAULT_MIME: "image/png" };
+        const vipsRequest = { headers: {}, query: {} };
 
         // start benchmarking
-        new Benchmark.Suite(description).add('GM', {
-          defer: true, fn: function (deferred) {
-            suiteConfig.profiles[profileName](gmRequest, gmOptions).then(streamFunction(deferred));
-          }
-        })
-          .add('VIPS', {
-            defer: true, fn: function (deferred) {
-              suiteConfig.profiles[profileName](vipsRequest, vipsOptions).then(streamFunction(deferred));
-            }
+        new Benchmark.Suite(description)
+          .add("GM", {
+            defer: true,
+            fn: function (deferred: Deferred) {
+              suiteConfig.profiles[profileName](gmRequest, gmOptions).then(
+                streamFunction(deferred)
+              );
+            },
           })
-          .on('cycle', suiteConfig.cycle)
-          .on('error', suiteConfig.error)
-          .on('complete', suiteConfig.complete(suiteName, profileName, resolve))
+          .add("VIPS", {
+            defer: true,
+            fn: function (deferred: Deferred) {
+              suiteConfig.profiles[profileName](vipsRequest, vipsOptions).then(
+                streamFunction(deferred)
+              );
+            },
+          })
+          .on("cycle", suiteConfig.cycle)
+          .on("error", suiteConfig.error)
+          .on("complete", suiteConfig.complete(suiteName, profileName, resolve))
           .run(suiteConfig.runConfig);
       });
     }
 
-    suiteConfig.convertProfiles.forEach(function (name) {
+    suiteConfig.convertProfiles.forEach(function (name: string) {
       prom = prom.then(function () {
         return convertLocal(name);
       });

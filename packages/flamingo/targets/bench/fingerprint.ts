@@ -1,5 +1,5 @@
-import os = require('os');
-import sharp = require('sharp');
+import os = require("os");
+import sharp = require("sharp");
 
 function fingerprint() {
   /* eslint no-sync: 0 */
@@ -11,12 +11,12 @@ function fingerprint() {
       release: os.release(),
       totalMem: os.totalmem(),
       freeMem: os.freemem(),
-      cpus: os.cpus()
+      cpus: os.cpus(),
     },
     libs: {
       node: process.versions,
-      vips: sharp.versions.vips
-    }
+      vips: sharp.versions.vips,
+    },
   };
 }
 

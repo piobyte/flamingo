@@ -5,6 +5,7 @@ import Convert = require("./../mixins/convert");
 import Server = require("../model/server");
 import FlamingoOperation = require("../model/flamingo-operation");
 import Config = require("../../config");
+import Hapi = require("@hapi/hapi");
 
 /**
  * Route that converts an image url, passed inside the request param, to an image
@@ -23,8 +24,8 @@ class Image extends ImageStream(ProfileOperation(Convert(Route))) {
    * @param {string} [description='Profile image conversion']
    */
   constructor(
-    conf,
-    method = "GET",
+    conf: Config,
+    method: Hapi.Util.HTTP_METHODS_PARTIAL = "GET",
     path = "/image/{profile}/{url}",
     description = "Profile image conversion"
   ) {

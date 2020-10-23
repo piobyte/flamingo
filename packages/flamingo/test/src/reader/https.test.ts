@@ -1,4 +1,5 @@
 import url = require("url");
+// @ts-ignore
 import temp = require("temp");
 import nock = require("nock");
 import merge = require("lodash/merge");

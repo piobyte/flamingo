@@ -4,27 +4,28 @@ import sinon = require("sinon");
 import fs = require("fs");
 import path = require("path");
 import Hapi = require("@hapi/hapi");
+import nodeStream = require("stream");
 
 import FlamingoOperation = require("../../../src/model/flamingo-operation");
 import Convert = require("../../../src/mixins/convert");
 import Route = require("../../../src/model/route");
 import DummyRoute = require("../../test-util/DummyRoute");
 
-function failOnHandleError(operation) {
-  return (err) => {
+function failOnHandleError() {
+  return (err: Error) => {
     assert.ok(false, err);
   };
 }
 
 describe("convert", function () {
   it("#validOperation rejects", function () {
-    function testMixin(superClass) {
+    function testMixin(superClass: any) {
       return class TestMixin extends superClass {
-        handleError(request, reply, error, operation = {}) {
-          return failOnHandleError(operation);
+        handleError() {
+          return failOnHandleError();
         }
 
-        validOperation(operation) {
+        validOperation(operation: any) {
           return operation.shouldFail
             ? Promise.reject("should fail")
             : Promise.resolve(operation);
@@ -44,8 +45,8 @@ describe("convert", function () {
 
   it("#write", function () {
     const convert = new (class extends Convert(DummyRoute) {
-      handleError(request, reply, error, operation = {}) {
-        return (failOnHandleError(operation) as any) as Hapi.ResponseObject;
+      handleError() {
+        return (failOnHandleError() as any) as Hapi.ResponseObject;
       }
     })();
     const operation = new FlamingoOperation();
@@ -67,12 +68,19 @@ describe("convert", function () {
     );
     const preprocessSpy = sinon
       .stub()
-      .returns((operation) => operation.stream());
+      .returns((operation: any) => operation.stream());
     const validStreamSpy = sinon
       .stub()
-      .returns((operation) => Promise.resolve(operation));
-    const processSpy = sinon.stub().returns((operation) => (stream) => stream);
-    const writeSpy = sinon.stub().returns((operation) => operation);
+      .returns((operation: FlamingoOperation) => Promise.resolve(operation));
+    const processSpy = sinon
+      .stub()
+      .returns(
+        (operation: FlamingoOperation) => (stream: nodeStream.Readable) =>
+          stream
+      );
+    const writeSpy = sinon
+      .stub()
+      .returns((operation: FlamingoOperation) => operation);
 
     const operation = new FlamingoOperation();
     const convert = new (class extends Convert(class extends DummyRoute {}) {
