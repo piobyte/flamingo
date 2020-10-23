@@ -16,7 +16,7 @@ import VideoRoute = require("../../../../src/routes/video");
 
 const FLAMINGO_PORT = 43723; // some random unused port
 
-async function startServer(localConf) {
+async function startServer(localConf: Config) {
   let config = await Config.fromEnv();
   config = merge(
     {},
@@ -27,11 +27,11 @@ async function startServer(localConf) {
 
   if (config.CRYPTO!.ENABLED) {
     // manually copy cipher, key, iv because they're buffers
-    config.CRYPTO!.KEY = Buffer.isBuffer(localConf.CRYPTO.KEY)
-      ? localConf.CRYPTO.KEY
+    config.CRYPTO!.KEY = Buffer.isBuffer(localConf.CRYPTO!.KEY)
+      ? localConf.CRYPTO!.KEY
       : config.CRYPTO!.KEY;
-    config.CRYPTO!.IV = Buffer.isBuffer(localConf.CRYPTO.IV)
-      ? localConf.CRYPTO.IV
+    config.CRYPTO!.IV = Buffer.isBuffer(localConf.CRYPTO!.IV)
+      ? localConf.CRYPTO!.IV
       : config.CRYPTO!.IV;
   }
 
@@ -49,7 +49,7 @@ describe("video converting server response", function () {
 
   it("returns 400 for all target error codes", async function () {
     const httpServer = await simpleHttpServer(function (req, res) {
-      const code = parseInt(req.url.replace(/\//g, ""), 10);
+      const code = parseInt(req.url!.replace(/\//g, ""), 10);
       res.writeHead(code, {});
       res.end();
     });
@@ -92,7 +92,7 @@ describe("video converting server response", function () {
         assert.strictEqual(response.statusCode, 400)
       );
     } finally {
-      await Promise.all([httpServer.stop(), server.stop()]);
+      await Promise.all([httpServer.stop(), server?.stop()]);
     }
   });
 
@@ -115,13 +115,13 @@ describe("video converting server response", function () {
       const { response } = await got(URL).catch((d) => d);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
   it("rejects redirects by default", async function () {
-    let HOST;
-    let SERVER_PORT;
+    let HOST: string;
+    let SERVER_PORT: number;
 
     const httpServer = await simpleHttpServer(function (req, res) {
       res.writeHead(301, {
@@ -143,7 +143,7 @@ describe("video converting server response", function () {
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      await Promise.all([httpServer.stop(), server.stop()]);
+      await Promise.all([httpServer.stop(), server?.stop()]);
     }
   });
 
@@ -153,10 +153,10 @@ describe("video converting server response", function () {
       "../../../fixtures/videos/trailer_1080p.ogg"
     );
 
-    let SERVER_PORT;
-    let HOST;
+    let SERVER_PORT: number;
+    let HOST: string;
     const httpServer = await simpleHttpServer(function (req, res) {
-      const urlPath = req.url.replace(/\//g, "");
+      const urlPath = req.url!.replace(/\//g, "");
       if (urlPath === "moved.png") {
         res.writeHead(301, {
           Location: url.format({
@@ -197,7 +197,7 @@ describe("video converting server response", function () {
       const { statusCode } = await got(flamingoUrl);
       assert.strictEqual(statusCode, 200);
     } finally {
-      await Promise.all([httpServer.stop(), server.stop()]);
+      await Promise.all([httpServer.stop(), server?.stop()]);
     }
   });
 
@@ -212,7 +212,7 @@ describe("video converting server response", function () {
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -227,7 +227,7 @@ describe("video converting server response", function () {
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -238,13 +238,13 @@ describe("video converting server response", function () {
     let server;
 
     try {
-      server = await startServer({
+      server = await startServer(({
         CRYPTO: { ENABLED: true },
-      });
+      } as unknown) as Config);
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -258,16 +258,16 @@ describe("video converting server response", function () {
     let server;
 
     try {
-      server = await startServer({
+      server = await startServer(({
         CRYPTO: { ENABLED: false },
         ACCESS: {
           FILE: { READ: [path.join(__dirname, "../../../fixtures/videos")] },
         },
-      });
+      } as unknown) as Config);
       const { statusCode } = await got(URL);
       assert.strictEqual(statusCode, 200);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 });

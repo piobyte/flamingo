@@ -19,7 +19,7 @@ export = function readAllowed(
   whitelist: Array<Partial<Url.Url>> = []
 ): boolean {
   return some(whitelist, (whitelistUrl) => {
-    return every(keys(whitelistUrl), (whitelistKey) => {
+    return every(keys(whitelistUrl), (whitelistKey: keyof Url.Url) => {
       // url needs to have the whitelisted key → if not early return
       return (
         !url.hasOwnProperty(whitelistKey) ||

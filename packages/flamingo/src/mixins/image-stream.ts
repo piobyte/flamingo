@@ -4,6 +4,7 @@ import FlamingoOperation = require("../model/flamingo-operation");
 import Constructor from "../model/Constructor";
 import Server = require("../model/server");
 import Config = require("../../config");
+import nodeStream = require("stream");
 
 export = function <T extends Constructor<Route>>(Base: T) {
   /**
@@ -16,7 +17,9 @@ export = function <T extends Constructor<Route>>(Base: T) {
      * @param {FlamingoOperation} op
      * @returns {Promise}
      */
-    validStream(op: FlamingoOperation): (stream) => Promise<any> {
+    validStream(
+      op: FlamingoOperation
+    ): (stream: nodeStream.Readable) => Promise<nodeStream.Readable> {
       return validImageStream(op);
     }
   };

@@ -3,6 +3,7 @@ import Image = require("./image");
 import Server = require("../model/server");
 import FlamingoOperation = require("../model/flamingo-operation");
 import Config = require("../../config");
+import Hapi = require("@hapi/hapi");
 
 /**
  * Route that converts a video to an image.
@@ -20,8 +21,8 @@ class Video extends VideoPreprocess(Image) {
    * @param {string} [description='Profile video conversion']
    */
   constructor(
-    conf,
-    method = "GET",
+    conf: Config,
+    method: Hapi.Util.HTTP_METHODS_PARTIAL = "GET",
     path = "/video/{profile}/{url}",
     description = "Profile video conversion"
   ) {

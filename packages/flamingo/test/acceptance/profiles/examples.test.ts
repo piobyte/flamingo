@@ -145,7 +145,7 @@ describe("example profiles", function () {
           DEFAULT_MIME: "image/png",
         }
       );
-      assert.deepStrictEqual(data.response.header, {
+      assert.deepStrictEqual(data.response!.header, {
         "Accept-CH": "DPR, Width",
         "Content-DPR": 2,
         "Content-Type": "image/png",
@@ -176,7 +176,7 @@ describe("example profiles", function () {
           DEFAULT_MIME: "image/png",
         }
       );
-      assert.deepStrictEqual(data.response.header, {
+      assert.deepStrictEqual(data.response!.header, {
         "Accept-CH": "DPR, Width",
         "Content-DPR": 2.3,
         "Content-Type": "image/png",
@@ -207,7 +207,7 @@ describe("example profiles", function () {
           DEFAULT_MIME: "image/png",
         }
       );
-      assert.deepStrictEqual(data.response.header, {
+      assert.deepStrictEqual(data.response!.header, {
         "Accept-CH": "DPR, Width",
         "Content-DPR": 1,
         "Content-Type": "image/png",
@@ -363,7 +363,7 @@ describe("example profiles", function () {
           DEFAULT_MIME: "image/png",
         }
       );
-      assert.deepStrictEqual(data.response.header, {
+      assert.deepStrictEqual(data.response!.header, {
         "Accept-CH": "DPR, Width",
         "Content-DPR": 2,
         "Content-Type": "image/png",
@@ -404,7 +404,7 @@ describe("example profiles", function () {
           DEFAULT_MIME: "image/png",
         }
       );
-      assert.deepStrictEqual(data.response.header, {
+      assert.deepStrictEqual(data.response!.header, {
         "Accept-CH": "DPR, Width",
         "Content-DPR": 2,
         "Content-Type": "image/png",
@@ -445,7 +445,7 @@ describe("example profiles", function () {
           DEFAULT_MIME: "image/png",
         }
       );
-      assert.deepStrictEqual(data.response.header, {
+      assert.deepStrictEqual(data.response!.header, {
         "Accept-CH": "DPR, Width",
         "Content-DPR": 1,
         "Content-Type": "image/png",
@@ -486,7 +486,7 @@ describe("example profiles", function () {
           DEFAULT_MIME: "image/png",
         }
       );
-      assert.deepStrictEqual(data.response.header, {
+      assert.deepStrictEqual(data.response!.header, {
         "Accept-CH": "DPR, Width",
         "Content-DPR": 1,
         "Content-Type": "image/png",

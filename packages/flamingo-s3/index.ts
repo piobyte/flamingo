@@ -72,7 +72,13 @@ exports[addon.HOOKS.CONF] = function () {
  * @param {Server} server server instance
  */
 exports[addon.HOOKS.START] = function (server: Server) {
-  const config /*: { credentials: any, region: string, apiVersion: string, endpoint?: string, s3ForcePathStyle?: boolean } */ = {
+  const config: {
+    credentials: AWS.Credentials;
+    region: string;
+    apiVersion: string;
+    endpoint?: string;
+    s3ForcePathStyle?: boolean;
+  } = {
     credentials: new AWS.Credentials(
       server.config.AWS.ACCESS_KEY,
       server.config.AWS.SECRET

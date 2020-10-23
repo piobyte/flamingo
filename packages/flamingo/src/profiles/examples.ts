@@ -4,6 +4,7 @@
  */
 
 import sharp = require("sharp");
+// @ts-ignore
 import clamp = require("clamp");
 
 import envParser = require("../util/env-parser");
@@ -74,7 +75,7 @@ function extractDimension(
 const f: { [name: string]: any } = {};
 f["avatar-image"] = 2;
 
-const ExampleProfiles: { [profileName: string]: Profile } = {
+const ExampleProfiles: Record<string, Profile> = {
   /**
    * Avatar image profile
    * @param {Request} request

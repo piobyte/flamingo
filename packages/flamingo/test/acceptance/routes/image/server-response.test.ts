@@ -12,7 +12,7 @@ import ImageRoute = require("../../../../src/routes/image");
 
 const PORT = 43723; // some random unused port
 
-async function startServer(localConf) {
+async function startServer(localConf: Config) {
   let config = await Config.fromEnv();
   config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
 
@@ -63,7 +63,7 @@ describe("image converting server response", function () {
         assert.strictEqual((response as any).statusCode, 400)
       );
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -85,7 +85,7 @@ describe("image converting server response", function () {
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -109,7 +109,7 @@ describe("image converting server response", function () {
 
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -138,7 +138,7 @@ describe("image converting server response", function () {
       const response = await got(URL);
       assert.strictEqual(response.statusCode, 200);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -153,7 +153,7 @@ describe("image converting server response", function () {
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -168,7 +168,7 @@ describe("image converting server response", function () {
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -179,13 +179,13 @@ describe("image converting server response", function () {
     let server;
 
     try {
-      server = await startServer({
+      server = await startServer(({
         CRYPTO: { ENABLED: true },
-      });
+      } as unknown) as Config);
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 });

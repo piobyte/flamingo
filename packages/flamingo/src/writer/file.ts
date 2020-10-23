@@ -3,6 +3,7 @@
  * @module
  */
 import fs = require("fs");
+// @ts-ignore
 import mkdirp = require("mkdirp");
 import path = require("path");
 import stream = require("stream");
@@ -32,7 +33,7 @@ export = function ({ input, reply, config }: FlamingoOperation) {
     }
 
     return new Promise(function (resolve, reject) {
-      mkdirp(outputDir, function (err) {
+      mkdirp(outputDir, function (err: Error) {
         if (err) {
           reject(err);
         } else {

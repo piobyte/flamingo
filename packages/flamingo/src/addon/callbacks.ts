@@ -5,6 +5,11 @@ import assign = require("lodash/assign");
 import partial = require("lodash/partial");
 import noop = require("lodash/noop");
 import mergeWith = require("lodash/mergeWith");
+import Config = require("../../config");
+import FlamingoOperation = require("../model/flamingo-operation");
+import { ProfileInstruction } from "../types/Instruction";
+import { Plugin } from "@hapi/hapi";
+import Profile from "../types/Profile";
 
 /**
  * Addon callbacks module
@@ -33,7 +38,7 @@ const {
  * @private
  * @returns {Buffer|undefined} b if b is Buffer
  */
-function mergeBufferAware(a, b) {
+function mergeBufferAware(a: any, b: any) {
   if (b instanceof Buffer) {
     return b;
   }
@@ -45,8 +50,8 @@ function mergeBufferAware(a, b) {
  * @returns {*}
  */
 export = function (loader: AddonLoader): AddonLoader {
-  loader.callback(CONF, (conf) => {
-    return (addonConf) => {
+  loader.callback(CONF, (conf: Config) => {
+    return (addonConf: Config) => {
       // overwrite addon config with config.js content and merge the result into config.js
       mergeWith(
         conf,
@@ -55,24 +60,36 @@ export = function (loader: AddonLoader): AddonLoader {
       );
     };
   });
-  loader.callback(EXTRACT_PROCESS, (extracted, operation) => {
-    return function (addonExtractFunction) {
-      return addonExtractFunction(extracted, operation);
-    };
-  });
-  loader.callback(ENV, (config, environment) => {
-    // call envConfig on the config.js object given the addon env mappings
-    return partial(envConfig, config, environment);
-  });
-  loader.callback(PROFILES, (profiles) => {
+  loader.callback(
+    EXTRACT_PROCESS,
+    (extracted: ProfileInstruction, operation: FlamingoOperation) => {
+      return function (
+        addonExtractFunction: (
+          extracted: ProfileInstruction,
+          operation: FlamingoOperation
+        ) => any
+      ) {
+        return addonExtractFunction(extracted, operation);
+      };
+    }
+  );
+  loader.callback(
+    ENV,
+    (config: Config, environment: Record<string, string | undefined>) => {
+      // call envConfig on the config.js object given the addon env mappings
+      return partial(envConfig, config, environment);
+    }
+  );
+  loader.callback(PROFILES, (profiles: Record<string, Profile>) => {
     // put addon profile fields on the existing profiles object
     return partial(assign, profiles);
   });
+  // TODO: this doesn't seem to be called
   loader.callback(ROUTES, (server) => {
     // add additional routes
     return server.route.bind(server);
   });
-  loader.callback(HAPI_PLUGINS, (plugins) => {
+  loader.callback(HAPI_PLUGINS, (plugins: Plugin<unknown>[]) => {
     // add hapi plugins
     return plugins.push.bind(plugins);
   });

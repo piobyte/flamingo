@@ -8,6 +8,7 @@ import Config = require("flamingo/config");
 
 import s3Reader = require("./reader");
 import Constructor from "flamingo/src/model/Constructor";
+import { S3Input } from "flamingo-s3/src/types";
 
 const { InvalidInputError } = Errors;
 
@@ -24,7 +25,7 @@ export = function S3Mixin<T extends Constructor<Route>>(SuperClass: T) {
      * @param {FlamingoOperation} operation
      * @return {Promise.<{bucket: string, key: string}>}
      */
-    extractInput(operation: FlamingoOperation) {
+    extractInput(operation: FlamingoOperation): Promise<S3Input> {
       const bucketAlias = operation.request.params.bucketAlias;
       const bucket = operation.config.AWS.S3.BUCKETS[bucketAlias];
       const keySplit = operation.request.params.key.split(KEY_DELIMITER);
@@ -52,7 +53,7 @@ export = function S3Mixin<T extends Constructor<Route>>(SuperClass: T) {
      * @param {string} key
      * @return {Promise.<function(): Promise.<ReadResult>>}
      */
-    extractReader({ bucket, key }) {
+    extractReader({ bucket, key }: S3Input) {
       return Promise.resolve(() =>
         s3Reader(
           bucket.name,

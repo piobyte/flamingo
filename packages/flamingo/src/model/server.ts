@@ -23,7 +23,7 @@ const { CONF, LOG_STREAM, ENV, START, STOP, HAPI_PLUGINS } = HOOKS;
 class Server {
   config: Config;
   addonsLoader: AddonLoader;
-  profiles: { [name: string]: Profile } = {};
+  profiles: Record<string, Profile> = {};
   hapi: Hapi.Server;
 
   private plugins = [];
@@ -70,7 +70,7 @@ class Server {
    * @param {Array.<{}>} profiles profiles to add to the server instance
    * @returns {Server}
    */
-  withProfiles(profiles) {
+  withProfiles(profiles: Record<string, Profile>[]) {
     profiles.forEach((profile) => merge(this.profiles, profile));
     return this;
   }

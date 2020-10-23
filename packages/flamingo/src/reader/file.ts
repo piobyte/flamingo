@@ -5,6 +5,7 @@ import FlamingoOperation = require("../model/flamingo-operation");
 import ReaderType = require("../model/reader-type");
 import accessAllowed = require("../util/file-access-allowed");
 import errors = require("../util/errors");
+import Reader = require("../types/Reader");
 
 const { InvalidInputError } = errors;
 const { FILE } = ReaderType;
@@ -30,7 +31,7 @@ function fileExists(filePath: string) {
  * @param {Object} operation
  * @return {Promise} resolves with the file read configuration
  */
-export = function (operation: FlamingoOperation) {
+const FileReader: Reader = function (operation: FlamingoOperation) {
   const filePath = operation.input;
   const access = operation.config.ACCESS!;
 
@@ -44,8 +45,10 @@ export = function (operation: FlamingoOperation) {
   }
 
   return fileExists(normalizedPath).then(() => ({
-    stream: () => fs.createReadStream(normalizedPath),
+    stream: () => Promise.resolve(fs.createReadStream(normalizedPath)),
     type: FILE,
     path: normalizedPath,
   }));
 };
+
+export = FileReader;

@@ -3,9 +3,11 @@
  * @module
  */
 
+// @ts-ignore
 import ffmpeg = require("fluent-ffmpeg");
 import assign = require("lodash/assign");
 import isFinite = require("lodash/isFinite");
+import stream = require("stream");
 import got from "got";
 
 import errors = require("../../util/errors");
@@ -14,6 +16,8 @@ import Logger = require("../../logger");
 
 const { build } = Logger;
 import pkg = require("../../../package.json");
+import FlamingoOperation = require("../../model/flamingo-operation");
+import { ReaderResult } from "../../types/ReaderResult";
 
 const { ProcessingError, InvalidInputError } = errors;
 const { FILE, REMOTE } = ReaderType;
@@ -27,22 +31,22 @@ const defaultProcessConf = {
  * @param {FlamingoOperation} operation
  * @return {Function}
  */
-export = function (operation) {
+export = function (operation: FlamingoOperation) {
   const conf = operation.config;
   const givenProcessConf = operation.preprocessorConfig;
   const processConf = assign({}, defaultProcessConf, givenProcessConf);
 
-  return function (readerResult) {
+  return function (readerResult: ReaderResult): Promise<stream.Readable> {
     const ffmpegOptions: Record<string, any> = {};
 
     /* istanbul ignore else */
-    if (conf.PREPROCESSOR.VIDEO.KILL_TIMEOUT) {
+    if (conf.PREPROCESSOR?.VIDEO.KILL_TIMEOUT) {
       ffmpegOptions.timeout = conf.PREPROCESSOR.VIDEO.KILL_TIMEOUT;
     }
 
-    function videoProcessor(input) {
+    function videoProcessor(input: stream.Readable): Promise<stream.Readable> {
       return new Promise(function (resolve, reject) {
-        ffmpeg.ffprobe(input, function (err, meta) {
+        ffmpeg.ffprobe(input, function (err: Error, meta: any) {
           if (err) {
             reject(new InvalidInputError(err.message, err));
           } else {
@@ -64,13 +68,13 @@ export = function (operation) {
                 .seekInput(duration * processConf.seekPercent)
                 .frames(1)
                 .format("image2")
-                .on("codecData", function (data) {
+                .on("codecData", function (data: any) {
                   logger.debug(data);
                 })
-                .on("start", function (commandLine) {
+                .on("start", function (commandLine: string) {
                   logger.info(`Spawned ffmpeg with command: ${commandLine}`);
                 })
-                .on("error", function (e) {
+                .on("error", function (e: Error) {
                   /* istanbul ignore next */
                   throw new ProcessingError(e.message, e);
                 })
@@ -95,7 +99,7 @@ export = function (operation) {
           // do HEAD to check if redirect response code because ffprobe/ffmpeg always follow redirects
           promise = got
             .head(readerResult.url.href, {
-              timeout: conf.READER.REQUEST.TIMEOUT,
+              timeout: conf.READER?.REQUEST?.TIMEOUT ?? 10 * 1000,
               headers: {
                 "user-agent":
                   pkg.name + "/" + pkg.version + " (+" + pkg.bugs.url + ")",
@@ -106,12 +110,13 @@ export = function (operation) {
             .then(() => {
               return videoProcessor(readerResult.url.href);
             })
-            .catch(
-              (err) =>
+            .catch((err) =>
+              Promise.reject(
                 new InvalidInputError(
                   "Error while doing a HEAD request to check for redirects",
                   err
                 )
+              )
             );
         }
         return promise;

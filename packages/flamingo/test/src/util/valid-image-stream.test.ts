@@ -15,7 +15,7 @@ describe("valid-image-stream", function () {
   });
   it("rejects for invalid image streams", function () {
     const image = fs.createReadStream(
-      path.join(__dirname, "valid-image-stream.js")
+      path.join(__dirname, "valid-image-stream.test.js")
     );
     return validImageStream()(image).catch((e) =>
       assert.ok(e instanceof InvalidInputError)

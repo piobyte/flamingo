@@ -6,6 +6,7 @@
  * @see http://www.graphicsmagick.org/
  */
 
+// @ts-ignore
 import optional = require("optional");
 import Logger = require("../../logger");
 import FlamingoOperation = require("../../model/flamingo-operation");
@@ -13,6 +14,8 @@ import FlamingoOperation = require("../../model/flamingo-operation");
 const { build } = Logger;
 const gm = optional("gm");
 const logger = build("processor/image/gm");
+import nodeStream = require("stream");
+import { Processor } from "../../types/Processor";
 
 /**
  * Function that takes an array with processing operations and returns a function that can be called with an stream.
@@ -29,9 +32,9 @@ const logger = build("processor/image/gm");
  */
 export = function (
   operation: FlamingoOperation,
-  pipeline /*: function */,
-  stream /*: {pipe: function }*/
-) /*: any */ {
+  pipeline: (gm: any) => any,
+  stream: nodeStream.Readable
+): nodeStream.Readable {
   if (gm !== null) {
     const graphics = gm(stream).options({
       nativeAutoOrient: operation.config.NATIVE_AUTO_ORIENT,
@@ -41,4 +44,4 @@ export = function (
     logger.info("`gm` processor disabled, because `gm` isn't installed.");
     return stream;
   }
-};
+} as Processor<any>;

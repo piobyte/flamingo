@@ -1,6 +1,7 @@
 import assert = require("assert");
 import sinon = require("sinon");
 import url = require("url");
+import Hapi = require("@hapi/hapi");
 
 import ProfileOperation = require("../../../src/mixins/profile-operation");
 import Route = require("../../../src/model/route");
@@ -18,7 +19,7 @@ const { InvalidInputError } = errors;
 const { encode } = cipher;
 
 class ProfilesServer extends Server {
-  constructor(profiles) {
+  constructor(profiles: any) {
     super({}, new NoopAddonLoader());
     this.profiles = profiles;
   }
@@ -56,7 +57,7 @@ describe("profile-operation", function () {
     operation.request = { params: { profile } };
     operation.config = conf;
     const profiles = {
-      someProfile: (request, config) => {
+      someProfile: (request: Hapi.Request, config: Config) => {
         assert.deepStrictEqual(request, operation.request);
         assert.deepStrictEqual(config, operation.config);
         return Promise.resolve(profileSpy);
@@ -90,7 +91,7 @@ describe("profile-operation", function () {
     const profile = "someProfile";
     const givenUrl = "http://example.com/image.png";
     const profileData = {
-      process: [{ processor: "foo", pipe: (p) => p }],
+      process: [{ processor: "foo", pipe: (p: any) => p }],
       response: { header: { foo: "bar" } },
     };
 
@@ -100,12 +101,14 @@ describe("profile-operation", function () {
       config.CRYPTO!.KEY,
       config.CRYPTO!.IV
     );
-    const request = { params: { profile, url: encoded } };
-    const reply = sinon.spy();
+    const request = ({
+      params: { profile, url: encoded },
+    } as unknown) as Hapi.Request;
+    const reply = (sinon.spy() as unknown) as Hapi.ResponseToolkit;
 
     const ProfileOperationClass = ProfileOperation(
       class extends Convert(Route) {
-        buildOperation(request, reply) {
+        buildOperation(request: Hapi.Request, reply: Hapi.ResponseToolkit) {
           return super.buildOperation(request, reply).then((operation) => {
             operation.process = profileData.process;
             operation.response = profileData.response;
@@ -135,8 +138,10 @@ describe("profile-operation", function () {
     const profile = "someProfile";
     const givenUrl = "ftp://example.com/image.png";
     const encodedUrl = encodeURIComponent(givenUrl);
-    const request = { params: { profile, url: encodedUrl } };
-    const reply = sinon.spy();
+    const request = ({
+      params: { profile, url: encodedUrl },
+    } as unknown) as Hapi.Request;
+    const reply = (sinon.spy() as unknown) as Hapi.ResponseToolkit;
 
     operation.request = { params: { profile, url: encodedUrl } };
     operation.config = conf;
@@ -146,13 +151,13 @@ describe("profile-operation", function () {
 
     const ProfileOperationClass = ProfileOperation(
       class extends Route {
-        extractInput(operation) {
+        extractInput(operation: FlamingoOperation) {
           return Promise.resolve(
             decodeURIComponent(operation.request.params.url)
           );
         }
 
-        buildOperation(request, reply) {
+        buildOperation(request: Hapi.Request, reply: Hapi.ResponseToolkit) {
           return Promise.resolve(operation);
         }
       }

@@ -1,6 +1,6 @@
 import path = require("path");
 
-const images = {
+const images: Record<string, string> = {
   jpg: "2569067123_aca715a2ee_o.jpg", // http://www.flickr.com/photos/grizdave/2569067123/
   jpgWithExif: "Landscape_8.jpg", // https://github.com/recurser/exif-orientation-examples/blob/master/Landscape_8.jpg
   jpgWithExifMirroring: "Landscape_5.jpg", // https://github.com/recurser/exif-orientation-examples/blob/master/Landscape_5.jpg
@@ -56,7 +56,6 @@ export interface ImageDescription {
   desc: string;
   path: string;
   filename: string;
-  url?: string;
 }
 
 function all(): Array<ImageDescription> {

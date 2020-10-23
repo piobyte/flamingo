@@ -10,7 +10,7 @@ import IndexRoute = require("../../../../src/routes/index");
 
 const PORT = 43723; // some random unused port
 
-async function startServer(localConf) {
+async function startServer(localConf: Config) {
   let config = await Config.fromEnv();
 
   config = merge({}, config, { PORT }, localConf);
@@ -33,7 +33,7 @@ describe("index server response", function () {
         "isn't showing debug information if disabled"
       );
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 
@@ -45,7 +45,7 @@ describe("index server response", function () {
       const response = await got(`http://localhost:${PORT}`);
       assert.ok(response.body.indexOf("debug") !== -1);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 });

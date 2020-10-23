@@ -7,6 +7,7 @@ import util = require("util");
 import bunyan = require("bunyan");
 import url = require("url");
 import pkg = require("../package.json");
+import Hapi = require("@hapi/hapi");
 
 import FlamingoOperation = require("./model/flamingo-operation");
 import Route = require("./model/route");
@@ -14,7 +15,7 @@ import { SerializerError } from "./types/SerializerError";
 
 const { Url } = url as any;
 
-const loggers = {};
+const loggers: Record<string, ReturnType<typeof bunyan.createLogger>> = {};
 // disable stdout logging for test env
 let streamDefs: Array<bunyan.LoggerOptions> = process.env.TEST
   ? [] /* istanbul ignore next */
@@ -56,7 +57,7 @@ const serializers = {
         }
       : _serializerError("route", route);
   },
-  request(request) {
+  request(request: Hapi.Request | any) {
     return typeof request === "object" &&
       request.hasOwnProperty("path") &&
       request.hasOwnProperty("method")
@@ -73,10 +74,13 @@ const serializers = {
     switch (type) {
       case "object":
         // via http://stackoverflow.com/a/18391400
-        return Object.getOwnPropertyNames(error).reduce((raw, key) => {
-          raw[key] = error[key];
-          return raw;
-        }, {});
+        return Object.getOwnPropertyNames(error).reduce(
+          (raw: Record<string, any>, key) => {
+            raw[key] = error[key];
+            return raw;
+          },
+          {}
+        );
       case "string":
         return { message: error };
     }

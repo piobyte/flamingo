@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import addon = require("flamingo/src/addon");
+// @ts-ignore
 import Raven = require("raven");
 import bunyan = require("bunyan");
 import { HOOK, HOOKS } from "flamingo/src/addon";
@@ -19,7 +21,7 @@ import { HOOK, HOOKS } from "flamingo/src/addon";
  * @param {object} obj sentry log object
  * @return {object} obj input object
  */
-function ensureLogMessage(obj) {
+function ensureLogMessage(obj: any) {
   /* istanbul ignore next */
   if (!obj.msg) {
     if (obj.request) {
@@ -70,7 +72,7 @@ exports[addon.HOOKS.CONF] = function () {
  * @return {Array.<BunyanStreamDefinition>} bunyan stream definitions
  */
 exports[addon.HOOKS.LOG_STREAM] = function (conf) {
-  const levels = {};
+  const levels: Record<number, string> = {};
   levels[bunyan.DEBUG] = "debug";
   levels[bunyan.INFO] = "info";
   levels[bunyan.WARN] = "warning";
@@ -83,7 +85,7 @@ exports[addon.HOOKS.LOG_STREAM] = function (conf) {
     {
       level: bunyan.WARN,
       stream: {
-        write: function (msg) {
+        write: function (msg: any) {
           let obj: Record<string, any> = {};
           /* istanbul ignore next */
           try {

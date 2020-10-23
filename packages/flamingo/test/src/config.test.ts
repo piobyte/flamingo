@@ -20,7 +20,7 @@ class NoopAddonLoader extends AddonLoader {
   }
 }
 
-async function startServer(localConf) {
+async function startServer(localConf: Config) {
   let config = await Config.fromEnv();
   config = merge({}, config, { CRYPTO: { ENABLED: false }, PORT }, localConf);
 
@@ -43,7 +43,7 @@ describe("config", function () {
       );
       assert.strictEqual(response.statusCode, 404);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 

@@ -1,4 +1,6 @@
+// @ts-ignore
 import gm = require("gm");
+// @ts-ignore
 import temp = require("temp");
 import path = require("path");
 import url = require("url");
@@ -11,7 +13,7 @@ import FlamingoOperation = require("../../../src/model/flamingo-operation");
 import errors = require("../../../src/util/errors");
 
 const { InvalidInputError, isInvalidInputError } = errors;
-const compareFileFixtures = function (fixturePath) {
+const compareFileFixtures = function (fixturePath: string) {
   return new Promise(function (resolve, reject) {
     const TEST_WHITELIST = {
       FILE: { READ: ["/tmp", path.resolve(__dirname, "../../")] },
@@ -24,21 +26,21 @@ const compareFileFixtures = function (fixturePath) {
     };
 
     fileReader(op)
-      .then(function (readResult) {
+      .then(async function (readResult) {
         temp.track();
 
-        const readStream = readResult.stream();
+        const readStream = await readResult.stream();
         const writeTemp = temp.path({ suffix: ".png" });
 
         readStream.on("end", function () {
           gm.compare(writeTemp, fixture.fullFixturePath(fixturePath), function (
-            err,
-            isEqual
+            err: Error,
+            isEqual: boolean
           ) {
             if (err) {
               reject(err);
             } else {
-              temp.cleanup(function (tmpErr) {
+              temp.cleanup(function (tmpErr: Error) {
                 /* istanbul ignore next */
                 if (tmpErr) {
                   reject(tmpErr);

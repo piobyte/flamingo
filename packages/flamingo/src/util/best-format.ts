@@ -3,6 +3,7 @@
  * @module
  */
 
+// @ts-ignore
 import mimeparse = require("mimeparse");
 import { Mime } from "../types/Mime";
 // ["application", "xhtml", { "q" : "0.5" }]

@@ -3,7 +3,7 @@ import http = require("http");
 import IServer from "./IServer";
 
 export = function simpleHttpServer(
-  callback,
+  callback: http.RequestListener,
   port = 0,
   host = "localhost"
 ): Promise<IServer> {

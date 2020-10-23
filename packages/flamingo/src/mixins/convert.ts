@@ -14,6 +14,7 @@ import Constructor from "../model/Constructor";
 import { ProfileInstruction } from "../types/Instruction";
 import Server = require("../model/server");
 import Config = require("../../config");
+import { ReaderResult } from "../types/ReaderResult";
 
 const { InvalidInputError } = errors;
 const { HOOKS } = Addon;
@@ -35,7 +36,7 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      *    Promise.resolve(operation) :
      *    Promise.reject(new InvalidInputError('target has no protocol'))
      */
-    validOperation(operation): Promise<FlamingoOperation> {
+    validOperation(operation: FlamingoOperation): Promise<FlamingoOperation> {
       return Promise.resolve(operation);
     }
 
@@ -45,7 +46,9 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      * @param {FlamingoOperation} operation
      * @returns {function(FlamingoOperation): Promise.<{type: string, stream: function(): Promise<Stream>}>}
      */
-    read(operation: FlamingoOperation) {
+    read(
+      operation: FlamingoOperation
+    ): (op: FlamingoOperation) => Promise<ReaderResult> {
       return (op) => op.reader(op);
     }
 
@@ -60,7 +63,9 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      *  return (readerResult) => markdown2Image(operation.request.path.md);
      * }
      */
-    preprocess(operation: FlamingoOperation) {
+    preprocess(
+      operation: FlamingoOperation
+    ): (result: ReaderResult) => Promise<nodeStream.Readable> {
       // same as return (readerResult) => unfoldReaderResult(readerResult);
       return unfoldReaderResult;
     }
@@ -82,7 +87,9 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      * @param {FlamingoOperation} operation
      * @returns {function(Stream):Stream}
      */
-    process(operation: FlamingoOperation) {
+    process(
+      operation: FlamingoOperation
+    ): (stream: nodeStream.Readable) => nodeStream.Readable {
       // same as return (stream) => transform(stream);
       return imageProcessor(operation);
     }
@@ -92,7 +99,9 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      * @param {FlamingoOperation} operation
      * @returns {function(Stream):Promise}
      */
-    write(operation: FlamingoOperation) {
+    write(
+      operation: FlamingoOperation
+    ): (stream: nodeStream.Readable) => Promise<any> | void {
       // same as return (stream) => operation.response.write(stream);
       return operation.writer(operation);
     }
@@ -149,7 +158,7 @@ export = function Convert<T extends Constructor<Route>>(Base: T) {
      * @param {function} reply hapi reply function
      * @return {Promise.<FlamingoOperation>} Promise that resolves the build operation
      */
-    buildOperation(request: Request, reply: Hapi.ResponseToolkit) {
+    buildOperation(request: Hapi.Request, reply: Hapi.ResponseToolkit) {
       const server = this.server;
       return super.buildOperation(request, reply).then((operation) =>
         Promise.all([

@@ -3,6 +3,7 @@ import fs = require("fs");
 import nodePath = require("path");
 import url = require("url");
 import omit = require("lodash/omit");
+import Hapi = require("@hapi/hapi");
 
 import { all } from "../../test/fixtures/images/sharp-bench-assets/index";
 import Route = require("../model/route");
@@ -14,7 +15,13 @@ import FlamingoOperation = require("../model/flamingo-operation");
 const { encode } = cipher;
 import pkg = require("../../package.json");
 
-let IMAGES;
+let IMAGES: {
+  desc: string;
+  path: string;
+  filename: string;
+  url: string;
+  enc?: any;
+}[];
 
 /**
  * Debug route that exposes many internal values, should not be used in production
@@ -31,7 +38,7 @@ class Debug extends Route {
    */
   constructor(
     config: Config = {},
-    method = "GET",
+    method: Hapi.Util.HTTP_METHODS_PARTIAL = "GET",
     path = "/_debug",
     description = "Debug"
   ) {
@@ -43,7 +50,7 @@ class Debug extends Route {
         nodePath.join(
           __dirname,
           "../../test/fixtures/images/sharp-bench-assets",
-          url.parse(req.url).pathname!
+          url.parse(req.url!).pathname!
         )
       ).pipe(res, { end: true });
     }).then((httpServer) => {
@@ -53,8 +60,7 @@ class Debug extends Route {
         port: httpServer.address().port,
       });
       IMAGES = all().map(function (image) {
-        image.url = `${URL}/${image.filename}`;
-        return image;
+        return { ...image, url: `${URL}/${image.filename}` };
       });
 
       return Promise.all(

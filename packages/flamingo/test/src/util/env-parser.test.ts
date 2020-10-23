@@ -3,7 +3,7 @@ import envParser = require("../../../src/util/env-parser");
 
 const { int, objectInt, buffer64, buffer, boolean, float } = envParser;
 
-const compareFunction = function (bufA, bufB) {
+const compareFunction = function (bufA: Buffer, bufB: Buffer) {
   return bufA.compare(bufB) === 0;
 };
 

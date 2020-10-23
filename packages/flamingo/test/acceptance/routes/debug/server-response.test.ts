@@ -10,7 +10,7 @@ import DebugRoute = require("../../../../src/routes/debug");
 
 const PORT = 43723; // some random unused port
 
-async function startServer(localConf) {
+async function startServer(localConf: Config) {
   let config = await Config.fromEnv();
   config = merge({}, config, { PORT }, localConf);
   return new Server(config, new NoopAddonLoader())
@@ -30,7 +30,7 @@ describe("debug server response", function () {
       ).json();
       assert.strictEqual(body.config.PORT, server.config.PORT);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
   it("displays debug information if DEBUG is enabled", async function () {
@@ -43,7 +43,7 @@ describe("debug server response", function () {
       ).json();
       return got(body.urls[0].url);
     } finally {
-      server.stop();
+      server?.stop();
     }
   });
 });

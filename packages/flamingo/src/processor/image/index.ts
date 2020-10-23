@@ -3,6 +3,7 @@
  * @module
  */
 import forEach = require("lodash/forEach");
+// @ts-ignore
 import optional = require("optional");
 import nodeStream = require("stream");
 
@@ -10,14 +11,12 @@ import sharp = require("./sharp");
 import gm = require("./gm");
 import FlamingoOperation = require("../../model/flamingo-operation");
 import Logger = require("../../logger");
+import { Processor } from "../../types/Processor";
 
 const { build } = Logger;
 const logger = build("processor/image");
 
-const processors: {
-  sharp: any;
-  gm?: any;
-} = {
+const processors: Record<string, Processor<any>> = {
   sharp,
 };
 

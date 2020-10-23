@@ -11,3 +11,5 @@ export interface Addon {
   pkg: PackageJSON;
   hooks?: { [name: string]: any };
 }
+
+export const isAddon = (val: any): val is Addon => val && val.pkg;
