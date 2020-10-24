@@ -17,6 +17,9 @@ describe("logger", function () {
     const loggerName = "test:logger.addStreams";
     const LOG_MESSAGE = "Time is an illusion. Lunchtime doubly so.";
 
+    // ensure file exists to append to
+    fs.writeFileSync(tempPath, "");
+
     logger.addStreams([
       {
         name: "temp",
