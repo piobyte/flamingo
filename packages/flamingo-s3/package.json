@@ -4,7 +4,7 @@
   "main": "index.js",
   "description": "flamingo-s3 is a https://github.com/piobyte/flamingo addon to allow reading and converting images from https://aws.amazon.com/s3/.",
   "engines": {
-    "node": ">=14.14.0"
+    "node": ">=14"
   },
   "scripts": {
     "lint": "eslint index.ts test/**/*.ts src/**/*.ts",

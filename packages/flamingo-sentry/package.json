@@ -4,7 +4,7 @@
   "main": "index.js",
   "description": "flamingo-sentry is a https://github.com/piobyte/flamingo addon to adds a bunyan log stream for sentry integration.",
   "engines": {
-    "node": ">=14.14.0"
+    "node": ">=14"
   },
   "scripts": {
     "lint": "eslint index.ts test/**/*.ts",
