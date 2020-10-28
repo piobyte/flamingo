@@ -28,7 +28,7 @@ jobs:
     node_js: 'node'
     script: yarn test-changed
   - stage: test
-    node_js: 'lts/erbium'
+    node_js: 'lts/fermium'
     script: yarn test-changed
   - stage: benchmark
     node_js: 'node'
