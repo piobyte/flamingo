@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.0.7](https://github.com/piobyte/flamingo-sentry/compare/flamingo-sentry@3.0.6...flamingo-sentry@3.0.7) (2020-10-28)
+
+**Note:** Version bump only for package flamingo-sentry
+
+
+
+
+
 ## [3.0.6](https://github.com/piobyte/flamingo-sentry/compare/flamingo-sentry@3.0.5...flamingo-sentry@3.0.6) (2020-08-10)
 
 **Note:** Version bump only for package flamingo-sentry
