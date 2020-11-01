@@ -72,7 +72,6 @@ module.exports = function (suiteConfig: any) {
                         if (error) {
                           deferred.benchmark.abort();
                         }
-                        // @ts-ignore
                         deferred.resolve();
                       });
                       wstream.on("error", function (err: Error) {
@@ -127,7 +126,6 @@ module.exports = function (suiteConfig: any) {
                         if (error) {
                           deferred.benchmark.abort();
                         }
-                        // @ts-ignore
                         deferred.resolve();
                       });
                       wstream.on("error", function (err: Error) {

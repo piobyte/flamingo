@@ -34,14 +34,8 @@ function storeResults(
   suiteName: string,
   profileName: string
 ) {
-  const fastest = suite
-    .filter("fastest")
-    // @ts-ignore
-    .map("id");
-  const slowest = suite
-    .filter("slowest")
-    // @ts-ignore
-    .map("id");
+  const fastest = suite.filter("fastest").map("id");
+  const slowest = suite.filter("slowest").map("id");
 
   suiteObj[suiteName] = suiteObj[suiteName]
     ? suiteObj[suiteName]
@@ -90,10 +84,7 @@ function completeFn(
     console.log(
       profileName,
       this.name,
-      "Fastest is " +
-        this.filter("fastest")
-          // @ts-ignore
-          .map("name"),
+      "Fastest is " + this.filter("fastest").map("name"),
       "\n"
     );
     resolve();

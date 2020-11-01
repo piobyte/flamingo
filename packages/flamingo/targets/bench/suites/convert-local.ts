@@ -21,7 +21,6 @@ module.exports = function (suiteConfig: any) {
           if (error) {
             deferred.benchmark.abort();
           }
-          // @ts-ignore
           deferred.resolve();
         });
         suiteConfig
