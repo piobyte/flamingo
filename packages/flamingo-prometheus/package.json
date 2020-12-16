@@ -31,22 +31,22 @@
     "url": "https://github.com/piobyte/flamingo"
   },
   "dependencies": {
-    "@promster/hapi": "5.0.1",
-    "@promster/types": "^1.0.8",
+    "@promster/hapi": "6.0.0",
+    "@promster/types": "^2.0.0",
     "flamingo": "^3.1.1",
     "nyc": "^15.1.0",
     "prom-client": "^12.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "^8.0.3",
-    "@types/node": "^14.14.6",
-    "@typescript-eslint/eslint-plugin": "^4.6.0",
-    "@typescript-eslint/parser": "^4.6.0",
-    "eslint": "^7.12.1",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "got": "^11.8.0",
-    "mocha": "^8.2.0",
-    "typescript": "^4.0.5"
+    "@types/mocha": "^8.2.0",
+    "@types/node": "^14.14.14",
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-prettier": "^3.3.0",
+    "got": "^11.8.1",
+    "mocha": "^8.2.1",
+    "typescript": "^4.1.3"
   }
 }

@@ -10,7 +10,7 @@ import Reader = require("../types/Reader");
 const { InvalidInputError } = errors;
 const { FILE } = ReaderType;
 
-function fileExists(filePath: string) {
+function fileExists(filePath: string): Promise<void> {
   return new Promise(function (resolve, reject) {
     fs.stat(filePath, (err, stat) => {
       if (err) {

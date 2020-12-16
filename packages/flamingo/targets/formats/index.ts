@@ -90,7 +90,7 @@ processors.forEach(function (processor) {
       return httpsReader(op)
         .then(unfoldReaderResult)
         .then(imageProcessor(op))
-        .then(function (stream) {
+        .then(function (stream): Promise<void> {
           return new Promise(function (resolve) {
             stream.on("error", function () {
               result[data.desc] = false;

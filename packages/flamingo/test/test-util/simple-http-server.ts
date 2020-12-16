@@ -14,7 +14,7 @@ export = function simpleHttpServer(
   httpServer.listen(port, host);
 
   return new Promise<IServer>((resolve) => {
-    (httpServer as IServer).stop = () =>
+    (httpServer as IServer).stop = (): Promise<void> =>
       new Promise((resolve, reject) => {
         httpServer.close(function (err) {
           if (err) {

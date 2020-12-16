@@ -33,24 +33,25 @@ const compareFileFixtures = function (fixturePath: string) {
         const writeTemp = temp.path({ suffix: ".png" });
 
         readStream.on("end", function () {
-          gm.compare(writeTemp, fixture.fullFixturePath(fixturePath), function (
-            err: Error,
-            isEqual: boolean
-          ) {
-            if (err) {
-              reject(err);
-            } else {
-              temp.cleanup(function (tmpErr: Error) {
-                /* istanbul ignore next */
-                if (tmpErr) {
-                  reject(tmpErr);
-                } else {
-                  resolve(isEqual);
-                }
-              });
-              resolve(isEqual);
+          gm.compare(
+            writeTemp,
+            fixture.fullFixturePath(fixturePath),
+            function (err: Error, isEqual: boolean) {
+              if (err) {
+                reject(err);
+              } else {
+                temp.cleanup(function (tmpErr: Error) {
+                  /* istanbul ignore next */
+                  if (tmpErr) {
+                    reject(tmpErr);
+                  } else {
+                    resolve(isEqual);
+                  }
+                });
+                resolve(isEqual);
+              }
             }
-          });
+          );
         });
         readStream.pipe(fs.createWriteStream(writeTemp), {
           end: true,
