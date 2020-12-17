@@ -12,6 +12,6 @@
     "lint": "yarn lerna run lint",
     "prettier": "yarn lerna run prettier --since HEAD~1",
     "release": "yarn lerna version -m \"chore(release): bump release versions\" --conventional-commits",
-    "bench": "yarn lerna run bench --stream --no-prefix --since HEAD~1"
+    "bench": "yarn lerna run bench --stream --no-prefix"
   }
 }

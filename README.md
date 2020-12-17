@@ -5,7 +5,7 @@
 </div>
 
 [![Issues](https://img.shields.io/github/issues/piobyte/flamingo.svg)](https://github.com/piobyte/flamingo/issues)
-[![Build Status](https://travis-ci.org/piobyte/flamingo.png?branch=master)](https://travis-ci.org/piobyte/flamingo)
+![CI](https://github.com/piobyte/flamingo/workflows/CI/badge.svg)
 [![Code Climate](https://codeclimate.com/github/piobyte/flamingo.png)](https://codeclimate.com/github/piobyte/flamingo)
 [![documentation](https://inch-ci.org/github/piobyte/flamingo.svg?branch=master)](https://inch-ci.org/github/piobyte/flamingo)
 
