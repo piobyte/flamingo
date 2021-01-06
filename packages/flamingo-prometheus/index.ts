@@ -53,8 +53,11 @@ exports[addon.HOOKS.HAPI_PLUGINS] = function (server) {
         hapi.route({
           method: "GET",
           path: server.config.PROMETHEUS.URL,
-          handler(request, h) {
-            return h.response(getSummary()).type(getContentType()).code(200);
+          async handler(request, h) {
+            return h
+              .response(await getSummary())
+              .type(getContentType())
+              .code(200);
           },
         });
       },
