@@ -43,6 +43,8 @@ const images: Record<string, string> = {
   smallJpeg: "../640px-Saturneclipse.jpg",
   largeJpeg: "../Saturn_from_Cassini_Orbiter_(2004-10-06).jpg",
 
+  avif: "../fox.profile0.10bpc.yuv420.avif",
+
   smallPdf: "../pdf-sample.pdf",
   largePdf: "../nipguide.pdf",
 

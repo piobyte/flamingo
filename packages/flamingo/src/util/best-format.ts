@@ -21,7 +21,12 @@ function parseRanges(ranges: string) {
   return parsedRanges;
 }
 
-const DEFAULT_SUPPORTED = ["image/png", "image/jpeg", "image/webp"];
+const DEFAULT_SUPPORTED = [
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "image/avif",
+];
 
 /**
  * Function to get a media type from a given accept handler using a default media type as fallback.

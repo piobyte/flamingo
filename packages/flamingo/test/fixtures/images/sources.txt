@@ -16,3 +16,7 @@ https://developers.google.com/speed/webp/gallery2#image_credits
 libheif-assets/*.heic
 https://github.com/strukturag/libheif/blob/master/examples/example.heic
 MIT - https://github.com/strukturag/libheif/blob/master/examples/COPYING
+
+fox.profile0.10bpc.yuv420.avif
+https://github.com/link-u/avif-sample-images
+CC-BY-SA - https://github.com/link-u/avif-sample-images/blob/master/LICENSE.txt
