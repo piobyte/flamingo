@@ -21,6 +21,7 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: Install native dependencies
         run: |
+          sudo apt-get update
           sudo apt-get -y install pkg-config ffmpeg
           sudo bash packages/flamingo/tools/install-graphicsmagick.sh
       - run: yarn install --frozen-lockfile
@@ -39,6 +40,7 @@ jobs:
           node-version: 15
       - name: Install native dependencies
         run: |
+          sudo apt-get update
           sudo apt-get -y install pkg-config ffmpeg
           sudo bash packages/flamingo/tools/install-imagemagick.sh
           sudo bash packages/flamingo/tools/install-graphicsmagick.sh
