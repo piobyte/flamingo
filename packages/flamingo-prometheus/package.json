@@ -1,6 +1,6 @@
 {
   "name": "flamingo-prometheus",
-  "version": "3.1.1",
+  "version": "4.0.0",
   "main": "index.js",
   "description": "flamingo-prometheus is a https://github.com/piobyte/flamingo addon to add prometheus metrics rporting.",
   "scripts": {
@@ -33,7 +33,7 @@
   "dependencies": {
     "@promster/hapi": "6.0.3",
     "@promster/types": "^3.0.1",
-    "flamingo": "^3.1.1",
+    "flamingo": "^4.0.0",
     "nyc": "^15.1.0",
     "prom-client": "^13.1.0"
   },

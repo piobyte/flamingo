@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/piobyte/flamingo/compare/flamingo@3.1.1...flamingo@4.0.0) (2021-05-05)
+
+
+### chore
+
+* bump minimum node version to 14 ([24982fe](https://github.com/piobyte/flamingo/commit/24982fe6afd02c6005ba2361d734f098fbd01f1b)), closes [#46](https://github.com/piobyte/flamingo/issues/46)
+
+
+### Features
+
+* add avif to list of supported mimetypes ([64ed3f9](https://github.com/piobyte/flamingo/commit/64ed3f91ed1da1754728cf9aa30f91fb780dff6e))
+
+
+### BREAKING CHANGES
+
+* this makes all flamingo packages to require nodejs >= 14 now
+
+
+
+
+
 ## [3.1.1](https://github.com/piobyte/flamingo/compare/flamingo@3.1.0...flamingo@3.1.1) (2020-10-28)
 
 **Note:** Version bump only for package flamingo

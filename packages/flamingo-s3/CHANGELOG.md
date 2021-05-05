@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/piobyte/flamingo-s3/compare/flamingo-s3@3.0.7...flamingo-s3@4.0.0) (2021-05-05)
+
+
+### chore
+
+* bump minimum node version to 14 ([24982fe](https://github.com/piobyte/flamingo-s3/commit/24982fe6afd02c6005ba2361d734f098fbd01f1b)), closes [#46](https://github.com/piobyte/flamingo-s3/issues/46)
+
+
+### BREAKING CHANGES
+
+* this makes all flamingo packages to require nodejs >= 14 now
+
+
+
+
+
 ## [3.0.7](https://github.com/piobyte/flamingo-s3/compare/flamingo-s3@3.0.6...flamingo-s3@3.0.7) (2020-10-28)
 
 **Note:** Version bump only for package flamingo-s3
