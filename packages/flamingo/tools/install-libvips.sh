@@ -1,8 +1,8 @@
 #!/bin/sh
 
-vips_version_minimum=8.10.5
+vips_version_minimum=8.10.6
 vips_version_latest_major_minor=8.10
-vips_version_latest_patch=5
+vips_version_latest_patch=6
 
 VIPS_VERSION=${vips_version_latest_major_minor}.${vips_version_latest_patch}
 

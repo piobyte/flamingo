@@ -12,6 +12,7 @@ import bestFormat = require("../util/best-format");
 import Config = require("../../config");
 import Profile from "../types/Profile";
 import { ProfileInstruction } from "../types/Instruction";
+import { SharpType } from "../types/Mime";
 
 const MIN_IMAGE_SIZE = 10;
 const MAX_IMAGE_SIZE = 1024;
@@ -128,7 +129,7 @@ const ExampleProfiles: Record<string, Profile> = {
           pipe(pipe: sharp.Sharp) {
             return pipe
               .rotate()
-              .toFormat(format.type, { quality })
+              .toFormat(format.type as SharpType, { quality })
               .resize(Math.ceil(width), Math.ceil(height), {
                 fit: "outside",
                 position: sharp.gravity.center,
@@ -192,7 +193,7 @@ const ExampleProfiles: Record<string, Profile> = {
             return instance
               .rotate()
               .flatten({ background: "white" })
-              .toFormat(format.type, { quality })
+              .toFormat(format.type as SharpType, { quality })
               .resize(Math.ceil(width), Math.ceil(height), {
                 fit: "outside",
                 position: sharp.gravity.center,

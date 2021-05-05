@@ -10,6 +10,7 @@ import bestFormat = require("../util/best-format");
 import envParser = require("../util/env-parser");
 import { ProcessInstruction, ProfileInstruction } from "../types/Instruction";
 import Profile from "../types/Profile";
+import { SharpType } from "../types/Mime";
 
 const DebugProfiles: Record<string, Profile> = {
   /**
@@ -53,7 +54,7 @@ const DebugProfiles: Record<string, Profile> = {
           return pipe
             .rotate()
             .flatten({ background: "white" })
-            .toFormat(format.type)
+            .toFormat(format.type as SharpType)
             .resize(dim, dim, {
               fit: "outside",
               position: sharp.gravity.center,
@@ -100,10 +101,13 @@ const DebugProfiles: Record<string, Profile> = {
       process.push({
         processor: "sharp",
         pipe(pipe: sharp.Sharp) {
-          return pipe.rotate().toFormat(format.type).resize(dim, dim, {
-            fit: "outside",
-            position: sharp.gravity.center,
-          });
+          return pipe
+            .rotate()
+            .toFormat(format.type as SharpType)
+            .resize(dim, dim, {
+              fit: "outside",
+              position: sharp.gravity.center,
+            });
         },
       });
     }
