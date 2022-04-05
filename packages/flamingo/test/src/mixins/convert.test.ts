@@ -46,7 +46,7 @@ describe("convert", function () {
   it("#write", function () {
     const convert = new (class extends Convert(DummyRoute) {
       handleError() {
-        return (failOnHandleError() as any) as Hapi.ResponseObject;
+        return failOnHandleError() as any as Hapi.ResponseObject;
       }
     })();
     const operation = new FlamingoOperation();

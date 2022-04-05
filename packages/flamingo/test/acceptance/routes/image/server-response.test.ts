@@ -179,9 +179,9 @@ describe("image converting server response", function () {
     let server;
 
     try {
-      server = await startServer(({
+      server = await startServer({
         CRYPTO: { ENABLED: true },
-      } as unknown) as Config);
+      } as unknown as Config);
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {

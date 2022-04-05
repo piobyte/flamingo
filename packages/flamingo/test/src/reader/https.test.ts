@@ -95,7 +95,7 @@ describe("https? reader", function () {
     try {
       await data.stream();
       assert.ok(false, "shouldn't resolve this request.");
-    } catch (reason) {
+    } catch (reason: any) {
       assert.strictEqual(reason.extra, "http://example.org/bad");
     }
   });

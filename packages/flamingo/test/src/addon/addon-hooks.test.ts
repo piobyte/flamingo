@@ -149,7 +149,7 @@ describe("hook", function () {
       const operation = new FlamingoOperation();
       loader().hook(EXTRACT_PROCESS)(extracted, operation);
       assert.strictEqual(extracted.response.header.Authorization, "Basic 1234");
-      extracted.process[0].pipe(({
+      extracted.process[0].pipe({
         rotate() {
           return this;
         },
@@ -159,7 +159,7 @@ describe("hook", function () {
           }
           return this;
         },
-      } as unknown) as sharp.Sharp);
+      } as unknown as sharp.Sharp);
 
       assert.ok(calledToFormatWebp);
     });

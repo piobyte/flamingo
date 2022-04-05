@@ -238,9 +238,9 @@ describe("video converting server response", function () {
     let server;
 
     try {
-      server = await startServer(({
+      server = await startServer({
         CRYPTO: { ENABLED: true },
-      } as unknown) as Config);
+      } as unknown as Config);
       const { response } = await got(URL).catch((e) => e);
       assert.strictEqual(response.statusCode, 400);
     } finally {
@@ -258,12 +258,12 @@ describe("video converting server response", function () {
     let server;
 
     try {
-      server = await startServer(({
+      server = await startServer({
         CRYPTO: { ENABLED: false },
         ACCESS: {
           FILE: { READ: [path.join(__dirname, "../../../fixtures/videos")] },
         },
-      } as unknown) as Config);
+      } as unknown as Config);
       const { statusCode } = await got(URL);
       assert.strictEqual(statusCode, 200);
     } finally {

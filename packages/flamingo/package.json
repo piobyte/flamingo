@@ -82,7 +82,7 @@
     "lines": 95,
     "statements": 95,
     "functions": 93,
-    "branches": 85,
+    "branches": 84,
     "reporter": [
       "text-summary",
       "html"

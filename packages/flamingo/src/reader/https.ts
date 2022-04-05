@@ -24,7 +24,7 @@ const httpsReader: Reader = function (
   const input = operation.input;
 
   return conf.access?.HTTPS?.ENABLED &&
-    !readAllowed(input, (conf.access?.HTTPS?.READ as unknown) as Array<Url.Url>)
+    !readAllowed(input, conf.access?.HTTPS?.READ as unknown as Array<Url.Url>)
     ? Promise.reject(
         "Read not allowed. See `ACCESS.HTTPS.READ` for more information."
       )

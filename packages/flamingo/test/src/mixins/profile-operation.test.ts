@@ -101,10 +101,10 @@ describe("profile-operation", function () {
       config.CRYPTO!.KEY,
       config.CRYPTO!.IV
     );
-    const request = ({
+    const request = {
       params: { profile, url: encoded },
-    } as unknown) as Hapi.Request;
-    const reply = (sinon.spy() as unknown) as Hapi.ResponseToolkit;
+    } as unknown as Hapi.Request;
+    const reply = sinon.spy() as unknown as Hapi.ResponseToolkit;
 
     const ProfileOperationClass = ProfileOperation(
       class extends Convert(Route) {
@@ -138,10 +138,10 @@ describe("profile-operation", function () {
     const profile = "someProfile";
     const givenUrl = "ftp://example.com/image.png";
     const encodedUrl = encodeURIComponent(givenUrl);
-    const request = ({
+    const request = {
       params: { profile, url: encodedUrl },
-    } as unknown) as Hapi.Request;
-    const reply = (sinon.spy() as unknown) as Hapi.ResponseToolkit;
+    } as unknown as Hapi.Request;
+    const reply = sinon.spy() as unknown as Hapi.ResponseToolkit;
 
     operation.request = { params: { profile, url: encodedUrl } };
     operation.config = conf;

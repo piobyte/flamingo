@@ -18,7 +18,7 @@ import { ProcessInstruction } from "../types/Instruction";
  */
 class FlamingoOperation {
   request: any = {};
-  reply: Hapi.ResponseToolkit = (noop as any) as Hapi.ResponseToolkit;
+  reply: Hapi.ResponseToolkit = noop as any as Hapi.ResponseToolkit;
   preprocessorConfig: any = {
     seekPercent: 0.1,
   };

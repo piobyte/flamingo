@@ -2,13 +2,8 @@ import addon = require("flamingo/src/addon");
 import { HOOK, HOOKS } from "flamingo/src/addon";
 import prompsterHapi = require("@promster/hapi");
 
-const {
-  createPlugin,
-  getSummary,
-  getContentType,
-  signalIsUp,
-  signalIsNotUp,
-} = prompsterHapi;
+const { createPlugin, getSummary, getContentType, signalIsUp, signalIsNotUp } =
+  prompsterHapi;
 
 /**
  * Returns prometheus config mappings
