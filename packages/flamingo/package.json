@@ -44,7 +44,7 @@
     "mimeparse": "^0.1.4",
     "mkdirp": "^1.0.4",
     "optional": "^0.1.4",
-    "sharp": "^0.28.1",
+    "sharp": "^0.30.5",
     "temp": "^0.9.4"
   },
   "devDependencies": {
